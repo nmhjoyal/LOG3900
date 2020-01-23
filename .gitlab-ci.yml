@@ -34,6 +34,7 @@ stages:
   - test
 
 build:client-léger:
+  stage: build
   script:
     - ./thin_client/gradlew assembleDebug
   artifacts:
@@ -41,9 +42,11 @@ build:client-léger:
     - thin_client/app/build/outputs/
 
 lint:client-léger:
+  stage: lint
   script:
     - ./thin_client/gradlew -Pci --console=plain lintDebug -PbuildDir=lint
 
 test:client-léger:
+  stage: test
   script:
     - ./thin_client/gradlew -Pci --console=plain testDebug
