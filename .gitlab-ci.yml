@@ -22,30 +22,28 @@ before_script:
   - export CMAKE_HOME=$PWD/android-sdk-linux/cmake/${CMAKE}/bin/
   - export PATH=$PATH:$PWD/android-sdk-linux/platform-tools/:$CMAKE_HOME
 
-  - chmod +x ./gradlew
+  - chmod +x ./thin_client/gradlew
   - set +o pipefail
   - yes | android-sdk-linux/tools/bin/sdkmanager --licenses
   - set -o pipefail
 
-build:
+
+stages:
+  - build
+  - lint
+  - test
+
+build:client-léger:
   script:
     - ./thin_client/gradlew assembleDebug
   artifacts:
     paths:
     - thin_client/app/build/outputs/
 
-lint:
+lint:client-léger:
   script:
     - ./thin_client/gradlew -Pci --console=plain lintDebug -PbuildDir=lint
 
-unitTest:
+test:client-léger:
   script:
     - ./thin_client/gradlew -Pci --console=plain testDebug
-
-instrumentationTest:
-  script:
-    - echo y | android-sdk-linux/tools/bin/sdkmanager  "emulator" >/dev/null
-    - echo y | android-sdk-linux/tools/bin/sdkmanager "system-images;android-${ANDROID_COMPILE_SDK};google_apis;x86"
-    - echo y | android-sdk-linux/tools/bin/avdmanager create avd -f -n testAVD -k "system-images;android-${ANDROID_COMPILE_SDK};google_apis;x86"
-    - android-sdk-linux/emulator/emulator -avd testAVD -no-audio -no-window &
-    - ./thin_client/gradlew connectedAndroidTest
