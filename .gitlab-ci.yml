@@ -22,11 +22,11 @@ before_script:
   - export CMAKE_HOME=$PWD/android-sdk-linux/cmake/${CMAKE}/bin/
   - export PATH=$PATH:$PWD/android-sdk-linux/platform-tools/:$CMAKE_HOME
 
-  - chmod +x ./thin_client/gradlew
+  - pushd thin_client
+  - chmod +x ./gradlew
   - set +o pipefail
   - yes | android-sdk-linux/tools/bin/sdkmanager --licenses
   - set -o pipefail
-
 
 stages:
   - build
@@ -36,17 +36,17 @@ stages:
 build:client-léger:
   stage: build
   script:
-    - ./thin_client/gradlew assembleDebug
+    - ./gradlew assembleDebug
   artifacts:
     paths:
-    - thin_client/app/build/outputs/
+    - app/build/outputs/
 
 lint:client-léger:
   stage: lint
   script:
-    - ./thin_client/gradlew -Pci --console=plain lintDebug -PbuildDir=lint
+    - ./gradlew -Pci --console=plain lintDebug -PbuildDir=lint
 
 test:client-léger:
   stage: test
   script:
-    - ./thin_client/gradlew -Pci --console=plain testDebug
+    - ./gradlew -Pci --console=plain testDebug
