@@ -6,17 +6,20 @@
   "scripts": {
     "tsc": "tsc",
     "build": "tsc",
-    "start": "ts-node-dev --respawn src/server.ts"
+    "start": "ts-node-dev --respawn server.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "ts-node": "^8.6.2",
-    "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.7.5",
     "nodemon": "^2.0.2",
-    "@types/node": "^13.1.8"
   },
-  "dependencies": {}
+  "dependencies": {
+    "ts-node": "^8.6.2",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "reflect-metadata": "^0.1.13",
+    "routing-controllers": "^0.8.0",
+    "@types/node": "^13.1.8"
+  }
 }
