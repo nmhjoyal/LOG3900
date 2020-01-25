@@ -7,6 +7,7 @@ variables:
   CMAKE:               "3.10.2.4988404"
 
 before_script:
+  - pushd thin_client
   - apt-get --quiet update --yes
   - apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1
   
@@ -22,7 +23,6 @@ before_script:
   - export CMAKE_HOME=$PWD/android-sdk-linux/cmake/${CMAKE}/bin/
   - export PATH=$PATH:$PWD/android-sdk-linux/platform-tools/:$CMAKE_HOME
 
-  - pushd thin_client
   - chmod +x ./gradlew
   - set +o pipefail
   - yes | android-sdk-linux/tools/bin/sdkmanager --licenses
