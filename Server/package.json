@@ -1,0 +1,22 @@
+{
+  "name": "Server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Server.js",
+  "scripts": {
+    "tsc": "tsc",
+    "build": "tsc",
+    "start": "ts-node-dev --respawn src/server.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "ts-node": "^8.6.2",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "typescript": "^3.7.5",
+    "nodemon": "^2.0.2",
+    "@types/node": "^13.1.8"
+  },
+  "dependencies": {}
+}
