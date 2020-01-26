@@ -14,10 +14,7 @@
       "noUnusedLocals": true,
       "noImplicitReturns": true,
       "suppressImplicitAnyIndexErrors": true,
-      "strictNullChecks": true
-  },
-  "exclude": [
-    "node_modules",
-    "out"
-  ]
+      "strictNullChecks": true,
+      "resolveJsonModule": true
+  }
 }

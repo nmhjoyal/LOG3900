@@ -6,7 +6,7 @@ import { injectable } from "inversify";
 import * as morgan from "morgan";
 import "reflect-metadata";
 import { useExpressServer } from "routing-controllers";
-import { UserController } from "./controllers/userController";
+import { UserController } from "./http/userController";
 import * as ServerConfig from "./serverConfig.json";
 
 
@@ -33,7 +33,8 @@ export class Server {
             ] 
         });
         
-        this.server.listen(ServerConfig.port);
-        console.log("Listening ... ");
+        let port: number = ServerConfig.port;
+        this.server.listen(port);
+        console.log("Listening on port " + port + " ...");
     }
 }
