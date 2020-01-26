@@ -13,7 +13,7 @@ stages:
 cache:
   key: ${CI_PROJECT_ID}
   paths:
-  - .gradle/
+  - thin_client/.gradle/
 
 build:client-léger:
   stage: build
