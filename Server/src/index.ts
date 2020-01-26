@@ -5,4 +5,8 @@ import Types from "./types";
 
 const server: Server = container.get<Server>(Types.Server);
 
-server.init();
+try {
+    server.init();
+} catch (error) {
+    console.log(error)
+}
