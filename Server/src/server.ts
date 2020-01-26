@@ -6,9 +6,10 @@ import { injectable } from "inversify";
 import * as morgan from "morgan";
 import "reflect-metadata";
 import { useExpressServer } from "routing-controllers";
-import { UserController } from "./http/userController";
+import { UserController } from "./controller/http/userController";
 import * as ServerConfig from "./serverConfig.json";
-
+import { useSocketServer } from "socket-controllers";
+import { MessageController } from "./controller/socket/messageController"
 
 @injectable()
 export class Server {
@@ -23,9 +24,16 @@ export class Server {
     }
 
     public init(): void {
-        this.app.set("port", ServerConfig.port);
+        let port: number = ServerConfig.port;
+
+        this.app.set("port", port);
         this.server = http.createServer(this.app);
         this.server.on("error", (error) => console.log(error));
+
+        const io: SocketIO.Server = require("socket.io")(this.server);
+        useSocketServer(io, {
+            controllers : [MessageController]
+        });
 
         useExpressServer(this.app, {
             controllers: [
@@ -33,7 +41,6 @@ export class Server {
             ] 
         });
         
-        let port: number = ServerConfig.port;
         this.server.listen(port);
         console.log("Listening on port " + port + " ...");
     }
