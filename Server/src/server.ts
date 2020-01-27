@@ -32,7 +32,9 @@ export class Server {
 
         const io: SocketIO.Server = require("socket.io")(this.server);
         useSocketServer(io, {
-            controllers : [MessageController]
+            controllers : [
+                MessageController
+            ]
         });
 
         useExpressServer(this.app, {
