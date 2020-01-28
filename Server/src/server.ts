@@ -10,6 +10,7 @@ import { UserController } from "./controller/http/userController";
 import * as ServerConfig from "./serverConfig.json";
 import { useSocketServer } from "socket-controllers";
 import { MessageController } from "./controller/socket/messageController"
+import * as socketioImport from "socket.io"
 
 @injectable()
 export class Server {
@@ -19,7 +20,7 @@ export class Server {
     public constructor() {
         this.app = express();
         this.app.use(bodyParser.json({limit: "50mb"}));
-        this.app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
+        this.app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit: 50000}));
         this.app.use(morgan("dev"));
     }
 
@@ -30,15 +31,15 @@ export class Server {
         this.server = http.createServer(this.app);
         this.server.on("error", (error) => console.log(error));
 
-        const io: SocketIO.Server = require("socket.io")(this.server);
+        // Start socket 
+        const io: SocketIO.Server = socketioImport(this.server);
         useSocketServer(io, {
-            controllers : [MessageController]
+            controllers: [ MessageController ]
         });
 
+        // Start http server
         useExpressServer(this.app, {
-            controllers: [
-                UserController
-            ] 
+            controllers: [ UserController ] 
         });
         
         this.server.listen(port);
