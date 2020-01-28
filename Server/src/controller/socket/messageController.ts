@@ -1,4 +1,4 @@
-import {OnConnect, SocketController, ConnectedSocket, OnDisconnect, MessageBody, OnMessage} from "socket-controllers";
+import { OnConnect, SocketController, ConnectedSocket, OnDisconnect, MessageBody, OnMessage } from "socket-controllers";
  
 @SocketController()
 export class MessageController {
@@ -12,7 +12,7 @@ export class MessageController {
     disconnect(@ConnectedSocket() socket: any) {
         console.log("client disconnected");
     }
- 
+
     @OnMessage("save")
     save(@ConnectedSocket() socket: any, @MessageBody() message: any) {
         console.log("received message:", message);
