@@ -1,6 +1,7 @@
 package com.example.thin_client.ui.login
 
 import android.app.Activity
+import android.content.Intent
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -16,6 +17,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 
 import com.example.thin_client.R
+import com.example.thin_client.ui.createUser.CreateUserActivity
 
 class LoginActivity : AppCompatActivity() {
 
@@ -30,6 +32,7 @@ class LoginActivity : AppCompatActivity() {
         val password = findViewById<EditText>(R.id.password)
         val login = findViewById<Button>(R.id.login)
         val loading = findViewById<ProgressBar>(R.id.loading)
+        val createAccount = findViewById<Button>(R.id.createAccount)
 
         loginViewModel = ViewModelProviders.of(this, LoginViewModelFactory())
             .get(LoginViewModel::class.java)
@@ -94,6 +97,11 @@ class LoginActivity : AppCompatActivity() {
                 loading.visibility = View.VISIBLE
                 loginViewModel.login(username.text.toString(), password.text.toString())
             }
+        }
+
+        createAccount.setOnClickListener {
+            val intent = Intent(applicationContext, CreateUserActivity::class.java)
+            startActivity(intent)
         }
     }
 
