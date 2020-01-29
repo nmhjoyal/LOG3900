@@ -1,25 +1,35 @@
 import { JsonController, Get, Param, Post, Body } from "routing-controllers";
 import { User } from "../../models/user";
+import { Room } from "../../services/room";
 
 
 @JsonController("/user")
 export class UserController {
 
-    @Post("/")
+    private room: Room;
+
+    public constructor() {
+        this.room = new Room("Room1");
+    }
+
+    @Post("/add")
     createUser(@Body() body: User) {
         console.log(body.username);
         console.log(body.password);
-        // const obj = JSON.parse(body);
+        this.room.addUser(body);
         // Create new user in database
-        // console.log("You sent : " + obj);
         return body.username + " added";
     }
 
-    @Get("/:userId")
-    test(@Param("userId") userId: string) {
-        console.log("You sent : " + userId);
-        // Retrieve user from database
-        return "Get request done successfully";
+    @Get("/:userName")
+    test(@Param("userName") userName: string) {
+        console.log("You sent : " + userName);
+        let userRetrieved: User | undefined = this.room.getUser(userName);
+        if (userRetrieved) {
+            return "User exists";
+        } else {
+            return "User does not exist";
+        }
     }
 }
 

@@ -6,26 +6,30 @@ export class Room {
     private users: User[];
     private messages: Message[];
 
-    public Room(name: string) {
+    public constructor(name: string) {
         this.name = name;
-        this.users = [];
+        this.users = [{ username: "Hubert", password: "123" }];
         this.messages = [];
     }
 
-    public addUser(user : User) : void {
+    public addUser(user: User): void {
         this.users.push(user);
     }
 
-    public removeUser(user : User) : void {
+    public removeUser(user: User): void {
         this.users.splice(this.users.indexOf(user), 1);
     }
 
-    public getUsers() : User[] {
+    public getUsers(): User[] {
         return this.users;
     }
 
-    public addMessage(message : Message) : void {
+    public addMessage(message: Message): void {
         this.messages.push(message);
+    }
+
+    public getUser(username: string): User | undefined {
+        return this.users.find( user => user.username === username);
     }
 
     public getMessages() : Message[] {

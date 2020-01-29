@@ -1,0 +1,33 @@
+image: jangrewe/gitlab-ci-android
+
+before_script:
+  - pushd thin_client
+  - export GRADLE_USER_HOME=$(pwd)/.gradle
+  - chmod +x ./gradlew
+
+stages:
+  - build
+  - test & lint
+
+cache:
+  key: ${CI_PROJECT_ID}
+  paths:
+  - thin_client/.gradle/
+
+build:client-léger:
+  stage: build
+  script:
+    - ./gradlew assembleDebug
+  artifacts:
+    paths:
+    - app/build/outputs/
+
+lint:client-léger:
+  stage: test & lint
+  script:
+    - ./gradlew -Pci --console=plain lintDebug -PbuildDir=lint
+
+test:client-léger:
+  stage: test & lint
+  script:
+    - ./gradlew -Pci --console=plain testDebug
