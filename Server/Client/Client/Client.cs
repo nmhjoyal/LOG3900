@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Net;
-using System.Net.Sockets;
-using System.Text;
 using System.IO;
 using Newtonsoft.Json;
-
-public class Client
-{
-    public static void Main(String[] args)
-    {
+using Quobject.SocketIoClientDotNet.Client;
+public class Client {
+    public static void Main(String[] args) {
         /*
         Console.WriteLine("Enter your username");
         string username = Console.ReadLine();
@@ -29,18 +25,22 @@ public class Client
                 case "exit" : disconnected = true;
             }
         }
-        */
-        User user = new User
-        {
+        User user = new User {
             username = "zakari",
             password = "banane"
         };
         TestPOSTWebRequest(user);
         TestGETWebRequest("Testing get...");
-    }
+        */
+        var socket = IO.Socket("http://localhost:5000");
+        socket.On(Socket.EVENT_CONNECT, () =>
+        {
+            socket.Emit("hi");
 
-    public static void sendSocket()
-    {
+        });
+    }
+    /*
+    public static void sendSocket() {
         Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         socket.Bind(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5000));
         socket.Listen(0);
@@ -56,6 +56,7 @@ public class Client
         client.Close();
         socket.Close();
     }
+    */
     /*
     public static void sendSocket() {
         byte[] bytes = new byte[1024];  
@@ -77,8 +78,7 @@ public class Client
         Console.WriteLine("\nbytes received : " + res);
     }
     */
-    public static void TestPOSTWebRequest(Object obj)
-    {
+    public static void TestPOSTWebRequest(Object obj) {
         var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000/user/");
         httpWebRequest.ContentType = "application/json";
         httpWebRequest.Method = "POST";
@@ -98,8 +98,7 @@ public class Client
         }
     }
 
-    public static void TestGETWebRequest(string request)
-    {
+    public static void TestGETWebRequest(string request) {
         var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000/user/" + request);
         httpWebRequest.ContentType = "application/json";
         httpWebRequest.Method = "GET";
@@ -113,8 +112,7 @@ public class Client
     }
 }
 
-public class User
-{
+public class User {
     public string username;
     public string password;
 }
