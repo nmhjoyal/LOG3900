@@ -9,6 +9,17 @@ namespace WPFUI.Models
     public class MessageModel
     {
 		private string _content;
+		private string _senderName;
+		private DateTime _timeStamp;
+		public MessageModel(string content, string senderName, DateTime timeStamp)
+		{
+			_content = content;
+			_senderName = senderName;
+			_timeStamp = timeStamp;
+
+
+		}
+
 
 		public string content
 		{
@@ -16,15 +27,12 @@ namespace WPFUI.Models
 			set { _content = value; }
 		}
 
-		private string _senderName;
-
 		public string senderName
 		{
 			get { return _senderName; }
 			set { _senderName = value; }
 		}
 
-		private DateTime _timeStamp;
 
 		public DateTime timeStamp
 		{
