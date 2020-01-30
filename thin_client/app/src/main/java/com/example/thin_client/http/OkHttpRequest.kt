@@ -16,6 +16,23 @@ class OkHttpRequest( var client: OkHttpClient) {
         call.enqueue(callback)
         return call
     }
+    
+    fun POST(url: String, jsonStr: String, callback: Callback): Call {
+        val body = jsonStr.toRequestBody(JSONMediaType)
+
+        val request = Request.Builder()
+            .url(url)
+            .post(body)
+            .build()
+
+        val call = client.newCall(request)
+        call.enqueue(callback)
+        return call
+    }
+
+    companion object {
+        val JSONMediaType = "application/json; charset=utf-8".toMediaType()
+    }
 
 
 }
