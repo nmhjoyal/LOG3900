@@ -11,6 +11,7 @@ namespace WPFUI
 {
     public class Bootstrapper: BootstrapperBase
     {
+
         public Bootstrapper()
         {
             Initialize();
