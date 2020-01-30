@@ -29,6 +29,7 @@
         <TextBlock Text="Messages " Grid.Column="1" Grid.Row="1"/>
         <TextBlock Text="{Binding Path = protoMessages, Mode = Oneway}" Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="5"/>
         <TextBox x:Name ="message" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="5"></TextBox>
-        <Button x:Name ="sendMessage" Grid.Column="5" Grid.Row="6"> Envoyer</Button>  
+        <Button x:Name ="disconnect" Grid.Column="5" Grid.Row="1">Disconnect</Button>
+        <Button x:Name ="sendMessage" Grid.Column="5" Grid.Row="6"> Send</Button>  
     </Grid>
 </UserControl>

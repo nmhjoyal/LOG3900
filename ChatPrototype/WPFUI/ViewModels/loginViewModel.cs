@@ -8,19 +8,19 @@ using WPFUI.EventModels;
 
 namespace WPFUI.ViewModels
 {
-    public class chatBoxViewModel: Screen
+    class LoginViewModel: Screen
     {
         private IEventAggregator _events;
-
-        public chatBoxViewModel(IEventAggregator events)
+        public LoginViewModel(IEventAggregator events)
         {
             _events = events;
         }
 
-        public void disconnect()
+        public void logIn()
         {
-            _events.PublishOnUIThread(new DisconnectEvent());
-        }
-    }
+            _events.PublishOnUIThread(new LogInEvent());
 
+        }
+
+    }
 }

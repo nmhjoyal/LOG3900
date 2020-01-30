@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\Orlanda\Desktop\LOG3900\RepoPoly\log3900-106\ChatPrototype\WPFUI\obj\Debug\
+C:\Users\Orlanda\Desktop\log3900-106\ChatPrototype\WPFUI\obj\Debug\
 WPFUI
 none
 false
 DEBUG;TRACE
-C:\Users\Orlanda\Desktop\LOG3900\RepoPoly\log3900-106\ChatPrototype\WPFUI\App.xaml
-21382958720
+C:\Users\Orlanda\Desktop\log3900-106\ChatPrototype\WPFUI\App.xaml
+3176218762
 
-10-1560604756
-121-1212445487
-Views\chatBoxView.xaml;Views\ShellView.xaml;
+141221542214
+1211753504654
+Views\chatBoxView.xaml;Views\LoginView.xaml;Views\ShellView.xaml;
 
 False
 

@@ -4,57 +4,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WPFUI.EventModels;
 using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    class ShellViewModel: Conductor<object>
-    {
-		private string _chatName;
-		private string _ipAdress;
-		private BindableCollection<MessageModel> _messages = new BindableCollection<MessageModel>();
+    class ShellViewModel: Conductor<object>, IHandle<LogInEvent>, IHandle<DisconnectEvent>
+	{
+		private IEventAggregator _events;
+		private SimpleContainer _container;
 
-		public ShellViewModel()
+		public ShellViewModel(IEventAggregator events, SimpleContainer container)
 		{
+			_container = container;
+			_events = events;
+			_events.Subscribe(this);
+			ActivateItem(_container.GetInstance<LoginViewModel>());
 
 		}
 
-		private string _connectMessage;
-
-		public string connectMessage
+		public void Handle(LogInEvent message)
 		{
-			get { return $"Tentative de connection de { chatName } avec l'IP { ipAdress }"; }
+			ActivateItem(_container.GetInstance<chatBoxViewModel>());
 		}
 
-		public BindableCollection<MessageModel> messages
+		public void Handle(DisconnectEvent message)
 		{
-			get { return _messages; }
-			set { _messages = value; }
-		}
-
-		public string ipAdress
-		{
-			get { return _ipAdress; }
-			set { _ipAdress = value;
-				NotifyOfPropertyChange(() => ipAdress);
-				NotifyOfPropertyChange(() => connectMessage);
-			}
-		}
-
-
-		public string chatName
-		{
-			get { return _chatName; }
-			set { _chatName = value;
-				  NotifyOfPropertyChange(() => chatName);
-				  NotifyOfPropertyChange(() => connectMessage);}
-		}
-
-		public void loadChat()
-		{
-
-			ActivateItem(new chatBoxViewModel());
+			ActivateItem(_container.GetInstance<LoginViewModel>());
 		}
 	}
-
 }
