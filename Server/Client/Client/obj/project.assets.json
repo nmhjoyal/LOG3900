@@ -2,6 +2,15 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v3.1": {
+      "EngineIoClientDotNet/0.9.22": {
+        "type": "package",
+        "compile": {
+          "lib/net45/EngineIoClientDotNet.dll": {}
+        },
+        "runtime": {
+          "lib/net45/EngineIoClientDotNet.dll": {}
+        }
+      },
       "Newtonsoft.Json/12.0.3": {
         "type": "package",
         "compile": {
@@ -10,10 +19,40 @@
         "runtime": {
           "lib/netstandard2.0/Newtonsoft.Json.dll": {}
         }
+      },
+      "SocketIoClientDotNet/0.9.13": {
+        "type": "package",
+        "compile": {
+          "lib/net45/SocketIoClientDotNet.dll": {}
+        },
+        "runtime": {
+          "lib/net45/SocketIoClientDotNet.dll": {}
+        }
       }
     }
   },
   "libraries": {
+    "EngineIoClientDotNet/0.9.22": {
+      "sha512": "/dMIbPizLAzde4hr8uvHSCshKqq2zEH1lYQa83eHXRMiBGltyUKikvIdZCunDiwPL1EPxa5ngHwqd5NBQyn7eA==",
+      "type": "package",
+      "path": "engineioclientdotnet/0.9.22",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "engineioclientdotnet.0.9.22.nupkg.sha512",
+        "engineioclientdotnet.nuspec",
+        "lib/monoandroid10/EngineIoClientDotNet.dll",
+        "lib/monotouch10/EngineIoClientDotNet.dll",
+        "lib/net35/EngineIoClientDotNet.dll",
+        "lib/net40/EngineIoClientDotNet.dll",
+        "lib/net45/EngineIoClientDotNet.dll",
+        "lib/netcore45/EngineIoClientDotNet.dll",
+        "lib/portable-win81+wpa81/EngineIoClientDotNet.dll",
+        "lib/portable-wpa81+wp81/EngineIoClientDotNet.dll",
+        "lib/windowsphone8/EngineIoClientDotNet.dll",
+        "lib/xamarinios10/EngineIoClientDotNet.dll"
+      ]
+    },
     "Newtonsoft.Json/12.0.3": {
       "sha512": "6mgjfnRB4jKMlzHSl+VD+oUc1IebOZabkbyWj2RiTgWwYPPuaK1H97G1sHqGwPlS5npiF5Q0OrxN1wni2n5QWg==",
       "type": "package",
@@ -44,27 +83,50 @@
         "newtonsoft.json.nuspec",
         "packageIcon.png"
       ]
+    },
+    "SocketIoClientDotNet/0.9.13": {
+      "sha512": "0U1gOjIYNLLeEabCinglXOeY7QyVPMmvE6DRtHgwhq2H8zglPUXIpbbG74FmRVZhDA8ryATpArTeHcT/CP6xXA==",
+      "type": "package",
+      "path": "socketioclientdotnet/0.9.13",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/monoandroid10/SocketIoClientDotNet.dll",
+        "lib/monotouch10/SocketIoClientDotNet.dll",
+        "lib/net35/SocketIoClientDotNet.dll",
+        "lib/net40/SocketIoClientDotNet.dll",
+        "lib/net45/SocketIoClientDotNet.dll",
+        "lib/netcore45/SocketIoClientDotNet.dll",
+        "lib/portable-win81+wpa81/SocketIoClientDotNet.dll",
+        "lib/portable-wpa81+wp81/SocketIoClientDotNet.dll",
+        "lib/windowsphone8/SocketIoClientDotNet.dll",
+        "lib/xamarinios10/SocketIoClientDotNet.dll",
+        "socketioclientdotnet.0.9.13.nupkg.sha512",
+        "socketioclientdotnet.nuspec"
+      ]
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
-      "Newtonsoft.Json >= 12.0.3"
+      "EngineIoClientDotNet >= 0.9.22",
+      "Newtonsoft.Json >= 12.0.3",
+      "SocketIoClientDotNet >= 0.9.13"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\zakari\\.nuget\\packages\\": {}
+    "C:\\Users\\Zakari\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Poly\\LOG3900\\log3900-106\\Server\\Client\\Client\\Client.csproj",
+      "projectUniqueName": "D:\\Poly\\LOG3900\\log3900-106\\Server\\Client\\Client\\Client.csproj",
       "projectName": "Client",
-      "projectPath": "C:\\Poly\\LOG3900\\log3900-106\\Server\\Client\\Client\\Client.csproj",
-      "packagesPath": "C:\\Users\\zakari\\.nuget\\packages\\",
-      "outputPath": "C:\\Poly\\LOG3900\\log3900-106\\Server\\Client\\Client\\obj\\",
+      "projectPath": "D:\\Poly\\LOG3900\\log3900-106\\Server\\Client\\Client\\Client.csproj",
+      "packagesPath": "C:\\Users\\Zakari\\.nuget\\packages\\",
+      "outputPath": "D:\\Poly\\LOG3900\\log3900-106\\Server\\Client\\Client\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\zakari\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Zakari\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -88,9 +150,17 @@
     "frameworks": {
       "netcoreapp3.1": {
         "dependencies": {
+          "EngineIoClientDotNet": {
+            "target": "Package",
+            "version": "[0.9.22, )"
+          },
           "Newtonsoft.Json": {
             "target": "Package",
             "version": "[12.0.3, )"
+          },
+          "SocketIoClientDotNet": {
+            "target": "Package",
+            "version": "[0.9.13, )"
           }
         },
         "imports": [
@@ -111,5 +181,27 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Le package 'EngineIoClientDotNet 0.9.22' a été restauré en utilisant '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' au lieu du framework cible du projet '.NETCoreApp,Version=v3.1'. Ce package n'est peut-être pas totalement compatible avec votre projet.",
+      "libraryId": "EngineIoClientDotNet",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.1"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Le package 'SocketIoClientDotNet 0.9.13' a été restauré en utilisant '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' au lieu du framework cible du projet '.NETCoreApp,Version=v3.1'. Ce package n'est peut-être pas totalement compatible avec votre projet.",
+      "libraryId": "SocketIoClientDotNet",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.1"
+      ]
+    }
+  ]
 }

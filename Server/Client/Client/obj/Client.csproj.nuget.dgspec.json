@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Poly\\LOG3900\\log3900-106\\Server\\Client\\Client\\Client.csproj": {}
+    "D:\\Poly\\LOG3900\\log3900-106\\Server\\Client\\Client\\Client.csproj": {}
   },
   "projects": {
-    "C:\\Poly\\LOG3900\\log3900-106\\Server\\Client\\Client\\Client.csproj": {
+    "D:\\Poly\\LOG3900\\log3900-106\\Server\\Client\\Client\\Client.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Poly\\LOG3900\\log3900-106\\Server\\Client\\Client\\Client.csproj",
+        "projectUniqueName": "D:\\Poly\\LOG3900\\log3900-106\\Server\\Client\\Client\\Client.csproj",
         "projectName": "Client",
-        "projectPath": "C:\\Poly\\LOG3900\\log3900-106\\Server\\Client\\Client\\Client.csproj",
-        "packagesPath": "C:\\Users\\zakari\\.nuget\\packages\\",
-        "outputPath": "C:\\Poly\\LOG3900\\log3900-106\\Server\\Client\\Client\\obj\\",
+        "projectPath": "D:\\Poly\\LOG3900\\log3900-106\\Server\\Client\\Client\\Client.csproj",
+        "packagesPath": "C:\\Users\\Zakari\\.nuget\\packages\\",
+        "outputPath": "D:\\Poly\\LOG3900\\log3900-106\\Server\\Client\\Client\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\zakari\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Zakari\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -38,9 +38,17 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
+            "EngineIoClientDotNet": {
+              "target": "Package",
+              "version": "[0.9.22, )"
+            },
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[12.0.3, )"
+            },
+            "SocketIoClientDotNet": {
+              "target": "Package",
+              "version": "[0.9.13, )"
             }
           },
           "imports": [

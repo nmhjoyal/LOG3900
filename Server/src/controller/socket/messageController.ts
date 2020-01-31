@@ -20,6 +20,11 @@ export class MessageController {
         message.id = 1;
         socket.emit("message_saved", message);
     }
+
+    @OnMessage("test")
+    test(@ConnectedSocket() socket: any) {
+        console.log("test received");
+    }
  
 }
 
