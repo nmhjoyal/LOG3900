@@ -1,3 +1,6 @@
+node_modules/
+out/
+package-lock.json
 ChatPrototype/WPFUI/obj/debug/
 ChatPrototype/WPFUI/obj/Debug/
 ChatPrototype/.vs/ChatPrototype/v16/
