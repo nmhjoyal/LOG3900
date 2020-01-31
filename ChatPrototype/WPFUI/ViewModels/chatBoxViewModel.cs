@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using WPFUI.EventModels;
 using WPFUI.Models;
 
@@ -23,7 +24,15 @@ namespace WPFUI.ViewModels
                 NotifyOfPropertyChange(() => currentMessage);}
         }
 
+        public void keyDown(ActionExecutionContext context)
+        {
+            var keyArgs = context.EventArgs as KeyEventArgs;
 
+            if (keyArgs != null && keyArgs.Key == Key.Enter)
+            {
+                sendMessage();
+            }
+        }
         public BindableCollection<MessageModel> messages
         {
             get { return _messages; }
