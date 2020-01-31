@@ -50,22 +50,30 @@ namespace WPFUI.Models
             _socket.On("new_message", (message) =>
             {
                 Message newMessage = JsonConvert.DeserializeObject<Message>(message.ToString());
-                Console.WriteLine(newMessage.author.username + " : " + newMessage.content);
+                MessageModel newMessageModel = new MessageModel(newMessage.content, newMessage.author.username, DateTime.Now);
+                _userdata.messages.Add(newMessageModel);
+                //Console.WriteLine(newMessage.author.username + " : " + newMessage.content);
             });
 
             _socket.On("new_client", (socketId) =>
             {
-                Console.WriteLine(socketId + " is connected");
+                MessageModel newMessageModel = new MessageModel("Nouvelle connection de: " + socketId.ToString(), "Server", DateTime.Now);
+                _userdata.messages.Add(newMessageModel);
+                ///Console.WriteLine(socketId + " is connected");
             });
             // TestPOSTWebRequest(user);
             // TestGETWebRequest("Testing get...");
         }
 
+        public void disconnect()
+        {
+            _socket.Disconnect();
+        }
         public void sendMessage()
         {
             Message message = new Message(_userdata.currentMessage, _user);
-
             _socket.Emit("send_message", JsonConvert.SerializeObject(message));
+
         }
 
         public void createUser(User user)

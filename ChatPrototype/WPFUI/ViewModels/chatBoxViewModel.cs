@@ -47,7 +47,7 @@ namespace WPFUI.ViewModels
         {
             if (currentMessage != null & currentMessage != "")
             {
-                messages.Add(new MessageModel(currentMessage, _userData.userName, DateTime.Now));
+                //messages.Add(new MessageModel(currentMessage, _userData.userName, DateTime.Now));
                 _socketHandler.sendMessage();
                 currentMessage = "";
                 _userData.currentMessage = "";
@@ -59,9 +59,9 @@ namespace WPFUI.ViewModels
         {
             _events = events;
             _socketHandler = socketHandler;
-            _messages = new BindableCollection<MessageModel>();
-            addFakeMessages();
             _userData = userdata;
+            _messages = _userData.messages;
+            addFakeMessages();
         }
 
         public string welcomeMessage
@@ -74,14 +74,13 @@ namespace WPFUI.ViewModels
         public void disconnect()
         {
             clearUserData();
+            _socketHandler.disconnect();
             _events.PublishOnUIThread(new DisconnectEvent());
         }
 
         private void clearUserData()
         {
-            _messages = new BindableCollection<MessageModel>();
-            _userData.ipAdress = "";
-            _userData.userName = "";
+            _userData.clearData();
         }
 
         private void addFakeMessages()

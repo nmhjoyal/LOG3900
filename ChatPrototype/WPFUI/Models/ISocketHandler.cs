@@ -9,6 +9,7 @@ namespace WPFUI.Models
 
         void connectionAttempt();
         void createUser(User user);
+        void disconnect();
         void sendMessage();
     }
 }

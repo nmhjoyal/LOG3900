@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Caliburn.Micro;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,13 @@ namespace WPFUI.Models
         private string _userName;
         private string _ipAdress;
         private string _currentMessage;
+        private BindableCollection<MessageModel> _messages;
+
+        public BindableCollection<MessageModel> messages
+        {
+            get { return _messages; }
+            set { _messages = value; }
+        }
 
         public string currentMessage
         {
@@ -36,7 +44,17 @@ namespace WPFUI.Models
         {
             _userName = userName;
             _ipAdress = ipAdress;
+            _messages = new BindableCollection<MessageModel>();
+            clearData();
+        }
+
+        public void clearData()
+        {
             _currentMessage = "";
+            _userName = "";
+            _ipAdress = "";
+            _messages = new BindableCollection<MessageModel>();
+
         }
 
 
