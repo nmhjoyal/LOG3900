@@ -5,5 +5,5 @@ data class Message(
     val text: String,
     val username: String,
     val avatarUrl: String,
-    val date: Long
+    val date: String
 )

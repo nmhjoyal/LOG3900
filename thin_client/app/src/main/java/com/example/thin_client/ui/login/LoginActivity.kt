@@ -17,6 +17,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 
 import com.example.thin_client.R
+import com.example.thin_client.ui.chat.ChatActivity
 import com.example.thin_client.ui.createUser.CreateUserActivity
 
 class LoginActivity : AppCompatActivity() {
@@ -33,6 +34,7 @@ class LoginActivity : AppCompatActivity() {
         val login = findViewById<Button>(R.id.login)
         val loading = findViewById<ProgressBar>(R.id.loading)
         val createAccount = findViewById<Button>(R.id.createAccount)
+        val chat = findViewById<Button>(R.id.login)
 
         loginViewModel = ViewModelProviders.of(this, LoginViewModelFactory())
             .get(LoginViewModel::class.java)
@@ -101,6 +103,11 @@ class LoginActivity : AppCompatActivity() {
 
         createAccount.setOnClickListener {
             val intent = Intent(applicationContext, CreateUserActivity::class.java)
+            startActivity(intent)
+        }
+
+        chat.setOnClickListener {
+            val intent = Intent(applicationContext, ChatActivity::class.java)
             startActivity(intent)
         }
     }
