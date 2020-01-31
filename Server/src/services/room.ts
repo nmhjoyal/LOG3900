@@ -2,7 +2,7 @@ import { User } from "../models/user";
 import { Message } from "../models/message";
 
 export class Room {
-    private name: string;
+    public name: string;
     private users: User[];
     private messages: Message[];
 

@@ -4,19 +4,14 @@ using System.Net;
 using System.IO;
 using Newtonsoft.Json;
 using Quobject.SocketIoClientDotNet.Client;
-using System;
-using System.Net;
-using System.IO;
-using Newtonsoft.Json;
-using Quobject.SocketIoClientDotNet.Client;
-using Socket = Quobject.SocketIoClientDotNet.Client.Socket;
-using System.Configuration;
 
 namespace SocketIoClient
 {
     public delegate void UpdateTextBoxMethod(string text);
     public partial class Form1 : Form
     {
+        public Socket socket;
+        public User user;
         public Form1()
         {
             InitializeComponent();
@@ -24,49 +19,49 @@ namespace SocketIoClient
 
         private void button1_Click(object sender, EventArgs e)
         {
-            /*
-            Console.WriteLine("Enter your username");
-            string username = Console.ReadLine();
-            Console.WriteLine("Enter your password");
-            string password = Console.ReadLine();
-            User user = new User {
-                username = username,
-                password = password
-            };
-            bool disconnected = false;
-            while(!disconnected) {
-                Console.WriteLine("Enter a command : ");
-                string command = Console.ReadLine();
-                switch(command) {
-                    case "join" : join(); // post
-                    case "leave" : leave(); // delete
-                    case "get users" : getUsers(); // get
-                    case "exit" : disconnected = true;
-                }
-            }
-            User user = new User {
-                username = "zakari",
-                password = "banane"
-            };
-            TestPOSTWebRequest(user);
-            */
-            TestGETWebRequest("Testing get...");
-            socketIoManager();
-        }
-
-        private void socketIoManager()
-        {
-            var socket = IO.Socket("http://localhost:5000");
-            socket.On(Socket.EVENT_CONNECT, () =>
+            user = new User
             {
-                Console.WriteLine("Connected");
+                username = textBox1.Text,
+                password = "xxxxx"
+            };
+
+            createUser(user);
+
+            socket = IO.Socket("http://localhost:5000");
+
+            // Socket on connect send user + socket id to map on the server
+
+            socket.On("new_message", (message) =>
+            {
+                Message newMessage = JsonConvert.DeserializeObject<Message>(message.ToString());
+                Console.WriteLine(newMessage.author.username + " : " + newMessage.content);
             });
-            socket.Emit("test");
+
+            socket.On("new_client", (socketId) =>
+            {
+                Console.WriteLine(socketId + " is connected");
+            });
+            // TestPOSTWebRequest(user);
+            // TestGETWebRequest("Testing get...");
         }
 
-        public static void TestPOSTWebRequest(Object obj)
+        private void button2_Click(object sender, EventArgs e)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000/user/");
+            Message message = new Message
+            {
+                author = user,
+                content = textBox2.Text
+            };
+            socket.Emit("send_message", JsonConvert.SerializeObject(message));
+        }
+
+            public static void createUser(User user)
+        {
+            TestPOSTWebRequest(user, "/user/add");
+        }
+        public static void TestPOSTWebRequest(Object obj, string url)
+        {
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000" + url);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
@@ -104,5 +99,11 @@ namespace SocketIoClient
     {
         public string username;
         public string password;
+    }
+
+    public class Message
+    {
+        public User author;
+        public string content;
     }
 }

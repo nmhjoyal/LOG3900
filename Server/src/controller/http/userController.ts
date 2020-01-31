@@ -1,15 +1,15 @@
 import { JsonController, Get, Param, Post, Body } from "routing-controllers";
 import { User } from "../../models/user";
-import { Room } from "../../services/room";
+// import { Room } from "../../services/room";
 
 
 @JsonController("/user")
 export class UserController {
 
-    private room: Room;
+    // private room: Room;
 
     public constructor() {
-        this.room = new Room("Room1");
+        // this.room = new Room("Room1");
     }
 
     @Post("/add")
@@ -17,7 +17,7 @@ export class UserController {
         console.log(body)
         console.log(body.username);
         console.log(body.password);
-        this.room.addUser(body);
+        // this.room.addUser(body);
         // Create new user in database
         return body.username + " added";
     }
@@ -25,12 +25,14 @@ export class UserController {
     @Get("/:userName")
     test(@Param("userName") userName: string) {
         console.log("You sent : " + userName);
+        /*
         let userRetrieved: User | undefined = this.room.getUser(userName);
         if (userRetrieved) {
             return userRetrieved;
         } else {
             return "User does not exist";
         }
+        */
     }
 }
 
