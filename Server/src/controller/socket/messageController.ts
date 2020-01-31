@@ -15,7 +15,7 @@ export class MessageController {
     connection(@SocketIO() io: any, @ConnectedSocket() socket: any) {
         console.log("client connected");
         socket.join(this.room.name);
-        io.in(this.room.name).emit("new_client", socket.id);
+        socket.to(this.room.name).emit('new_client', socket.id);
     }
  
     @OnDisconnect()

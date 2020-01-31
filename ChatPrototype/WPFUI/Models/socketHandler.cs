@@ -41,8 +41,6 @@ namespace WPFUI.Models
         {
             _user = new User(_userdata.userName, "xxxxx");
 
-            createUser(_user);
-
             _socket = IO.Socket("http://localhost:5000");
 
             // Socket on connect send user + socket id to map on the server
