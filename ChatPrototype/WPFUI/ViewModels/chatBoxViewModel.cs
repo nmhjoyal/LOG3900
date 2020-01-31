@@ -41,19 +41,11 @@ namespace WPFUI.ViewModels
 
         }
 
-
         public chatBoxViewModel(IUserData userdata, IEventAggregator events)
         {
             _events = events;
             _messages = new BindableCollection<MessageModel>();
-            messages.Add(new MessageModel("this is a test message", "Barack Obama", DateTime.Now));
-            messages.Add(new MessageModel("this is another test message", "Kobe", DateTime.Now));
-            messages.Add(new MessageModel("cette architecture est a chier", "Oliver G.", DateTime.Now));
-            messages.Add(new MessageModel("WOW c'est vrm beau mtnt ! on va manger ?", "Karima", DateTime.Now));
-            messages.Add(new MessageModel("non jte donnerais par leur code !!", "Amar", DateTime.Now));
-            messages.Add(new MessageModel("yo le serveur c'est chaud", "Hubert", DateTime.Now));
-            messages.Add(new MessageModel("merde j'aurais du prendre le lien avec le client leger", "Zackary", DateTime.Now));
-            messages.Add(new MessageModel("qui a fait une activite de 5hr ? Inacceptable", "Sebastien C.", DateTime.Now));
+            addFakeMessages();
             _userData = userdata;
         }
 
@@ -61,7 +53,7 @@ namespace WPFUI.ViewModels
         {
             get
             {
-                return $"Welcome {_userData.userName} ! Server IP: {_userData.ipAdress} ";
+                return $"Welcome to the chatroom {_userData.userName} !" + Environment.NewLine + $"Server IP adress: {_userData.ipAdress} ";
             }
         }
         public void disconnect()
@@ -75,6 +67,18 @@ namespace WPFUI.ViewModels
             _messages = new BindableCollection<MessageModel>();
             _userData.ipAdress = "";
             _userData.userName = "";
+        }
+
+        private void addFakeMessages()
+        {
+            messages.Add(new MessageModel("this is a test message", "Barack Obama", DateTime.Now));
+            messages.Add(new MessageModel("this is another test message", "Kobe", DateTime.Now));
+            messages.Add(new MessageModel("yo le serveur c'est chaud", "Hubert", DateTime.Now));
+            messages.Add(new MessageModel("WOW c'est vrm beau mtnt ! on va manger ?", "Karima", DateTime.Now));
+            messages.Add(new MessageModel("non jte donnerais par leur code !!", "Amar", DateTime.Now));
+            messages.Add(new MessageModel("aight, t'auras pas de sockets", "Zackary", DateTime.Now));
+            messages.Add(new MessageModel("qui a fait une activite de 5hr ? Inacceptable", "Sebastien C.", DateTime.Now));
+            messages.Add(new MessageModel("cette architecture est a chier", "Oliver G.", DateTime.Now));
         }
     }
 
