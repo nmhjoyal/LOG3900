@@ -5,8 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WPFUI.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" 
-             Background="#2e856e" FontSize="16" Foreground="White">
+             d:DesignHeight="450" d:DesignWidth="800" FontSize="20" Foreground="White">
+    <UserControl.Background>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FFB9C5BC" Offset="1"/>
+            <GradientStop Color="#FF15A6B4"/>
+        </LinearGradientBrush>
+    </UserControl.Background>
     <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20"/>
@@ -32,12 +37,24 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="Login" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" HorizontalAlignment="Center" Foreground="White" FontSize="20"/>
-        <Separator Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="5"/>
-        <TextBlock Text="Entrer l'adresse IP: " Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="5"/>
-        <TextBox MinWidth="100" Grid.Column="1" Grid.Row="4" x:Name="_ipAdress" Grid.ColumnSpan="5" Background="DarkSlateGray" Foreground="White"/>
-        <TextBlock Text="Entrer votre pseudo: " Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="5"/>
-        <TextBox MinWidth="100" Grid.Column="1" Grid.Row="6" x:Name="_userName" Grid.ColumnSpan="5" Background="DarkSlateGray" Foreground="White"/>
-        <Button x:Name="logIn" MaxWidth =" 100" Content="Me connecter" Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="5" FontSize="14"/>
+        <TextBlock Text="Login" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" HorizontalAlignment="Center" Foreground="White" FontSize="35"/>
+        <Separator Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="5" Margin="0,10,0,10" Background="White" />
+        <TextBlock Text="Enter your server IP adress: " Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="5"/>
+        <TextBox MinWidth="100" Grid.Column="1" Grid.Row="4" x:Name="_ipAdress" Grid.ColumnSpan="5" Background="DarkSlateGray" Foreground="White" Margin="5">
+            <TextBox.Effect>
+                <DropShadowEffect/>
+            </TextBox.Effect>
+        </TextBox>
+        <TextBlock Text="Enter you desired username: " Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="5"/>
+        <TextBox MinWidth="100" Grid.Column="1" Grid.Row="6" x:Name="_userName" Grid.ColumnSpan="5" Background="DarkSlateGray" Foreground="White" Margin="5">
+            <TextBox.Effect>
+                <DropShadowEffect/>
+            </TextBox.Effect>
+        </TextBox>
+        <Button x:Name="logIn" MaxWidth =" 200" Content="Enter the chatroom" Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="5" Margin="10">
+            <Button.Effect>
+                <DropShadowEffect/>
+            </Button.Effect>
+        </Button>
     </Grid>
 </UserControl>
