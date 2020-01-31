@@ -83,3 +83,8 @@ C:\Users\Orlanda\Desktop\log3900-106\ChatPrototype\WPFUI\bin\Debug\Newtonsoft.Js
 C:\Users\Orlanda\Desktop\log3900-106\ChatPrototype\WPFUI\bin\Debug\SocketIoClientDotNet.dll
 C:\Users\Orlanda\Desktop\log3900-106\ChatPrototype\WPFUI\bin\Debug\WebSocket4Net.dll
 C:\Users\Orlanda\Desktop\log3900-106\ChatPrototype\WPFUI\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Orlanda\Desktop\log3900-106\ChatPrototype\WPFUI\bin\Debug\MaterialDesignColors.dll
+C:\Users\Orlanda\Desktop\log3900-106\ChatPrototype\WPFUI\bin\Debug\MaterialDesignThemes.Wpf.dll
+C:\Users\Orlanda\Desktop\log3900-106\ChatPrototype\WPFUI\bin\Debug\MaterialDesignColors.pdb
+C:\Users\Orlanda\Desktop\log3900-106\ChatPrototype\WPFUI\bin\Debug\MaterialDesignThemes.Wpf.pdb
+C:\Users\Orlanda\Desktop\log3900-106\ChatPrototype\WPFUI\bin\Debug\MaterialDesignThemes.Wpf.xml

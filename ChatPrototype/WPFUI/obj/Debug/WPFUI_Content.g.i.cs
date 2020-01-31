@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("views/colorfullgradient.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("views/chat%20logo%20png.png")]
 
 
