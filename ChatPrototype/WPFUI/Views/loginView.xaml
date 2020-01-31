@@ -35,9 +35,9 @@
         <TextBlock Text="Login" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" HorizontalAlignment="Center" Foreground="White" FontSize="20"/>
         <Separator Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="5"/>
         <TextBlock Text="Entrer l'adresse IP: " Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="5"/>
-        <TextBox MinWidth="100" Grid.Column="1" Grid.Row="4" x:Name="ipAdress" Grid.ColumnSpan="5" Background="DarkSlateGray" Foreground="White"/>
+        <TextBox MinWidth="100" Grid.Column="1" Grid.Row="4" x:Name="_ipAdress" Grid.ColumnSpan="5" Background="DarkSlateGray" Foreground="White"/>
         <TextBlock Text="Entrer votre pseudo: " Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="5"/>
-        <TextBox MinWidth="100" Grid.Column="1" Grid.Row="6" x:Name="chatName" Grid.ColumnSpan="5" Background="DarkSlateGray" Foreground="White"/>
+        <TextBox MinWidth="100" Grid.Column="1" Grid.Row="6" x:Name="_userName" Grid.ColumnSpan="5" Background="DarkSlateGray" Foreground="White"/>
         <Button x:Name="logIn" MaxWidth =" 100" Content="Me connecter" Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="5" FontSize="14"/>
     </Grid>
 </UserControl>

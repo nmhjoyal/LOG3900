@@ -11,15 +11,53 @@ namespace WPFUI.ViewModels
     class LoginViewModel: Screen
     {
         private IEventAggregator _events;
-        public LoginViewModel(IEventAggregator events)
+        private IUserData _userdata;
+        private string _userName;
+        private string _ipAdress;
+
+        public LoginViewModel(IUserData userdata, IEventAggregator events)
         {
+            _userdata = userdata;
             _events = events;
         }
 
-        public void logIn()
+        public string userName
         {
-            _events.PublishOnUIThread(new LogInEvent());
+            get { return _userName; }
+            set { _userName = value;
+                NotifyOfPropertyChange(() => userName);}
+        }
 
+
+        public string ipAdress
+        {
+            get { return _ipAdress; }
+            set { _ipAdress = value;
+                  NotifyOfPropertyChange(() => ipAdress);}
+        }
+
+        public void setUserName()
+        {
+            _userdata.userName = userName;
+        }
+
+        public void setIpAdress()
+        {
+            _userdata.ipAdress = ipAdress;
+        }
+
+        public bool loginOk()
+        {
+            return (userName != null & ipAdress !=null);
+        }
+        public void logIn()
+        {   
+            if (loginOk())
+            {
+                setUserName();
+                setIpAdress();
+                _events.PublishOnUIThread(new LogInEvent());
+            }
         }
 
     }

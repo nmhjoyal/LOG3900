@@ -73,7 +73,9 @@
     </Compile>
     <Compile Include="EventModels\DisconnectEvent.cs" />
     <Compile Include="EventModels\LogInEvent.cs" />
+    <Compile Include="IUserData.cs" />
     <Compile Include="Models\MessageModel.cs" />
+    <Compile Include="UserData.cs" />
     <Compile Include="ViewModels\chatBoxViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />

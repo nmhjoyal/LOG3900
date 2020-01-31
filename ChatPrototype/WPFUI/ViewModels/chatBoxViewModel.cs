@@ -13,15 +13,27 @@ namespace WPFUI.ViewModels
     {
         private IEventAggregator _events;
         private List<MessageModel> _messages;
+        private IUserData _userData;
 
-        public chatBoxViewModel(IEventAggregator events)
+
+        public chatBoxViewModel(IUserData userdata, IEventAggregator events)
         {
             _events = events;
             _messages = new List<MessageModel>();
+            _userData = userdata;
         }
 
+        public string welcomeMessage
+        {
+            get
+            {
+                return $"Username: {_userData.userName} Server IP Adress: {_userData.ipAdress} ";
+            }
+        }
         public void disconnect()
         {
+            _userData.ipAdress = "";
+            _userData.userName = "";
             _events.PublishOnUIThread(new DisconnectEvent());
         }
     }

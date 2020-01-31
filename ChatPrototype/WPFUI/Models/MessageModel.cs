@@ -16,8 +16,6 @@ namespace WPFUI.Models
 			_content = content;
 			_senderName = senderName;
 			_timeStamp = timeStamp;
-
-
 		}
 
 

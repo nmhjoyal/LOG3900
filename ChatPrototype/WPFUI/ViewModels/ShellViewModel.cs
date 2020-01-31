@@ -20,7 +20,6 @@ namespace WPFUI.ViewModels
 			_events = events;
 			_events.Subscribe(this);
 			ActivateItem(_container.GetInstance<LoginViewModel>());
-
 		}
 
 		public void Handle(LogInEvent message)
