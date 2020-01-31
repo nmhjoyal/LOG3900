@@ -12,7 +12,7 @@
              TextElement.FontSize="20"
              TextOptions.TextFormattingMode="Ideal"
              TextOptions.TextRenderingMode="Auto"
-             FontFamily="{DynamicResource MaterialDesignFont}" Background="#FF9ED400">
+             FontFamily="{DynamicResource MaterialDesignFont}" Background="#FFC5DA86">
 
     <Grid >
         <Grid.ColumnDefinitions>
