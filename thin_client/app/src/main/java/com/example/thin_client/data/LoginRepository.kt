@@ -1,6 +1,11 @@
 package com.example.thin_client.data
 
 import com.example.thin_client.data.model.LoggedInUser
+import com.example.thin_client.server.connect.ServerConnect
+import com.github.nkzawa.socketio.client.Socket
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Class that requests authentication and user information from the remote data source and
@@ -27,14 +32,13 @@ class LoginRepository(val dataSource: LoginDataSource) {
         dataSource.logout()
     }
 
-    fun login(username: String, password: String): Result<LoggedInUser> {
+    fun login(ipAddress: String, port: String, username: String): Socket {
         // handle login
-        val result = dataSource.login(username, password)
+        val result: Socket = ServerConnect().connect(ipAddress, port)
 
-        if (result is Result.Success) {
-            setLoggedInUser(result.data)
-        }
-
+        result.on(Socket.EVENT_CONNECT, ({
+            setLoggedInUser(LoggedInUser(username, username))
+        }))
         return result
     }
 

@@ -4,5 +4,6 @@ package com.example.thin_client.ui.login
  * Data validation state of the login form.
  */
 data class LoginFormState (val usernameError: Int? = null,
-                      val passwordError: Int? = null,
-                      val isDataValid: Boolean = false)
+                           val ipAddressError: Int? = null,
+                           val portError: Int? = null,
+                           val isDataValid: Boolean = false)
