@@ -4,18 +4,29 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WPFUI.Views"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              MinHeight="200"
              FontSize="20"
              Foreground="White">
+    
     <UserControl.Background>
         <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
             <GradientStop Color="#FF517CF4"/>
             <GradientStop Color="#FFB3B3B3" Offset="1"/>
         </LinearGradientBrush>
     </UserControl.Background>
+
     <Grid>
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="KeyDown">
+                <cal:ActionMessage MethodName="keyDown">
+                    <cal:Parameter Value="$executionContext"/>
+                </cal:ActionMessage>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20"/>
             <ColumnDefinition Width="auto" />
@@ -39,8 +50,22 @@
         <TextBlock Text="Messages " Grid.Column="1" Grid.Row="1" FontSize="30"/>
         <Separator Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="6" Margin="0,10,0,10" Background="White" />
         <TextBlock Text="{Binding Path = welcomeMessage, Mode = Oneway}" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment ="Center" Grid.ColumnSpan="3" Foreground="Yellow"/>
-        <TextBlock Text="messages will be shown here ..." Grid.Column="1" Grid.Row="3" Grid.RowSpan="4" Grid.ColumnSpan="5"/>
-        <TextBox x:Name ="message" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="4">
+        <ScrollViewer Grid.Column="1" Grid.Row="3" Grid.RowSpan="3" Grid.ColumnSpan="6" VerticalScrollBarVisibility="Hidden">
+            <ItemsControl x:Name="messages">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding senderName}" Foreground="Yellow"/>
+                            <TextBlock Text=" "/>
+                            <TextBlock Text="{Binding content}" />
+                            <TextBlock Text=" "/>
+                            <TextBlock Text="{Binding formattedTimeStamp}" Foreground="Yellow"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <TextBox x:Name ="currentMessage" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="4">
             <TextBox.Effect>
                 <DropShadowEffect/>
             </TextBox.Effect>
@@ -48,7 +73,9 @@
         <Button x:Name ="disconnect" Grid.Column="6" Grid.Row="1">
             <Button.Effect>
                 <DropShadowEffect/>
-            </Button.Effect> Disconnect</Button>
+            </Button.Effect> 
+            Disconnect
+        </Button>
         <Button x:Name ="sendMessage" Grid.Column="6" Grid.Row="6" >
             <Button.Effect>
                 <DropShadowEffect/>
