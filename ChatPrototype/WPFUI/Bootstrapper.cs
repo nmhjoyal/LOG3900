@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using WPFUI.Models;
 using WPFUI.ViewModels;
 
 namespace WPFUI
@@ -24,7 +25,8 @@ namespace WPFUI
             _container
                 .Singleton<IWindowManager, WindowManager>()
                 .Singleton<IEventAggregator, EventAggregator>()
-                .Singleton<IUserData, UserData>();
+                .Singleton<IUserData, UserData>()
+                .Singleton <ISocketHandler, SocketHandler>();
 
             GetType().Assembly.GetTypes()
                 .Where(type => type.IsClass)

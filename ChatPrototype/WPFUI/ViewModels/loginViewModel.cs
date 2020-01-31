@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WPFUI.EventModels;
+using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
@@ -14,10 +15,13 @@ namespace WPFUI.ViewModels
         private IUserData _userdata;
         private string _userName;
         private string _ipAdress;
+        private ISocketHandler _socketHandler;
 
-        public LoginViewModel(IUserData userdata, IEventAggregator events)
+
+        public LoginViewModel(IUserData userdata, IEventAggregator events, ISocketHandler socketHandler)
         {
             _userdata = userdata;
+            _socketHandler = socketHandler;
             _events = events;
         }
 
@@ -56,6 +60,7 @@ namespace WPFUI.ViewModels
             {
                 setUserName();
                 setIpAdress();
+                _socketHandler.connectionAttempt();
                 _events.PublishOnUIThread(new LogInEvent());
             }
         }

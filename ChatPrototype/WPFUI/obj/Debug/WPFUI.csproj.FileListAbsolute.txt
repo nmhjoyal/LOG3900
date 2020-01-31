@@ -78,3 +78,8 @@ C:\Users\Orlanda\Desktop\log3900-106\ChatPrototype\WPFUI\obj\Debug\WPFUI.csproj.
 C:\Users\Orlanda\Desktop\log3900-106\ChatPrototype\WPFUI\obj\Debug\WPFUI.csproj.CopyComplete
 C:\Users\Orlanda\Desktop\log3900-106\ChatPrototype\WPFUI\obj\Debug\WPFUI.exe
 C:\Users\Orlanda\Desktop\log3900-106\ChatPrototype\WPFUI\obj\Debug\WPFUI.pdb
+C:\Users\Orlanda\Desktop\log3900-106\ChatPrototype\WPFUI\bin\Debug\EngineIoClientDotNet.dll
+C:\Users\Orlanda\Desktop\log3900-106\ChatPrototype\WPFUI\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Orlanda\Desktop\log3900-106\ChatPrototype\WPFUI\bin\Debug\SocketIoClientDotNet.dll
+C:\Users\Orlanda\Desktop\log3900-106\ChatPrototype\WPFUI\bin\Debug\WebSocket4Net.dll
+C:\Users\Orlanda\Desktop\log3900-106\ChatPrototype\WPFUI\bin\Debug\Newtonsoft.Json.xml

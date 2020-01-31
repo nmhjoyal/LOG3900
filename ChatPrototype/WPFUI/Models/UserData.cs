@@ -4,12 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WPFUI
+namespace WPFUI.Models
 {
     public class UserData : IUserData
     {
         private string _userName;
         private string _ipAdress;
+        private string _currentMessage;
+
+        public string currentMessage
+        {
+            get { return _currentMessage; }
+            set { _currentMessage = value; }
+        }
+
 
         public string userName
         {
@@ -28,6 +36,7 @@ namespace WPFUI
         {
             _userName = userName;
             _ipAdress = ipAdress;
+            _currentMessage = "";
         }
 
 

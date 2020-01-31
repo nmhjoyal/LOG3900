@@ -16,12 +16,15 @@ namespace WPFUI.ViewModels
         private IUserData _userData;
         private BindableCollection<MessageModel> _messages;
         private string _currentMessage;
+        private ISocketHandler _socketHandler;
 
         public string currentMessage
         {
             get { return _currentMessage; }
             set { _currentMessage = value;
-                NotifyOfPropertyChange(() => currentMessage);}
+                NotifyOfPropertyChange(() => currentMessage);
+                _userData.currentMessage = value;
+            }
         }
 
         public void keyDown(ActionExecutionContext context)
@@ -45,14 +48,17 @@ namespace WPFUI.ViewModels
             if (currentMessage != null & currentMessage != "")
             {
                 messages.Add(new MessageModel(currentMessage, _userData.userName, DateTime.Now));
+                _socketHandler.sendMessage();
                 currentMessage = "";
+                _userData.currentMessage = "";
             }
 
         }
 
-        public chatBoxViewModel(IUserData userdata, IEventAggregator events)
+        public chatBoxViewModel(IUserData userdata, IEventAggregator events, ISocketHandler socketHandler)
         {
             _events = events;
+            _socketHandler = socketHandler;
             _messages = new BindableCollection<MessageModel>();
             addFakeMessages();
             _userData = userdata;
