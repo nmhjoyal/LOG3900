@@ -4,58 +4,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WPFUI.EventModels;
 using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    class chatBoxViewModel: Screen
-
-
-
-
+    public class chatBoxViewModel: Screen
     {
-        private BindableCollection<MessageModel> _messages = new BindableCollection<MessageModel>();
-        public chatBoxViewModel()
-        {
-            _messages.Add(new MessageModel { content = "hello", senderName = "Bob", timeStamp = new DateTime(2020, 1, 29, 7, 0, 0) });
-            _messages.Add(new MessageModel { content = "bonjour", senderName = "Justin", timeStamp = new DateTime(2020, 1, 29, 8, 0, 0) });
+        private IEventAggregator _events;
+        private List<MessageModel> _messages;
+        private IUserData _userData;
 
+
+        public chatBoxViewModel(IUserData userdata, IEventAggregator events)
+        {
+            _events = events;
+            _messages = new List<MessageModel>();
+            _userData = userdata;
         }
-        public BindableCollection<MessageModel> messages
-        {
-            get { return _messages; }
-            set { _messages = value; }
-        }
 
-        private string _message;
-
-        public string message
+        public string welcomeMessage
         {
-            get { return _message; }
-            set { _message = value;
-                  NotifyOfPropertyChange(() => message);
+            get
+            {
+                return $"Username: {_userData.userName} Server IP Adress: {_userData.ipAdress} ";
             }
         }
-
-        private string _protoMessages = "";
-
-        public string protoMessages
+        public void disconnect()
         {
-            get { return _protoMessages; }
-            set { _protoMessages = value;
-                NotifyOfPropertyChange(() => protoMessages);
-            }
+            _userData.ipAdress = "";
+            _userData.userName = "";
+            _events.PublishOnUIThread(new DisconnectEvent());
         }
-
-
-
-        public void sendMessage()
-        {
-            protoMessages += message + "\n";
-            message = "";
-        }
-
-
     }
-    
+
 }
