@@ -14,6 +14,7 @@ export class UserController {
 
     @Post("/add")
     createUser(@Body() body: User) {
+        console.log(body)
         console.log(body.username);
         console.log(body.password);
         this.room.addUser(body);
@@ -26,7 +27,7 @@ export class UserController {
         console.log("You sent : " + userName);
         let userRetrieved: User | undefined = this.room.getUser(userName);
         if (userRetrieved) {
-            return "User exists";
+            return userRetrieved;
         } else {
             return "User does not exist";
         }
