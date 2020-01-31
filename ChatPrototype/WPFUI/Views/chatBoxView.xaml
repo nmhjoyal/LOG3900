@@ -59,7 +59,7 @@
                             <TextBlock Text=" "/>
                             <TextBlock Text="{Binding content}" />
                             <TextBlock Text=" "/>
-                            <TextBlock Text="{Binding timeStamp}" Foreground="Yellow"/>
+                            <TextBlock Text="{Binding formattedTimeStamp}" Foreground="Yellow"/>
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

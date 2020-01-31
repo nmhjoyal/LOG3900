@@ -38,5 +38,13 @@ namespace WPFUI.Models
 			set { _timeStamp = value; }
 		}
 
+		public string formattedTimeStamp
+		{
+			get
+			{
+				return "["+timeStamp.ToString("HH:mm:ss") +"]";
+			}
+		}
+
 	}
 }
