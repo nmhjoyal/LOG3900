@@ -3,11 +3,12 @@ package com.example.thin_client.ui.login
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import android.util.Patterns
 import com.example.thin_client.data.LoginRepository
-import com.example.thin_client.data.Result
 
 import com.example.thin_client.R
+import com.github.nkzawa.socketio.client.Socket
+import java.lang.Integer.parseInt
+import java.lang.NumberFormatException
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
 
@@ -17,34 +18,52 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
-    fun login(username: String, password: String) {
+    fun login(ipAddress: String, port: String, username: String): Socket {
         // can be launched in a separate asynchronous job
-        val result = loginRepository.login(username, password)
+        return loginRepository.login(ipAddress, port, username)
 
-        if (result is Result.Success) {
-            _loginResult.value = LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
-        } else {
-            _loginResult.value = LoginResult(error = R.string.login_failed)
-        }
     }
 
-    fun loginDataChanged(username: String, password: String) {
+    fun loginDataChanged(ipAddress: String, port: String, username: String) {
         if (!isUserNameValid(username)) {
             _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
-        } else if (!isPasswordValid(password)) {
-            _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
+        } else if (!isIPAddressValid(ipAddress)) {
+            _loginForm.value = LoginFormState(ipAddressError = R.string.invalid_ip)
+        } else if (!isPortValid(port)) {
+            _loginForm.value = LoginFormState(portError = R.string.invalid_port)
         } else {
             _loginForm.value = LoginFormState(isDataValid = true)
         }
     }
 
-    // A placeholder username validation check
     private fun isUserNameValid(username: String): Boolean {
         return username.isNotBlank()
     }
 
-    // A placeholder password validation check
-    private fun isPasswordValid(password: String): Boolean {
-        return password.length > 5
+    private fun isIPAddressValid(ipAddress: String): Boolean {
+        val splitIP = ipAddress.split(".")
+        if (splitIP.size == 4) {
+            for (strByte in splitIP) {
+                try {
+                    val byte = parseInt(strByte)
+                    if (byte < 0) { return false }
+                } catch (e: NumberFormatException) {
+                    return false
+                }
+            }
+        } else {
+            return false
+        }
+        return true
+    }
+
+    private fun isPortValid(port: String): Boolean {
+        try {
+            val portNum = parseInt(port)
+            if (portNum < 0) { return false }
+        } catch (e: NumberFormatException) {
+            return false
+        }
+        return true
     }
 }

@@ -10,6 +10,11 @@
     <string name="login_failed">"Failed Connection"</string>
     <!-- Strings related to chat -->
     <string name="default_message">Type message here</string>
+    <string name="prompt_ip">IP Address</string>
+    <string name="prompt_port">Port</string>
+    <string name="invalid_ip">IP address invalid. Must be in the form 127.0.0.1</string>
+    <string name="invalid_port">Port not a valid number.</string>
+
     <!-- Strings for create user -->
     <string name="prompt_first_name">First Name</string>
     <string name="prompt_last_name">Last Name</string>

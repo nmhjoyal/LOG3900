@@ -2,25 +2,26 @@ package com.example.thin_client.ui.login
 
 import android.app.Activity
 import android.content.Intent
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
-
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.example.thin_client.R
-import com.example.thin_client.data.model.LoggedInUser
-import com.example.thin_client.data.model.User
 import com.example.thin_client.ui.chat.ChatActivity
+import com.example.thin_client.ui.Lobby
 import com.example.thin_client.ui.createUser.CreateUserActivity
+import com.github.nkzawa.socketio.client.Socket
+
 
 class LoginActivity : AppCompatActivity() {
 
@@ -28,16 +29,17 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_login)
 
         val username = findViewById<EditText>(R.id.username)
-        val password = findViewById<EditText>(R.id.password)
+        val ipAddress = findViewById<EditText>(R.id.ipAddress)
+        val port = findViewById<EditText>(R.id.port)
         val login = findViewById<Button>(R.id.login)
         val loading = findViewById<ProgressBar>(R.id.loading)
         val createAccount = findViewById<Button>(R.id.createAccount)
         val chat = findViewById<Button>(R.id.login)
 
+        loading.visibility = View.INVISIBLE
         loginViewModel = ViewModelProviders.of(this, LoginViewModelFactory())
             .get(LoginViewModel::class.java)
 
@@ -50,15 +52,17 @@ class LoginActivity : AppCompatActivity() {
             if (loginState.usernameError != null) {
                 username.error = getString(loginState.usernameError)
             }
-            if (loginState.passwordError != null) {
-               password.error = getString(loginState.passwordError)
+            if (loginState.ipAddressError != null) {
+               ipAddress.error = getString(loginState.ipAddressError)
+            }
+            if (loginState.portError != null) {
+                port.error = getString(loginState.portError)
             }
         })
 
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer
 
-            loading.visibility = View.GONE
             if (loginResult.error != null) {
                 showLoginFailed(loginResult.error)
             }
@@ -66,42 +70,46 @@ class LoginActivity : AppCompatActivity() {
                 updateUiWithUser(loginResult.success)
             }
             setResult(Activity.RESULT_OK)
-
-            //Complete and destroy login activity once successful
-            finish()
         })
 
         username.afterTextChanged {
             loginViewModel.loginDataChanged(
-                username.text.toString(),
-                password.text.toString()
+                ipAddress.text.toString(),
+                port.text.toString(),
+                username.text.toString()
             )
         }
 
-        password.apply {
-            afterTextChanged {
-                loginViewModel.loginDataChanged(
-                    username.text.toString(),
-                    password.text.toString()
-                )
-            }
+        ipAddress.afterTextChanged {
+            loginViewModel.loginDataChanged(
+                ipAddress.text.toString(),
+                port.text.toString(),
+                username.text.toString()
+            )
+        }
 
-            setOnEditorActionListener { _, actionId, _ ->
-                when (actionId) {
-                    EditorInfo.IME_ACTION_DONE ->
-                        loginViewModel.login(
-                            username.text.toString(),
-                            password.text.toString()
-                        )
-                }
-                false
-            }
+        port.afterTextChanged {
+            loginViewModel.loginDataChanged(
+                ipAddress.text.toString(),
+                port.text.toString(),
+                username.text.toString()
+            )
+        }
 
-            login.setOnClickListener {
-                loading.visibility = View.VISIBLE
-                loginViewModel.login(username.text.toString(), password.text.toString())
-                User.username = username.text.toString()
-            }
+        login.setOnClickListener {
+            loading.visibility = ProgressBar.VISIBLE
+            val socket = loginViewModel.login(ipAddress.text.toString(), port.text.toString(), username.text.toString())
+            socket.on(Socket.EVENT_CONNECT, ({
+                    val intent = Intent(applicationContext, Lobby::class.java)
+                    startActivity(intent)
+                }))
+                .on(Socket.EVENT_CONNECT_ERROR, ({
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        Toast.makeText(applicationContext, "Unable to connect", Toast.LENGTH_SHORT).show()
+                        loading.visibility = ProgressBar.GONE
+                    })
+                    socket.io().reconnection(false)
+                }))
         }
 
         createAccount.setOnClickListener {
