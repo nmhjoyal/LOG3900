@@ -15,7 +15,6 @@ import com.example.thin_client.ui.login.LoginActivity
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_chat.*
-import kotlinx.android.synthetic.main.chat_from_row.*
 
 
 class ChatActivity : AppCompatActivity() {
@@ -57,7 +56,7 @@ class ChatActivity : AppCompatActivity() {
         val text = editText_chat.text
         val username = User.username
         val message = Message(text.toString(),username,System.currentTimeMillis()/100)
-
+        text.clear()
     }
 
 
