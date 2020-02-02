@@ -1,56 +1,67 @@
 package com.example.thin_client.ui.chat
 
+import android.content.Intent
 import android.os.Bundle
-import android.view.KeyEvent
-import android.view.View
+
+import android.view.Menu
+import android.view.MenuItem
 
 
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.thin_client.R
 import com.example.thin_client.data.Message
-import com.example.thin_client.data.model.LoggedInUser
+import com.example.thin_client.data.model.User
+import com.example.thin_client.ui.login.LoginActivity
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_chat.*
-import kotlinx.android.synthetic.main.activity_login.*
-import java.lang.ClassCastException
+import kotlinx.android.synthetic.main.chat_from_row.*
+
 
 class ChatActivity : AppCompatActivity() {
+
+
+    val adapter = GroupAdapter<ViewHolder>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        val mRecyclerView = findViewById(R.id.recyclerview) as RecyclerView
 
-        mRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+       recyclerview_chat.adapter = adapter
 
-        val messages = ArrayList<Message>()
-        messages.add(Message("1", editTextMessage.text.toString(), "Amar", "", "2"))
-
-        val adapter = ChatAdapter(messages)
-        mRecyclerView.adapter=adapter
-
-        sendButton.setOnClickListener {
-            messages.add(Message("1","Allo", "Amar", "", ""))
+        send_button_chat.setOnClickListener {
+            sendMessage()
         }
+    }
 
-        editTextMessage.setOnKeyListener(View.OnKeyListener {v, keyCode, event ->
-            if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                messages.add(Message("1",editTextMessage.text.toString(), "Amaaaaaaaaa", "", ""))
-                return@OnKeyListener true
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.menu_sign_out -> {
+                val intent = Intent(this, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
             }
-            false
-        })
+        }
+        return super.onOptionsItemSelected(item)
     }
 
-    private fun sendMessage() {
-       // var message = Message("1",editTextMessage.text.toString(), username.text.toString(), "", "")
-
+    override fun onCreateOptionsMenu(menu:Menu): Boolean{
+        menuInflater.inflate(R.menu.nav_menu, menu)
+        return super.onCreateOptionsMenu(menu)
     }
 
+
+    private fun sendMessage(){
+        val text = editText_chat.text
+        val username = User.username
+        val message = Message(text.toString(),username,System.currentTimeMillis()/100)
+
+    }
 
 
 }
+
 
 

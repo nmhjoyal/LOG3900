@@ -17,6 +17,8 @@ import android.widget.ProgressBar
 import android.widget.Toast
 
 import com.example.thin_client.R
+import com.example.thin_client.data.model.LoggedInUser
+import com.example.thin_client.data.model.User
 import com.example.thin_client.ui.chat.ChatActivity
 import com.example.thin_client.ui.createUser.CreateUserActivity
 
@@ -98,6 +100,7 @@ class LoginActivity : AppCompatActivity() {
             login.setOnClickListener {
                 loading.visibility = View.VISIBLE
                 loginViewModel.login(username.text.toString(), password.text.toString())
+                User.username = username.text.toString()
             }
         }
 
@@ -110,6 +113,8 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(applicationContext, ChatActivity::class.java)
             startActivity(intent)
         }
+
+
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
