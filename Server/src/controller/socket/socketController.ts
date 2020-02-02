@@ -30,12 +30,12 @@ export class MessageController {
 
     @OnMessage("sign_in")
     sign_in(@ConnectedSocket() socket: any, @MessageBody() user: User) {
-        socket.emit("user_signed_in", this.server.signInUser(socket.id, user));
+        socket.emit("user_signed_in", JSON.stringify(this.server.signInUser(socket.id, user)));
     }
 
     @OnMessage("sign_out")
     sign_out(@ConnectedSocket() socket: any) {
-        socket.emit("user_signed_out", this.server.signOutUser(socket.id));
+        socket.emit("user_signed_out", JSON.stringify(this.server.signOutUser(socket.id)));
     }
 
     @OnMessage("join_chat_room")
