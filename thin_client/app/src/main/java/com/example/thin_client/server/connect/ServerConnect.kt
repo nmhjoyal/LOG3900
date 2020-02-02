@@ -5,7 +5,7 @@ import com.github.nkzawa.socketio.client.Socket
 
 class ServerConnect {
 
-    private lateinit var mSocket: Socket
+    lateinit var mSocket: Socket
 
     fun connect(ipAddress: String, port: String) : Socket {
         mSocket = IO.socket("http://" + ipAddress + ":" + port)
