@@ -1,6 +1,4 @@
 package com.example.thin_client.ui.chat
-
-import android.content.Intent
 import android.os.Bundle
 
 import android.view.Menu
@@ -11,16 +9,15 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.thin_client.R
 import com.example.thin_client.data.Message
 import com.example.thin_client.data.model.User
-import com.example.thin_client.ui.login.LoginActivity
 import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.ViewHolder
+import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.activity_chat.*
 
 
 class ChatActivity : AppCompatActivity() {
 
 
-    val adapter = GroupAdapter<ViewHolder>()
+    val adapter = GroupAdapter<GroupieViewHolder>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,9 +35,7 @@ class ChatActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.menu_sign_out -> {
-                val intent = Intent(this, LoginActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
+                finish()
             }
         }
         return super.onOptionsItemSelected(item)

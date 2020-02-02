@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.thin_client.R
+import com.example.thin_client.server.ServerService
 import com.example.thin_client.ui.chat.ChatActivity
 import com.example.thin_client.ui.Lobby
 import com.example.thin_client.ui.createUser.CreateUserActivity
@@ -37,7 +38,6 @@ class LoginActivity : AppCompatActivity() {
         val login = findViewById<Button>(R.id.login)
         val loading = findViewById<ProgressBar>(R.id.loading)
         val createAccount = findViewById<Button>(R.id.createAccount)
-        val chat = findViewById<Button>(R.id.login)
 
         loading.visibility = View.INVISIBLE
         loginViewModel = ViewModelProviders.of(this, LoginViewModelFactory())
@@ -116,13 +116,6 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(applicationContext, CreateUserActivity::class.java)
             startActivity(intent)
         }
-
-        chat.setOnClickListener {
-            val intent = Intent(applicationContext, ChatActivity::class.java)
-            startActivity(intent)
-        }
-
-
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {

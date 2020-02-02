@@ -1,15 +1,14 @@
 package com.example.thin_client.ui.chat
 
 import com.example.thin_client.R
-import com.example.thin_client.data.Message
 
 import com.xwray.groupie.Item
-import com.xwray.groupie.ViewHolder
+import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.chat_from_row.view.*
 import kotlinx.android.synthetic.main.chat_to_row.view.*
 
-class ChatToItem(val text:String): Item<ViewHolder>(){
-    override fun bind(viewHolder: ViewHolder, position: Int) {
+class ChatToItem(val text:String): Item<GroupieViewHolder>(){
+    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.text_view_to_message.text = "To message......"
     }
 
@@ -19,8 +18,8 @@ class ChatToItem(val text:String): Item<ViewHolder>(){
 }
 
 
-class ChatFromItem(val text:String): Item<ViewHolder>(){
-    override fun bind(viewHolder: ViewHolder, position: Int) {
+class ChatFromItem(val text:String): Item<GroupieViewHolder>(){
+    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
        viewHolder.itemView.text_view_from_message.text = "From Message....."
     }
 
