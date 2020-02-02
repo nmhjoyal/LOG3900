@@ -1,6 +1,6 @@
 package com.example.thin_client.data
 
-import com.example.thin_client.data.model.LoggedInUser
+import com.example.thin_client.data.model.User
 import com.example.thin_client.server.connect.ServerConnect
 import com.github.nkzawa.socketio.client.Socket
 
@@ -12,7 +12,7 @@ import com.github.nkzawa.socketio.client.Socket
 class LoginRepository(val dataSource: LoginDataSource) {
 
     // in-memory cache of the loggedInUser object
-    var user: LoggedInUser? = null
+    var user: User? = null
         private set
 
     val isLoggedIn: Boolean
@@ -34,12 +34,12 @@ class LoginRepository(val dataSource: LoginDataSource) {
         val result: Socket = ServerConnect().connect(ipAddress, port)
 
         result.on(Socket.EVENT_CONNECT, ({
-            setLoggedInUser(LoggedInUser(username, username))
+            setLoggedInUser(User(username, username))
         }))
         return result
     }
 
-    private fun setLoggedInUser(loggedInUser: LoggedInUser) {
+    private fun setLoggedInUser(loggedInUser: User) {
         this.user = loggedInUser
         // If user credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore

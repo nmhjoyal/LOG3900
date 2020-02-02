@@ -17,8 +17,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.thin_client.R
+import com.example.thin_client.data.model.User
 import com.example.thin_client.server.ServerService
-import com.example.thin_client.ui.Lobby
+import com.example.thin_client.ui.chat.ChatActivity
 import com.example.thin_client.ui.createUser.CreateUserActivity
 import com.github.nkzawa.socketio.client.Socket
 
@@ -97,17 +98,15 @@ class LoginActivity : AppCompatActivity() {
 
         login.setOnClickListener {
             loading.visibility = ProgressBar.VISIBLE
-//            val serviceIntent = Intent(applicationContext, ServerService::class.java)
-//            serviceIntent.putExtra("ipAddress", ipAddress.text.toString())
-//            serviceIntent.putExtra("port", port.text.toString())
-//            applicationContext.startService(intent)
-//            val socket = ServerService().mSocket
-            val socket = loginViewModel.login(ipAddress.text.toString(), port.text.toString(), username.text.toString())
-            socket.on(Socket.EVENT_CONNECT, ({
-                    val intent = Intent(applicationContext, Lobby::class.java)
+            val service = ServerService(ipAddress.text.toString(), port.text.toString())
+            val socket = service.mSocket
+            socket?.on(Socket.EVENT_CONNECT, ({
+                    service.login(User(username.text.toString(), "testpass"))
+                    val intent = Intent(applicationContext, ChatActivity::class.java)
                     startActivity(intent)
+                    finish()
                 }))
-                .on(Socket.EVENT_CONNECT_ERROR, ({
+                ?.on(Socket.EVENT_CONNECT_ERROR, ({
                     Handler(Looper.getMainLooper()).post(Runnable {
                         Toast.makeText(applicationContext, "Unable to connect", Toast.LENGTH_SHORT).show()
                         loading.visibility = ProgressBar.GONE
