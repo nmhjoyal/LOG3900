@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.thin_client.R
-import com.example.thin_client.server.ServerService
 import com.example.thin_client.ui.chat.ChatActivity
 import com.example.thin_client.ui.Lobby
 import com.example.thin_client.ui.createUser.CreateUserActivity

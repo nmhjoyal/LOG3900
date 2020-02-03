@@ -3,9 +3,7 @@ package com.example.thin_client.data
 import com.example.thin_client.data.model.LoggedInUser
 import com.example.thin_client.server.connect.ServerConnect
 import com.github.nkzawa.socketio.client.Socket
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+
 
 /**
  * Class that requests authentication and user information from the remote data source and
