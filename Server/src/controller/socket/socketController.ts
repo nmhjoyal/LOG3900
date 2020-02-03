@@ -4,7 +4,7 @@ import Message from "../../models/message";
 import User from "../../models/user";
  
 @SocketController()
-export class MessageController {
+export class SocketProtoController {
 
     private server: ServerHandler;
 
@@ -13,12 +13,12 @@ export class MessageController {
     }
  
     @OnConnect()
-    connection(@SocketIO() io: any, @ConnectedSocket() socket: any) {
+    connection() {
         console.log("client connected");
     }
  
     @OnDisconnect()
-    disconnect(@ConnectedSocket() socket: any) {
+    disconnect() {
         console.log("client disconnected");
     }
 

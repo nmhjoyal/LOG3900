@@ -11,7 +11,7 @@ export class ServerHandler {
         this.name = name;
         this.users = new Map();
         // TEMPORARY
-        this.chatRoom = ChatRoom("TEMPORARY_NAME");
+        this.chatRoom = new ChatRoom("TEMPORARY_NAME");
     }
 
     /**

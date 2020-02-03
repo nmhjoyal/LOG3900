@@ -9,7 +9,7 @@ import { useExpressServer } from "routing-controllers";
 import { HttpController } from "./controller/http/httpController";
 import * as ServerConfig from "./serverConfig.json";
 import { useSocketServer } from "socket-controllers";
-import { MessageController } from "./controller/socket/socketController"
+import { SocketProtoController } from "./controller/socket/socketController"
 import * as socketioImport from "socket.io"
 
 @injectable()
@@ -34,7 +34,7 @@ export class Server {
         // Start socket 
         const io: SocketIO.Server = socketioImport(this.server);
         useSocketServer(io, {
-            controllers: [ MessageController ]
+            controllers: [ SocketProtoController ]
         });
 
         // Start http server
