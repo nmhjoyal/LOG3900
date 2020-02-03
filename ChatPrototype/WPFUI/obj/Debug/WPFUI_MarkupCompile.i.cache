@@ -1,7 +1,7 @@
 ﻿WPFUI
 
 
-winexe
+exe
 C#
 .cs
 C:\Users\Orlanda\Desktop\log3900-106\ChatPrototype\WPFUI\obj\Debug\
@@ -16,5 +16,5 @@ C:\Users\Orlanda\Desktop\log3900-106\ChatPrototype\WPFUI\App.xaml
 1281735852173
 Views\chatBoxView.xaml;Views\LoginView.xaml;Views\ShellView.xaml;
 
-False
+True
 

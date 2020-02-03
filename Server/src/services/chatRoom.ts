@@ -1,7 +1,7 @@
-import { User } from "../models/user";
-import { Message } from "../models/message";
+import User from "../models/user";
+import Message from "../models/message";
 
-export class Room {
+export default class ChatRoom {
     public name: string;
     private users: User[];
     private messages: Message[];

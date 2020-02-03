@@ -1,25 +1,23 @@
 import { JsonController, Get, Param, Post, Body } from "routing-controllers";
-import { User } from "../../models/user";
-// import { Room } from "../../services/room";
+import User from "../../models/user";
 
-
+/**
+ * HTTPController is used only to manage user database and game database. 
+ */
 @JsonController("/user")
-export class UserController {
+export class HttpController {
 
-    // private room: Room;
+    // Eventually 
 
-    public constructor() {
-        // this.room = new Room("Room1");
-    }
+    @Post("/createUser")
+    createUser(@Body() user: User) {
 
-    @Post("/add")
-    createUser(@Body() body: User) {
-        console.log(body)
-        console.log(body.username);
-        console.log(body.password);
-        // this.room.addUser(body);
-        // Create new user in database
-        return body.username + " added";
+        // console.log(body)
+        // console.log(body.username);
+        // console.log(body.password);
+        // // this.room.addUser(body);
+        // // Create new user in database
+        // return body.username + " added";
     }
 
     @Get("/:userName")

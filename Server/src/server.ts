@@ -6,10 +6,10 @@ import { injectable } from "inversify";
 import * as morgan from "morgan";
 import "reflect-metadata";
 import { useExpressServer } from "routing-controllers";
-import { UserController } from "./controller/http/userController";
+import { HttpController } from "./controller/http/httpController";
 import * as ServerConfig from "./serverConfig.json";
 import { useSocketServer } from "socket-controllers";
-import { MessageController } from "./controller/socket/messageController"
+import { SocketProtoController } from "./controller/socket/socketController"
 import * as socketioImport from "socket.io"
 
 @injectable()
@@ -34,12 +34,12 @@ export class Server {
         // Start socket 
         const io: SocketIO.Server = socketioImport(this.server);
         useSocketServer(io, {
-            controllers: [ MessageController ]
+            controllers: [ SocketProtoController ]
         });
 
         // Start http server
         useExpressServer(this.app, {
-            controllers: [ UserController ] 
+            controllers: [ HttpController ] 
         });
         
         this.server.listen(port);
