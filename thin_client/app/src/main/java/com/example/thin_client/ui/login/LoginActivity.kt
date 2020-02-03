@@ -102,9 +102,6 @@ class LoginActivity : AppCompatActivity() {
             val socket = service.mSocket
             socket?.on(Socket.EVENT_CONNECT, ({
                     service.login(User(username.text.toString(), "testpass"))
-                    val intent = Intent(applicationContext, ChatActivity::class.java)
-                    startActivity(intent)
-                    finish()
                 }))
                 ?.on(Socket.EVENT_CONNECT_ERROR, ({
                     Handler(Looper.getMainLooper()).post(Runnable {
@@ -112,6 +109,17 @@ class LoginActivity : AppCompatActivity() {
                         loading.visibility = ProgressBar.GONE
                     })
                     socket.io().reconnection(false)
+                }))?.on("user_signed_in", ({ data ->
+                    if (data.last().toString().toBoolean()) {
+                        val intent = Intent(applicationContext, ChatActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Handler(Looper.getMainLooper()).post(Runnable {
+                            Toast.makeText(applicationContext, "Unable to connect", Toast.LENGTH_SHORT).show()
+                            loading.visibility = ProgressBar.GONE
+                        })
+                    }
                 }))
         }
 
