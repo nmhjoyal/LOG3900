@@ -1,6 +1,8 @@
 package com.example.thin_client.data
 
-import com.example.thin_client.data.model.LoggedInUser
+import com.example.thin_client.data.model.User
+import com.example.thin_client.server.connect.ServerConnect
+import com.github.nkzawa.socketio.client.Socket
 
 /**
  * Class that requests authentication and user information from the remote data source and
@@ -10,7 +12,7 @@ import com.example.thin_client.data.model.LoggedInUser
 class LoginRepository(val dataSource: LoginDataSource) {
 
     // in-memory cache of the loggedInUser object
-    var user: LoggedInUser? = null
+    var user: User? = null
         private set
 
     val isLoggedIn: Boolean
@@ -27,18 +29,17 @@ class LoginRepository(val dataSource: LoginDataSource) {
         dataSource.logout()
     }
 
-    fun login(username: String, password: String): Result<LoggedInUser> {
+    fun login(ipAddress: String, port: String, username: String): Socket {
         // handle login
-        val result = dataSource.login(username, password)
+        val result: Socket = ServerConnect().connect(ipAddress, port)
 
-        if (result is Result.Success) {
-            setLoggedInUser(result.data)
-        }
-
+        result.on(Socket.EVENT_CONNECT, ({
+            setLoggedInUser(User(username, username))
+        }))
         return result
     }
 
-    private fun setLoggedInUser(loggedInUser: LoggedInUser) {
+    private fun setLoggedInUser(loggedInUser: User) {
         this.user = loggedInUser
         // If user credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore
