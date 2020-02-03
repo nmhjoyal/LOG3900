@@ -18,27 +18,27 @@ export class ServerHandler {
      * Returns true if user is signed in
      * @param user user we wish to add
      */
-    public signInUser(socketId: string, user: User): boolean {
+    public signIn(socketId: string, user: User): boolean {
 
-        let userSignedIn: boolean = false;
+        let canSignIn: boolean = false;
 
         if (!this.isConnected(user)) {
             this.users.set(socketId, user);
-            userSignedIn = true;
+            canSignIn = true;
         }
 
-        return userSignedIn;
+        return canSignIn;
     }
 
-    public signOutUser(socketId: string): void {
-        this.users.delete(socketId);
+    public signOut(socketId: string): boolean {
+        return this.users.delete(socketId);
     }
 
     public getUsers(): Map<string, User> {
         return this.users;
     }
 
-    private getUser(socketId: string): User | undefined {
+    public getUser(socketId: string): User | undefined {
         return this.users.get(socketId);
     }
 

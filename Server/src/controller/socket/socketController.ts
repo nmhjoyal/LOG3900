@@ -14,42 +14,43 @@ export class SocketProtoController {
  
     @OnConnect()
     connection(@ConnectedSocket() socket: any) {
-        console.log("client connected");
-        socket.join(this.server.name);
+        console.log("user connected");
+        // socket.join(this.server.name);
     }
  
     @OnDisconnect()
-    disconnect(@ConnectedSocket() socket: any) {
-        console.log("client disconnected");
+    disconnect(@ConnectedSocket() socket: SocketIO.Socket) {
+        console.log("user disconnected");
         socket.leave(this.server.name);
     }
 
     @OnMessage("send_message")
-    send_message(@SocketIO() io: any, @ConnectedSocket() socket: any, @MessageBody() message: Message) {
-        console.log("*" + message.content + "* has been sent by " + socket.id);
+    send_message(@SocketIO() io: SocketIO.Socket, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() message: Message) {
+        console.log("*" + message.content + "* has been sent by " + this.server.getUser(socket.id)?.username);
         io.in(this.server.name).emit("new_message", JSON.stringify(message));
     }
 
     @OnMessage("sign_in")
-    sign_in(@ConnectedSocket() socket: any, @MessageBody() user: User) {
-        socket.emit("user_signed_in", JSON.stringify(this.server.signInUser(socket.id, user)));
+    sign_in(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() user: User) {
+        console.log(user.username + " signed in");
+        socket.emit("user_signed_in", JSON.stringify(this.server.signIn(socket.id, user)));
     }
 
     @OnMessage("sign_out")
-    sign_out(@ConnectedSocket() socket: any) {
-        socket.emit("user_signed_out", JSON.stringify(this.server.signOutUser(socket.id)));
+    sign_out(@ConnectedSocket() socket: SocketIO.Socket) {
+        socket.emit("user_signed_out", JSON.stringify(this.server.signOut(socket.id)));
     }
 
     @OnMessage("join_chat_room")
-    join_chat_room(@ConnectedSocket() socket: any, @MessageBody() user: User) {
+    join_chat_room(@ConnectedSocket() socket: SocketIO.Socket) {
         socket.join(this.server.name);
-        socket.to(this.server.name).emit("new_client", socket.id);
+        socket.to(this.server.name).emit("new_user", this.server.getUser(socket.id)?.username);
     }
 
     @OnMessage("leave_chat_room")
-    leave_chat_room(@ConnectedSocket() socket: any, @MessageBody() user: User) {
+    leave_chat_room(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() user: User) {
         socket.leave(this.server.name);
-        socket.to(this.server.name).emit("new_client", socket.id);
+        socket.to(this.server.name).emit("new_user", socket.id);
     }
 
 }
