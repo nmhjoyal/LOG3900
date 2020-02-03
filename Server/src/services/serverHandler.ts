@@ -1,7 +1,7 @@
 import User from "../models/user";
 import ChatRoom from "./chatRoom";
 
-export class ServerHandler {
+export default class ServerHandler {
     public name: string;
     private users: Map<string, User>;
     // TEMPORARY : eventually array of rooms

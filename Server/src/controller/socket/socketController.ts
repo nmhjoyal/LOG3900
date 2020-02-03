@@ -1,5 +1,5 @@
 import { OnConnect, SocketController, ConnectedSocket, OnDisconnect, MessageBody, OnMessage, SocketIO } from "socket-controllers";
-import { ServerHandler } from "../../services/serverHandler";
+import ServerHandler from "../../services/serverHandler";
 import Message from "../../models/message";
 import User from "../../models/user";
  
@@ -39,13 +39,13 @@ export class SocketProtoController {
     }
 
     @OnMessage("join_chat_room")
-    join_chat_room(@ConnectedSocket() socket: any, @MessageBody() user: User) {
+    join_chat_room(@ConnectedSocket() socket: any) {
         socket.join(this.server.name);
         socket.to(this.server.name).emit("new_client", socket.id);
     }
 
     @OnMessage("leave_chat_room")
-    leave_chat_room(@ConnectedSocket() socket: any, @MessageBody() user: User) {
+    leave_chat_room(@ConnectedSocket() socket: any) {
         socket.leave(this.server.name);
         socket.to(this.server.name).emit("new_client", socket.id);
     }
