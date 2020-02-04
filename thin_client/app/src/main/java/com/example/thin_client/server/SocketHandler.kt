@@ -7,14 +7,18 @@ import com.github.nkzawa.socketio.client.Socket
 import com.google.gson.Gson
 
 object SocketHandler {
-    var socket: Socket? = null
     var user: User? = null
+    const val IP_ADDRESS = "http://10.200.26.21:5000"
+    var socket: Socket? = null
 
-    fun connect(ipAddress: String, port: String): Socket {
+    fun createSocket() {
         if (socket == null) {
-            socket = IO.socket("http://" + ipAddress + ":" + port)
+            socket = IO.socket(IP_ADDRESS)
 
         }
+    }
+
+    fun connect(): Socket {
         socket!!.io().reconnection(false)
         return socket!!.connect()
     }
