@@ -60,9 +60,10 @@ namespace WPFUI.ViewModels
             {
                 setUserName();
                 setIpAdress();
+                
                 _socketHandler.connectionAttempt();
-                _events.PublishOnUIThread(new LogInEvent());
             }
+
         }
 
     }

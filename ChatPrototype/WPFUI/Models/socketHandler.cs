@@ -1,18 +1,30 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
+using Caliburn.Micro;
 using Newtonsoft.Json;
 using Quobject.SocketIoClientDotNet.Client;
 using Socket = Quobject.SocketIoClientDotNet.Client.Socket;
+using WPFUI.EventModels;
 
 namespace WPFUI.Models
 {
     public partial class SocketHandler : ISocketHandler
     {
         public IUserData _userdata;
+        public IEventAggregator _events;
         public User _user;
         public string _userJSON;
         Socket _socket;
+        public bool _canConnect;
+
+        public bool canConnect
+        {
+            get { return _canConnect; }
+            set { _canConnect = value; }
+        }
+
 
         public User user
         {
@@ -22,9 +34,10 @@ namespace WPFUI.Models
 
         public Socket socket { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public SocketHandler(IUserData userdata)
+        public SocketHandler(IUserData userdata, IEventAggregator events)
         {
             _userdata = userdata;
+            _events = events;
             // TestPOSTWebRequest(user);
             // TestGETWebRequest("Testing get...");
         }
@@ -45,8 +58,13 @@ namespace WPFUI.Models
 
             _socket.On("user_signed_in", (connected) =>
             {
-                // bool canConnect = JsonConvert.DeserializeObject<bool>(connected.ToString());
-                _socket.Emit("join_chat_room");
+                _canConnect = JsonConvert.DeserializeObject<bool>(connected.ToString());
+                if (_canConnect)
+                {
+                    _events.BeginPublishOnUIThread(new LogInEvent());
+                }
+                Console.WriteLine(_canConnect);
+                //_socket.Emit("join_chat_room");
             });
 
             _socket.On("new_message", (message) =>
