@@ -98,6 +98,7 @@ class LoginActivity : AppCompatActivity() {
 
         login.setOnClickListener {
             loading.visibility = ProgressBar.VISIBLE
+            login.isEnabled = false
             val socket = SocketHandler.connect(ipAddress.text.toString(), port.text.toString())
             socket.on(Socket.EVENT_CONNECT, ({
                     SocketHandler.login(User(username.text.toString(), "testpass"))
@@ -106,8 +107,9 @@ class LoginActivity : AppCompatActivity() {
                     Handler(Looper.getMainLooper()).post(Runnable {
                         Toast.makeText(applicationContext, "Unable to connect", Toast.LENGTH_SHORT).show()
                         loading.visibility = ProgressBar.GONE
+                        login.isEnabled = true
                     })
-                    socket.io().reconnection(false)
+                    SocketHandler.disconnect()
                 }))?.on("user_signed_in", ({ data ->
                     if (data.last().toString().toBoolean()) {
                         val intent = Intent(applicationContext, ChatActivity::class.java)
@@ -115,9 +117,11 @@ class LoginActivity : AppCompatActivity() {
                         finish()
                     } else {
                         Handler(Looper.getMainLooper()).post(Runnable {
-                            Toast.makeText(applicationContext, "Unable to connect", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(applicationContext, "Username already taken", Toast.LENGTH_SHORT).show()
                             loading.visibility = ProgressBar.GONE
+                            login.isEnabled = true
                         })
+                        SocketHandler.disconnect()
                     }
                 }))
         }

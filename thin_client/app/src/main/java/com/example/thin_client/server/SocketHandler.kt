@@ -11,8 +11,20 @@ object SocketHandler {
     var user: User? = null
 
     fun connect(ipAddress: String, port: String): Socket {
-        socket = IO.socket("http://" + ipAddress + ":" + port)
+        if (socket == null) {
+            socket = IO.socket("http://" + ipAddress + ":" + port)
+
+        }
+        socket!!.io().reconnection(false)
         return socket!!.connect()
+    }
+
+    fun disconnect() {
+        if (socket != null) {
+            socket!!.off()
+            socket!!.disconnect()
+            socket = null
+        }
     }
 
     fun login(user: User) {
@@ -23,8 +35,8 @@ object SocketHandler {
     }
 
     fun logout() {
-        socket!!.disconnect()
         socket!!.emit("sign_out")
+        disconnect()
     }
 
     fun sendMessage(text: String) {
