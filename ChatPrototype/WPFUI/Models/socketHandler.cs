@@ -1,23 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Net;
 using Newtonsoft.Json;
 using Quobject.SocketIoClientDotNet.Client;
-using Caliburn.Micro;
-using WPFUI.EventModels;
-using WPFUI.Models;
+using Socket = Quobject.SocketIoClientDotNet.Client.Socket;
 
 namespace WPFUI.Models
 {
-    public class SocketHandler : ISocketHandler
+    public partial class SocketHandler : ISocketHandler
     {
-        private IUserData _userdata;
-        private User _user;
-        private Socket _socket;
+        public IUserData _userdata;
+        public User _user;
+        public string _userJSON;
+        Socket _socket;
 
         public User user
         {
@@ -25,32 +20,40 @@ namespace WPFUI.Models
             set { _user = value; }
         }
 
-        public Socket socket
-        {
-            get { return _socket; }
-            set { _socket = value; }
-        }
-
+        public Socket socket { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public SocketHandler(IUserData userdata)
         {
             _userdata = userdata;
+            // TestPOSTWebRequest(user);
+            // TestGETWebRequest("Testing get...");
         }
 
         public void connectionAttempt()
         {
-            _user = new User(_userdata.userName, "xxxxx");
 
-            _socket = IO.Socket("http://localhost:5000");
+            _user = new User(_userdata.userName, "hubert");
 
-            // Socket on connect send user + socket id to map on the server
+            this._userJSON = JsonConvert.SerializeObject(_user);
+
+            this._socket = IO.Socket("http://10.200.26.21:5000");
+
+            this._socket.On(Socket.EVENT_CONNECT, () =>
+            {
+                this._socket.Emit("sign_in", this._userJSON);
+            });
+
+            _socket.On("user_signed_in", (connected) =>
+            {
+                // bool canConnect = JsonConvert.DeserializeObject<bool>(connected.ToString());
+                _socket.Emit("join_chat_room");
+            });
 
             _socket.On("new_message", (message) =>
             {
                 Message newMessage = JsonConvert.DeserializeObject<Message>(message.ToString());
                 MessageModel newMessageModel = new MessageModel(newMessage.content, newMessage.author.username, DateTime.Now);
                 _userdata.messages.Add(newMessageModel);
-                //Console.WriteLine(newMessage.author.username + " : " + newMessage.content);
             });
 
             _socket.On("new_client", (socketId) =>
@@ -59,10 +62,7 @@ namespace WPFUI.Models
                 _userdata.messages.Add(newMessageModel);
                 ///Console.WriteLine(socketId + " is connected");
             });
-            // TestPOSTWebRequest(user);
-            // TestGETWebRequest("Testing get...");
         }
-
         public void disconnect()
         {
             _socket.Disconnect();

@@ -8,29 +8,12 @@ namespace WPFUI.Models
 {
     public class User
     {
-
+        public string username;
+        public string password;
         public User(string username, string password)
         {
-            _username = username;
-            _password = password;
+            this.username = username;
+            this.password = password;
         }
-
-        private string _username;
-
-        public string username
-        {
-            get { return _username; }
-            set { _username = value; }
-        }
-
-        private string _password;
-
-        public string password
-        {
-            get { return _password; }
-            set { _password = value; }
-        }
-
-
     }
 }
