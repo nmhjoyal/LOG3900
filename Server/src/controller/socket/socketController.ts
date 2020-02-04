@@ -22,6 +22,11 @@ export class SocketProtoController {
         console.log("client disconnected");
     }
 
+    @OnMessage("test")
+    messageTest() {
+        console.log("Hi")
+    }
+
     @OnMessage("send_message")
     send_message(@SocketIO() io: any, @ConnectedSocket() socket: any, @MessageBody() message: Message) {
         console.log("*" + message.content + "* has been sent by " + socket.id);
@@ -30,6 +35,7 @@ export class SocketProtoController {
 
     @OnMessage("sign_in")
     sign_in(@ConnectedSocket() socket: any, @MessageBody() user: User) {
+        console.log("User " + user.username + " signed in")
         socket.emit("user_signed_in", JSON.stringify(this.server.signInUser(socket.id, user)));
     }
 
@@ -40,6 +46,8 @@ export class SocketProtoController {
 
     @OnMessage("join_chat_room")
     join_chat_room(@ConnectedSocket() socket: any) {
+        console.log(this.server.name + "joined")
+        // Eventually, this.server.joinRoom()
         socket.join(this.server.name);
         socket.to(this.server.name).emit("new_client", socket.id);
     }

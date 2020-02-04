@@ -46,7 +46,7 @@ export default class ServerHandler {
         return this.getUser(user.username) !== undefined;
     }
 
-    public joinRoom(): void {
-
+    public joinRoom(roomName: string): void {
+        // eventually
     }
 }
