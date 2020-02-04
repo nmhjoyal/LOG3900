@@ -7,9 +7,9 @@ import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.chat_from_row.view.*
 import kotlinx.android.synthetic.main.chat_to_row.view.*
 
-class ChatToItem(val text:String): Item<GroupieViewHolder>(){
+class ChatToItem(val text: String): Item<GroupieViewHolder>(){
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.text_view_to_message.text = "To message......"
+        viewHolder.itemView.text_view_to_message.text = text
     }
 
     override fun getLayout(): Int {
@@ -20,7 +20,7 @@ class ChatToItem(val text:String): Item<GroupieViewHolder>(){
 
 class ChatFromItem(val text:String): Item<GroupieViewHolder>(){
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-       viewHolder.itemView.text_view_from_message.text = "From Message....."
+       viewHolder.itemView.text_view_from_message.text = text
     }
 
     override fun getLayout(): Int {

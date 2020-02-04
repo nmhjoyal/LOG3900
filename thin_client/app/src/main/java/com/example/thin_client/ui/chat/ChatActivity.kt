@@ -1,6 +1,8 @@
 package com.example.thin_client.ui.chat
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 
 import android.view.Menu
 import android.view.MenuItem
@@ -9,10 +11,9 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.example.thin_client.R
 import com.example.thin_client.data.Message
-import com.example.thin_client.data.model.User
-import com.example.thin_client.server.GlobalBus
-import com.example.thin_client.server.LogoutEvent
+import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.login.LoginActivity
+import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.activity_chat.*
@@ -28,27 +29,32 @@ class ChatActivity : AppCompatActivity() {
         setContentView(R.layout.activity_chat)
 
 
-       recyclerview_chat.adapter = adapter
+        SocketHandler.joinRoom()
 
+        SocketHandler.socket?.on("new_message", ({ data ->
+            val jsonData = Gson().fromJson(data.first().toString(), Message::class.java)
+            val username = jsonData.author.username
+            Handler(Looper.getMainLooper()).post(Runnable {
+                if (username == SocketHandler.user!!.username) {
+                    showFromMessage()
+                } else {
+                    showToMessage(jsonData.content)
+                }
+            })
+        }))
+
+        recyclerview_chat.adapter = adapter
+        val text = editText_chat.text
         send_button_chat.setOnClickListener {
-            sendMessage()
+            SocketHandler.sendMessage(text.toString())
         }
-    }
 
-    override fun onStart() {
-        super.onStart()
-        GlobalBus.bus?.register(this)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        GlobalBus.bus?.unregister(this)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.menu_sign_out -> {
-                GlobalBus.bus?.post(LogoutEvent("logout"))
+                SocketHandler.logout()
                 val intent = Intent(applicationContext, LoginActivity::class.java)
                 startActivity(intent)
                 finish()
@@ -63,11 +69,14 @@ class ChatActivity : AppCompatActivity() {
     }
 
 
-    private fun sendMessage(){
+    private fun showFromMessage(){
         val text = editText_chat.text
-//        val username = User.username
-//        val message = Message(text.toString(),username,System.currentTimeMillis()/100)
+        adapter.add(ChatFromItem(text.toString()))
         text.clear()
+    }
+
+    private fun showToMessage(text: String) {
+        adapter.add(ChatToItem(text))
     }
 
 

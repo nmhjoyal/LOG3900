@@ -1,9 +1,8 @@
 package com.example.thin_client.data
 
+import com.example.thin_client.data.model.User
+
 data class Message(
-    //val id: String,
-    val text: String,
-   val username: String,
-    //val avatarUrl: String,
-    val timestamp: Long
+    val content: String,
+    val author: User
 )

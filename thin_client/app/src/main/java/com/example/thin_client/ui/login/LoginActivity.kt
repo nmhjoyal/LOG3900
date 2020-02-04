@@ -18,7 +18,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.thin_client.R
 import com.example.thin_client.data.model.User
-import com.example.thin_client.server.ServerService
+import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.chat.ChatActivity
 import com.example.thin_client.ui.createUser.CreateUserActivity
 import com.github.nkzawa.socketio.client.Socket
@@ -98,10 +98,9 @@ class LoginActivity : AppCompatActivity() {
 
         login.setOnClickListener {
             loading.visibility = ProgressBar.VISIBLE
-            val service = ServerService(ipAddress.text.toString(), port.text.toString())
-            val socket = service.mSocket
-            socket?.on(Socket.EVENT_CONNECT, ({
-                    service.login(User(username.text.toString(), "testpass"))
+            val socket = SocketHandler.connect(ipAddress.text.toString(), port.text.toString())
+            socket.on(Socket.EVENT_CONNECT, ({
+                    SocketHandler.login(User(username.text.toString(), "testpass"))
                 }))
                 ?.on(Socket.EVENT_CONNECT_ERROR, ({
                     Handler(Looper.getMainLooper()).post(Runnable {
