@@ -22,7 +22,7 @@ export default class ServerHandler {
 
         let userSignedIn: boolean = false;
 
-        if (!this.isConnected(user)) {
+        if (!this.isConnected(user.username)) {
             this.users.set(socketId, user);
             userSignedIn = true;
         }
@@ -38,12 +38,20 @@ export default class ServerHandler {
         return this.users;
     }
 
-    private getUser(socketId: string): User | undefined {
+    public getUser(socketId: string): User | undefined {
         return this.users.get(socketId);
     }
 
-    private isConnected(user: User): boolean {
-        return this.getUser(user.username) !== undefined;
+    private isConnected(username: string): boolean {
+        let userIsConnected: boolean = false;
+
+        this.users.forEach((value: User) => {
+            if (value.username === username) {
+                userIsConnected = true;
+            }
+        });
+
+        return userIsConnected;
     }
 
     public joinRoom(roomName: string): void {

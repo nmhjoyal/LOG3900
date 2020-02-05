@@ -18,7 +18,8 @@ export class SocketProtoController {
     }
  
     @OnDisconnect()
-    disconnect() {
+    disconnect(@ConnectedSocket() socket: any) {
+        this.server.signOutUser(socket.id);
         console.log("client disconnected");
     }
 
@@ -35,12 +36,16 @@ export class SocketProtoController {
 
     @OnMessage("sign_in")
     sign_in(@ConnectedSocket() socket: any, @MessageBody() user: User) {
-        console.log("User " + user.username + " signed in")
-        socket.emit("user_signed_in", JSON.stringify(this.server.signInUser(socket.id, user)));
+        console.log("User " + user.username + " signed in on socket id : " + socket.id)
+        let cantConnect:boolean =  this.server.signInUser(socket.id, user);
+        console.log(cantConnect);
+        socket.emit("user_signed_in", JSON.stringify(cantConnect));
     }
 
     @OnMessage("sign_out")
     sign_out(@ConnectedSocket() socket: any) {
+        this.server.signOutUser(socket.id);
+        socket.leave(this.server.name);
         socket.emit("user_signed_out", JSON.stringify(this.server.signOutUser(socket.id)));
     }
 
@@ -49,13 +54,13 @@ export class SocketProtoController {
         console.log(this.server.name + "joined")
         // Eventually, this.server.joinRoom()
         socket.join(this.server.name);
-        socket.to(this.server.name).emit("new_client", socket.id);
+        socket.to(this.server.name).emit("new_client", this.server.getUser(socket.id)?.username);
     }
 
     @OnMessage("leave_chat_room")
     leave_chat_room(@ConnectedSocket() socket: any) {
         socket.leave(this.server.name);
-        socket.to(this.server.name).emit("new_client", socket.id);
+        socket.to(this.server.name).emit("new_client", this.server.getUser(socket.id)?.username);
     }
 
 }
