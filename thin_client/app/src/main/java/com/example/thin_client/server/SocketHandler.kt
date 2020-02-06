@@ -8,7 +8,7 @@ import com.google.gson.Gson
 
 object SocketHandler {
     var user: User? = null
-    const val IP_ADDRESS = "http://10.200.26.21:5000"
+    const val IP_ADDRESS = "http://10.200.11.127:5000"
     var socket: Socket? = null
 
     fun createSocket() {

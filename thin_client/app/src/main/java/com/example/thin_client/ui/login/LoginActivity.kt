@@ -47,6 +47,7 @@ class LoginActivity : AppCompatActivity() {
             })
         })).on("user_signed_in", ({ data ->
             if (data.last().toString().toBoolean()) {
+
                 val intent = Intent(applicationContext, ChatActivity::class.java)
                 startActivity(intent)
                 finish()

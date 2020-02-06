@@ -8,17 +8,23 @@ import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.EditText
+import android.widget.ImageView
 
 
 import androidx.appcompat.app.AppCompatActivity
 import com.example.thin_client.R
 import com.example.thin_client.data.Message
+import com.example.thin_client.data.model.User
 import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.login.LoginActivity
 import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.activity_chat.*
+import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.chat_from_row.*
+import kotlinx.android.synthetic.main.chat_to_row.*
 
 
 class ChatActivity : AppCompatActivity() {
@@ -30,7 +36,6 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-
         SocketHandler.joinRoom()
 
         SocketHandler.socket?.on("new_message", ({ data ->
@@ -40,7 +45,7 @@ class ChatActivity : AppCompatActivity() {
                 if (username == SocketHandler.user!!.username) {
                     showToMessage()
                 } else {
-                    showFromMessage(jsonData.content)
+                    showFromMessage(jsonData.content,username)
                 }
             })
         }))
@@ -58,7 +63,7 @@ class ChatActivity : AppCompatActivity() {
       editText_chat.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
           if(text.isNotEmpty()) {
               send_button_chat.isEnabled = true
-            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+            if (keyCode == KeyEvent.KEYCODE_ENTER) {
                 SocketHandler.sendMessage(text.toString())
                 return@OnKeyListener true
             }
@@ -92,8 +97,8 @@ class ChatActivity : AppCompatActivity() {
         text.clear()
     }
 
-    private fun showFromMessage(text: String) {
-        adapter.add(ChatFromItem(text))
+    private fun showFromMessage(text: String, author:String) {
+        adapter.add(ChatFromItem(text, author))
     }
 
 
