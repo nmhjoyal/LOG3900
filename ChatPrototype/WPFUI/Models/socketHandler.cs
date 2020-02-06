@@ -51,8 +51,8 @@ namespace WPFUI.Models
 
             this._userJSON = JsonConvert.SerializeObject(_user);
 
-            this._socket = IO.Socket("http://10.200.16.39:5000");
-
+            Console.WriteLine(_userdata.ipAdress);
+            this._socket = IO.Socket("http://"+_userdata.ipAdress+":5000");
             this._socket.On(Socket.EVENT_CONNECT, () =>
             {
                 this._socket.Emit("sign_in", this._userJSON);
