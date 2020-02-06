@@ -61,7 +61,7 @@ namespace WPFUI.ViewModels
             _socketHandler = socketHandler;
             _userData = userdata;
             _messages = _userData.messages;
-            addFakeMessages();
+            //addFakeMessages();
         }
 
         public string welcomeMessage

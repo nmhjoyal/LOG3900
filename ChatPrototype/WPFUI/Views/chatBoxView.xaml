@@ -58,7 +58,7 @@
                             <Image Source="account_circle_grey_72x72.png" MaxHeight="25" VerticalAlignment="Center"></Image>
                             <TextBlock Text="{Binding senderName}" Foreground="DarkSlateGray"/>
                             <TextBlock Text=" "/>
-                            <TextBlock Text="{Binding content}" Foreground="Black"/>
+                            <TextBlock Text="{Binding content}" Foreground="Black" TextTrimming="WordEllipsis"/>
                             <TextBlock Text=" "/>
                             <TextBlock Text="{Binding formattedTimeStamp}" Foreground="DarkSlateGray"/>
                         </StackPanel>

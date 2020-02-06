@@ -93,6 +93,7 @@ namespace WPFUI.Models
             if (_canConnect)
             {
                 _socket.Emit("join_chat_room");
+                System.Threading.Thread.Sleep(100);
                 _events.BeginPublishOnUIThread(new LogInEvent());
             }
         }
