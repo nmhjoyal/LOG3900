@@ -23,7 +23,6 @@ import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.chat.ChatActivity
 import com.example.thin_client.ui.createUser.CreateUserActivity
 import com.github.nkzawa.socketio.client.Socket
-import kotlinx.android.synthetic.main.activity_chat.*
 
 
 class LoginActivity : AppCompatActivity() {

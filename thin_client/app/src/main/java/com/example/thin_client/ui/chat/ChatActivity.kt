@@ -38,9 +38,9 @@ class ChatActivity : AppCompatActivity() {
             val username = jsonData.author.username
             Handler(Looper.getMainLooper()).post(Runnable {
                 if (username == SocketHandler.user!!.username) {
-                    showFromMessage()
+                    showToMessage()
                 } else {
-                    showToMessage(jsonData.content)
+                    showFromMessage(jsonData.content)
                 }
             })
         }))
@@ -86,14 +86,14 @@ class ChatActivity : AppCompatActivity() {
     }
 
 
-    private fun showFromMessage(){
+    private fun showToMessage(){
         val text = editText_chat.text
-        adapter.add(ChatFromItem(text.toString()))
+        adapter.add(ChatToItem(text.toString()))
         text.clear()
     }
 
-    private fun showToMessage(text: String) {
-        adapter.add(ChatToItem(text))
+    private fun showFromMessage(text: String) {
+        adapter.add(ChatFromItem(text))
     }
 
 
