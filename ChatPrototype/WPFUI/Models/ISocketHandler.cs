@@ -8,6 +8,7 @@ namespace WPFUI.Models
         Socket socket { get; set; }
         User user { get; set; }
 
+        void connect();
         void connectionAttempt();
         void createUser(User user);
         void disconnect();

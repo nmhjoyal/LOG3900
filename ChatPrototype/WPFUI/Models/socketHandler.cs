@@ -22,7 +22,9 @@ namespace WPFUI.Models
         public bool canConnect
         {
             get { return _canConnect; }
-            set { _canConnect = value; }
+            set { _canConnect = value;
+                connect();
+            }
         }
 
 
@@ -49,7 +51,7 @@ namespace WPFUI.Models
 
             this._userJSON = JsonConvert.SerializeObject(_user);
 
-            this._socket = IO.Socket("http://10.200.26.21:5000");
+            this._socket = IO.Socket("http://10.200.16.39:5000");
 
             this._socket.On(Socket.EVENT_CONNECT, () =>
             {
@@ -58,13 +60,7 @@ namespace WPFUI.Models
 
             _socket.On("user_signed_in", (connected) =>
             {
-                _canConnect = JsonConvert.DeserializeObject<bool>(connected.ToString());
-                if (_canConnect)
-                {
-                    _events.BeginPublishOnUIThread(new LogInEvent());
-                }
-                Console.WriteLine(_canConnect);
-                //_socket.Emit("join_chat_room");
+                canConnect = JsonConvert.DeserializeObject<bool>(connected.ToString());
             });
 
             _socket.On("new_message", (message) =>
@@ -90,6 +86,15 @@ namespace WPFUI.Models
             Message message = new Message(_userdata.currentMessage, _user);
             _socket.Emit("send_message", JsonConvert.SerializeObject(message));
 
+        }
+
+        public void connect()
+        {
+            if (_canConnect)
+            {
+                _socket.Emit("join_chat_room");
+                _events.BeginPublishOnUIThread(new LogInEvent());
+            }
         }
 
         public void createUser(User user)
