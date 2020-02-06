@@ -3,9 +3,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.KeyEvent
 
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 
 
 import androidx.appcompat.app.AppCompatActivity
@@ -45,9 +47,24 @@ class ChatActivity : AppCompatActivity() {
 
         recyclerview_chat.adapter = adapter
         val text = editText_chat.text
-        send_button_chat.setOnClickListener {
-            SocketHandler.sendMessage(text.toString())
-        }
+
+       send_button_chat.setOnClickListener {
+           if(text.isNotEmpty()) {
+               send_button_chat.isEnabled = true
+               SocketHandler.sendMessage(text.toString())
+           }
+       }
+
+      editText_chat.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+          if(text.isNotEmpty()) {
+              send_button_chat.isEnabled = true
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+                SocketHandler.sendMessage(text.toString())
+                return@OnKeyListener true
+            }
+          }
+            false
+        })
 
     }
 

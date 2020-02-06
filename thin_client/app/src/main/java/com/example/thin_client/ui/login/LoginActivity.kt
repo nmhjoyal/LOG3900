@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -22,6 +23,7 @@ import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.chat.ChatActivity
 import com.example.thin_client.ui.createUser.CreateUserActivity
 import com.github.nkzawa.socketio.client.Socket
+import kotlinx.android.synthetic.main.activity_chat.*
 
 
 class LoginActivity : AppCompatActivity() {
@@ -97,6 +99,16 @@ class LoginActivity : AppCompatActivity() {
             login.isEnabled = false
             SocketHandler.login(User(username.text.toString(), "testpass"))
         }
+        username.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+            if(username.text.isNotEmpty()) {
+                login.isEnabled = true
+                if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+                    SocketHandler.login(User(username.text.toString(), "testpass"))
+                    return@OnKeyListener true
+                }
+            }
+            false
+        })
 
         createAccount.setOnClickListener {
             val intent = Intent(applicationContext, CreateUserActivity::class.java)
