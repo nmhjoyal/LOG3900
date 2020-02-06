@@ -12,7 +12,7 @@
              TextElement.FontSize="20"
              TextOptions.TextFormattingMode="Ideal"
              TextOptions.TextRenderingMode="Auto"
-             FontFamily="{DynamicResource MaterialDesignFont}" Background="#FFC5DA86">
+             FontFamily="{DynamicResource MaterialDesignFont}" Background="#FFF1F2F1">
 
     <Grid >
         <Grid.ColumnDefinitions>
@@ -40,13 +40,13 @@
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
         <Image Source="login image.png" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" HorizontalAlignment="Center" MaxHeight="100"/>
-        <TextBlock Text="Enter your server IP adress: " Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="5" Foreground="White"/>
-        <TextBox MinWidth="100" Grid.Column="1" Grid.Row="4" x:Name="_ipAdress" Grid.ColumnSpan="5"  Margin="5" Foreground="White">
+        <TextBlock Text="Enter your server IP adress: " Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="5" Foreground="DarkSlateGray"/>
+        <TextBox MinWidth="100" Grid.Column="1" Grid.Row="4" x:Name="_ipAdress" Grid.ColumnSpan="5"  Margin="5" Foreground="DarkSlateGray">
         </TextBox>
-        <TextBlock Text="Enter you desired username: " Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="5" Foreground="White"/>
-        <TextBox MinWidth="100" Grid.Column="1" Grid.Row="6" x:Name="_userName" Grid.ColumnSpan="5"  Margin="5" Foreground="White">
+        <TextBlock Text="Enter you desired username: " Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="5" Foreground="DarkSlateGray"/>
+        <TextBox MinWidth="100" Grid.Column="1" Grid.Row="6" x:Name="_userName" Grid.ColumnSpan="5"  Margin="5" Foreground="DarkSlateGray">
         </TextBox>
-        <Button x:Name="logIn" Style="{DynamicResource MaterialDesignRaisedAccentButton}" MaxWidth =" 200" Content="Enter the chatroom" Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="5" Margin="10" Foreground="White">
+        <Button x:Name="logIn" Style="{DynamicResource MaterialDesignRaisedAccentButton}" MaxWidth =" 200" Content="Enter the chatroom" Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="5" Margin="10" Foreground="White" Background="#FFCFD1D0">
         </Button>
     </Grid>
 </UserControl>
