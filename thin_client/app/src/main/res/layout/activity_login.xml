@@ -13,20 +13,31 @@
     tools:context=".ui.login.LoginActivity">
 
     <EditText
-        android:id="@+id/username"
-        android:layout_width="119dp"
-        android:layout_height="53dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:hint="@string/prompt_username"
-        android:inputType="textEmailAddress"
+        android:id="@+id/ipAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/prompt_ip"
+        android:imeActionLabel="@string/action_sign_in_short"
+        android:imeOptions="actionDone"
+        android:inputType="text"
         android:selectAllOnFocus="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.295" />
+        app:layout_constraintVertical_bias="0.3" />
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="@string/prompt_username"
+        android:inputType="textEmailAddress"
+        android:selectAllOnFocus="true"
+        app:layout_constraintStart_toStartOf="@+id/ipAddress"
+        app:layout_constraintTop_toBottomOf="@+id/ipAddress"/>
     <Button
         android:id="@+id/login"
         android:enabled="false"
@@ -66,5 +77,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.37" />
+        app:layout_constraintVertical_bias="0.4" />
 </androidx.constraintlayout.widget.ConstraintLayout>

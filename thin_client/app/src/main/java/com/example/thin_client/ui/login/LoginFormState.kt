@@ -5,5 +5,4 @@ package com.example.thin_client.ui.login
  */
 data class LoginFormState (val usernameError: Int? = null,
                            val ipAddressError: Int? = null,
-                           val portError: Int? = null,
                            val isDataValid: Boolean = false)

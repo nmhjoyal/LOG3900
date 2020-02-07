@@ -7,7 +7,6 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.KeyEvent
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -21,7 +20,6 @@ import com.example.thin_client.R
 import com.example.thin_client.data.model.User
 import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.chat.ChatActivity
-import com.example.thin_client.ui.createUser.CreateUserActivity
 import com.github.nkzawa.socketio.client.Socket
 
 
@@ -34,32 +32,9 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         val username = findViewById<EditText>(R.id.username)
+        val ipAddress = findViewById<EditText>(R.id.ipAddress)
         val login = findViewById<Button>(R.id.login)
         val loading = findViewById<ProgressBar>(R.id.loading)
-        val createAccount = findViewById<Button>(R.id.createAccount)
-
-        SocketHandler.createSocket()
-        SocketHandler.socket!!.on(Socket.EVENT_CONNECT_ERROR, ({
-            Handler(Looper.getMainLooper()).post(Runnable {
-                Toast.makeText(applicationContext, "Unable to connect", Toast.LENGTH_SHORT).show()
-                loading.visibility = ProgressBar.GONE
-                login.isEnabled = true
-            })
-        })).on("user_signed_in", ({ data ->
-            if (data.last().toString().toBoolean()) {
-
-                val intent = Intent(applicationContext, ChatActivity::class.java)
-                startActivity(intent)
-                finish()
-            } else {
-                Handler(Looper.getMainLooper()).post(Runnable {
-                    Toast.makeText(applicationContext, "Username already taken", Toast.LENGTH_SHORT).show()
-                    loading.visibility = ProgressBar.GONE
-                    login.isEnabled = true
-                })
-            }
-        }))
-        SocketHandler.connect()
 
         loading.visibility = View.INVISIBLE
         loginViewModel = ViewModelProviders.of(this, LoginViewModelFactory())
@@ -73,6 +48,9 @@ class LoginActivity : AppCompatActivity() {
 
             if (loginState.usernameError != null) {
                 username.error = getString(loginState.usernameError)
+            }
+            if (loginState.ipAddressError != null) {
+               ipAddress.error = getString(loginState.ipAddressError)
             }
         })
 
@@ -90,6 +68,14 @@ class LoginActivity : AppCompatActivity() {
 
         username.afterTextChanged {
             loginViewModel.loginDataChanged(
+                ipAddress.text.toString(),
+                username.text.toString()
+            )
+        }
+
+        ipAddress.afterTextChanged {
+            loginViewModel.loginDataChanged(
+                ipAddress.text.toString(),
                 username.text.toString()
             )
         }
@@ -97,22 +83,32 @@ class LoginActivity : AppCompatActivity() {
         login.setOnClickListener {
             loading.visibility = ProgressBar.VISIBLE
             login.isEnabled = false
-            SocketHandler.login(User(username.text.toString(), "testpass"))
-        }
-        username.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
-            if(username.text.isNotEmpty()) {
-                login.isEnabled = true
-                if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+            val socket = SocketHandler.connect(ipAddress.text.toString())
+            socket.on(Socket.EVENT_CONNECT, ({
                     SocketHandler.login(User(username.text.toString(), "testpass"))
-                    return@OnKeyListener true
-                }
-            }
-            false
-        })
-
-        createAccount.setOnClickListener {
-            val intent = Intent(applicationContext, CreateUserActivity::class.java)
-            startActivity(intent)
+                }))
+                .on(Socket.EVENT_CONNECT_ERROR, ({
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        Toast.makeText(applicationContext, "Unable to connect", Toast.LENGTH_SHORT).show()
+                        loading.visibility = ProgressBar.GONE
+                        login.isEnabled = true
+                    })
+                    SocketHandler.disconnect()
+                }))
+                .on("user_signed_in", ({ data ->
+                    if (data.last().toString().toBoolean()) {
+                        val intent = Intent(applicationContext, ChatActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Handler(Looper.getMainLooper()).post(Runnable {
+                            Toast.makeText(applicationContext, "Username already taken", Toast.LENGTH_SHORT).show()
+                            loading.visibility = ProgressBar.GONE
+                            login.isEnabled = true
+                        })
+                        SocketHandler.disconnect()
+                    }
+                }))
         }
     }
 

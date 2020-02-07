@@ -20,7 +20,6 @@ import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.activity_chat.*
-import java.util.*
 
 
 class ChatActivity : AppCompatActivity() {
@@ -33,6 +32,7 @@ class ChatActivity : AppCompatActivity() {
         setContentView(R.layout.activity_chat)
 
         SocketHandler.joinRoom()
+        recyclerview_chat.adapter = adapter
 
         SocketHandler.socket?.on("new_message", ({ data ->
             val jsonData = Gson().fromJson(data.first().toString(), Message::class.java)
@@ -40,28 +40,27 @@ class ChatActivity : AppCompatActivity() {
             val timestamp = jsonData.date
             Handler(Looper.getMainLooper()).post(Runnable {
                 if (username == SocketHandler.user!!.username) {
-                    showToMessage(timestamp)
+                    showToMessage(jsonData.content, timestamp)
                 } else {
                     showFromMessage(jsonData.content, username, timestamp)
                 }
             })
         }))
 
-        recyclerview_chat.adapter = adapter
-        val text = editText_chat.text
-
        send_button_chat.setOnClickListener {
-           if (text.isNotBlank()) {
+           if (editText_chat.text.isNotBlank()) {
                send_button_chat.isEnabled = true
-               SocketHandler.sendMessage(text.toString())
+               SocketHandler.sendMessage(editText_chat.text.toString())
+               editText_chat.setText("")
            }
        }
 
       editText_chat.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
-          if(text.isNotBlank()) {
+          if(editText_chat.text.isNotBlank()) {
               send_button_chat.isEnabled = true
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
-                SocketHandler.sendMessage(text.toString())
+                SocketHandler.sendMessage(editText_chat.text.replace("\\n".toRegex(), ""))
+                editText_chat.setText("")
                 return@OnKeyListener true
             }
           }
@@ -92,13 +91,11 @@ class ChatActivity : AppCompatActivity() {
     }
 
 
-    private fun showToMessage(date: Date){
-        val text = editText_chat.text
+    private fun showToMessage(text: String, date: Long){
         adapter.add(ChatToItem(text.replace("\\n".toRegex(), ""), date))
-        text.clear()
     }
 
-    private fun showFromMessage(text: String, author:String, date: Date) {
+    private fun showFromMessage(text: String, author:String, date: Long) {
         adapter.add(ChatFromItem(text, author, date))
     }
 
