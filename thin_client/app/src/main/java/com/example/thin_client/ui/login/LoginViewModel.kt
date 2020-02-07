@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 import com.example.thin_client.R
+import java.lang.Integer.parseInt
+import java.lang.NumberFormatException
 
 class LoginViewModel : ViewModel() {
 
@@ -15,8 +17,10 @@ class LoginViewModel : ViewModel() {
 
 
 
-    fun loginDataChanged(username: String) {
-        if (!isUserNameValid(username)) {
+    fun loginDataChanged(ipAddress: String,username: String) {
+        if (!isIPAddressValid(ipAddress)) {
+            _loginForm.value = LoginFormState(ipAddressError = R.string.invalid_ip)
+        } else if (!isUserNameValid(username)) {
             _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
         } else {
             _loginForm.value = LoginFormState(isDataValid = true)
@@ -24,7 +28,23 @@ class LoginViewModel : ViewModel() {
     }
 
     private fun isUserNameValid(username: String): Boolean {
-        return (username.isNotBlank() && username.length < 11)
+        return (username.isNotBlank() && username.length < 21)
     }
 
+    private fun isIPAddressValid(ipAddress: String): Boolean {
+        val splitIP = ipAddress.split(".")
+        if (splitIP.size == 4) {
+            for (strByte in splitIP) {
+                try {
+                    val byte = parseInt(strByte)
+                    if (byte < 0) { return false }
+                } catch (e: NumberFormatException) {
+                    return false
+                }
+            }
+        } else {
+            return false
+        }
+        return true
+    }
 }

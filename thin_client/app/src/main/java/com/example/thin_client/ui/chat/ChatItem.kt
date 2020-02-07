@@ -10,15 +10,15 @@ import kotlinx.android.synthetic.main.chat_to_row.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-const val stringDate = "yyyy-MM-dd HH:mm"
+const val stringDate = "[HH:mm:ss]"
 val simpleDateFormat = SimpleDateFormat(stringDate, Locale.US)
 
-class ChatToItem(val text: String, val date: Date): Item<GroupieViewHolder>(){
+class ChatToItem(val text: String, val date: Long): Item<GroupieViewHolder>(){
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.text_view_to_message.text = text
         viewHolder.itemView.text_view_username_to.text =  SocketHandler.user!!.username
-        viewHolder.itemView.timestamp_to.text =  simpleDateFormat.format(date)
+        viewHolder.itemView.timestamp_to.text =  simpleDateFormat.format(Date(date * 1000))
     }
 
     override fun getLayout(): Int {
@@ -27,11 +27,11 @@ class ChatToItem(val text: String, val date: Date): Item<GroupieViewHolder>(){
 }
 
 
-class ChatFromItem(val text:String, val author:String, val date: Date): Item<GroupieViewHolder>(){
+class ChatFromItem(val text:String, val author:String, val date: Long): Item<GroupieViewHolder>(){
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.text_view_from_message.text = text
         viewHolder.itemView.text_view_username_from.text = author
-        viewHolder.itemView.timestamp_from.text =  simpleDateFormat.format(date)
+        viewHolder.itemView.timestamp_from.text =  simpleDateFormat.format(Date(date * 1000))
     }
 
     override fun getLayout(): Int {

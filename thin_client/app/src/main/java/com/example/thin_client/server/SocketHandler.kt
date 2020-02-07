@@ -8,18 +8,11 @@ import com.google.gson.Gson
 
 object SocketHandler {
     var user: User? = null
-    const val IP_ADDRESS = "http://10.200.11.127:5000"
     var socket: Socket? = null
 
-    fun createSocket() {
-        if (socket == null) {
-            socket = IO.socket(IP_ADDRESS)
 
-        }
-    }
-
-    fun connect(): Socket {
-        socket!!.io().reconnection(false)
+    fun connect(ipAddress: String): Socket {
+        socket = IO.socket("http://" + ipAddress + ":5000")
         return socket!!.connect()
     }
 
@@ -45,7 +38,7 @@ object SocketHandler {
 
     fun sendMessage(text: String) {
         val gson = Gson()
-        val message = gson.toJson(Message(text, user!!))
+        val message = gson.toJson(Message(text, user!!, 0))
         socket!!.emit("send_message", message)
     }
 
