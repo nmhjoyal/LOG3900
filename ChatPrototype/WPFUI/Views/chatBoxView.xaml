@@ -54,13 +54,14 @@
             <ItemsControl x:Name="messages">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="account_circle_grey_72x72.png" MaxHeight="25" VerticalAlignment="Center"></Image>
-                            <TextBlock Text="{Binding senderName}" Foreground="DarkSlateGray"/>
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="account_circle_grey_72x72.png" MaxHeight="25" VerticalAlignment="Center"></Image>
+                                <TextBlock Text="{Binding senderName}" Foreground="DarkSlateGray"/>
+                            </StackPanel>
+                            <TextBlock Text="{Binding content}" Foreground="Black" TextWrapping="Wrap"/>
+                            <TextBlock Text="{Binding formattedTimeStamp}" Foreground="DarkSlateGray" HorizontalAlignment="Right"/>
                             <TextBlock Text=" "/>
-                            <TextBlock Text="{Binding content}" Foreground="Black" TextTrimming="WordEllipsis"/>
-                            <TextBlock Text=" "/>
-                            <TextBlock Text="{Binding formattedTimeStamp}" Foreground="DarkSlateGray"/>
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
