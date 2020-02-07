@@ -1,5 +1,5 @@
 import { OnConnect, SocketController, ConnectedSocket, OnDisconnect, MessageBody, OnMessage, SocketIO } from "socket-controllers";
-import { ServerHandler } from "../../services/serverHandler";
+import ServerHandler from "../../services/serverHandler";
 import Message from "../../models/message";
 import User from "../../models/user";
  
@@ -14,14 +14,18 @@ export class SocketProtoController {
  
     @OnConnect()
     connection(@ConnectedSocket() socket: any) {
-        console.log("user connected");
-        // socket.join(this.server.name);
+        console.log("client connected");
     }
  
     @OnDisconnect()
-    disconnect(@ConnectedSocket() socket: SocketIO.Socket) {
-        console.log("user disconnected");
-        socket.leave(this.server.name);
+    disconnect(@ConnectedSocket() socket: any) {
+        this.server.signOut(socket.id);
+        console.log("client disconnected");
+    }
+
+    @OnMessage("test")
+    messageTest() {
+        console.log("Hi")
     }
 
     @OnMessage("send_message")
@@ -35,26 +39,32 @@ export class SocketProtoController {
     }
 
     @OnMessage("sign_in")
-    sign_in(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() user: User) {
-        console.log(user.username + " signed in");
-        socket.emit("user_signed_in", JSON.stringify(this.server.signIn(socket.id, user)));
+    sign_in(@ConnectedSocket() socket: any, @MessageBody() user: User) {
+        console.log("User " + user.username + " signed in on socket id : " + socket.id)
+        let cantConnect:boolean =  this.server.signIn(socket.id, user);
+        console.log(cantConnect);
+        socket.emit("user_signed_in", JSON.stringify(cantConnect));
     }
 
     @OnMessage("sign_out")
-    sign_out(@ConnectedSocket() socket: SocketIO.Socket) {
+    sign_out(@ConnectedSocket() socket: any) {
+        this.server.signOut(socket.id);
+        socket.leave(this.server.name);
         socket.emit("user_signed_out", JSON.stringify(this.server.signOut(socket.id)));
     }
 
     @OnMessage("join_chat_room")
-    join_chat_room(@ConnectedSocket() socket: SocketIO.Socket) {
+    join_chat_room(@ConnectedSocket() socket: any) {
+        console.log(this.server.name + " joined")
+        // Eventually, this.server.joinRoom()
         socket.join(this.server.name);
-        socket.to(this.server.name).emit("new_user", this.server.getUser(socket.id)?.username);
+        socket.to(this.server.name).emit("new_client", this.server.getUser(socket.id)?.username);
     }
 
     @OnMessage("leave_chat_room")
-    leave_chat_room(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() user: User) {
+    leave_chat_room(@ConnectedSocket() socket: any) {
         socket.leave(this.server.name);
-        socket.to(this.server.name).emit("new_user", socket.id);
+        socket.to(this.server.name).emit("new_client", this.server.getUser(socket.id)?.username);
     }
 
 }

@@ -1,7 +1,7 @@
 import User from "../models/user";
 import ChatRoom from "./chatRoom";
 
-export class ServerHandler {
+export default class ServerHandler {
     public name: string;
     private users: Map<string, User>;
     // TEMPORARY : eventually array of rooms
@@ -22,7 +22,7 @@ export class ServerHandler {
 
         let canSignIn: boolean = false;
 
-        if (!this.isConnected(user)) {
+        if (!this.isConnected(user.username)) {
             this.users.set(socketId, user);
             canSignIn = true;
         }
@@ -42,11 +42,19 @@ export class ServerHandler {
         return this.users.get(socketId);
     }
 
-    private isConnected(user: User): boolean {
-        return this.getUser(user.username) !== undefined;
+    private isConnected(username: string): boolean {
+        let userIsConnected: boolean = false;
+
+        this.users.forEach((value: User) => {
+            if (value.username === username) {
+                userIsConnected = true;
+            }
+        });
+
+        return userIsConnected;
     }
 
-    public joinRoom(): void {
-
+    public joinRoom(roomName: string): void {
+        // eventually
     }
 }
