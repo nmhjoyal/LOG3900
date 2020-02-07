@@ -2,22 +2,28 @@ package com.example.thin_client.ui.login
 
 import android.app.Activity
 import android.content.Intent
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
-
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.example.thin_client.R
+import com.example.thin_client.data.model.User
+import com.example.thin_client.server.SocketHandler
+import com.example.thin_client.ui.chat.ChatActivity
 import com.example.thin_client.ui.createUser.CreateUserActivity
+import com.github.nkzawa.socketio.client.Socket
+
 
 class LoginActivity : AppCompatActivity() {
 
@@ -25,15 +31,37 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_login)
 
         val username = findViewById<EditText>(R.id.username)
-        val password = findViewById<EditText>(R.id.password)
         val login = findViewById<Button>(R.id.login)
         val loading = findViewById<ProgressBar>(R.id.loading)
         val createAccount = findViewById<Button>(R.id.createAccount)
 
+        SocketHandler.createSocket()
+        SocketHandler.socket!!.on(Socket.EVENT_CONNECT_ERROR, ({
+            Handler(Looper.getMainLooper()).post(Runnable {
+                Toast.makeText(applicationContext, "Unable to connect", Toast.LENGTH_SHORT).show()
+                loading.visibility = ProgressBar.GONE
+                login.isEnabled = true
+            })
+        })).on("user_signed_in", ({ data ->
+            if (data.last().toString().toBoolean()) {
+
+                val intent = Intent(applicationContext, ChatActivity::class.java)
+                startActivity(intent)
+                finish()
+            } else {
+                Handler(Looper.getMainLooper()).post(Runnable {
+                    Toast.makeText(applicationContext, "Username already taken", Toast.LENGTH_SHORT).show()
+                    loading.visibility = ProgressBar.GONE
+                    login.isEnabled = true
+                })
+            }
+        }))
+        SocketHandler.connect()
+
+        loading.visibility = View.INVISIBLE
         loginViewModel = ViewModelProviders.of(this, LoginViewModelFactory())
             .get(LoginViewModel::class.java)
 
@@ -46,15 +74,11 @@ class LoginActivity : AppCompatActivity() {
             if (loginState.usernameError != null) {
                 username.error = getString(loginState.usernameError)
             }
-            if (loginState.passwordError != null) {
-               password.error = getString(loginState.passwordError)
-            }
         })
 
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer
 
-            loading.visibility = View.GONE
             if (loginResult.error != null) {
                 showLoginFailed(loginResult.error)
             }
@@ -62,42 +86,29 @@ class LoginActivity : AppCompatActivity() {
                 updateUiWithUser(loginResult.success)
             }
             setResult(Activity.RESULT_OK)
-
-            //Complete and destroy login activity once successful
-            finish()
         })
 
         username.afterTextChanged {
             loginViewModel.loginDataChanged(
-                username.text.toString(),
-                password.text.toString()
+                username.text.toString()
             )
         }
 
-        password.apply {
-            afterTextChanged {
-                loginViewModel.loginDataChanged(
-                    username.text.toString(),
-                    password.text.toString()
-                )
-            }
-
-            setOnEditorActionListener { _, actionId, _ ->
-                when (actionId) {
-                    EditorInfo.IME_ACTION_DONE ->
-                        loginViewModel.login(
-                            username.text.toString(),
-                            password.text.toString()
-                        )
-                }
-                false
-            }
-
-            login.setOnClickListener {
-                loading.visibility = View.VISIBLE
-                loginViewModel.login(username.text.toString(), password.text.toString())
-            }
+        login.setOnClickListener {
+            loading.visibility = ProgressBar.VISIBLE
+            login.isEnabled = false
+            SocketHandler.login(User(username.text.toString(), "testpass"))
         }
+        username.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+            if(username.text.isNotEmpty()) {
+                login.isEnabled = true
+                if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+                    SocketHandler.login(User(username.text.toString(), "testpass"))
+                    return@OnKeyListener true
+                }
+            }
+            false
+        })
 
         createAccount.setOnClickListener {
             val intent = Intent(applicationContext, CreateUserActivity::class.java)
