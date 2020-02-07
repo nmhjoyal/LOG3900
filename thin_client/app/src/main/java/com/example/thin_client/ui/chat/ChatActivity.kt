@@ -20,6 +20,7 @@ import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.activity_chat.*
+import java.util.*
 
 
 class ChatActivity : AppCompatActivity() {
@@ -36,11 +37,12 @@ class ChatActivity : AppCompatActivity() {
         SocketHandler.socket?.on("new_message", ({ data ->
             val jsonData = Gson().fromJson(data.first().toString(), Message::class.java)
             val username = jsonData.author.username
+            val timestamp = jsonData.date
             Handler(Looper.getMainLooper()).post(Runnable {
                 if (username == SocketHandler.user!!.username) {
-                    showToMessage()
+                    showToMessage(timestamp)
                 } else {
-                    showFromMessage(jsonData.content,username)
+                    showFromMessage(jsonData.content, username, timestamp)
                 }
             })
         }))
@@ -49,14 +51,16 @@ class ChatActivity : AppCompatActivity() {
         val text = editText_chat.text
 
        send_button_chat.setOnClickListener {
-           send_button_chat.isEnabled = true
-           SocketHandler.sendMessage(text.toString())
+           if (text.isNotBlank()) {
+               send_button_chat.isEnabled = true
+               SocketHandler.sendMessage(text.toString())
+           }
        }
 
       editText_chat.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
           if(text.isNotBlank()) {
               send_button_chat.isEnabled = true
-            if (keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
                 SocketHandler.sendMessage(text.toString())
                 return@OnKeyListener true
             }
@@ -88,14 +92,14 @@ class ChatActivity : AppCompatActivity() {
     }
 
 
-    private fun showToMessage(){
+    private fun showToMessage(date: Date){
         val text = editText_chat.text
-        adapter.add(ChatToItem(text.toString()))
+        adapter.add(ChatToItem(text.replace("\\n".toRegex(), ""), date))
         text.clear()
     }
 
-    private fun showFromMessage(text: String, author:String) {
-        adapter.add(ChatFromItem(text, author))
+    private fun showFromMessage(text: String, author:String, date: Date) {
+        adapter.add(ChatFromItem(text, author, date))
     }
 
 
