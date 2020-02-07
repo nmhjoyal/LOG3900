@@ -61,7 +61,6 @@ namespace WPFUI.ViewModels
             _socketHandler = socketHandler;
             _userData = userdata;
             _messages = _userData.messages;
-            //addFakeMessages();
         }
 
         public string welcomeMessage
@@ -83,17 +82,6 @@ namespace WPFUI.ViewModels
             _userData.clearData();
         }
 
-        private void addFakeMessages()
-        {
-            messages.Add(new MessageModel("this is a test message", "Barack Obama", DateTime.Now));
-            messages.Add(new MessageModel("this is another test message", "Kobe", DateTime.Now));
-            messages.Add(new MessageModel("yo le serveur c'est chaud", "Hubert", DateTime.Now));
-            messages.Add(new MessageModel("WOW c'est vrm beau mtnt ! on va manger ?", "Karima", DateTime.Now));
-            messages.Add(new MessageModel("non jte donnerais par leur code !!", "Amar", DateTime.Now));
-            messages.Add(new MessageModel("aight, t'auras pas de sockets", "Zackary", DateTime.Now));
-            messages.Add(new MessageModel("qui a fait une activite de 5hr ? Inacceptable", "Sebastien C.", DateTime.Now));
-            messages.Add(new MessageModel("cette architecture est a chier", "Oliver G.", DateTime.Now));
-        }
     }
 
 }

@@ -25,11 +25,19 @@ namespace WPFUI.Models
             set { _content = value; }
         }
 
-        public Message(string content, User author)
+        private double _date;
+
+        public double date
+        {
+            get { return _date; }
+            set { _date = value; }
+        }
+
+        public Message(User author, string content, double timestamp)
         {
             _content = content;
             _author = author;
-
+            _date = timestamp;
         }
 
     }

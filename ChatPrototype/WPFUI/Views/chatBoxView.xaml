@@ -59,9 +59,8 @@
                                 <Image Source="account_circle_grey_72x72.png" MaxHeight="25" VerticalAlignment="Center"></Image>
                                 <TextBlock Text="{Binding senderName}" Foreground="DarkSlateGray"/>
                             </StackPanel>
-                            <TextBlock Text="{Binding content}" Foreground="Black" TextWrapping="Wrap"/>
-                            <TextBlock Text="{Binding formattedTimeStamp}" Foreground="DarkSlateGray" HorizontalAlignment="Right"/>
-                            <TextBlock Text=" "/>
+                            <TextBlock Text="{Binding content}" Foreground="Black" TextWrapping="Wrap" Margin="10,0,0,0"/>
+                            <TextBlock Text="{Binding formattedTimeStamp}" Foreground="DarkSlateGray" HorizontalAlignment="Left" FontSize="12" Margin="10,0,0,10"/>
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

@@ -27,7 +27,10 @@ export class SocketProtoController {
     @OnMessage("send_message")
     send_message(@SocketIO() io: SocketIO.Socket, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() message: Message) {
         console.log("*" + message.content + "* has been sent by " + this.server.getUser(socket.id)?.username);
-        message.date = new Date()
+        
+
+        message.date = Math.floor(Date.now() / 1000);
+        console.log(message.date);
         io.in(this.server.name).emit("new_message", JSON.stringify(message));
     }
 

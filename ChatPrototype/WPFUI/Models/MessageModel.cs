@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,13 +12,21 @@ namespace WPFUI.Models
 		private string _content;
 		private string _senderName;
 		private DateTime _timeStamp;
-		public MessageModel(string content, string senderName, DateTime timeStamp)
+		public MessageModel(string content, string senderName, double unixTimeStamp = 0 )
 		{
 			_content = content;
 			_senderName = senderName;
-			_timeStamp = timeStamp;
+			if (unixTimeStamp !=0)
+			{
+				System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+				dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
+				_timeStamp = dtDateTime;
+			} else
+			{
+				_timeStamp = DateTime.Now;
+			}
+			
 		}
-
 
 		public string content
 		{
@@ -30,7 +39,6 @@ namespace WPFUI.Models
 			get { return _senderName; }
 			set { _senderName = value; }
 		}
-
 
 		public DateTime timeStamp
 		{

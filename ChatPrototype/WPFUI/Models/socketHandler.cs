@@ -54,7 +54,6 @@ namespace WPFUI.Models
 
             this._userJSON = JsonConvert.SerializeObject(_user);
 
-            Console.WriteLine(_userdata.ipAdress);
             this._socket = IO.Socket("http://" + _userdata.ipAdress + ":5000");
             this._socket.On(Socket.EVENT_CONNECT, () =>
             {
@@ -69,13 +68,15 @@ namespace WPFUI.Models
             _socket.On("new_message", (message) =>
             {
                 Message newMessage = JsonConvert.DeserializeObject<Message>(message.ToString());
-                MessageModel newMessageModel = new MessageModel(newMessage.content, newMessage.author.username, DateTime.Now);
+                Console.WriteLine(newMessage.date);
+                MessageModel newMessageModel = new MessageModel(newMessage.content, newMessage.author.username,
+                                                                newMessage.date);
                 _userdata.messages.Add(newMessageModel);
             });
 
             _socket.On("new_client", (socketId) =>
             {
-                MessageModel newMessageModel = new MessageModel("Nouvelle connection de: " + socketId.ToString(), "Server", DateTime.Now);
+                MessageModel newMessageModel = new MessageModel("Nouvelle connection de: " + socketId.ToString(), "Server");
                 _userdata.messages.Add(newMessageModel);
                 ///Console.WriteLine(socketId + " is connected");
             });
@@ -86,9 +87,8 @@ namespace WPFUI.Models
         }
         public void sendMessage()
         {
-            Message message = new Message(_userdata.currentMessage, _user);
+            Message message = new Message(_user, _userdata.currentMessage, 0);
             _socket.Emit("send_message", JsonConvert.SerializeObject(message));
-
         }
 
         public void createUser(User user)
