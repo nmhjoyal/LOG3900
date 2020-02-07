@@ -19,6 +19,7 @@ export default class ServerHandler {
      * @param user user we wish to add
      */
     public signIn(socketId: string, user: User): boolean {
+        console.log("User " + user.username + " signed in")
 
         let canSignIn: boolean = false;
 
@@ -31,6 +32,7 @@ export default class ServerHandler {
     }
 
     public signOut(socketId: string): boolean {
+        console.log("User " + this.getUser(socketId)?.username + " signed out")
         return this.users.delete(socketId);
     }
 

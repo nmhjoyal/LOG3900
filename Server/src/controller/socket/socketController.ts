@@ -31,19 +31,15 @@ export class SocketProtoController {
     @OnMessage("send_message")
     send_message(@SocketIO() io: SocketIO.Socket, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() message: Message) {
         console.log("*" + message.content + "* has been sent by " + this.server.getUser(socket.id)?.username);
-        
 
         message.date = Math.floor(Date.now() / 1000);
-        console.log(message.date);
         io.in(this.server.name).emit("new_message", JSON.stringify(message));
     }
 
     @OnMessage("sign_in")
     sign_in(@ConnectedSocket() socket: any, @MessageBody() user: User) {
-        console.log("User " + user.username + " signed in on socket id : " + socket.id)
-        let cantConnect:boolean =  this.server.signIn(socket.id, user);
-        console.log(cantConnect);
-        socket.emit("user_signed_in", JSON.stringify(cantConnect));
+        let canConnect:boolean =  this.server.signIn(socket.id, user);
+        socket.emit("user_signed_in", JSON.stringify(canConnect));
     }
 
     @OnMessage("sign_out")
@@ -55,7 +51,6 @@ export class SocketProtoController {
 
     @OnMessage("join_chat_room")
     join_chat_room(@ConnectedSocket() socket: any) {
-        console.log(this.server.name + " joined")
         // Eventually, this.server.joinRoom()
         socket.join(this.server.name);
         socket.to(this.server.name).emit("new_client", this.server.getUser(socket.id)?.username);
