@@ -8,23 +8,18 @@ import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageView
 
 
 import androidx.appcompat.app.AppCompatActivity
 import com.example.thin_client.R
 import com.example.thin_client.data.Message
-import com.example.thin_client.data.model.User
 import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.login.LoginActivity
+import com.example.thin_client.ui.login.afterTextChanged
 import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.activity_chat.*
-import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.chat_from_row.*
-import kotlinx.android.synthetic.main.chat_to_row.*
 
 
 class ChatActivity : AppCompatActivity() {
@@ -54,14 +49,12 @@ class ChatActivity : AppCompatActivity() {
         val text = editText_chat.text
 
        send_button_chat.setOnClickListener {
-           if(text.isNotEmpty()) {
-               send_button_chat.isEnabled = true
-               SocketHandler.sendMessage(text.toString())
-           }
+           send_button_chat.isEnabled = true
+           SocketHandler.sendMessage(text.toString())
        }
 
       editText_chat.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
-          if(text.isNotEmpty()) {
+          if(text.isNotBlank()) {
               send_button_chat.isEnabled = true
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
                 SocketHandler.sendMessage(text.toString())
@@ -70,6 +63,10 @@ class ChatActivity : AppCompatActivity() {
           }
             false
         })
+
+        editText_chat.afterTextChanged {
+            send_button_chat.isEnabled = editText_chat.text.isNotBlank()
+        }
 
     }
 
