@@ -14,8 +14,7 @@ export class SocketProtoController {
  
     @OnConnect()
     connection(@ConnectedSocket() socket: any) {
-        console.log("user connected");
-        // socket.join(this.server.name);
+        console.log("client connected");
     }
  
     @OnDisconnect()
@@ -53,7 +52,7 @@ export class SocketProtoController {
 
     @OnMessage("join_chat_room")
     join_chat_room(@ConnectedSocket() socket: any) {
-        console.log(this.server.name + "joined")
+        console.log(this.server.name + " joined")
         // Eventually, this.server.joinRoom()
         socket.join(this.server.name);
         socket.to(this.server.name).emit("new_client", this.server.getUser(socket.id)?.username);
