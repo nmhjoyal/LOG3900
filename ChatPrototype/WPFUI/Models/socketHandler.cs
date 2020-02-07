@@ -88,7 +88,10 @@ namespace WPFUI.Models
         public void sendMessage()
         {
             Message message = new Message(_user, _userdata.currentMessage, 0);
-            _socket.Emit("send_message", JsonConvert.SerializeObject(message));
+            if(message.content.Trim() != "")
+            {
+                _socket.Emit("send_message", JsonConvert.SerializeObject(message));
+            }
         }
 
         public void createUser(User user)
