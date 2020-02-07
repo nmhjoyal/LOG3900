@@ -24,7 +24,7 @@ class LoginViewModel : ViewModel() {
     }
 
     private fun isUserNameValid(username: String): Boolean {
-        return username.isNotBlank()
+        return (username.isNotBlank() && username.length < 11)
     }
 
 }

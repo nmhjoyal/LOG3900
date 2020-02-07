@@ -5,7 +5,7 @@
     <string name="action_register">Create an account</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome !"</string>
-    <string name="invalid_username">Invalid Username</string>
+    <string name="invalid_username">Username cannot be blank and cannot exceed 10 characters.</string>
     <string name="invalid_password">Invalid Password</string>
     <string name="login_failed">"Failed Connection"</string>
     <!-- Strings related to chat -->
