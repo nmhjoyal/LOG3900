@@ -19,11 +19,10 @@ export default class ServerHandler {
      * @param user user we wish to add
      */
     public signIn(socketId: string, user: User): boolean {
-        console.log("User " + user.username + " signed in")
-
         let canSignIn: boolean = false;
 
         if (!this.isConnected(user.username)) {
+            console.log("User " + user.username + " signed in")
             this.users.set(socketId, user);
             canSignIn = true;
         }
@@ -32,7 +31,11 @@ export default class ServerHandler {
     }
 
     public signOut(socketId: string): boolean {
-        console.log("User " + this.getUser(socketId)?.username + " signed out")
+        let user: User | undefined = this.getUser(socketId);
+        if (user) {
+            console.log("User " + user.username + " signed out")
+        }
+
         return this.users.delete(socketId);
     }
 
