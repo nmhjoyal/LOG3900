@@ -99,6 +99,7 @@
     <Compile Include="EventModels\DisconnectEvent.cs" />
     <Compile Include="EventModels\LogInEvent.cs" />
     <Compile Include="EventModels\sendMessageEvent.cs" />
+    <Compile Include="EventModels\userNameTakenEvent.cs" />
     <Compile Include="Models\ISocketHandler.cs" />
     <Compile Include="Models\IUserData.cs" />
     <Compile Include="Models\MessageModel.cs" />

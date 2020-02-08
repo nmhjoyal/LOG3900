@@ -43,9 +43,16 @@ namespace WPFUI.ViewModels
                   NotifyOfPropertyChange(() => messages); }
         }
 
-        public void sendMessage()
+        public void sendMessage( string content = null)
         {
-            if (currentMessage != null & currentMessage != "")
+            if (content != null)
+            {
+                _userData.currentMessage = content;
+                _socketHandler.sendMessage();
+                currentMessage = "";
+                _userData.currentMessage = "";
+            }
+            else if (currentMessage != null & currentMessage != "")
             {
                 //messages.Add(new MessageModel(currentMessage, _userData.userName, DateTime.Now));
                 _socketHandler.sendMessage();

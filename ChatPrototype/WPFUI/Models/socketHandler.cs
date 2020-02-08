@@ -25,9 +25,12 @@ namespace WPFUI.Models
             set
             {
                 _canConnect = value;
-                if (_canConnect) { _socket.Emit("join_chat_room");
+                if (_canConnect)
+                {
+                    _socket.Emit("join_chat_room");
                     _events.PublishOnUIThread(new LogInEvent());
-                };
+                }
+                else { _events.PublishOnUIThread(new userNameTakenEvent()); };
                 ;
             }
         }

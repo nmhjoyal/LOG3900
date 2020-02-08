@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WPFUI.ViewModels;
 
 namespace WPFUI.Views
 {
@@ -20,11 +21,31 @@ namespace WPFUI.Views
     /// Logique d'interaction pour chatBoxView.xaml
     /// </summary>
     public partial class chatBoxView : UserControl
+
     {
+        chatBoxViewModel _viewModel;
         public chatBoxView()
         {
             InitializeComponent();
         }
 
+        private void refocus(object sender, RoutedEventArgs e)
+        {
+            currentMessage.Focus();
+        }
+
+        private void OnLoad(object sender, RoutedEventArgs e)
+        {
+            _viewModel = DataContext as chatBoxViewModel;
+        }
+
+        private void currentMessage_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+               _viewModel.sendMessage(currentMessage.Text);
+            }
+            
+        }
     }
 }
