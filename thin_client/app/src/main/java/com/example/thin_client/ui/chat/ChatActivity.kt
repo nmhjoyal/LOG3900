@@ -73,6 +73,11 @@ class ChatActivity : AppCompatActivity() {
 
     }
 
+
+    override fun onBackPressed() {
+        // Disable native back
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.menu_sign_out -> {
