@@ -10,7 +10,9 @@ using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    class ShellViewModel: Conductor<object>, IHandle<LogInEvent>, IHandle<DisconnectEvent>, IHandle<userNameTakenEvent>
+    class ShellViewModel: Conductor<object>, IHandle<LogInEvent>, 
+						  IHandle<DisconnectEvent>, IHandle<userNameTakenEvent>,
+						  IHandle<passwordMismatchEvent>
 	{
 		private IEventAggregator _events;
 		private SimpleContainer _container;
@@ -20,7 +22,8 @@ namespace WPFUI.ViewModels
 			_container = container;
 			_events = events;
 			_events.Subscribe(this);
-			ActivateItem(_container.GetInstance<LoginViewModel>());
+			//ActivateItem(_container.GetInstance<LoginViewModel>());
+			ActivateItem(_container.GetInstance<NewUserViewModel>());
 		}
 
 		public void Handle(LogInEvent message)
@@ -36,6 +39,16 @@ namespace WPFUI.ViewModels
 		public void Handle(userNameTakenEvent message)
 		{
 			string messageBoxText = "userName already taken";
+			string caption = "Warning";
+			MessageBoxButton button = MessageBoxButton.OK;
+			MessageBoxImage icon = MessageBoxImage.Warning;
+
+			MessageBox.Show(messageBoxText, caption, button, icon);
+		}
+
+		public void Handle(passwordMismatchEvent message)
+		{
+			string messageBoxText = "passwords don't match";
 			string caption = "Warning";
 			MessageBoxButton button = MessageBoxButton.OK;
 			MessageBoxImage icon = MessageBoxImage.Warning;

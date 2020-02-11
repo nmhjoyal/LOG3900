@@ -53,7 +53,7 @@ namespace WPFUI.Models
         public void connectionAttempt()
         {
 
-            _user = new User(_userdata.userName, "hubert");
+            _user = new User(_userdata.userName, _userdata.password);
 
             this._userJSON = JsonConvert.SerializeObject(_user);
 
