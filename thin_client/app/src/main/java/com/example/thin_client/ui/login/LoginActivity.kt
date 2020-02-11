@@ -1,6 +1,7 @@
 package com.example.thin_client.ui.login
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -17,8 +18,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.thin_client.R
+import com.example.thin_client.data.Preferences
 import com.example.thin_client.data.model.User
 import com.example.thin_client.server.SocketHandler
+import com.example.thin_client.ui.MainActivity
 import com.example.thin_client.ui.chat.ChatActivity
 import com.github.nkzawa.socketio.client.Socket
 
@@ -97,8 +100,8 @@ class LoginActivity : AppCompatActivity() {
                 }))
                 .on("user_signed_in", ({ data ->
                     if (data.last().toString().toBoolean()) {
-                        val intent = Intent(applicationContext, ChatActivity::class.java)
-                        startActivity(intent)
+                        val prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
+                        prefs.edit().putBoolean(Preferences.LOGGED_IN_KEY, true).apply()
                         finish()
                     } else {
                         Handler(Looper.getMainLooper()).post(Runnable {
