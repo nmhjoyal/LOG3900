@@ -1,5 +1,6 @@
 package com.example.thin_client.ui.createUser
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Button
@@ -23,6 +24,7 @@ class CreateUserActivity : AppCompatActivity() {
         val password = findViewById<EditText>(R.id.password)
         val confirmPassword = findViewById<EditText>(R.id.confirmPass)
         val create = findViewById<Button>(R.id.create)
+        val avatar = findViewById<Button>(R.id.button_upload_avatar)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -59,6 +61,11 @@ class CreateUserActivity : AppCompatActivity() {
         confirmPassword.afterTextChanged {
             createUserModel.userDataChanged(username.text.toString(), password.text.toString(),
                 confirmPassword.text.toString())
+        }
+        avatar.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type="image/*"
+            startActivityForResult(intent,0)
         }
     }
 

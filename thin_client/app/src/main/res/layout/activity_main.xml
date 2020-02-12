@@ -6,14 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
 
-    <com.google.android.material.button.MaterialButton
-        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton.Icon"
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:shadowColor="@color/colorPrimary"
-        android:text="@string/title_activity_free_draw"
-        android:textColor="@color/color_white"
+        android:text="Free draw"
+        android:textColor="#ffffff"
         android:textSize="18sp"
         android:gravity="center"
         app:fontFamily="cursive"

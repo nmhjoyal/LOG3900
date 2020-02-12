@@ -23,6 +23,7 @@ import com.example.thin_client.data.model.User
 import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.MainActivity
 import com.example.thin_client.ui.chat.ChatActivity
+import com.example.thin_client.ui.createUser.CreateUserActivity
 import com.github.nkzawa.socketio.client.Socket
 
 
@@ -37,6 +38,7 @@ class LoginActivity : AppCompatActivity() {
         val username = findViewById<EditText>(R.id.username)
         val ipAddress = findViewById<EditText>(R.id.ipAddress)
         val login = findViewById<Button>(R.id.login)
+        val signup = findViewById<Button>(R.id.signup)
         val loading = findViewById<ProgressBar>(R.id.loading)
 
         loading.visibility = View.INVISIBLE
@@ -113,6 +115,11 @@ class LoginActivity : AppCompatActivity() {
                     }
                 }))
         }
+        signup.setOnClickListener {
+            val intent = Intent(this, CreateUserActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
