@@ -105,4 +105,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.672" />
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/avatar_circleImageView"
+        android:layout_width="122dp"
+        android:layout_height="122dp"
+        app:layout_constraintBottom_toBottomOf="@+id/button_upload_avatar"
+        app:layout_constraintEnd_toEndOf="@+id/button_upload_avatar"
+        app:layout_constraintStart_toStartOf="@+id/button_upload_avatar"
+        app:layout_constraintTop_toTopOf="@+id/button_upload_avatar" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
