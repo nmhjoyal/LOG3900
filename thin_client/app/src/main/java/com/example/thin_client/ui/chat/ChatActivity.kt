@@ -33,7 +33,9 @@ class ChatActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
-
+        val roomname = intent.getStringExtra(ChatRoomsActivity.ROOM_KEY)
+        supportActionBar?.title = roomname
+       // SocketHandler.joinRoom()
         recyclerview_chat.adapter = adapter
 
         SocketHandler.socket?.on("new_message", ({ data ->

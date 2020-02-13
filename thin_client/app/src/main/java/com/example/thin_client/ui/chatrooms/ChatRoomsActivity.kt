@@ -23,6 +23,9 @@ class ChatRoomsActivity : AppCompatActivity() {
         fetchRooms()
 
     }
+    companion object{
+        val ROOM_KEY = "ROOM_KEY"
+    }
 
     private fun fetchRooms(){
         adapter.add(ChatRoomItem("Room # 1"))
@@ -31,7 +34,9 @@ class ChatRoomsActivity : AppCompatActivity() {
 
         adapter.setOnItemClickListener{ item,view ->
             SocketHandler.joinRoom()
+            val room = item as ChatRoomItem
             val intent= Intent(view.context, ChatActivity::class.java)
+            intent.putExtra(ROOM_KEY,room.roomname)
             startActivity(intent)
             finish()
         }
