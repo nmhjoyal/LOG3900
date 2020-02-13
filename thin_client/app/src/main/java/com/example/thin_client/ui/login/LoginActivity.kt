@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.thin_client.R
 import com.example.thin_client.data.model.User
 import com.example.thin_client.server.SocketHandler
+import com.example.thin_client.ui.Lobby
 import com.example.thin_client.ui.chat.ChatActivity
 import com.github.nkzawa.socketio.client.Socket
 
@@ -97,7 +98,7 @@ class LoginActivity : AppCompatActivity() {
                 }))
                 .on("user_signed_in", ({ data ->
                     if (data.last().toString().toBoolean()) {
-                        val intent = Intent(applicationContext, ChatActivity::class.java)
+                        val intent = Intent(applicationContext, Lobby::class.java)
                         startActivity(intent)
                         finish()
                     } else {

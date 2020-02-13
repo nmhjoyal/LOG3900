@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.game_mode.free_draw.FreeDrawActivity">
+
+    <com.divyanshu.draw.widget.DrawView
+        android:id="@+id/draw_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        app:srcCompat="@drawable/ic_save_alt_24px"
+        android:visibility="gone"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+    </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:cardBackgroundColor="@color/colorPrimaryDark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            app:srcCompat="@drawable/ic_save_alt_24px"
+            android:tint="@color/color_white"
+            android:padding="12dp"
+            android:background="@color/colorPrimaryDark"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            />
+    </androidx.cardview.widget.CardView>
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="396dp"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="14dp"
+        tools:layout_editor_absoluteY="103dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
