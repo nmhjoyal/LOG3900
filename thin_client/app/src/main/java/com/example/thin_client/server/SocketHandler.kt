@@ -17,11 +17,9 @@ object SocketHandler {
     }
 
     fun disconnect() {
-        if (socket != null) {
-            socket!!.off()
-            socket!!.disconnect()
-            socket = null
-        }
+        socket!!.off()
+        socket!!.disconnect()
+        socket = null
     }
 
     fun login(user: User) {
@@ -32,8 +30,10 @@ object SocketHandler {
     }
 
     fun logout() {
-        socket!!.emit("sign_out")
-        disconnect()
+        if (socket != null) {
+            socket!!.emit("sign_out")
+            disconnect()
+        }
     }
 
     fun sendMessage(text: String) {

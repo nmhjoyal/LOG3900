@@ -22,4 +22,7 @@
     <string name="prompt_confirm_password">Confirm password</string>
     <string name="action_create">Create</string>
     <string name="invalid_password_confirm">Passwords do not match</string>
+
+    <!-- Strings for free draw -->
+    <string name="title_activity_free_draw">Free Draw</string>
 </resources>
