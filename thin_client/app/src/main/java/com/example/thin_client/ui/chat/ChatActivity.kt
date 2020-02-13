@@ -16,6 +16,7 @@ import com.example.thin_client.R
 import com.example.thin_client.data.Message
 import com.example.thin_client.data.Preferences
 import com.example.thin_client.server.SocketHandler
+import com.example.thin_client.ui.chatrooms.ChatRoomsActivity
 import com.example.thin_client.ui.login.LoginActivity
 import com.example.thin_client.ui.login.afterTextChanged
 import com.google.gson.Gson
@@ -33,7 +34,6 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        SocketHandler.joinRoom()
         recyclerview_chat.adapter = adapter
 
         SocketHandler.socket?.on("new_message", ({ data ->

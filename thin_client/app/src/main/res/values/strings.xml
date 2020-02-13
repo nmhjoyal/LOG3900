@@ -22,5 +22,10 @@
     <string name="prompt_confirm_password">Confirm password</string>
     <string name="action_create">Create</string>
     <string name="invalid_password_confirm">Passwords do not match</string>
-    <string name="title_activity_chat_rooms">ChatRoomsActivity</string>
+
+    <!-- Strings for manifest page names -->
+    <string name="chat_rooms">Chat Rooms</string>
+    <string name="sign_up">Create a Profile</string>
+
+
 </resources>

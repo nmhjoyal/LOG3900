@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.thin_client.R
 import com.example.thin_client.data.Preferences
+import com.example.thin_client.ui.chatrooms.ChatRoomsActivity
 import com.example.thin_client.ui.login.LoginActivity
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,8 +18,6 @@ class MainActivity : AppCompatActivity() {
 
         val prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
         val isLoggedIn = prefs.getBoolean(Preferences.LOGGED_IN_KEY, false)
-
-        
 
         if (!isLoggedIn) {
             val intent = Intent(applicationContext, LoginActivity::class.java)

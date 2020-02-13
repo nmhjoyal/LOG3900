@@ -2,21 +2,28 @@ package com.example.thin_client.ui.createUser
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.drawable.BitmapDrawable
+
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
+
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.thin_client.R
+import com.example.thin_client.data.model.User
+import com.example.thin_client.server.SocketHandler
+import com.example.thin_client.ui.chatrooms.ChatRoomsActivity
 import com.example.thin_client.ui.login.afterTextChanged
+import com.github.nkzawa.socketio.client.Socket
 import de.hdodenhof.circleimageview.CircleImageView
-import kotlinx.android.synthetic.main.activity_createuser.*
+
 
 
 class CreateUserActivity : AppCompatActivity() {
@@ -35,6 +42,7 @@ class CreateUserActivity : AppCompatActivity() {
         var confirmPassword = findViewById<EditText>(R.id.confirmPass)
         val create = findViewById<Button>(R.id.create)
         val avatar = findViewById<Button>(R.id.button_upload_avatar)
+        val ipAddress = "192.168.2.32"
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -85,7 +93,28 @@ class CreateUserActivity : AppCompatActivity() {
         }
 
         create.setOnClickListener {
-           // signup()
+            val socket = SocketHandler.connect(ipAddress)
+            socket.on(Socket.EVENT_CONNECT, ({
+                SocketHandler.login(User(username.text.toString(), password.text.toString()))
+            }))
+                .on(Socket.EVENT_CONNECT_ERROR, ({
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        Toast.makeText(applicationContext, "Unable to connect", Toast.LENGTH_SHORT).show()
+                    })
+                    SocketHandler.disconnect()
+                }))
+                .on("user_signed_in", ({ data ->
+                    if (data.last().toString().toBoolean()) {
+                        val intent = Intent(applicationContext, ChatRoomsActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Handler(Looper.getMainLooper()).post(Runnable {
+                            Toast.makeText(applicationContext, "Username already taken", Toast.LENGTH_SHORT).show()
+                        })
+                        SocketHandler.disconnect()
+                    }
+                }))
         }
     }
 

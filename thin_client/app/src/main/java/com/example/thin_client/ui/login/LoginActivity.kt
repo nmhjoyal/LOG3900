@@ -1,7 +1,7 @@
 package com.example.thin_client.ui.login
 
 import android.app.Activity
-import android.content.Context
+
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -18,11 +18,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.thin_client.R
-import com.example.thin_client.data.Preferences
+
 import com.example.thin_client.data.model.User
 import com.example.thin_client.server.SocketHandler
-import com.example.thin_client.ui.MainActivity
-import com.example.thin_client.ui.chat.ChatActivity
+
+import com.example.thin_client.ui.chatrooms.ChatRoomsActivity
 import com.example.thin_client.ui.createUser.CreateUserActivity
 import com.github.nkzawa.socketio.client.Socket
 
@@ -86,36 +86,37 @@ class LoginActivity : AppCompatActivity() {
         }
 
         login.setOnClickListener {
-            loading.visibility = ProgressBar.VISIBLE
-            login.isEnabled = false
-            val socket = SocketHandler.connect(ipAddress.text.toString())
-            socket.on(Socket.EVENT_CONNECT, ({
+                loading.visibility = ProgressBar.VISIBLE
+                login.isEnabled = false
+                val socket = SocketHandler.connect(ipAddress.text.toString())
+                socket.on(Socket.EVENT_CONNECT, ({
                     SocketHandler.login(User(username.text.toString(), "testpass"))
                 }))
-                .on(Socket.EVENT_CONNECT_ERROR, ({
-                    Handler(Looper.getMainLooper()).post(Runnable {
-                        Toast.makeText(applicationContext, "Unable to connect", Toast.LENGTH_SHORT).show()
-                        loading.visibility = ProgressBar.GONE
-                        login.isEnabled = true
-                    })
-                    SocketHandler.disconnect()
-                }))
-                .on("user_signed_in", ({ data ->
-                    if (data.last().toString().toBoolean()) {
-                        val prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
-                        prefs.edit().putBoolean(Preferences.LOGGED_IN_KEY, true).apply()
-                        finish()
-                    } else {
+                    .on(Socket.EVENT_CONNECT_ERROR, ({
                         Handler(Looper.getMainLooper()).post(Runnable {
-                            Toast.makeText(applicationContext, "Username already taken", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(applicationContext, "Unable to connect", Toast.LENGTH_SHORT).show()
                             loading.visibility = ProgressBar.GONE
                             login.isEnabled = true
                         })
                         SocketHandler.disconnect()
-                    }
-                }))
+                    }))
+                    .on("user_signed_in", ({ data ->
+                        if (data.last().toString().toBoolean()) {
+                            val intent = Intent(applicationContext, ChatRoomsActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        } else {
+                            Handler(Looper.getMainLooper()).post(Runnable {
+                                Toast.makeText(applicationContext, "Username already taken", Toast.LENGTH_SHORT).show()
+                                loading.visibility = ProgressBar.GONE
+                                login.isEnabled = true
+                            })
+                            SocketHandler.disconnect()
+                        }
+                    }))
         }
-        signup.setOnClickListener {
+
+            signup.setOnClickListener {
             val intent = Intent(this, CreateUserActivity::class.java)
             startActivity(intent)
         }
