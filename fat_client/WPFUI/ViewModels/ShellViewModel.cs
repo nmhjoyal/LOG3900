@@ -10,7 +10,7 @@ using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    class ShellViewModel: Conductor<object>, IHandle<LogInEvent>, IHandle<logOutEvent>, IHandle<joinChatEvent>,
+    class ShellViewModel: Conductor<object>, IHandle<LogInEvent>, IHandle<logOutEvent>, IHandle<joinChatEvent>, IHandle<joinChatroomEvent>,
 						  IHandle<DisconnectEvent>, IHandle<userNameTakenEvent>,
 						  IHandle<passwordMismatchEvent>
 	{
@@ -23,7 +23,7 @@ namespace WPFUI.ViewModels
 			_events = events;
 			_events.Subscribe(this);
 			//ActivateItem(_container.GetInstance<LoginViewModel>());
-			ActivateItem(_container.GetInstance<ChatRoomChannelsViewModel>());
+			ActivateItem(_container.GetInstance<MainMenuViewModel>());
 		}
 
 		public void Handle(LogInEvent message)
@@ -39,6 +39,11 @@ namespace WPFUI.ViewModels
 		public void Handle(joinChatEvent message)
 		{
 			ActivateItem(_container.GetInstance<chatBoxViewModel>());
+		}
+
+		public void Handle(joinChatroomEvent message)
+		{
+			ActivateItem(_container.GetInstance<ChatRoomChannelsViewModel>());
 		}
 
 		public void Handle(DisconnectEvent message)
