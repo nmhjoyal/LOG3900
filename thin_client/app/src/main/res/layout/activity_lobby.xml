@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.Lobby">
 
-    <com.google.android.material.button.MaterialButton
+    <Button
         android:id="@+id/free_draw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,6 +19,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></com.google.android.material.button.MaterialButton>
+        app:layout_constraintTop_toTopOf="parent"></Button>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
