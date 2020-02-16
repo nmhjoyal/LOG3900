@@ -31,6 +31,11 @@ namespace WPFUI.ViewModels
 			ActivateItem(_container.GetInstance<chatBoxViewModel>());
 		}
 
+		public void Handle(logOutEvent message)
+		{
+			ActivateItem(_container.GetInstance<LoginViewModel>());
+		}
+
 		public void Handle(DisconnectEvent message)
 		{
 			ActivateItem(_container.GetInstance<LoginViewModel>());
