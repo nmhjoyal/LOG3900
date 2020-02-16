@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace WPFUI.Views
 {
     /// <summary>
-    /// Logique d'interaction pour MainMenu.xaml
+    /// Logique d'interaction pour MainMenuView.xaml
     /// </summary>
-    public partial class MainMenu : UserControl
+    public partial class MainMenuView : UserControl
     {
-        public MainMenu()
+        public MainMenuView()
         {
             InitializeComponent();
         }

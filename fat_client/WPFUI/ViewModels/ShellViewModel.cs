@@ -23,7 +23,7 @@ namespace WPFUI.ViewModels
 			_events = events;
 			_events.Subscribe(this);
 			//ActivateItem(_container.GetInstance<LoginViewModel>());
-			ActivateItem(_container.GetInstance<NewUserViewModel>());
+			ActivateItem(_container.GetInstance<MainMenuViewModel>());
 		}
 
 		public void Handle(LogInEvent message)
