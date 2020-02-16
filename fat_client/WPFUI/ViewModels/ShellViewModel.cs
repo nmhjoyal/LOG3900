@@ -10,7 +10,7 @@ using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    class ShellViewModel: Conductor<object>, IHandle<LogInEvent>, 
+    class ShellViewModel: Conductor<object>, IHandle<LogInEvent>, IHandle<logOutEvent>,
 						  IHandle<DisconnectEvent>, IHandle<userNameTakenEvent>,
 						  IHandle<passwordMismatchEvent>
 	{
