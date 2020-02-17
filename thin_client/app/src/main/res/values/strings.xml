@@ -27,5 +27,16 @@
     <string name="chat_rooms">Chat Rooms</string>
     <string name="sign_up">Create a Profile</string>
 
-
+    <!-- Strings for free draw mode -->
+    <string name="title_activity_free_draw">Free Draw</string>
+    <string name="palette_cd">Pick a colour</string>
+    <string name="crayon_cd">Crayon</string>
+    <string name="pen_cd">Pen</string>
+    <string name="eraser_cd">Eraser</string>
+    <string name="eraser_draw_erase">Draw erase</string>
+    <string name="eraser_touch_erase">Touch erase</string>
+    <string name="round_cap">Round</string>
+    <string name="square_cap">Square</string>
+    <string name="image_saved">Image successfully saved.</string>
+    <string name="error_image_saved">Unable to save image.</string>
 </resources>

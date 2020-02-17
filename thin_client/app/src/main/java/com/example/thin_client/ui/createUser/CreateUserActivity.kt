@@ -19,8 +19,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.thin_client.R
 import com.example.thin_client.data.model.User
 import com.example.thin_client.server.SocketHandler
-import com.example.thin_client.ui.MainActivity
-import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
+import com.example.thin_client.ui.Lobby
 import com.example.thin_client.ui.login.afterTextChanged
 import com.github.nkzawa.socketio.client.Socket
 import de.hdodenhof.circleimageview.CircleImageView
@@ -106,7 +105,7 @@ class CreateUserActivity : AppCompatActivity() {
                 }))
                 .on("user_signed_in", ({ data ->
                     if (data.last().toString().toBoolean()) {
-                        val intent = Intent(applicationContext, MainActivity::class.java)
+                        val intent = Intent(applicationContext, Lobby::class.java)
                         startActivity(intent)
                         finish()
                     } else {

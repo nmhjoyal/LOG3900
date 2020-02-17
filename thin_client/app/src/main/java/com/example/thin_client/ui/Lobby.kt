@@ -1,30 +1,29 @@
 package com.example.thin_client.ui
 
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import com.example.thin_client.R
-import com.example.thin_client.data.Preferences
+import com.example.thin_client.ui.chat.ChatActivity
 import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
-import com.example.thin_client.ui.login.LoginActivity
+import com.example.thin_client.ui.game_mode.free_draw.FreeDrawActivity
+import kotlinx.android.synthetic.main.activity_lobby.*
 
-class MainActivity : AppCompatActivity() {
-
+class Lobby : AppCompatActivity() {
     val manager = supportFragmentManager
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_lobby)
 
-       // val prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
-       // val isLoggedIn = prefs.getBoolean(Preferences.LOGGED_IN_KEY, false)
+        free_draw.setOnClickListener(({
+            val intent = Intent(applicationContext, FreeDrawActivity::class.java)
+            startActivity(intent)
+        }))
 
         showChatRoomsFragment()
-
     }
+
 
     fun showChatRoomsFragment(){
         val transaction = manager.beginTransaction()
@@ -33,5 +32,4 @@ class MainActivity : AppCompatActivity() {
         transaction.addToBackStack(null)
         transaction.commit()
     }
-
 }
