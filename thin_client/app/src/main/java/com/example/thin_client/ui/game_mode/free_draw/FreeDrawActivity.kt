@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.activity_free_draw.*
 import java.util.*
 
 
-class FreeDrawActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
+class FreeDrawActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -160,13 +160,5 @@ class FreeDrawActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
     private fun saveImage(bitmap: Bitmap, fileName: String, imgDescription: String) {
         MediaStore.Images.Media.insertImage(contentResolver, bitmap, fileName, imgDescription)
 
-    }
-
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onNothingSelected(parent: AdapterView<*>?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
