@@ -37,6 +37,7 @@ class ChatRoomsFragment : Fragment() {
         val ROOM_KEY = "ROOM_KEY"
     }
 
+
     private fun fetchRooms(){
         adapter.add(ChatRoomItem("Room # 1"))
         adapter.add(ChatRoomItem("Room # 2"))

@@ -85,10 +85,16 @@ class ChatActivity : AppCompatActivity() {
 
     private fun showToMessage(text: String, date: Long){
         adapter.add(ChatToItem(text.replace("\\n".toRegex(), ""), date))
+        if (recyclerview_chat != null){
+            recyclerview_chat.scrollToPosition(adapter.itemCount - 1)
+        }
     }
 
     private fun showFromMessage(text: String, author:String, date: Long) {
         adapter.add(ChatFromItem(text, author, date))
+        if (recyclerview_chat != null){
+            recyclerview_chat.scrollToPosition(adapter.itemCount - 1)
+        }
     }
 
 

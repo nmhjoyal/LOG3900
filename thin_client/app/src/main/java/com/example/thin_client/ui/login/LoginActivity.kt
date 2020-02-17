@@ -38,7 +38,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         val username = findViewById<EditText>(R.id.username)
-        val ipAddress = findViewById<EditText>(R.id.ipAddress)
+       // val ipAddress = findViewById<EditText>(R.id.ipAddress)
         val login = findViewById<Button>(R.id.login)
         val signup = findViewById<Button>(R.id.signup)
         val loading = findViewById<ProgressBar>(R.id.loading)
@@ -56,9 +56,7 @@ class LoginActivity : AppCompatActivity() {
             if (loginState.usernameError != null) {
                 username.error = getString(loginState.usernameError)
             }
-            if (loginState.ipAddressError != null) {
-               ipAddress.error = getString(loginState.ipAddressError)
-            }
+
         })
 
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
@@ -75,22 +73,15 @@ class LoginActivity : AppCompatActivity() {
 
         username.afterTextChanged {
             loginViewModel.loginDataChanged(
-                ipAddress.text.toString(),
                 username.text.toString()
             )
         }
 
-        ipAddress.afterTextChanged {
-            loginViewModel.loginDataChanged(
-                ipAddress.text.toString(),
-                username.text.toString()
-            )
-        }
 
         login.setOnClickListener {
                 loading.visibility = ProgressBar.VISIBLE
                 login.isEnabled = false
-                val socket = SocketHandler.connect(ipAddress.text.toString())
+                val socket = SocketHandler.connect()
                 socket.on(Socket.EVENT_CONNECT, ({
                     SocketHandler.login(User(username.text.toString(), "testpass"))
                 }))

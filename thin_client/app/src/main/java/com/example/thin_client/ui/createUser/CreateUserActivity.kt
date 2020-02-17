@@ -42,7 +42,6 @@ class CreateUserActivity : AppCompatActivity() {
         var confirmPassword = findViewById<EditText>(R.id.confirmPass)
         val create = findViewById<Button>(R.id.create)
         val avatar = findViewById<Button>(R.id.button_upload_avatar)
-        val ipAddress = "10.226.230.137"
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -93,7 +92,7 @@ class CreateUserActivity : AppCompatActivity() {
         }
 
         create.setOnClickListener {
-            val socket = SocketHandler.connect(ipAddress)
+            val socket = SocketHandler.connect()
             socket.on(Socket.EVENT_CONNECT, ({
                 SocketHandler.login(User(username.text.toString(), password.text.toString()))
             }))
