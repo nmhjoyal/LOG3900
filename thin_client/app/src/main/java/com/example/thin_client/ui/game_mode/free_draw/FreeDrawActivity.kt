@@ -13,12 +13,16 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.thin_client.R
+import com.example.thin_client.data.PermissionHandler
+import com.example.thin_client.data.RequestCodes
 import kotlinx.android.synthetic.main.activity_free_draw.*
 import java.util.*
 
+private const val PERCENT = 100f
+private const val SCALE_FACTOR = 10f
+private const val SIZING_FACTOR = 70f
 
 class FreeDrawActivity : AppCompatActivity() {
 
@@ -42,8 +46,8 @@ class FreeDrawActivity : AppCompatActivity() {
         }))
 
         save_button.setOnClickListener(({
-            if (!hasStoragePermission()) {
-                requestStoragePermission()
+            if (!PermissionHandler.hasStoragePermission(applicationContext)) {
+                PermissionHandler.requestStoragePermission(this)
             } else {
                 showSaveDialog(draw_view.getBitmap())
             }
@@ -123,30 +127,30 @@ class FreeDrawActivity : AppCompatActivity() {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int,
                                            fromUser: Boolean) {
                 draw_view.toggleEraser(false)
-                sizing.scaleX = (progress.div(100f)) * 10
-                sizing.scaleY = (progress.div(100f)) * 10
+                sizing.scaleX = (progress.div(PERCENT)) * SCALE_FACTOR
+                sizing.scaleY = (progress.div(PERCENT)) * SCALE_FACTOR
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-                draw_view.setStrokeWidth(seekBar.progress.div(100f) * 70f)
+                draw_view.setStrokeWidth(seekBar.progress.div(PERCENT) * SIZING_FACTOR)
             }
         })
     }
 
-    private fun hasStoragePermission(): Boolean {
-        return ContextCompat.checkSelfPermission(applicationContext, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-                PackageManager.PERMISSION_GRANTED
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when(requestCode){
+            RequestCodes.WRITE_EXTERNAL_STORAGE.ordinal -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)){
+                    showSaveDialog(draw_view.getBitmap())
+                }
+                return
+            }
+            else -> {}
+        }
     }
-
-    private fun requestStoragePermission() {
-        ActivityCompat.requestPermissions(this,
-            arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            2)
-    }
-
 
     private fun showSaveDialog(bitmap: Bitmap) {
         val alertDialog = AlertDialog.Builder(this)
@@ -165,18 +169,6 @@ class FreeDrawActivity : AppCompatActivity() {
         val dialog = alertDialog.create()
         dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
         dialog.show()
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        when(requestCode){
-            2 -> {
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)){
-                    showSaveDialog(draw_view.getBitmap())
-                }
-                return
-            }
-            else -> {}
-        }
     }
 
     private fun saveImage(bitmap: Bitmap, fileName: String, imgDescription: String) {
