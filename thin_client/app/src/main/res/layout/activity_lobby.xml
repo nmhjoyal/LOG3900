@@ -13,7 +13,7 @@
         android:text="@string/title_activity_free_draw"
         android:textSize="16sp"
         android:background="@color/colorPrimary"
-        android:textColor="@color/color_white"
+        android:textColor="#ffffff"
         android:textStyle="bold"
         android:padding="12dp"
         app:layout_constraintBottom_toBottomOf="parent"

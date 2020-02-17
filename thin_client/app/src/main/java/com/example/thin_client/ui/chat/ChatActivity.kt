@@ -82,25 +82,6 @@ class ChatActivity : AppCompatActivity() {
         // Disable native back
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
-            R.id.menu_sign_out -> {
-                SocketHandler.logout()
-                val prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
-                prefs.edit().putBoolean(Preferences.LOGGED_IN_KEY, false).apply()
-                val intent = Intent(applicationContext, LoginActivity::class.java)
-                startActivity(intent)
-                finish()
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    override fun onCreateOptionsMenu(menu:Menu): Boolean{
-        menuInflater.inflate(R.menu.nav_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
 
     private fun showToMessage(text: String, date: Long){
         adapter.add(ChatToItem(text.replace("\\n".toRegex(), ""), date))

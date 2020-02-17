@@ -28,6 +28,7 @@ class ChatRoomsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         val v = inflater.inflate(R.layout.chatrooms_fragment, container, false)
         return v
     }
