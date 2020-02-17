@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/round"
+        android:icon="@drawable/circle_black"
+        android:title="@string/round_cap"/>
+    <item
+        android:id="@+id/square"
+        android:icon="@drawable/square_tip"
+        android:title="@string/square_cap"/>
+</menu>

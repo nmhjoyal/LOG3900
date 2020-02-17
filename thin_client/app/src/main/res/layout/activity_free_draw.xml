@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.game_mode.free_draw.FreeDrawActivity">
 
-    <com.divyanshu.draw.widget.DrawView
+    <com.example.thin_client.ui.game_mode.free_draw.DrawView
         android:id="@+id/draw_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -98,6 +98,16 @@
                 android:progress="15"
                 android:rotation="270" />
         </androidx.cardview.widget.CardView>
+
+        <ImageButton
+            android:id="@+id/tip_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            app:srcCompat="@drawable/ic_pen_tip"
+            android:layout_gravity="center">
+
+        </ImageButton>
 
     </LinearLayout>
 

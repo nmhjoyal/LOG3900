@@ -2,25 +2,45 @@ package com.example.thin_client.ui.game_mode.free_draw
 
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Paint
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.view.WindowManager
+import android.widget.AdapterView
 import android.widget.EditText
 import android.widget.SeekBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.thin_client.R
-
 import kotlinx.android.synthetic.main.activity_free_draw.*
 import java.util.*
 
-class FreeDrawActivity : AppCompatActivity() {
+
+class FreeDrawActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_free_draw)
+
+        tip_button.setOnClickListener(({v ->
+            val popup = PopupMenu(this, v)
+            val inflater: MenuInflater = popup.menuInflater
+            inflater.inflate(R.menu.draw_tip_menu, popup.menu)
+            popup.setOnMenuItemClickListener (({
+                if (it.itemId == R.id.round) {
+                    draw_view.setStrokeCap(Paint.Cap.ROUND)
+                } else {
+                    draw_view.setStrokeCap(Paint.Cap.SQUARE)
+                }
+            }))
+            popup.show()
+        }))
 
         save_button.setOnClickListener(({
             if (!hasStoragePermission()) {
@@ -140,5 +160,13 @@ class FreeDrawActivity : AppCompatActivity() {
     private fun saveImage(bitmap: Bitmap, fileName: String, imgDescription: String) {
         MediaStore.Images.Media.insertImage(contentResolver, bitmap, fileName, imgDescription)
 
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

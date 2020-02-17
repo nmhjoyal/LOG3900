@@ -8,8 +8,4 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="PaletteSpinner" parent="android:Widget.Spinner">
-        <item name="android:background">@drawable/ic_palette_24px</item>
-    </style>
-
 </resources>
