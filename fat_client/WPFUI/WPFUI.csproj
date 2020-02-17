@@ -111,6 +111,7 @@
     <Compile Include="ViewModels\chatBoxViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="Models\Message.cs" />
+    <Compile Include="ViewModels\modifyProfileViewModel.cs" />
     <Compile Include="ViewModels\NewUserViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="Views\chatBoxView.xaml.cs">
@@ -118,6 +119,9 @@
     </Compile>
     <Compile Include="Views\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\modifyProfileView.xaml.cs">
+      <DependentUpon>modifyProfileView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\NewUserView.xaml.cs">
       <DependentUpon>NewUserView.xaml</DependentUpon>
@@ -160,6 +164,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\LoginView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\modifyProfileView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

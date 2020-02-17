@@ -14,39 +14,41 @@
              TextOptions.TextRenderingMode="Auto"
              FontFamily="{DynamicResource MaterialDesignFont}" Background="#FFF1F2F1">
 
-    <Grid >
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="20"/>
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="20" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="20"/>
-        </Grid.RowDefinitions>
-        <Image Source="login image.png" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" HorizontalAlignment="Center" MaxHeight="100"/>
-        <TextBlock Text="Enter your server IP adress: " Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="5" Foreground="DarkSlateGray"/>
-        <TextBox MinWidth="100" Grid.Column="1" Grid.Row="4" x:Name="_ipAdress" Grid.ColumnSpan="5"  Margin="5" Foreground="DarkSlateGray">
-        </TextBox>
-        <TextBlock Text="Enter you desired username: " Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="5" Foreground="DarkSlateGray"/>
-        <TextBox MinWidth="100" Grid.Column="1" Grid.Row="6" x:Name="_userName" Grid.ColumnSpan="5"  Margin="5" Foreground="DarkSlateGray" MaxLength="20">
-        </TextBox>
-        <Button x:Name="logIn" Style="{DynamicResource MaterialDesignRaisedAccentButton}" MaxWidth =" 200" Content="Enter the chatroom" Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="5" Margin="10" Foreground="White" Background="#FFCFD1D0">
-        </Button>
-    </Grid>
+	<Grid >
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="20"/>
+			<ColumnDefinition Width="auto" />
+			<ColumnDefinition Width="auto" />
+			<ColumnDefinition Width="auto" />
+			<ColumnDefinition Width="auto" />
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="20" />
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="20"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="2*"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="9*"/>
+			<RowDefinition Height="20"/>
+		</Grid.RowDefinitions>
+		<TextBlock Text="Fais moi un dessin" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Center" Grid.ColumnSpan="5" FontSize="30" Foreground="#FF66CC00"></TextBlock>
+		<TextBlock Text="Username: " Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="5" Foreground="DarkSlateGray"/>
+		<TextBox MinWidth="100" Grid.Column="1" Grid.Row="4" x:Name="_ipAdress" Grid.ColumnSpan="5"  Margin="5" Foreground="DarkSlateGray">
+		</TextBox>
+		<TextBlock Text="Password: " Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="5" Foreground="DarkSlateGray"/>
+		<TextBox MinWidth="100" Grid.Column="1" Grid.Row="6" x:Name="_userName" Grid.ColumnSpan="5"  Margin="5" Foreground="DarkSlateGray" MaxLength="20">
+		</TextBox>
+		<Button x:Name="signIn" Style="{DynamicResource MaterialDesignRaisedAccentButton}" MaxWidth =" 200" Content="Sign In" Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="5" Margin="10" Foreground="White" Background="#FF66CC00">
+		</Button>
+		<Button x:Name="signOut" Style="{DynamicResource MaterialDesignRaisedAccentButton}" MaxWidth =" 200" Content="Sign Out" Grid.Column="1" Grid.Row="10" Grid.ColumnSpan="5" Margin="10" Foreground="White" Background="#FF66CC00">
+		</Button>
+	</Grid>
 </UserControl>
