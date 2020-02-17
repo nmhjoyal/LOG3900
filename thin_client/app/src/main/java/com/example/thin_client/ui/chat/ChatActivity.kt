@@ -16,7 +16,7 @@ import com.example.thin_client.R
 import com.example.thin_client.data.Message
 import com.example.thin_client.data.Preferences
 import com.example.thin_client.server.SocketHandler
-import com.example.thin_client.ui.chatrooms.ChatRoomsActivity
+import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
 import com.example.thin_client.ui.login.LoginActivity
 import com.example.thin_client.ui.login.afterTextChanged
 import com.google.gson.Gson
@@ -33,7 +33,7 @@ class ChatActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
-        val roomname = intent.getStringExtra(ChatRoomsActivity.ROOM_KEY)
+        val roomname = intent.getStringExtra(ChatRoomsFragment.ROOM_KEY)
         supportActionBar?.title = roomname
        // SocketHandler.joinRoom()
         recyclerview_chat.adapter = adapter

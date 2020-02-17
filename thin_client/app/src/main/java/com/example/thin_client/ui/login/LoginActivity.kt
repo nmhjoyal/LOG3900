@@ -21,8 +21,9 @@ import com.example.thin_client.R
 
 import com.example.thin_client.data.model.User
 import com.example.thin_client.server.SocketHandler
+import com.example.thin_client.ui.MainActivity
 
-import com.example.thin_client.ui.chatrooms.ChatRoomsActivity
+import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
 import com.example.thin_client.ui.createUser.CreateUserActivity
 import com.github.nkzawa.socketio.client.Socket
 
@@ -102,7 +103,7 @@ class LoginActivity : AppCompatActivity() {
                     }))
                     .on("user_signed_in", ({ data ->
                         if (data.last().toString().toBoolean()) {
-                            val intent = Intent(applicationContext, ChatRoomsActivity::class.java)
+                            val intent = Intent(applicationContext, MainActivity::class.java)
                             startActivity(intent)
                             finish()
                         } else {

@@ -19,7 +19,8 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.thin_client.R
 import com.example.thin_client.data.model.User
 import com.example.thin_client.server.SocketHandler
-import com.example.thin_client.ui.chatrooms.ChatRoomsActivity
+import com.example.thin_client.ui.MainActivity
+import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
 import com.example.thin_client.ui.login.afterTextChanged
 import com.github.nkzawa.socketio.client.Socket
 import de.hdodenhof.circleimageview.CircleImageView
@@ -42,7 +43,7 @@ class CreateUserActivity : AppCompatActivity() {
         var confirmPassword = findViewById<EditText>(R.id.confirmPass)
         val create = findViewById<Button>(R.id.create)
         val avatar = findViewById<Button>(R.id.button_upload_avatar)
-        val ipAddress = "192.168.2.32"
+        val ipAddress = "10.226.230.137"
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -105,7 +106,7 @@ class CreateUserActivity : AppCompatActivity() {
                 }))
                 .on("user_signed_in", ({ data ->
                     if (data.last().toString().toBoolean()) {
-                        val intent = Intent(applicationContext, ChatRoomsActivity::class.java)
+                        val intent = Intent(applicationContext, MainActivity::class.java)
                         startActivity(intent)
                         finish()
                     } else {
