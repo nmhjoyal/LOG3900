@@ -3,10 +3,7 @@ package com.example.thin_client.ui.game_mode.free_draw
 import com.divyanshu.draw.widget.MyPath
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -25,6 +22,7 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private var mPaint = Paint()
     private var mPath = MyPath()
     private var mPaintOptions = PaintOptions()
+    private var mIsErasing = false
 
     private var mCurX = 0f
     private var mCurY = 0f
@@ -44,13 +42,14 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         }
     }
 
-    fun setColor(newColor: Int) {
+    fun setColor(newColor: Int): Boolean {
         @ColorInt
         val alphaColor = ColorUtils.setAlphaComponent(newColor, mPaintOptions.alpha)
         mPaintOptions.color = alphaColor
         if (mIsStrokeWidthBarEnabled) {
             invalidate()
         }
+        return true
     }
 
     fun setStrokeWidth(newStrokeWidth: Float) {
@@ -65,6 +64,11 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         if (mIsStrokeWidthBarEnabled) {
             invalidate()
         }
+        return true
+    }
+
+    fun toggleEraser(isToggled: Boolean): Boolean {
+        mIsErasing = isToggled
         return true
     }
 
@@ -108,31 +112,54 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     }
 
     private fun actionDown(x: Float, y: Float) {
-        mPath.reset()
-        mPath.moveTo(x, y)
-        mCurX = x
-        mCurY = y
+        if (!mIsErasing) {
+            mPath.reset()
+            mPath.moveTo(x, y)
+            mCurX = x
+            mCurY = y
+        }
     }
 
     private fun actionMove(x: Float, y: Float) {
-        mPath.quadTo(mCurX, mCurY, (x + mCurX) / 2, (y + mCurY) / 2)
-        mCurX = x
-        mCurY = y
+        if (mIsErasing) {
+            val region = Region()
+            val toDelete: ArrayList<MyPath> = ArrayList()
+            for (path in mPaths.keys) {
+                region.setPath(path, Region(0, 0, this.right, this.bottom))
+                if (region.contains(x.toInt() ,y.toInt())) {
+                    toDelete.add(path)
+                }
+            }
+            for (path in toDelete.iterator()) {
+                mPaths.remove(path)
+            }
+        } else {
+            mPath.quadTo(mCurX, mCurY, (x + mCurX) / 2, (y + mCurY) / 2)
+            mCurX = x
+            mCurY = y
+        }
     }
 
     private fun actionUp() {
-        mPath.lineTo(mCurX, mCurY)
+        if (!mIsErasing) {
+            mPath.lineTo(mCurX, mCurY)
 
-        // draw a dot on click
-        if (mStartX == mCurX && mStartY == mCurY) {
-            mPath.lineTo(mCurX, mCurY + 2)
-            mPath.lineTo(mCurX + 1, mCurY + 2)
-            mPath.lineTo(mCurX + 1, mCurY)
+            // draw a dot on click
+            if (mStartX == mCurX && mStartY == mCurY) {
+                mPath.lineTo(mCurX, mCurY + 2)
+                mPath.lineTo(mCurX + 1, mCurY + 2)
+                mPath.lineTo(mCurX + 1, mCurY)
+            }
+
+            mPaths.put(mPath, mPaintOptions)
+            mPath = MyPath()
+            mPaintOptions = PaintOptions(
+                mPaintOptions.color,
+                mPaintOptions.strokeWidth,
+                mPaintOptions.alpha,
+                mPaintOptions.cap
+            )
         }
-
-        mPaths.put(mPath, mPaintOptions)
-        mPath = MyPath()
-        mPaintOptions = PaintOptions(mPaintOptions.color, mPaintOptions.strokeWidth, mPaintOptions.alpha, mPaintOptions.cap)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

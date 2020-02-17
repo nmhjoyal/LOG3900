@@ -6,12 +6,10 @@ import android.graphics.Paint
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
 import android.view.WindowManager
-import android.widget.AdapterView
 import android.widget.EditText
 import android.widget.SeekBar
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
@@ -29,6 +27,7 @@ class FreeDrawActivity : AppCompatActivity() {
         setContentView(R.layout.activity_free_draw)
 
         tip_button.setOnClickListener(({v ->
+            draw_view.toggleEraser(false)
             val popup = PopupMenu(this, v)
             val inflater: MenuInflater = popup.menuInflater
             inflater.inflate(R.menu.draw_tip_menu, popup.menu)
@@ -51,56 +50,79 @@ class FreeDrawActivity : AppCompatActivity() {
         }))
 
         red.setOnClickListener(({
+            draw_view.toggleEraser(false)
             draw_view.setColor(ContextCompat.getColor(this, R.color.color_red))
         }))
 
         orange.setOnClickListener(({
+            draw_view.toggleEraser(false)
             draw_view.setColor(ContextCompat.getColor(this, R.color.color_orange))
         }))
 
         yellow.setOnClickListener(({
+            draw_view.toggleEraser(false)
             draw_view.setColor(ContextCompat.getColor(this, R.color.color_yellow))
         }))
 
         green.setOnClickListener(({
+            draw_view.toggleEraser(false)
             draw_view.setColor(ContextCompat.getColor(this, R.color.color_green))
         }))
 
         blue.setOnClickListener(({
+            draw_view.toggleEraser(false)
             draw_view.setColor(ContextCompat.getColor(this, R.color.color_blue))
         }))
 
         purple.setOnClickListener(({
+            draw_view.toggleEraser(false)
             draw_view.setColor(ContextCompat.getColor(this, R.color.color_purple))
         }))
 
         pink.setOnClickListener(({
+            draw_view.toggleEraser(false)
             draw_view.setColor(ContextCompat.getColor(this, R.color.color_pink))
         }))
 
         white.setOnClickListener(({
+            draw_view.toggleEraser(false)
             draw_view.setColor(ContextCompat.getColor(this, R.color.color_white))
         }))
 
         grey.setOnClickListener(({
+            draw_view.toggleEraser(false)
             draw_view.setColor(ContextCompat.getColor(this, R.color.color_grey))
         }))
 
         brown.setOnClickListener(({
+            draw_view.toggleEraser(false)
             draw_view.setColor(ContextCompat.getColor(this, R.color.color_brown))
         }))
 
         black.setOnClickListener(({
+            draw_view.toggleEraser(false)
             draw_view.setColor(ContextCompat.getColor(this, R.color.color_black))
         }))
 
-        eraser.setOnClickListener(({
-            draw_view.setColor(ContextCompat.getColor(this, R.color.default_background))
+        eraser.setOnClickListener(({v ->
+            val popup = PopupMenu(this, v)
+            val inflater: MenuInflater = popup.menuInflater
+            inflater.inflate(R.menu.draw_erase_menu, popup.menu)
+            popup.setOnMenuItemClickListener (({
+                if (it.itemId == R.id.draw_erase) {
+                    draw_view.toggleEraser(false)
+                    draw_view.setColor(ContextCompat.getColor(this, R.color.default_background))
+                } else {
+                    draw_view.toggleEraser(true)
+                }
+            }))
+            popup.show()
         }))
 
         seekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int,
                                            fromUser: Boolean) {
+                draw_view.toggleEraser(false)
                 sizing.scaleX = (progress.div(100f)) * 10
                 sizing.scaleY = (progress.div(100f)) * 10
             }
@@ -158,7 +180,11 @@ class FreeDrawActivity : AppCompatActivity() {
     }
 
     private fun saveImage(bitmap: Bitmap, fileName: String, imgDescription: String) {
-        MediaStore.Images.Media.insertImage(contentResolver, bitmap, fileName, imgDescription)
-
+        val result = MediaStore.Images.Media.insertImage(contentResolver, bitmap, fileName, imgDescription)
+        if (result != null) {
+            Toast.makeText(applicationContext, R.string.image_saved, Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(applicationContext, R.string.error_image_saved, Toast.LENGTH_SHORT).show()
+        }
     }
 }
