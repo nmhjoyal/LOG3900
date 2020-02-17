@@ -32,7 +32,7 @@
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="20"/>
 		</Grid.RowDefinitions>
-		<TextBlock Text="Edit Profile" FontSize="25" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" HorizontalAlignment="Center" MaxHeight="100" Foreground="GreenYellow"/>
+		<TextBlock Text="Edit Profile" FontSize="25" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" HorizontalAlignment="Center" MaxHeight="100" Foreground="#FF66CC00"/>
 		<TextBlock Text="Enter your new username:" Grid.Column="1" Grid.Row="2"/>
 		<TextBox x:Name="newUserName" Grid.Column="2" Grid.Row="2" MinWidth="200" Grid.ColumnSpan="4"/>
 		<TextBlock Text="Enter your new first name:" Grid.Column="1" Grid.Row="3"/>
@@ -47,6 +47,6 @@
 		<TextBox x:Name="confirmedNewPassword" Grid.Column="2" Grid.Row="7" MinWidth="200" Grid.ColumnSpan="4"/>
 		<TextBlock Grid.Column="1" Grid.Row="8" Text="Choose your avatar:"></TextBlock>
 		<TextBox Grid.Column="2" Grid.Row="8" Grid.ColumnSpan="4"></TextBox>
-		<Button x:Name="saveChanges" Content="Save Changes" Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="5" MaxWidth="200"/>
+		<Button x:Name="saveChanges" Content="Save Changes" Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="5" MaxWidth="200" Background="#FF66CC00"/>
 	</Grid>
 </UserControl>

@@ -31,7 +31,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="Create profile" FontSize="25" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" HorizontalAlignment="Center" MaxHeight="100" Foreground="GreenYellow"/>
+        <TextBlock Text="Create profile" FontSize="25" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" HorizontalAlignment="Center" MaxHeight="100" Foreground="#FF66CC00"/>
         <TextBlock Text="Enter your username:" Grid.Column="1" Grid.Row="2"/>
         <TextBox x:Name="userName" Grid.Column="2" Grid.Row="2" MinWidth="200" Grid.ColumnSpan="4"/>
         <TextBlock Text="Enter your first name:" Grid.Column="1" Grid.Row="3"/>
@@ -44,6 +44,6 @@
         <TextBox x:Name="confirmedPassword" Grid.Column="2" Grid.Row="6"  MinWidth="200" Grid.ColumnSpan="4"/>
         <TextBlock Text="Choose your avatar" Grid.Column="1" Grid.Row="7"/>
         <TextBox Grid.Column="2" Grid.Row="7" MinWidth="200" Grid.ColumnSpan="4"/>
-        <Button x:Name="createUser" Content="Sign Up" Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="5" MaxWidth="200"/>
+        <Button x:Name="createUser" Content="Sign Up" Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="5" MaxWidth="200" Background="#FF66CC00" Foreground="White"/>
     </Grid>
 </UserControl>
