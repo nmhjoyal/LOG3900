@@ -1,15 +1,15 @@
 stages:
   - build
-  - lint
   - test
 
 cache:
-  key: ${CI_PROJECT_ID}
+  key: "$CI_COMMIT_REF_NAME"
   paths:
     - thin_client/.gradle/
     - Server/node_modules/
+  policy: pull
 
-build:client-léger:
+build:thin_client:
   stage: build
   image: jangrewe/gitlab-ci-android
   before_script:
@@ -24,16 +24,20 @@ build:client-léger:
     paths:
     - app/build/outputs/
 
+# build:fat_client:
+#   stage: build
+#   image: microsoft/dotnet
+
 build:server:
   stage: build
-  image: xwiillz/node-yarn-firefox-chromium:latest
+  image: kkarczmarczyk/node-yarn:latest
   script:
     - pushd Server
+    - yarn
     - yarn tsc
     - popd
 
-
-test:client-léger:
+test:thin_client:
   stage: test
   image: jangrewe/gitlab-ci-android
   before_script:
@@ -44,3 +48,5 @@ test:client-léger:
     - popd
   script:
     - ./gradlew -Pci --console=plain testDebug
+  dependencies:
+    - build:thin_client
