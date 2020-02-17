@@ -1,0 +1,46 @@
+stages:
+  - build
+  - lint
+  - test
+
+cache:
+  key: ${CI_PROJECT_ID}
+  paths:
+    - thin_client/.gradle/
+    - Server/node_modules/
+
+build:client-léger:
+  stage: build
+  image: jangrewe/gitlab-ci-android
+  before_script:
+    - pushd thin_client
+    - export GRADLE_USER_HOME=$(pwd)/.gradle
+    - chmod +x ./gradlew
+  after_script:
+    - popd
+  script:
+    - ./gradlew assembleDebug
+  artifacts:
+    paths:
+    - app/build/outputs/
+
+build:server:
+  stage: build
+  image: xwiillz/node-yarn-firefox-chromium:latest
+  script:
+    - pushd Server
+    - yarn tsc
+    - popd
+
+
+test:client-léger:
+  stage: test
+  image: jangrewe/gitlab-ci-android
+  before_script:
+    - pushd thin_client
+    - export GRADLE_USER_HOME=$(pwd)/.gradle
+    - chmod +x ./gradlew
+  after_script:
+    - popd
+  script:
+    - ./gradlew -Pci --console=plain testDebug
