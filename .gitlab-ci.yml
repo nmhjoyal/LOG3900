@@ -26,14 +26,11 @@ build:thin_client:
 
 build:fat_client:
   stage: build
-  image: mono:4.7.2
+  image: mageno/gitlab-ci-dotnet
   script:
-    - pushd fat_client/WPFUI
-    - nuget install
-    - popd
     - pushd fat_client
-    - nuget restore
-    - msbuild /p:Configuration=Debug
+    - dotnet restore
+    - dotnet build
     - popd
 
 build:server:
