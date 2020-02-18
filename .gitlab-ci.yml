@@ -33,7 +33,7 @@ build:fat_client:
     - popd
     - pushd fat_client
     - nuget restore
-    - dotnet build
+    - devenv /build Debug ChatPrototype.sln
     - popd
 
 build:server:
