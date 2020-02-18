@@ -35,4 +35,13 @@ export default class ChatRoom {
     public getMessages() : Message[] {
         return this.messages;
     }
+
+    public toString() : string {
+        let chatRoom: string = "";
+        chatRoom += "\nName : " + this.name + "\nUsers : ";
+        for(let user of this.users) {
+            chatRoom += " " + user.username;
+        }
+        return chatRoom;
+    }
 }

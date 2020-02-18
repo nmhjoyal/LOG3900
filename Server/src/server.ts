@@ -9,8 +9,8 @@ import { useExpressServer } from "routing-controllers";
 import { HttpController } from "./controller/http/httpController";
 import * as ServerConfig from "./serverConfig.json";
 import { useSocketServer } from "socket-controllers";
-import { SocketProtoController } from "./controller/socket/socketController"
-import * as socketioImport from "socket.io"
+import { SocketProtoController } from "./controller/socket/socketController";
+import * as socketioImport from "socket.io";
 
 @injectable()
 export class Server {

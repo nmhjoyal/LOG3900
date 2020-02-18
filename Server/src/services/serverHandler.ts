@@ -1,17 +1,15 @@
 import User from "../models/user";
 import ChatRoom from "./chatRoom";
+import Message from "../models/message"
 
 export default class ServerHandler {
-    public name: string;
     private users: Map<string, User>;
     // TEMPORARY : eventually array of rooms
-    private chatRoom: ChatRoom;
+    private chatRooms: ChatRoom[];
 
-    public constructor(name: string) {
-        this.name = name;
+    public constructor() {
         this.users = new Map();
-        // TEMPORARY
-        this.chatRoom = new ChatRoom("TEMPORARY_NAME");
+        this.chatRooms = [new ChatRoom("Room1")];
     }
 
     /**
@@ -47,6 +45,48 @@ export default class ServerHandler {
         return this.users.get(socketId);
     }
 
+    public createChatRoom(io: SocketIO.Socket, socket: SocketIO.Socket, roomId: string): void {
+        if(this.getChatRoomByName(roomId) == undefined) {
+            this.chatRooms.push(new ChatRoom(roomId));
+            io.emit("room_created", roomId);
+        } else {
+            socket.emit("room_already_exists");
+        }
+        console.log(this.chatRooms.toString());
+    }
+
+    public joinChatRoom(socket: SocketIO.Socket, roomId: string): void {
+        let user: User | undefined = this.users.get(socket.id);
+        let chatRoom: ChatRoom | undefined = this.getChatRoomByName(roomId);
+        if (user && chatRoom) {
+            socket.join(roomId);
+            socket.to(roomId).emit("user_joined", this.getUser(socket.id)?.username);
+            chatRoom.addUser(user);
+            socket.emit("load_messages", JSON.stringify(chatRoom.getMessages));
+            console.log(this.chatRooms.toString());
+        }
+    }
+
+    public leaveChatRoom(socket: SocketIO.Socket, roomId: string): void {
+        socket.leave(roomId);
+        let user: User | undefined = this.users.get(socket.id);
+        if (user) {
+            this.getChatRoomByName(roomId)?.removeUser(user);
+        }
+        socket.to(roomId).emit("user_left", this.getUser(socket.id)?.username);
+        console.log(this.chatRooms.toString());
+    }
+
+    public sendMessage(io: SocketIO.Socket, socket: SocketIO.Socket, roomId: string, message: Message): void{
+        message.date = Math.floor(Date.now() / 1000);
+        let chatRoom: ChatRoom | undefined = this.getChatRoomByName(roomId);
+        if (chatRoom) {
+            chatRoom.addMessage(message);
+            io.in(roomId).emit("new_message", JSON.stringify(message));
+            console.log("*" + message.content + "* has been sent by " + this.getUser(socket.id)?.username + " in " + roomId);
+        }
+    }
+
     private isConnected(username: string): boolean {
         let userIsConnected: boolean = false;
 
@@ -59,7 +99,7 @@ export default class ServerHandler {
         return userIsConnected;
     }
 
-    public joinRoom(roomName: string): void {
-        // eventually
+    private getChatRoomByName(roomId: string): ChatRoom | undefined {
+        return this.chatRooms.find(room => room.name == roomId)
     }
 }

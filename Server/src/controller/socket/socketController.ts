@@ -9,57 +9,52 @@ export class SocketProtoController {
     private server: ServerHandler;
 
     public constructor() {
-        this.server = new ServerHandler("room1");
+        this.server = new ServerHandler();
     }
  
     @OnConnect()
-    connection(@ConnectedSocket() socket: any) {
+    connection(@ConnectedSocket() socket: SocketIO.Socket) {
         console.log("client connected");
     }
  
     @OnDisconnect()
-    disconnect(@ConnectedSocket() socket: any) {
+    disconnect(@ConnectedSocket() socket: SocketIO.Socket) {
         this.server.signOut(socket.id);
         console.log("client disconnected");
     }
 
-    @OnMessage("test")
-    messageTest() {
-        console.log("Hi")
-    }
-
-    @OnMessage("send_message")
-    send_message(@SocketIO() io: SocketIO.Socket, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() message: Message) {
-        console.log("*" + message.content + "* has been sent by " + this.server.getUser(socket.id)?.username);
-
-        message.date = Math.floor(Date.now() / 1000);
-        io.in(this.server.name).emit("new_message", JSON.stringify(message));
-    }
-
     @OnMessage("sign_in")
-    sign_in(@ConnectedSocket() socket: any, @MessageBody() user: User) {
+    sign_in(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() user: User) {
         let canConnect:boolean =  this.server.signIn(socket.id, user);
         socket.emit("user_signed_in", JSON.stringify(canConnect));
     }
 
     @OnMessage("sign_out")
-    sign_out(@ConnectedSocket() socket: any) {
+    sign_out(@ConnectedSocket() socket: SocketIO.Socket) {
         this.server.signOut(socket.id);
-        socket.leave(this.server.name);
+        // Quitter toutes les rooms dans lequel le user est
         socket.emit("user_signed_out", JSON.stringify(this.server.signOut(socket.id)));
     }
 
+    @OnMessage("create_chat_room")
+    create_chat_room(@SocketIO() io: SocketIO.Socket, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() roomId: string) {
+        this.server.createChatRoom(io, socket, roomId);
+    }
+
     @OnMessage("join_chat_room")
-    join_chat_room(@ConnectedSocket() socket: any) {
-        // Eventually, this.server.joinRoom()
-        socket.join(this.server.name);
-        socket.to(this.server.name).emit("new_client", this.server.getUser(socket.id)?.username);
+    join_chat_room(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() roomId: string) {
+        this.server.joinChatRoom(socket, roomId);
     }
 
     @OnMessage("leave_chat_room")
-    leave_chat_room(@ConnectedSocket() socket: any) {
-        socket.leave(this.server.name);
-        socket.to(this.server.name).emit("new_client", this.server.getUser(socket.id)?.username);
+    leave_chat_room(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() roomId: string) {
+        this.server.leaveChatRoom(socket, roomId);
+    }
+
+    
+    @OnMessage("send_message")
+    send_message(@SocketIO() io: SocketIO.Socket, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() roomId: string, @MessageBody() message: Message) {
+        this.server.sendMessage(io, socket, roomId, message);
     }
 
 }
