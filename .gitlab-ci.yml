@@ -1,5 +1,4 @@
 stages:
-  - setup
   - build
   - test
 
@@ -9,19 +8,6 @@ cache:
     - thin_client/.gradle/
     - Server/node_modules/
   policy: pull
-
-setup:server:
-  stage: setup
-  image: kkarczmarczyk/node-yarn:latest
-  script:
-    - pushd Server
-    - yarn
-    - popd
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    paths:
-      - Server/node_modules/
-    policy: pull-push
 
 build:thin_client:
   stage: build
@@ -42,7 +28,8 @@ build:fat_client:
   stage: build
   image: microsoft/dotnet:latest
   script:
-    - pushd fat_client
+    - pushd fat_client/WPFUI
+    - nuget install
     - dotnet build
     - popd
 
@@ -51,6 +38,7 @@ build:server:
   image: kkarczmarczyk/node-yarn:latest
   script:
     - pushd Server
+    - yarn
     - yarn tsc
     - popd
   dependencies:
