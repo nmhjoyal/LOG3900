@@ -8,7 +8,9 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.ColorInt
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
+import com.example.thin_client.R
 import com.example.thin_client.data.PaintOptions
 import java.util.LinkedHashMap
 
@@ -124,10 +126,11 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         if (mIsErasing) {
             val region = Region()
             val toDelete: ArrayList<MyPath> = ArrayList()
-            for (path in mPaths.keys) {
-                region.setPath(path, Region(0, 0, this.right, this.bottom))
-                if (region.contains(x.toInt() ,y.toInt())) {
-                    toDelete.add(path)
+            for (path in mPaths.entries) {
+                region.setPath(path.key, Region(0, 0, this.right, this.bottom))
+                if (region.contains(x.toInt() ,y.toInt()) &&
+                    path.value.color != ContextCompat.getColor(context, R.color.default_background)) {
+                    toDelete.add(path.key)
                 }
             }
             for (path in toDelete.iterator()) {

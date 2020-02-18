@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/draw_erase"
-        android:title="@string/eraser_draw_erase"/>
-    <item
-        android:id="@+id/touch_erase"
-        android:title="@string/eraser_touch_erase"/>
-</menu>

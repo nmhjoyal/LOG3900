@@ -5,14 +5,12 @@ import android.graphics.Bitmap
 import android.graphics.Paint
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.MenuInflater
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import com.example.thin_client.R
 import com.example.thin_client.data.PermissionHandler
@@ -21,28 +19,57 @@ import kotlinx.android.synthetic.main.activity_free_draw.*
 import java.util.*
 
 private const val PERCENT = 100f
-private const val SCALE_FACTOR = 10f
-private const val SIZING_FACTOR = 70f
+private const val SCALE_FACTOR = 8f
+private const val SIZING_FACTOR = 80f
 
 class FreeDrawActivity : AppCompatActivity() {
+
+    var lastColour = R.color.color_black
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_free_draw)
 
-        tip_button.setOnClickListener(({v ->
+        crayon.setOnClickListener(({
             draw_view.toggleEraser(false)
-            val popup = PopupMenu(this, v)
-            val inflater: MenuInflater = popup.menuInflater
-            inflater.inflate(R.menu.draw_tip_menu, popup.menu)
-            popup.setOnMenuItemClickListener (({
-                if (it.itemId == R.id.round) {
-                    draw_view.setStrokeCap(Paint.Cap.ROUND)
-                } else {
-                    draw_view.setStrokeCap(Paint.Cap.SQUARE)
-                }
-            }))
-            popup.show()
+            resetDrawingOptions()
+            crayon.setBackgroundResource(R.drawable.circle_primary_dark)
+            draw_view.setColor(ContextCompat.getColor(this, lastColour))
+        }))
+
+        circle_cap.setOnClickListener(({
+            draw_view.toggleEraser(false)
+            circle_cap.setBackgroundResource(R.drawable.circle_primary_dark)
+            draw_view.setStrokeCap(Paint.Cap.ROUND)
+        }))
+
+        square_cap.setOnClickListener(({
+            draw_view.toggleEraser(false)
+            square_cap.setBackgroundResource(R.drawable.circle_primary_dark)
+            draw_view.setStrokeCap(Paint.Cap.SQUARE)
+        }))
+
+        vertical_cap.setOnClickListener(({
+            draw_view.toggleEraser(false)
+            vertical_cap.setBackgroundResource(R.drawable.circle_primary_dark)
+            draw_view.setStrokeCap(Paint.Cap.BUTT)
+        }))
+
+        eraser.setOnClickListener(({
+            draw_view.toggleEraser(true)
+            resetDrawingOptions()
+            eraser.setBackgroundResource(R.drawable.circle_primary_dark)
+        }))
+
+        pencil_eraser.setOnClickListener(({
+            draw_view.toggleEraser(false)
+            resetDrawingOptions()
+            pencil_eraser.setBackgroundResource(R.drawable.circle_primary_dark)
+            draw_view.setColor(ContextCompat.getColor(this, R.color.default_background))
+        }))
+
+        trash.setOnClickListener(({
+            showClearDialog()
         }))
 
         save_button.setOnClickListener(({
@@ -55,78 +82,133 @@ class FreeDrawActivity : AppCompatActivity() {
 
         red.setOnClickListener(({
             draw_view.toggleEraser(false)
+            resetColourOptions()
+            resetDrawingOptions()
+            crayon.setBackgroundResource(R.drawable.circle_primary_dark)
+            sizing.setBackgroundResource(R.drawable.circle_red)
+            red.setBackgroundResource(R.color.colorPrimaryDark)
             draw_view.setColor(ContextCompat.getColor(this, R.color.color_red))
+            lastColour = R.color.color_red
         }))
 
         orange.setOnClickListener(({
             draw_view.toggleEraser(false)
+            resetColourOptions()
+            resetDrawingOptions()
+            crayon.setBackgroundResource(R.drawable.circle_primary_dark)
+            sizing.setBackgroundResource(R.drawable.circle_orange)
+            orange.setBackgroundResource(R.color.colorPrimaryDark)
             draw_view.setColor(ContextCompat.getColor(this, R.color.color_orange))
+            lastColour = R.color.color_orange
         }))
 
         yellow.setOnClickListener(({
             draw_view.toggleEraser(false)
+            resetColourOptions()
+            resetDrawingOptions()
+            crayon.setBackgroundResource(R.drawable.circle_primary_dark)
+            sizing.setBackgroundResource(R.drawable.circle_yellow)
+            yellow.setBackgroundResource(R.color.colorPrimaryDark)
             draw_view.setColor(ContextCompat.getColor(this, R.color.color_yellow))
+            lastColour = R.color.color_yellow
         }))
 
         green.setOnClickListener(({
             draw_view.toggleEraser(false)
+            resetColourOptions()
+            resetDrawingOptions()
+            crayon.setBackgroundResource(R.drawable.circle_primary_dark)
+            sizing.setBackgroundResource(R.drawable.circle_green)
+            green.setBackgroundResource(R.color.colorPrimaryDark)
             draw_view.setColor(ContextCompat.getColor(this, R.color.color_green))
+            lastColour = R.color.color_green
         }))
 
         blue.setOnClickListener(({
             draw_view.toggleEraser(false)
+            resetColourOptions()
+            resetDrawingOptions()
+            crayon.setBackgroundResource(R.drawable.circle_primary_dark)
+            sizing.setBackgroundResource(R.drawable.circle_blue)
+            blue.setBackgroundResource(R.color.colorPrimaryDark)
             draw_view.setColor(ContextCompat.getColor(this, R.color.color_blue))
+            lastColour = R.color.color_blue
         }))
 
         purple.setOnClickListener(({
             draw_view.toggleEraser(false)
+            resetColourOptions()
+            resetDrawingOptions()
+            crayon.setBackgroundResource(R.drawable.circle_primary_dark)
+            sizing.setBackgroundResource(R.drawable.circle_purple)
+            purple.setBackgroundResource(R.color.colorPrimaryDark)
             draw_view.setColor(ContextCompat.getColor(this, R.color.color_purple))
+            lastColour = R.color.color_purple
         }))
 
         pink.setOnClickListener(({
             draw_view.toggleEraser(false)
+            resetColourOptions()
+            resetDrawingOptions()
+            crayon.setBackgroundResource(R.drawable.circle_primary_dark)
+            sizing.setBackgroundResource(R.drawable.circle_pink)
+            pink.setBackgroundResource(R.color.colorPrimaryDark)
             draw_view.setColor(ContextCompat.getColor(this, R.color.color_pink))
+            lastColour = R.color.color_pink
         }))
 
         white.setOnClickListener(({
             draw_view.toggleEraser(false)
+            resetColourOptions()
+            resetDrawingOptions()
+            crayon.setBackgroundResource(R.drawable.circle_primary_dark)
+            sizing.setBackgroundResource(R.drawable.circle_white)
+            white.setBackgroundResource(R.color.colorPrimaryDark)
             draw_view.setColor(ContextCompat.getColor(this, R.color.color_white))
+            lastColour = R.color.color_white
         }))
 
         grey.setOnClickListener(({
             draw_view.toggleEraser(false)
+            resetColourOptions()
+            resetDrawingOptions()
+            crayon.setBackgroundResource(R.drawable.circle_primary_dark)
+            sizing.setBackgroundResource(R.drawable.circle_grey)
+            grey.setBackgroundResource(R.color.colorPrimaryDark)
             draw_view.setColor(ContextCompat.getColor(this, R.color.color_grey))
+            lastColour = R.color.color_grey
         }))
 
         brown.setOnClickListener(({
             draw_view.toggleEraser(false)
+            resetColourOptions()
+            resetDrawingOptions()
+            crayon.setBackgroundResource(R.drawable.circle_primary_dark)
+            sizing.setBackgroundResource(R.drawable.circle_brown)
+            brown.setBackgroundResource(R.color.colorPrimaryDark)
             draw_view.setColor(ContextCompat.getColor(this, R.color.color_brown))
+            lastColour = R.color.color_brown
         }))
 
         black.setOnClickListener(({
             draw_view.toggleEraser(false)
+            resetColourOptions()
+            resetDrawingOptions()
+            crayon.setBackgroundResource(R.drawable.circle_primary_dark)
+            sizing.setBackgroundResource(R.drawable.circle_black)
+            black.setBackgroundResource(R.color.colorPrimaryDark)
             draw_view.setColor(ContextCompat.getColor(this, R.color.color_black))
-        }))
-
-        eraser.setOnClickListener(({v ->
-            val popup = PopupMenu(this, v)
-            val inflater: MenuInflater = popup.menuInflater
-            inflater.inflate(R.menu.draw_erase_menu, popup.menu)
-            popup.setOnMenuItemClickListener (({
-                if (it.itemId == R.id.draw_erase) {
-                    draw_view.toggleEraser(false)
-                    draw_view.setColor(ContextCompat.getColor(this, R.color.default_background))
-                } else {
-                    draw_view.toggleEraser(true)
-                }
-            }))
-            popup.show()
+            lastColour = R.color.color_black
         }))
 
         seekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int,
                                            fromUser: Boolean) {
                 draw_view.toggleEraser(false)
+                if (progress == 0) {
+                    sizing.scaleX = (1.div(PERCENT)) * SCALE_FACTOR
+                    sizing.scaleY = (1.div(PERCENT)) * SCALE_FACTOR
+                }
                 sizing.scaleX = (progress.div(PERCENT)) * SCALE_FACTOR
                 sizing.scaleY = (progress.div(PERCENT)) * SCALE_FACTOR
             }
@@ -140,11 +222,37 @@ class FreeDrawActivity : AppCompatActivity() {
         })
     }
 
+    private fun resetDrawingOptions() {
+        crayon.setBackgroundResource(R.color.colorPrimary)
+        eraser.setBackgroundResource(R.color.colorPrimary)
+        pencil_eraser.setBackgroundResource(R.color.colorPrimary)
+    }
+
+    private fun resetColourOptions() {
+        red.setBackgroundResource(R.color.colorPrimary)
+        orange.setBackgroundResource(R.color.colorPrimary)
+        yellow.setBackgroundResource(R.color.colorPrimary)
+        green.setBackgroundResource(R.color.colorPrimary)
+        blue.setBackgroundResource(R.color.colorPrimary)
+        purple.setBackgroundResource(R.color.colorPrimary)
+        pink.setBackgroundResource(R.color.colorPrimary)
+        white.setBackgroundResource(R.color.colorPrimary)
+        grey.setBackgroundResource(R.color.colorPrimary)
+        brown.setBackgroundResource(R.color.colorPrimary)
+        black.setBackgroundResource(R.color.colorPrimary)
+    }
+
+    override fun onBackPressed() {
+        // Disable native back
+    }
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when(requestCode){
             RequestCodes.WRITE_EXTERNAL_STORAGE.ordinal -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)){
                     showSaveDialog(draw_view.getBitmap())
+                } else {
+                    Toast.makeText(applicationContext, R.string.error_image_saved, Toast.LENGTH_SHORT).show()
                 }
                 return
             }
@@ -161,10 +269,23 @@ class FreeDrawActivity : AppCompatActivity() {
         val filename = UUID.randomUUID().toString()
         fileNameEditText.setSelectAllOnFocus(true)
         fileNameEditText.setText(filename)
-        alertDialog.setTitle("Save Drawing")
-            .setPositiveButton("Save") { _, _ -> saveImage(bitmap,
+        alertDialog.setTitle(R.string.save_drawing)
+            .setPositiveButton(R.string.save) { _, _ -> saveImage(bitmap,
                 fileNameEditText.text.toString(), imgDescription.text.toString()) }
-            .setNegativeButton("Cancel") { _, _ -> }
+            .setNegativeButton(R.string.cancel) { _, _ -> }
+
+        val dialog = alertDialog.create()
+        dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.show()
+    }
+
+    private fun showClearDialog() {
+        val alertDialog = AlertDialog.Builder(this)
+        alertDialog.setTitle(R.string.trash_cd)
+            .setMessage(R.string.trash_dialog)
+            .setPositiveButton(R.string.yes) { _, _ -> draw_view.clearCanvas() }
+            .setCancelable(true)
+            .setNegativeButton(R.string.cancel) { _, _ -> }
 
         val dialog = alertDialog.create()
         dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)

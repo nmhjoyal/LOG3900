@@ -1,5 +1,10 @@
 <resources>
+    <!-- Common -->
     <string name="app_name">Draw Something</string>
+    <string name="ok">OK</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
+
     <!-- Strings related to login -->
     <string name="prompt_password">Password</string>
     <string name="action_register">Create an account</string>
@@ -8,6 +13,7 @@
     <string name="invalid_username">Username cannot be blank and cannot exceed 10 characters.</string>
     <string name="invalid_password">Invalid Password</string>
     <string name="login_failed">"Failed Connection"</string>
+
     <!-- Strings related to chat -->
     <string name="default_message">Type message here</string>
     <string name="prompt_ip">IP Address</string>
@@ -27,12 +33,19 @@
     <string name="title_activity_free_draw">Free Draw</string>
     <string name="palette_cd">Pick a colour</string>
     <string name="crayon_cd">Crayon</string>
-    <string name="pen_cd">Pen</string>
     <string name="eraser_cd">Eraser</string>
+    <string name="trash_cd">Clear canvas</string>
+    <string name="trash_dialog">"Are you sure you want to clear the canvas? All changes with be lost."</string>
     <string name="eraser_draw_erase">Draw erase</string>
     <string name="eraser_touch_erase">Touch erase</string>
-    <string name="round_cap">Round</string>
-    <string name="square_cap">Square</string>
+    <string name="round_cap">Round cap</string>
+    <string name="square_cap">Square cap</string>
     <string name="image_saved">Image successfully saved.</string>
     <string name="error_image_saved">Unable to save image.</string>
+
+    <!-- Save drawing -->
+    <string name="save_drawing">Save Drawing</string>
+    <string name="save">Save</string>
+    <string name="filename">File name</string>
+    <string name="desc">Description</string>
 </resources>
