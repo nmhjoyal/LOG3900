@@ -26,7 +26,7 @@ build:thin_client:
 
 build:fat_client:
   stage: build
-  image: microsoft/dotnet-framework:latest
+  image: microsoft/dotnet-framework:4.7.2-sdk
   script:
     - pushd fat_client/WPFUI
     - dotnet restore
