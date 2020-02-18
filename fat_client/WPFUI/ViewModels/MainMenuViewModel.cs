@@ -34,5 +34,12 @@ namespace WPFUI.ViewModels
         {
             _events.PublishOnUIThread(new joinChatroomEvent());
         }
+
+        public void joinGame()
+        {
+            _events.PublishOnUIThread(new joinGameEvent());
+        }
+
+
     }
 }

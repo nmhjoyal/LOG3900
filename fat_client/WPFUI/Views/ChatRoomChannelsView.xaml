@@ -32,8 +32,8 @@
             <RowDefinition Height="11*"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
-        <Image Source="chatRoom.PNG" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="5" HorizontalAlignment="Center" MaxHeight="100" Margin="198,0,178,0"/>
+        <Image Source="chatRoom.PNG" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="5" HorizontalAlignment="Center" MaxHeight="80"/>
         
-        <Button x:Name="joinChat" Content="Join A ChatRoom" Grid.Column="5" Grid.Row="7" MaxWidth="200" Margin="200,126.667,205,76"/>
+        <Button x:Name="joinChat" Content="Join A ChatRoom" Grid.Column="5" Grid.Row="7" MaxWidth="200" Background="#FF66CC00"/>
     </Grid>
 </UserControl>

@@ -47,7 +47,7 @@
 		<TextBox x:Name="confirmedPassword" Grid.Column="2" Grid.Row="6"  MinWidth="200" Grid.ColumnSpan="4"/>
         <TextBlock Text="Change your avatar" Grid.Column="1" Grid.Row="7"/>
         <TextBox Grid.Column="2" Grid.Row="7" MinWidth="200" />
-        <Button x:Name="saveProfileChanges" Content="Save Changes" Grid.Row="13" Grid.ColumnSpan="7" MaxWidth="200" Click="saveProfileChanges_Click" Margin="10,14.333,0,0.333" Height="Auto"/>
-        <Button x:Name="goBack" Content="Go Back" Grid.Column="5" Grid.Row="1" MaxWidth="100" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+        <Button x:Name="saveProfileChanges" Content="Save Changes" Grid.Row="13" Grid.ColumnSpan="7" MaxWidth="200" Click="saveProfileChanges_Click" Height="Auto" Background="#FF66CC00"/>
+        <Button x:Name="goBack" Content="Go Back" Grid.Column="5" Grid.Row="1" MaxWidth="100" HorizontalAlignment="Right" Margin="0,0,10,0" Background="#FF66CC00"/>
     </Grid>
 </UserControl>

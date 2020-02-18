@@ -10,9 +10,10 @@ using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    class ShellViewModel: Conductor<object>, IHandle<LogInEvent>, IHandle<logOutEvent>, IHandle<joinChatEvent>,
+    class ShellViewModel: Conductor<object>, IHandle<LogInEvent>, IHandle<logOutEvent>, IHandle<joinChatEvent>,
 						  IHandle<DisconnectEvent>, IHandle<userNameTakenEvent>,IHandle<signUpEvent>, IHandle<goBackEvent>,
-						  IHandle<passwordMismatchEvent>, IHandle<viewProfileEvent>, IHandle<goBackMainEvent>
+						  IHandle<passwordMismatchEvent>, IHandle<viewProfileEvent>, IHandle<goBackMainEvent>,
+						  IHandle<joinGameEvent>
 	{
 		private IEventAggregator _events;
 		private SimpleContainer _container;
@@ -89,6 +90,11 @@ namespace WPFUI.ViewModels
 			MessageBoxImage icon = MessageBoxImage.Warning;
 
 			MessageBox.Show(messageBoxText, caption, button, icon);
-		}
+		}
+
+		public void Handle(joinGameEvent message)
+		{
+			ActivateItem(_container.GetInstance<gameViewModel>());
+		}
 	}
 }
