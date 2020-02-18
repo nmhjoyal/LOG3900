@@ -26,7 +26,7 @@ build:thin_client:
 
 build:fat_client:
   stage: build
-  image: mono:latest
+  image: microsoft/dotnet-framework-build:4.8
   script:
     - pushd fat_client
     - nuget install
