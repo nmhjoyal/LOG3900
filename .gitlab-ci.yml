@@ -29,8 +29,7 @@ build:fat_client:
   image: mono:latest
   script:
     - pushd fat_client/WPFUI
-    - dotnet restore
-    - dotnet build
+    - msbuild
     - popd
 
 build:server:
