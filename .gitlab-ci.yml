@@ -26,14 +26,14 @@ build:thin_client:
 
 build:fat_client:
   stage: build
-  image: mono:4.4.0.182
+  image: mono:6.8
   script:
     - pushd fat_client/WPFUI
     - nuget install
     - popd
     - pushd fat_client
     - nuget restore
-    - devenv /build Debug ChatPrototype.sln
+    - msbuild
     - popd
 
 build:server:
