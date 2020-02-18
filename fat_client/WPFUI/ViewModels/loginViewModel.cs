@@ -62,8 +62,16 @@ namespace WPFUI.ViewModels
                 setIpAdress();
                 
                 _socketHandler.connectionAttempt();
+              
             }
+            //ajouter dans la condition
+            _events.PublishOnUIThread(new LogInEvent());
 
+        }
+
+        public void signUp()
+        {
+            _events.PublishOnUIThread(new signUpEvent());
         }
 
     }

@@ -97,6 +97,7 @@
     </Compile>
     <Compile Include="EventModels\connectionEvent.cs" />
     <Compile Include="EventModels\DisconnectEvent.cs" />
+    <Compile Include="EventModels\goBackEvent.cs" />
     <Compile Include="EventModels\joinChatEvent.cs" />
     <Compile Include="EventModels\LogInEvent.cs" />
     <Compile Include="EventModels\logOutEvent.cs" />
