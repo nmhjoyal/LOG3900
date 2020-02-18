@@ -24,14 +24,14 @@ build:thin_client:
     paths:
     - app/build/outputs/
 
-build:fat_client:
-  stage: build
-  image: msimons/dotnet-framework-build
-  script:
-    - pushd fat_client
-    - dotnet restore
-    - dotnet build
-    - popd
+# build:fat_client:
+#   stage: build
+#   image: mono:latest
+#   script:
+#     - pushd fat_client
+#     - nuget install
+#     - nuget restore
+#     - msbuild
 
 build:server:
   stage: build
