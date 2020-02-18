@@ -33,8 +33,7 @@ build:fat_client:
     - popd
     - pushd fat_client
     - nuget restore
-    - MONO_IOMAP=case xbuild/t:Build/p:Configuration="Debug"/p:Platform="x86"
-          ChatPrototype.sln
+    - dotnet build
     - popd
 
 build:server:
