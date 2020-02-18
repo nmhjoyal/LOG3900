@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="WPFUI.Views.profileView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WPFUI.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="20" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="11*"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+        <Image Source="ProfileLogo.PNG" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="5" HorizontalAlignment="Center" MaxHeight="100" Margin="198,0,178,0"/>
+        <TextBlock Text="Change your username:" Grid.Column="1" Grid.Row="2"/>
+        <TextBox x:Name="userName" Grid.Column="2" Grid.Row="2" MinWidth="200"/>
+        <TextBlock Text="Change your first name:" Grid.Column="1" Grid.Row="3"/>
+        <TextBox  x:Name="firstName" Grid.Column="2" Grid.Row="3"  MinWidth="200"/>
+        <TextBlock Text="Change your last name:" Grid.Column="1" Grid.Row="4"/>
+        <TextBox x:Name="lastName" Grid.Column="2" Grid.Row="4"  MinWidth="200"/>
+        <TextBlock Text="Change your password:" Grid.Column="1" Grid.Row="5"/>
+        <TextBox x:Name="password" Grid.Column="2" Grid.Row="5"  MinWidth="200"/>
+        <TextBlock Text="Confirm your changed password:" Grid.Column="1" Grid.Row="6"/>
+        <TextBox x:Name="confirmedPassword" Grid.Column="2" Grid.Row="6"  MinWidth="200"/>
+        <TextBlock Text="Change your avatar" Grid.Column="1" Grid.Row="7"/>
+        <TextBox Grid.Column="2" Grid.Row="7" MinWidth="200" />
+        <Button x:Name="saveProfileChanges" Content="Save Changes" Grid.Column="1" Grid.Row="11" Grid.ColumnSpan="5" MaxWidth="200" Click="saveProfileChanges_Click" Margin="0,10.333,0,115" Grid.RowSpan="2"/>
+    </Grid>
+</UserControl>
