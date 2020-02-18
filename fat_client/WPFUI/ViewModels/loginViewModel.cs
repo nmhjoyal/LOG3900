@@ -16,6 +16,13 @@ namespace WPFUI.ViewModels
         private string _userName;
         private string _ipAdress;
         private ISocketHandler _socketHandler;
+        private string _password;
+
+        public string password
+        {
+            get { return _password; }
+            set { _password = value; }
+        }
 
 
         public LoginViewModel(IUserData userdata, IEventAggregator events, ISocketHandler socketHandler)

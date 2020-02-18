@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Caliburn.Micro;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WPFUI.EventModels;
+using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
@@ -13,6 +16,16 @@ namespace WPFUI.ViewModels
 		private string _changedLastName;
 		private string _newchangedPassword;
 		private string _newConfirmedPassword;
+		private IUserData _userData;
+		private IEventAggregator _events;
+		private ISocketHandler _socketHandler;
+
+		public profileViewModel(IUserData userdata, IEventAggregator events, ISocketHandler socketHandler)
+		{
+			_userData = userdata;
+			_events = events;
+			_socketHandler = socketHandler;
+		}
 
 		public string newConfirmedPassword
 		{
@@ -50,7 +63,10 @@ namespace WPFUI.ViewModels
 			set { _changedFirstName = value; }
 		}
 
-
+		public void goBack()
+		{
+			_events.PublishOnUIThread(new goBackMainEvent());
+		}
 
 
 	}
