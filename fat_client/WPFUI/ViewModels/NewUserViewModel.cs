@@ -103,6 +103,10 @@ namespace WPFUI.ViewModels
 			}
 		}
 
+		public void goBack()
+		{
+			_events.PublishOnUIThread(new goBackEvent());
+		}
 
 	}
 }

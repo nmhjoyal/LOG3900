@@ -10,8 +10,8 @@ using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    class ShellViewModel: Conductor<object>, IHandle<LogInEvent>, IHandle<logOutEvent>, IHandle<joinChatEvent>, IHandle<joinChatroomEvent>,
-						  IHandle<DisconnectEvent>, IHandle<userNameTakenEvent>,
+    class ShellViewModel: Conductor<object>, IHandle<LogInEvent>, IHandle<logOutEvent>, IHandle<joinChatEvent>,
+						  IHandle<DisconnectEvent>, IHandle<userNameTakenEvent>,IHandle<signUpEvent>, IHandle<goBackEvent>,
 						  IHandle<passwordMismatchEvent>
 	{
 		private IEventAggregator _events;
@@ -21,14 +21,24 @@ namespace WPFUI.ViewModels
 		{
 			_container = container;
 			_events = events;
-			_events.Subscribe(this);
-			//ActivateItem(_container.GetInstance<LoginViewModel>());
-			ActivateItem(_container.GetInstance<MainMenuViewModel>());
+			_events.Subscribe(this);
+			ActivateItem(_container.GetInstance<LoginViewModel>());
+			//ActivateItem(_container.GetInstance<MainMenuViewModel>());
 		}
 
 		public void Handle(LogInEvent message)
 		{
-			ActivateItem(_container.GetInstance<chatBoxViewModel>());
+			ActivateItem(_container.GetInstance<MainMenuViewModel>());
+		}
+
+		public void Handle(goBackEvent message)
+		{
+			ActivateItem(_container.GetInstance<LoginViewModel>());
+		}
+
+		public void Handle(signUpEvent message)
+		{
+			ActivateItem(_container.GetInstance<NewUserViewModel>());
 		}
 
 		public void Handle(logOutEvent message)
@@ -39,8 +49,8 @@ namespace WPFUI.ViewModels
 		public void Handle(joinChatEvent message)
 		{
 			ActivateItem(_container.GetInstance<chatBoxViewModel>());
-		}
-
+		}
+
 		public void Handle(joinChatroomEvent message)
 		{
 			ActivateItem(_container.GetInstance<ChatRoomChannelsViewModel>());
@@ -59,16 +69,16 @@ namespace WPFUI.ViewModels
 			MessageBoxImage icon = MessageBoxImage.Warning;
 
 			MessageBox.Show(messageBoxText, caption, button, icon);
-		}
-
-		public void Handle(passwordMismatchEvent message)
-		{
+		}
+
+		public void Handle(passwordMismatchEvent message)
+		{
 			string messageBoxText = "passwords don't match";
 			string caption = "Warning";
 			MessageBoxButton button = MessageBoxButton.OK;
 			MessageBoxImage icon = MessageBoxImage.Warning;
 
-			MessageBox.Show(messageBoxText, caption, button, icon);
-		}
+			MessageBox.Show(messageBoxText, caption, button, icon);
+		}
 	}
 }
