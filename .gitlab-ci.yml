@@ -41,8 +41,6 @@ build:server:
     - yarn
     - yarn tsc
     - popd
-  dependencies:
-    - setup:server
 
 test:thin_client:
   stage: test
