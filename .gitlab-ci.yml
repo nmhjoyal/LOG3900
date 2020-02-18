@@ -28,7 +28,7 @@ build:fat_client:
   stage: build
   image: mono:4.4.0.182
   script:
-    - pushd fat_client
+    - pushd fat_client/WPFUI
     - nuget install
     - nuget restore
     - msbuild
