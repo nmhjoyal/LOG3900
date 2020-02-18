@@ -32,11 +32,11 @@
             <RowDefinition Height="11*"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
-        <Image Source="MainMenu.PNG" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="5" HorizontalAlignment="Center" MaxHeight="100" Margin="198,0,178,0"/>
+        <Image Source="MainMenu.PNG" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="5" HorizontalAlignment="Center" MaxHeight="80" Margin="0,0,0,10"/>
         <Button x:Name="viewProfile" Content="Profile" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="5" MaxWidth="200"/>
         <Button x:Name="joinChatroom" Content="Join A ChatRoom" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="5" MaxWidth="200"/>
         <Button x:Name="createChat" Content="Create A ChatRoom" Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="5" MaxWidth="200"/>
         <Button x:Name="viewLeaderboard" Content="Leaderboard" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="5" MaxWidth="200"/>
-        <Button x:Name="logOut" Content="Log Out" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="5" MaxWidth="200" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
+        <Button x:Name="logOut" Content="Log Out" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="5" MaxWidth="200" HorizontalAlignment="Right"/>
     </Grid>
 </UserControl>
