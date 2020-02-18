@@ -33,9 +33,7 @@ build:fat_client:
     - popd
     - pushd fat_client
     - nuget restore
-    - popd
-    - pushd fat_client/WPFUI
-    - msbuild
+    - msbuild /p:Configuration=Debug
     - popd
 
 build:server:
