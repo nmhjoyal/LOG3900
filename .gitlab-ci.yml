@@ -29,7 +29,7 @@ build:fat_client:
   image: microsoft/dotnet:latest
   script:
     - pushd fat_client/WPFUI
-    - nuget install
+    - dotnet restore
     - dotnet build
     - popd
 
