@@ -38,9 +38,13 @@ build:thin_client:
     paths:
     - app/build/outputs/
 
-# build:fat_client:
-#   stage: build
-#   image: microsoft/dotnet
+build:fat_client:
+  stage: build
+  image: microsoft/dotnet:latest
+  script:
+    - pushd fat_client
+    - dotnet build
+    - popd
 
 build:server:
   stage: build
