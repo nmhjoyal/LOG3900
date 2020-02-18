@@ -30,6 +30,7 @@ build:fat_client:
   script:
     - pushd fat_client/WPFUI
     - nuget install
+    - nuget restore
     - msbuild
     - popd
 
