@@ -69,9 +69,8 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         return true
     }
 
-    fun toggleEraser(isToggled: Boolean): Boolean {
+    fun toggleEraser(isToggled: Boolean) {
         mIsErasing = isToggled
-        return true
     }
 
     fun getBitmap(): Bitmap {
@@ -82,10 +81,6 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         draw(canvas)
         mIsSaving = false
         return bitmap
-    }
-
-    fun addPath(path: MyPath, options: PaintOptions) {
-        mPaths[path] = options
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -117,19 +112,22 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         if (!mIsErasing) {
             mPath.reset()
             mPath.moveTo(x, y)
-            mCurX = x
-            mCurY = y
         }
+        mCurX = x
+        mCurY = y
     }
 
     private fun actionMove(x: Float, y: Float) {
         if (mIsErasing) {
-            val region = Region()
+            val rect = RectF(x - 10, y - 10, x + 10, y + 10)
             val toDelete: ArrayList<MyPath> = ArrayList()
             for (path in mPaths.entries) {
-                region.setPath(path.key, Region(0, 0, this.right, this.bottom))
-                if (region.contains(x.toInt() ,y.toInt()) &&
-                    path.value.color != ContextCompat.getColor(context, R.color.default_background)) {
+                val tempPath = Path()
+                tempPath.moveTo(x, y)
+                tempPath.addRect(rect, Path.Direction.CW)
+                tempPath.op(path.key, Path.Op.INTERSECT)
+                if (!tempPath.isEmpty
+                    && path.value.color != ContextCompat.getColor(context, R.color.default_background)) {
                     toDelete.add(path.key)
                 }
             }
@@ -144,25 +142,26 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     }
 
     private fun actionUp() {
-        if (!mIsErasing) {
-            mPath.lineTo(mCurX, mCurY)
+        mPath.lineTo(mCurX, mCurY)
 
-            // draw a dot on click
-            if (mStartX == mCurX && mStartY == mCurY) {
-                mPath.lineTo(mCurX, mCurY + 2)
-                mPath.lineTo(mCurX + 1, mCurY + 2)
-                mPath.lineTo(mCurX + 1, mCurY)
-            }
-
-            mPaths.put(mPath, mPaintOptions)
-            mPath = MyPath()
-            mPaintOptions = PaintOptions(
-                mPaintOptions.color,
-                mPaintOptions.strokeWidth,
-                mPaintOptions.alpha,
-                mPaintOptions.cap
-            )
+        // draw a dot on click
+        if (mStartX == mCurX && mStartY == mCurY) {
+            mPath.lineTo(mCurX, mCurY + 2)
+            mPath.lineTo(mCurX + 1, mCurY + 2)
+            mPath.lineTo(mCurX + 1, mCurY)
         }
+
+        if (!mIsErasing) {
+            mPaths.put(mPath, mPaintOptions)
+        }
+
+        mPath = MyPath()
+        mPaintOptions = PaintOptions(
+            mPaintOptions.color,
+            mPaintOptions.strokeWidth,
+            mPaintOptions.alpha,
+            mPaintOptions.cap
+        )
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

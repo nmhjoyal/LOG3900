@@ -279,7 +279,7 @@
             android:id="@+id/black"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@color/colorPrimary"
+            android:background="@color/colorPrimaryDark"
             android:contentDescription="@string/crayon_cd"
             android:padding="8dp"
             app:srcCompat="@drawable/circle_black">

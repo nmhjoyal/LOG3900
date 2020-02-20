@@ -81,130 +81,63 @@ class FreeDrawActivity : AppCompatActivity() {
         }))
 
         red.setOnClickListener(({
-            draw_view.toggleEraser(false)
-            resetColourOptions()
-            resetDrawingOptions()
-            crayon.setBackgroundResource(R.drawable.circle_primary_dark)
-            sizing.setBackgroundResource(R.drawable.circle_red)
+            setColour(R.drawable.circle_red, R.color.color_red)
             red.setBackgroundResource(R.color.colorPrimaryDark)
-            draw_view.setColor(ContextCompat.getColor(this, R.color.color_red))
-            lastColour = R.color.color_red
         }))
 
         orange.setOnClickListener(({
-            draw_view.toggleEraser(false)
-            resetColourOptions()
-            resetDrawingOptions()
-            crayon.setBackgroundResource(R.drawable.circle_primary_dark)
-            sizing.setBackgroundResource(R.drawable.circle_orange)
+            setColour(R.drawable.circle_orange, R.color.color_orange)
             orange.setBackgroundResource(R.color.colorPrimaryDark)
-            draw_view.setColor(ContextCompat.getColor(this, R.color.color_orange))
-            lastColour = R.color.color_orange
         }))
 
         yellow.setOnClickListener(({
-            draw_view.toggleEraser(false)
-            resetColourOptions()
-            resetDrawingOptions()
-            crayon.setBackgroundResource(R.drawable.circle_primary_dark)
-            sizing.setBackgroundResource(R.drawable.circle_yellow)
+            setColour(R.drawable.circle_yellow, R.color.color_yellow)
             yellow.setBackgroundResource(R.color.colorPrimaryDark)
-            draw_view.setColor(ContextCompat.getColor(this, R.color.color_yellow))
-            lastColour = R.color.color_yellow
         }))
 
         green.setOnClickListener(({
-            draw_view.toggleEraser(false)
-            resetColourOptions()
-            resetDrawingOptions()
-            crayon.setBackgroundResource(R.drawable.circle_primary_dark)
-            sizing.setBackgroundResource(R.drawable.circle_green)
+            setColour(R.drawable.circle_green, R.color.color_green)
             green.setBackgroundResource(R.color.colorPrimaryDark)
-            draw_view.setColor(ContextCompat.getColor(this, R.color.color_green))
-            lastColour = R.color.color_green
         }))
 
         blue.setOnClickListener(({
-            draw_view.toggleEraser(false)
-            resetColourOptions()
-            resetDrawingOptions()
-            crayon.setBackgroundResource(R.drawable.circle_primary_dark)
-            sizing.setBackgroundResource(R.drawable.circle_blue)
+            setColour(R.drawable.circle_blue, R.color.color_blue)
             blue.setBackgroundResource(R.color.colorPrimaryDark)
-            draw_view.setColor(ContextCompat.getColor(this, R.color.color_blue))
-            lastColour = R.color.color_blue
         }))
 
         purple.setOnClickListener(({
-            draw_view.toggleEraser(false)
-            resetColourOptions()
-            resetDrawingOptions()
-            crayon.setBackgroundResource(R.drawable.circle_primary_dark)
-            sizing.setBackgroundResource(R.drawable.circle_purple)
+            setColour(R.drawable.circle_purple, R.color.color_purple)
             purple.setBackgroundResource(R.color.colorPrimaryDark)
-            draw_view.setColor(ContextCompat.getColor(this, R.color.color_purple))
-            lastColour = R.color.color_purple
         }))
 
         pink.setOnClickListener(({
-            draw_view.toggleEraser(false)
-            resetColourOptions()
-            resetDrawingOptions()
-            crayon.setBackgroundResource(R.drawable.circle_primary_dark)
-            sizing.setBackgroundResource(R.drawable.circle_pink)
+            setColour(R.drawable.circle_pink, R.color.color_pink)
             pink.setBackgroundResource(R.color.colorPrimaryDark)
-            draw_view.setColor(ContextCompat.getColor(this, R.color.color_pink))
-            lastColour = R.color.color_pink
         }))
 
         white.setOnClickListener(({
-            draw_view.toggleEraser(false)
-            resetColourOptions()
-            resetDrawingOptions()
-            crayon.setBackgroundResource(R.drawable.circle_primary_dark)
-            sizing.setBackgroundResource(R.drawable.circle_white)
+            setColour(R.drawable.circle_white, R.color.color_white)
             white.setBackgroundResource(R.color.colorPrimaryDark)
-            draw_view.setColor(ContextCompat.getColor(this, R.color.color_white))
-            lastColour = R.color.color_white
         }))
 
         grey.setOnClickListener(({
-            draw_view.toggleEraser(false)
-            resetColourOptions()
-            resetDrawingOptions()
-            crayon.setBackgroundResource(R.drawable.circle_primary_dark)
-            sizing.setBackgroundResource(R.drawable.circle_grey)
+            setColour(R.drawable.circle_grey, R.color.color_grey)
             grey.setBackgroundResource(R.color.colorPrimaryDark)
-            draw_view.setColor(ContextCompat.getColor(this, R.color.color_grey))
-            lastColour = R.color.color_grey
         }))
 
         brown.setOnClickListener(({
-            draw_view.toggleEraser(false)
-            resetColourOptions()
-            resetDrawingOptions()
-            crayon.setBackgroundResource(R.drawable.circle_primary_dark)
-            sizing.setBackgroundResource(R.drawable.circle_brown)
+            setColour(R.drawable.circle_brown, R.color.color_brown)
             brown.setBackgroundResource(R.color.colorPrimaryDark)
-            draw_view.setColor(ContextCompat.getColor(this, R.color.color_brown))
-            lastColour = R.color.color_brown
         }))
 
         black.setOnClickListener(({
-            draw_view.toggleEraser(false)
-            resetColourOptions()
-            resetDrawingOptions()
-            crayon.setBackgroundResource(R.drawable.circle_primary_dark)
-            sizing.setBackgroundResource(R.drawable.circle_black)
+            setColour(R.drawable.circle_black, R.color.color_black)
             black.setBackgroundResource(R.color.colorPrimaryDark)
-            draw_view.setColor(ContextCompat.getColor(this, R.color.color_black))
-            lastColour = R.color.color_black
         }))
 
         seekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int,
                                            fromUser: Boolean) {
-                draw_view.toggleEraser(false)
                 if (progress == 0) {
                     sizing.scaleX = (1.div(PERCENT)) * SCALE_FACTOR
                     sizing.scaleY = (1.div(PERCENT)) * SCALE_FACTOR
@@ -220,6 +153,16 @@ class FreeDrawActivity : AppCompatActivity() {
                 draw_view.setStrokeWidth(seekBar.progress.div(PERCENT) * SIZING_FACTOR)
             }
         })
+    }
+
+    private fun setColour(sizingDrawable: Int, colourRes: Int) {
+        draw_view.toggleEraser(false)
+        resetColourOptions()
+        resetDrawingOptions()
+        crayon.setBackgroundResource(R.drawable.circle_primary_dark)
+        sizing.setBackgroundResource(sizingDrawable)
+        draw_view.setColor(ContextCompat.getColor(this, colourRes))
+        lastColour = colourRes
     }
 
     private fun resetDrawingOptions() {
