@@ -37,6 +37,8 @@ namespace WPFUI.Views
             Point p = e.GetPosition(surfaceDessin);
             textBlockPosition.Text = Math.Round(p.X) + ", " + Math.Round(p.Y) + "px";
         }
+
+        //code pris de: https://stackoverflow.com/questions/8881865/saving-a-wpf-canvas-as-an-image
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             PART_Image.Source = RenderVisualService.RenderToPNGImageSource(PART_Canvas);

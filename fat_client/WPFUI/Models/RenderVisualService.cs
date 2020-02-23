@@ -10,6 +10,7 @@ using System.Windows.Media.Imaging;
 
 namespace WPFUI.Models
 {
+    //Code pris de https://stackoverflow.com/questions/8881865/saving-a-wpf-canvas-as-an-image
     public static class RenderVisualService
     {
         private const double defaultDpi = 96.0;
