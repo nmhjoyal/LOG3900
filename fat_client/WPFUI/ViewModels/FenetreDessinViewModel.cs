@@ -135,6 +135,7 @@ namespace WPFUI.ViewModels
                 AttributsDessin.Width = (editeur.PointeSelectionnee == "verticale") ? 1 : editeur.TailleTrait;
                 AttributsDessin.Height = (editeur.PointeSelectionnee == "horizontale") ? 1 : editeur.TailleTrait;
             }
-        }
+       
+    }
     
 }

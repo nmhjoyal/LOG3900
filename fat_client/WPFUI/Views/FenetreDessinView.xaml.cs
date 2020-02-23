@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WPFUI.Models;
 using WPFUI.ViewModels;
 
 namespace WPFUI.Views
@@ -36,6 +37,14 @@ namespace WPFUI.Views
             Point p = e.GetPosition(surfaceDessin);
             textBlockPosition.Text = Math.Round(p.X) + ", " + Math.Round(p.Y) + "px";
         }
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            PART_Image.Source = RenderVisualService.RenderToPNGImageSource(PART_Canvas);
+        }
 
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            RenderVisualService.RenderToPNGFile(PART_Canvas, "myawesomeimage.png");
+        }
     }
 }

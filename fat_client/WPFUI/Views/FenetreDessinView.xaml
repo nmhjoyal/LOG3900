@@ -105,6 +105,10 @@
                         Foreground="Gray"                        
                         TickFrequency="10" TickPlacement="BottomRight" IsSnapToTickEnabled="False">
                 </Slider>
+                <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Click="Button_Click" Content="Capture Image" Width="150"/>
+                    <Button Click="Button_Click_1" Content="Save To Disk" Width="150"/>
+                </StackPanel>
             </StackPanel>
 
         </Border>
@@ -127,15 +131,20 @@
             </Grid.RowDefinitions>
 
             <Border BorderThickness="5,5,0,0">
-                <InkCanvas ClipToBounds="True" Grid.Column="0" Grid.Row="0" Name="surfaceDessin" 
+                <Canvas x:Name="PART_Canvas" Grid.Row="1" Grid.Column="0">
+                    <InkCanvas ClipToBounds="True" Grid.Column="0" Grid.Row="0" Name="surfaceDessin" 
                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"                           
                            MouseLeave="surfaceDessin_MouseLeave" MouseMove="surfaceDessin_MouseMove"                                              
                            Strokes="{Binding Path=Traits, Mode=OneTime}" EditingMode="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurModeEdition}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                            DefaultDrawingAttributes="{Binding Path=AttributsDessin, Mode=OneTime}"/>
+                </Canvas>
+                
                 <Border.Effect>
                     <DropShadowEffect Opacity="0.3" BlurRadius="10"/>
                 </Border.Effect>
             </Border>
+            <Image x:Name="PART_Image" Grid.Row="1" Grid.Column="1" Stretch="None"/>
         </Grid>
+       
     </DockPanel>
 </UserControl>
