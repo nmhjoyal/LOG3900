@@ -13,14 +13,13 @@ using WPFUI.Utilitaires;
 namespace WPFUI.ViewModels
 {
 
-    class FenetreDessinViewModel
-    { }
+    
         /// <summary>
         /// Sert d'intermédiaire entre la vue et le modèle.
         /// Expose des commandes et propriétés connectées au modèle aux des éléments de la vue peuvent se lier.
         /// Reçoit des avis de changement du modèle et envoie des avis de changements à la vue.
         /// </summary>
-        class VueModele : INotifyPropertyChanged
+        class FenetreDessinViewModel : INotifyPropertyChanged
         {
             public event PropertyChangedEventHandler PropertyChanged;
             private Editeur editeur = new Editeur();
@@ -65,7 +64,7 @@ namespace WPFUI.ViewModels
             /// On récupère certaines données initiales du modèle et on construit les commandes
             /// sur lesquelles la vue se connectera.
             /// </summary>
-            public VueModele()
+            public FenetreDessinViewModel()
             {
                 // On écoute pour des changements sur le modèle. Lorsqu'il y en a, EditeurProprieteModifiee est appelée.
                 editeur.PropertyChanged += new PropertyChangedEventHandler(EditeurProprieteModifiee);

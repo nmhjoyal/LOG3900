@@ -24,7 +24,7 @@ namespace WPFUI.Views
         public FenetreDessinView()
         {
             InitializeComponent();
-            DataContext = new VueModele();
+            DataContext = new FenetreDessinViewModel();
         }
 
 
