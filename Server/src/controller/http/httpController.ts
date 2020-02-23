@@ -1,18 +1,12 @@
-import { JsonController, Get, Param, Post, Body } from "routing-controllers";
+import { JsonController, Get, Param, Post, Body, HttpError } from "routing-controllers";
 import Profile from "../../models/profile";
+import { profileDB } from "../../services/Database/profileDB";
 
 /**
  * HTTPController is used only to manage user database and game database. 
  */
 @JsonController("/profile")
 export class HttpController {
-
-    // Eventually 
-
-    @Post("/createProfile")
-    createUser(@Body() profile: Profile) {
-        console.log(profile);
-    }
 
     @Get("/:userName")
     test(@Param("userName") userName: string) {
@@ -23,6 +17,16 @@ export class HttpController {
             password : "string"
         }
         return profileRetrieved;
+    }
+   
+    @Post("/create")
+    public async createUser(@Body() profile: Profile) {
+        const profileCreated: boolean = await profileDB.createProfile(profile);
+        if (profileCreated) {
+            return "Profile " + profile.username + " created!";
+        } else {
+            throw new HttpError(400);
+        }
     }
 }
 

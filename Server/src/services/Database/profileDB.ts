@@ -1,16 +1,29 @@
-import { MongoClient } from "mongodb"
+import { MongoClient} from "mongodb"
+import Profile from "../../models/profile";
 
-const CONNECTION_URL: string = "mongodb+srv://Hubert:<banane123>@projet3db-jehvq.mongodb.net/test?retryWrites=true&w=majority"; 
+const CONNECTION_URL: string = "mongodb+srv://Admin:HeB6OZmfIA6n9pfu@projet3db-jehvq.mongodb.net/test?retryWrites=true&w=majority"; 
 
 export default class ProfileDB {
     private db: any;
+    private mongoClient: MongoClient;
 
-    public constructor() {
-        MongoClient.connect(CONNECTION_URL, (err, db) => {
+    public constructor() { 
+        this.mongoClient = new MongoClient(CONNECTION_URL, 
+            {useUnifiedTopology: true, useNewUrlParser: true})
+
+        // Connect to database
+        this.mongoClient.connect((err, db) => {
             if (err) throw err;
             this.db = db;
-            console.log("connected");
         });
+    }
+
+    public async createProfile(profile: Profile): Promise<boolean> {
+        return this.db.db("Profiles").collection("profiles").insertOne(profile, (err: any) => {
+            // False if the username is already taken.
+            return err.message.indexOf("11000"/*username already taken error code*/) != -1;
+        });
+        return true;
     }
 }
 
