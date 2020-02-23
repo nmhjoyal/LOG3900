@@ -12,7 +12,7 @@ namespace WPFUI.ViewModels
 {
     class ShellViewModel: Conductor<object>, IHandle<LogInEvent>, IHandle<logOutEvent>, IHandle<joinChatEvent>,
 						  IHandle<DisconnectEvent>, IHandle<userNameTakenEvent>,IHandle<signUpEvent>, IHandle<goBackEvent>,
-						  IHandle<passwordMismatchEvent>, IHandle<viewProfileEvent>, IHandle<goBackMainEvent>
+						  IHandle<passwordMismatchEvent>, IHandle<viewProfileEvent>, IHandle<goBackMainEvent>, IHandle<freeDrawEvent>
 	{
 		private IEventAggregator _events;
 		private SimpleContainer _container;
@@ -22,8 +22,8 @@ namespace WPFUI.ViewModels
 			_container = container;
 			_events = events;
 			_events.Subscribe(this);
-			ActivateItem(_container.GetInstance<FenetreDessinViewModel>());
-			//ActivateItem(_container.GetInstance<MainMenuViewModel>());
+			//ActivateItem(_container.GetInstance<FenetreDessinViewModel>());
+			ActivateItem(_container.GetInstance<LoginViewModel>());
 		}
 
 		public void Handle(LogInEvent message)
@@ -34,6 +34,11 @@ namespace WPFUI.ViewModels
 		public void Handle(viewProfileEvent message)
 		{
 			ActivateItem(_container.GetInstance<profileViewModel>());
+		}
+
+		public void Handle(freeDrawEvent message)
+		{
+			ActivateItem(_container.GetInstance<FenetreDessinViewModel>());
 		}
 
 		public void Handle(goBackEvent message)

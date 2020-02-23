@@ -29,7 +29,10 @@ namespace WPFUI.ViewModels
             _events.PublishOnUIThread(new viewProfileEvent());
         }
 
-
+        public void freeDraw()
+        {
+            _events.PublishOnUIThread(new freeDrawEvent());
+        }
         public void joinChatroom()
         {
             _events.PublishOnUIThread(new joinChatroomEvent());
