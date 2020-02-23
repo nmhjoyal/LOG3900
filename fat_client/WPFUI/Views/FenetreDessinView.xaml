@@ -107,7 +107,9 @@
                 </Slider>
                 <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button Click="Button_Click" Content="Capture Image" Width="150"/>
+                    
                     <Button Click="Button_Click_1" Content="Save To Disk" Width="150"/>
+                    <TextBox Name="txtEditor" TextWrapping="Wrap" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" />
                 </StackPanel>
             </StackPanel>
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -46,7 +47,12 @@ namespace WPFUI.Views
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            RenderVisualService.RenderToPNGFile(PART_Canvas, "myawesomeimage.png");
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = txtEditor.Text;
+            if (saveFileDialog.ShowDialog() == true) {
+                RenderVisualService.RenderToPNGFile(PART_Canvas, saveFileDialog.FileName);
+            }
+                
         }
     }
 }
