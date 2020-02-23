@@ -22,7 +22,7 @@ namespace WPFUI.ViewModels
 			_container = container;
 			_events = events;
 			_events.Subscribe(this);
-			ActivateItem(_container.GetInstance<LoginViewModel>());
+			ActivateItem(_container.GetInstance<FenetreDessinViewModel>());
 			//ActivateItem(_container.GetInstance<MainMenuViewModel>());
 		}
 
