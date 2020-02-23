@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Caliburn.Micro;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Ink;
 using System.Windows.Media;
+using WPFUI.EventModels;
 using WPFUI.Models;
 using WPFUI.Utilitaires;
 
@@ -59,15 +61,22 @@ namespace WPFUI.ViewModels
             public RelayCommand<string> ChoisirOutil { get; set; }
 
 
-            /// <summary>
-            /// Constructeur de VueModele
-            /// On récupère certaines données initiales du modèle et on construit les commandes
-            /// sur lesquelles la vue se connectera.
-            /// </summary>
-            public FenetreDessinViewModel()
-            {
-                // On écoute pour des changements sur le modèle. Lorsqu'il y en a, EditeurProprieteModifiee est appelée.
-                editeur.PropertyChanged += new PropertyChangedEventHandler(EditeurProprieteModifiee);
+        /// <summary>
+        /// Constructeur de VueModele
+        /// On récupère certaines données initiales du modèle et on construit les commandes
+        /// sur lesquelles la vue se connectera.
+        /// </summary>
+        private IEventAggregator _events;
+        private IUserData _userdata;
+    
+        private ISocketHandler _socketHandler;
+        public FenetreDessinViewModel( IEventAggregator events, ISocketHandler socketHandler)
+        {
+            
+            _socketHandler = socketHandler;
+            _events = events;
+            // On écoute pour des changements sur le modèle. Lorsqu'il y en a, EditeurProprieteModifiee est appelée.
+            editeur.PropertyChanged += new PropertyChangedEventHandler(EditeurProprieteModifiee);
 
                 // On initialise les attributs de dessin avec les valeurs de départ du modèle.
                 AttributsDessin = new DrawingAttributes();
@@ -135,6 +144,11 @@ namespace WPFUI.ViewModels
                 AttributsDessin.Width = (editeur.PointeSelectionnee == "verticale") ? 1 : editeur.TailleTrait;
                 AttributsDessin.Height = (editeur.PointeSelectionnee == "horizontale") ? 1 : editeur.TailleTrait;
             }
+            
+            public void fullScreenChat()
+        {
+            _events.PublishOnUIThread(new fullScreenChatEvent());
+        }
        
     }
     

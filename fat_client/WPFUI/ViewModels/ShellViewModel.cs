@@ -12,7 +12,7 @@ namespace WPFUI.ViewModels
 {
     class ShellViewModel: Conductor<object>, IHandle<LogInEvent>, IHandle<logOutEvent>, IHandle<joinChatEvent>,
 						  IHandle<DisconnectEvent>, IHandle<userNameTakenEvent>,IHandle<signUpEvent>, IHandle<goBackEvent>,
-						  IHandle<passwordMismatchEvent>, IHandle<viewProfileEvent>, IHandle<goBackMainEvent>, IHandle<freeDrawEvent>
+						  IHandle<passwordMismatchEvent>, IHandle<viewProfileEvent>, IHandle<goBackMainEvent>, IHandle<freeDrawEvent>, IHandle<fullScreenChatEvent>
 	{
 		private IEventAggregator _events;
 		private SimpleContainer _container;
@@ -39,6 +39,10 @@ namespace WPFUI.ViewModels
 		public void Handle(freeDrawEvent message)
 		{
 			ActivateItem(_container.GetInstance<FenetreDessinViewModel>());
+		}
+		public void Handle(fullScreenChatEvent message)
+		{
+			ActivateItem(_container.GetInstance<chatBoxViewModel>());
 		}
 
 		public void Handle(goBackEvent message)

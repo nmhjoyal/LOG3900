@@ -99,6 +99,7 @@
     <Compile Include="EventModels\connectionEvent.cs" />
     <Compile Include="EventModels\DisconnectEvent.cs" />
     <Compile Include="EventModels\freeDrawEvent.cs" />
+    <Compile Include="EventModels\fullScreenChatEvent.cs" />
     <Compile Include="EventModels\goBackEvent.cs" />
     <Compile Include="EventModels\goBackMainEvent.cs" />
     <Compile Include="EventModels\joinChatEvent.cs" />

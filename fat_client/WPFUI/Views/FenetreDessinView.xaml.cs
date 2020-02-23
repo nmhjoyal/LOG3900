@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using Caliburn.Micro;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,10 +24,12 @@ namespace WPFUI.Views
     /// </summary>
     public partial class FenetreDessinView : UserControl
     {
+        IEventAggregator events;
+        ISocketHandler socketHandler;
         public FenetreDessinView()
         {
             InitializeComponent();
-            DataContext = new FenetreDessinViewModel();
+            DataContext = new FenetreDessinViewModel(events,socketHandler);
         }
 
 
