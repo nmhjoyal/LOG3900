@@ -1,17 +1,17 @@
 import User from "../models/user";
-import ChatRoom from "./chatRoom";
+// import ChatRoom from "./chatRoom";
 
 export default class ServerHandler {
     public name: string;
     private users: Map<string, User>;
     // TEMPORARY : eventually array of rooms
-    private chatRoom: ChatRoom;
+    // private chatRoom: ChatRoom;
 
     public constructor(name: string) {
         this.name = name;
         this.users = new Map();
         // TEMPORARY
-        this.chatRoom = new ChatRoom("TEMPORARY_NAME");
+        // this.chatRoom = new ChatRoom("TEMPORARY_NAME");
     }
 
     /**
