@@ -64,9 +64,9 @@ export default class ServerHandler {
         let chatRoom: ChatRoom | undefined = this.getChatRoomByName(roomId);
         if (user && chatRoom) {
             socket.join(roomId);
-            socket.to(roomId).emit("user_joined", this.getUser(socket.id)?.username);
+            socket.to(roomId).emit("user_joined_room", this.getUser(socket.id)?.username);
             chatRoom.addUser(user);
-            socket.emit("load_messages", JSON.stringify(chatRoom.getMessages));
+            socket.emit("load_messages", JSON.stringify(chatRoom.getMessages()));
             console.log(this.chatRooms.toString());
         }
     }
@@ -77,11 +77,11 @@ export default class ServerHandler {
         if (user) {
             this.getChatRoomByName(roomId)?.removeUser(user);
         }
-        socket.to(roomId).emit("user_left", this.getUser(socket.id)?.username);
+        socket.to(roomId).emit("user_left_room", this.getUser(socket.id)?.username);
         console.log(this.chatRooms.toString());
     }
 
-    public sendMessage(io: SocketIO.Socket, socket: SocketIO.Socket, roomId: string, message: Message): void{
+    public sendMessage(io: SocketIO.Socket, socket: SocketIO.Socket, roomId: string, message: Message): void {
         message.date = Math.floor(Date.now() / 1000);
         let chatRoom: ChatRoom | undefined = this.getChatRoomByName(roomId);
         if (chatRoom) {
@@ -105,5 +105,23 @@ export default class ServerHandler {
 
     private getChatRoomByName(roomId: string): ChatRoom | undefined {
         return this.chatRooms.find(room => room.name == roomId)
+    }
+
+    private getUsersRooms(socketId: string): ChatRoom[] {
+        let user: PublicProfile | undefined = this.users.get(socketId);
+        if (user) {
+            user: user;
+        }
+        let chatRooms: ChatRoom[] = [];
+        /*
+        if (user) {
+            this.chatRooms.forEach((chatRoom) => {
+                if(chatRoom.contains(user)) {
+                    
+                }         
+            });
+        }
+        */
+       return chatRooms;
     }
 }

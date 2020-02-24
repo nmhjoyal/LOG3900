@@ -44,4 +44,13 @@ export default class ChatRoom {
         }
         return chatRoom;
     }
+
+    public contains(username: string): boolean {
+        this.users.forEach((user) => {
+            if (username == user.username) {
+                return true;
+            }
+        });
+        return false;
+    }
 }
