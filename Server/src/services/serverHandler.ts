@@ -2,6 +2,7 @@ import SignIn from "../models/signIn";
 import ChatRoom from "./chatRoom";
 import Message from "../models/message"
 import PublicProfile from "../models/publicProfile";
+import ChatFilter from "./chatFilter";
 
 export default class ServerHandler {
     private users: Map<string/*socketID*/, PublicProfile/*{ username, avatar }*/>; 
@@ -85,6 +86,7 @@ export default class ServerHandler {
         message.date = Math.floor(Date.now() / 1000);
         let chatRoom: ChatRoom | undefined = this.getChatRoomByName(roomId);
         if (chatRoom) {
+            message.content = ChatFilter.filter(message.content);
             chatRoom.addMessage(message);
             io.in(roomId).emit("new_message", JSON.stringify(message));
             console.log("*" + message.content + "* has been sent by " + this.getUser(socket.id)?.username + " in " + roomId);

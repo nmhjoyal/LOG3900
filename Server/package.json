@@ -22,9 +22,11 @@
   },
   "dependencies": {
     "@types/mongodb": "^3.3.16",
+    "bad-words": "^3.0.3",
     "body-parser": "^1.19.0",
     "class-validator": "^0.11.0",
     "express": "^4.17.1",
+    "french-badwords-list": "^1.0.5",
     "inversify": "^5.0.1",
     "json": "^9.0.6",
     "mongodb": "^3.5.3",
