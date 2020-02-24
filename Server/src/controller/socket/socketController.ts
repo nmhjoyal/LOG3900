@@ -25,7 +25,7 @@ export class SocketProtoController {
 
     @OnMessage("sign_in")
     sign_in(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() signIn: SignIn) {
-        let canConnect:boolean =  this.server.signIn(socket.id, signIn);
+        let canConnect: boolean =  this.server.signIn(socket.id, signIn);
         socket.emit("user_signed_in", JSON.stringify(canConnect));
     }
 

@@ -2,6 +2,7 @@ import SignIn from "../models/signIn";
 import ChatRoom from "./chatRoom";
 import Message from "../models/message"
 import PublicProfile from "../models/publicProfile";
+import { profileDB } from "../services/Database/profileDB";
 
 export default class ServerHandler {
     private users: Map<string/*socketID*/, PublicProfile/*{ username, avatar }*/>; 
@@ -12,16 +13,13 @@ export default class ServerHandler {
         this.chatRooms = [];
     }
 
-    /**
-     * Returns true if user is signed in
-     * @param user user we wish to add
-     */
     public signIn(socketId: string, signIn: SignIn): boolean {
         let canSignIn: boolean = false;
 
         // a changer, il faut dabord recuperer les infos de lutilisateur avec le username
         // puis ensuite il faut verifier si cest le bon password
         // si oui retourner true et set Map(socketid, PublicProfile)
+        
 
         if (!this.isConnected(signIn.username)) {
             console.log("User " + signIn.username + " signed in")

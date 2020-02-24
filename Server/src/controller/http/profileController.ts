@@ -1,4 +1,4 @@
-import { JsonController, Get, Param, Post, Body, HttpError, Delete, NotFoundError } from "routing-controllers";
+import { JsonController, Get, Param, Post, Body, HttpError, Delete, NotFoundError, Put } from "routing-controllers";
 import { profileDB } from "../../services/Database/profileDB";
 import PublicProfile from "../../models/publicProfile";
 import PrivateProfile from "../../models/privateProfile";
@@ -25,6 +25,8 @@ export class ProfileController {
         await profileDB.deleteProfile(userName);
         return "Profile " + userName + " deleted!"
     }
+
+    // @Put("/update/firstname/:username/:new")
 
     // TEST DB : 
     // @Get("/public/:userName")

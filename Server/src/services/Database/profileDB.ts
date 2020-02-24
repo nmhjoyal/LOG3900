@@ -26,6 +26,7 @@ class ProfileDB {
     }
 
     public async getPublicProfile(username: string): Promise<PublicProfile | null> {
+        
         const privateProfile: PrivateProfile | null = await this.db.db("Profiles").collection("profiles")
             .findOne({username: { $eq: username}})
 
