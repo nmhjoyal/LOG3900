@@ -146,10 +146,15 @@ namespace WPFUI.ViewModels
             }
             
             public void fullScreenChat()
-        {
-            _events.PublishOnUIThread(new fullScreenChatEvent());
-        }
-       
+            {
+                _events.PublishOnUIThread(new fullScreenChatEvent());
+            }
+
+            public void mainMenu()
+            {
+                _events.PublishOnUIThread(new goBackMainEvent());
+            }
+
     }
     
 }
