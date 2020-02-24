@@ -1,4 +1,4 @@
-import { JsonController, Get, Param, Post, Body, HttpError, Delete } from "routing-controllers";
+import { JsonController, Get, Param, Post, Body, HttpError, Delete, NotFoundError } from "routing-controllers";
 import Profile from "../../models/privateProfile";
 import { profileDB } from "../../services/Database/profileDB";
 import PublicProfile from "../../models/publicProfile";
@@ -12,12 +12,13 @@ export class ProfileController {
    
     @Post("/create")
     public async createUser(@Body() profile: Profile) {
-        const profileCreated: boolean = await profileDB.createProfile(profile);
-        if (profileCreated) {
-            return "Profile " + profile.username + " created!";
-        } else {
+        try {
+            await profileDB.createProfile(profile);
+        } catch {
             throw new HttpError(400);
         }
+        // Querry worked
+        return "Profile " + profile.username + " created!";
     }
 
     @Get("/public/:userName")
@@ -42,8 +43,25 @@ export class ProfileController {
     }
 
     @Delete("/:userName")
-    public deleteUserInfos(@Param("userName") userName: string) {
+    public async deleteUserInfos(@Param("userName") userName: string) {
+        try {
+            await profileDB.deleteProfile(userName);
+        } catch {
+            throw new HttpError(400);
+        }
 
+        const privateProfile: PrivateProfile = {
+            firstname : "string",
+            lastname : "string",
+            username : "string",
+            password : "string",
+            avatar : "string"/*String for the moment eventually needs to be image*/
+        }
+
+        const publicrter:PublicProfile = privateProfile;
+        console.log(publicrter)
+        // Querry worked
+        return "Profile " + userName + " deleted!"
     }
 }
 
