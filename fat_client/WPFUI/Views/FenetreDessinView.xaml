@@ -148,7 +148,7 @@
                 </Border.Effect>
             </Border>
             <Image x:Name="PART_Image" Grid.Row="1" Grid.Column="1" Stretch="None"/>
-            <local:chatBoxView Grid.Column="1" Margin="0.333,0,-342.667,-193.667" Grid.RowSpan="2"/>
+            <local:chatBoxView x:Name="resizeChat" Grid.Column="1" Margin="0.333,0,-342.667,-193.667" Grid.RowSpan="2"/>
             <Button x:Name="mainMenu" Style="{DynamicResource MaterialDesignRaisedAccentButton}" MaxWidth =" 100" Content="Go Back" Grid.Column="0" Grid.Row="1" Margin="-196,155.333,209.667,-180.667" Foreground="White" Background="#FFCFD1D0"/>
         </Grid>
 

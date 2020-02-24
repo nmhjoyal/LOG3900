@@ -66,6 +66,10 @@
         <Button x:Name ="disconnect" Style="{DynamicResource MaterialDesignRaisedAccentButton}" Grid.Column="6" Grid.Row="1" Foreground="White" Background="#FF00867A">
             Disconnect
         </Button>
+        <Button x:Name ="resize" Style="{DynamicResource MaterialDesignRaisedAccentButton}" Grid.Column="6" Grid.Row="2" Foreground="White" Background="#FFCFD1D0">
+            Game View
+        </Button>
+       
         <Button x:Name ="sendMessage" Style="{DynamicResource MaterialDesignRaisedLightButton}" Grid.Column="6" Grid.Row="6" Background="#FF008679" Foreground="White" Click="refocus">
             Send
         </Button>

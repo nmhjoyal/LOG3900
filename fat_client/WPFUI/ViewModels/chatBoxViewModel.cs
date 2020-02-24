@@ -84,6 +84,12 @@ namespace WPFUI.ViewModels
             _events.PublishOnUIThread(new DisconnectEvent());
         }
 
+        public void resize()
+        {
+           
+            _events.PublishOnUIThread(new freeDrawEvent());
+        }
+
         private void clearUserData()
         {
             _userData.clearData();
