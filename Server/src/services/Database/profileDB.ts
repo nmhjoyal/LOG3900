@@ -5,14 +5,13 @@ const CONNECTION_URL: string = "mongodb+srv://Admin:HeB6OZmfIA6n9pfu@projet3db-j
 
 export default class ProfileDB {
     private db: any;
-    private mongoClient: MongoClient;
 
     public constructor() { 
-        this.mongoClient = new MongoClient(CONNECTION_URL, 
+        const mongoClient: MongoClient = new MongoClient(CONNECTION_URL, 
             {useUnifiedTopology: true, useNewUrlParser: true})
 
         // Connect to database
-        this.mongoClient.connect((err, db) => {
+        mongoClient.connect((err, db) => {
             if (err) throw err;
             this.db = db;
         });
