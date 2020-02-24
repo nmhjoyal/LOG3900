@@ -1,7 +1,7 @@
 import { OnConnect, SocketController, ConnectedSocket, OnDisconnect, MessageBody, OnMessage, SocketIO } from "socket-controllers";
 import ServerHandler from "../../services/serverHandler";
 import Message from "../../models/message";
-import User from "../../models/user";
+import SignIn from "../../models/signIn";
  
 @SocketController()
 export class SocketProtoController {
@@ -24,8 +24,8 @@ export class SocketProtoController {
     }
 
     @OnMessage("sign_in")
-    sign_in(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() user: User) {
-        let canConnect:boolean =  this.server.signIn(socket.id, user);
+    sign_in(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() signIn: SignIn) {
+        let canConnect:boolean =  this.server.signIn(socket.id, signIn);
         socket.emit("user_signed_in", JSON.stringify(canConnect));
     }
 

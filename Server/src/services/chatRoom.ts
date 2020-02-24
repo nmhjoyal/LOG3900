@@ -1,26 +1,26 @@
-import User from "../models/user";
 import Message from "../models/message";
+import PublicProfile from "../models/publicProfile";
 
 export default class ChatRoom {
     public name: string;
-    private users: User[];
+    private users: PublicProfile[];
     private messages: Message[];
 
     public constructor(name: string) {
         this.name = name;
-        this.users = [{ username: "Hubert", password: "123" }];
+        this.users = [];
         this.messages = [];
     }
 
-    public addUser(user: User): void {
+    public addUser(user: PublicProfile): void {
         this.users.push(user);
     }
 
-    public removeUser(user: User): void {
+    public removeUser(user: PublicProfile): void {
         this.users.splice(this.users.indexOf(user), 1);
     }
 
-    public getUsers(): User[] {
+    public getUsers(): PublicProfile[] {
         return this.users;
     }
 
@@ -28,7 +28,7 @@ export default class ChatRoom {
         this.messages.push(message);
     }
 
-    public getUser(username: string): User | undefined {
+    public getUser(username: string): PublicProfile | undefined {
         return this.users.find( user => user.username === username);
     }
 
