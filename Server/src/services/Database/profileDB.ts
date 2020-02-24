@@ -25,29 +25,32 @@ class ProfileDB {
         });
     }
 
-    public async getPublicProfile(username: string): Promise<PublicProfile> {
-        const publicProfile: PublicProfile = {
-            username : "testreturn",
-            avatar : "testavatar"
+    public async getPublicProfile(username: string): Promise<PublicProfile | null> {
+        const privateProfile: PrivateProfile | null = await this.db.db("Profiles").collection("profiles")
+            .findOne({username: { $eq: username}})
+
+        if (privateProfile) {
+            const publicProfile: PublicProfile = {
+                username: privateProfile.username,
+                avatar: privateProfile.avatar
+            }
+            return publicProfile;
+        } else {
+            return null;
         }
-        return publicProfile;
     }
 
-    public async getPrivateProfile(username: string): Promise<PrivateProfile> {
-        const privateProfile: PrivateProfile = {
-            firstname : "string",
-            lastname : "string",
-            username : "string",
-            password : "string",
-            avatar : "string"/*String for the moment eventually needs to be image*/
-        }
+    public async getPrivateProfile(username: string): Promise<PrivateProfile | null> {
+
+        const privateProfile: PrivateProfile | null = await this.db.db("Profiles").collection("profiles")
+            .findOne({username: { $eq: username}})
+
         return privateProfile;
+        
     }
 
     public async deleteProfile(username: string): Promise<void> {
-        await this.db.db("Profiles").collection("profiles").deleteOne({ username: username }).catch((err: any) => {
-            throw err;
-        });
+        await this.db.db("Profiles").collection("profiles").deleteOne({ username: username });
     }
 }
 
