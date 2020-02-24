@@ -108,7 +108,7 @@ export default class ServerHandler {
     }
 
     private getUsersRooms(socketId: string): ChatRoom[] {
-        let user: User | undefined = this.users.get(socketId);
+        let user: PublicProfile | undefined = this.users.get(socketId);
         if (user) {
             user: user;
         }
