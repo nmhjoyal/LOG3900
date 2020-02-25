@@ -1,4 +1,5 @@
 package com.example.thin_client.ui.chat
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -13,7 +14,9 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.thin_client.R
 import com.example.thin_client.data.Message
+import com.example.thin_client.data.Preferences
 import com.example.thin_client.server.SocketHandler
+import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
 import com.example.thin_client.ui.login.LoginActivity
 import com.example.thin_client.ui.login.afterTextChanged
 import com.google.gson.Gson
@@ -30,7 +33,8 @@ class ChatActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
-
+        val roomname = intent.getStringExtra(ChatRoomsFragment.ROOM_KEY)
+        supportActionBar?.title = roomname
         SocketHandler.joinRoom()
         recyclerview_chat.adapter = adapter
 
@@ -78,30 +82,19 @@ class ChatActivity : AppCompatActivity() {
         // Disable native back
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
-            R.id.menu_sign_out -> {
-                SocketHandler.logout()
-                val intent = Intent(applicationContext, LoginActivity::class.java)
-                startActivity(intent)
-                finish()
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    override fun onCreateOptionsMenu(menu:Menu): Boolean{
-        menuInflater.inflate(R.menu.nav_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
 
     private fun showToMessage(text: String, date: Long){
         adapter.add(ChatToItem(text.replace("\\n".toRegex(), ""), date))
+        if (recyclerview_chat != null){
+            recyclerview_chat.scrollToPosition(adapter.itemCount - 1)
+        }
     }
 
     private fun showFromMessage(text: String, author:String, date: Long) {
         adapter.add(ChatFromItem(text, author, date))
+        if (recyclerview_chat != null){
+            recyclerview_chat.scrollToPosition(adapter.itemCount - 1)
+        }
     }
 
 

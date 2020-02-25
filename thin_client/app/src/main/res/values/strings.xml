@@ -7,7 +7,7 @@
 
     <!-- Strings related to login -->
     <string name="prompt_password">Password</string>
-    <string name="action_register">Create an account</string>
+    <string name="action_register">Sign up</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome !"</string>
     <string name="invalid_username">Username cannot be blank and cannot exceed 10 characters.</string>
@@ -28,6 +28,10 @@
     <string name="prompt_confirm_password">Confirm password</string>
     <string name="action_create">Create</string>
     <string name="invalid_password_confirm">Passwords do not match</string>
+
+    <!-- Strings for manifest page names -->
+    <string name="chat_rooms">Chat Rooms</string>
+    <string name="sign_up">Create a Profile</string>
 
     <!-- Strings for free draw mode -->
     <string name="title_activity_free_draw">Free Draw</string>

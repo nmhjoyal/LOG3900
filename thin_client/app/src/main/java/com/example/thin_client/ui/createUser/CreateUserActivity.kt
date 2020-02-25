@@ -1,19 +1,37 @@
 package com.example.thin_client.ui.createUser
 
+import android.app.Activity
+import android.content.Intent
+
+import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.provider.MediaStore
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
+
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.thin_client.R
+import com.example.thin_client.data.model.User
+import com.example.thin_client.server.SocketHandler
+import com.example.thin_client.ui.Lobby
 import com.example.thin_client.ui.login.afterTextChanged
+import com.github.nkzawa.socketio.client.Socket
+import de.hdodenhof.circleimageview.CircleImageView
+
 
 
 class CreateUserActivity : AppCompatActivity() {
 
     private lateinit var createUserModel: CreateUserModel
+
+    var avatarUri: Uri ?=null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,8 +39,9 @@ class CreateUserActivity : AppCompatActivity() {
 
         val username = findViewById<EditText>(R.id.username)
         val password = findViewById<EditText>(R.id.password)
-        val confirmPassword = findViewById<EditText>(R.id.confirmPass)
+        var confirmPassword = findViewById<EditText>(R.id.confirmPass)
         val create = findViewById<Button>(R.id.create)
+        val avatar = findViewById<Button>(R.id.button_upload_avatar)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -47,19 +66,70 @@ class CreateUserActivity : AppCompatActivity() {
         })
 
         username.afterTextChanged {
-            createUserModel.userDataChanged(username.text.toString(), password.text.toString(),
-                confirmPassword.text.toString())
+            createUserModel.userDataChanged(
+                username.text.toString(), password.text.toString(),
+                confirmPassword.text.toString()
+            )
         }
 
         password.afterTextChanged {
-            createUserModel.userDataChanged(username.text.toString(), password.text.toString(),
-                confirmPassword.text.toString())
+            createUserModel.userDataChanged(
+                username.text.toString(), password.text.toString(),
+                confirmPassword.text.toString()
+            )
         }
 
         confirmPassword.afterTextChanged {
-            createUserModel.userDataChanged(username.text.toString(), password.text.toString(),
-                confirmPassword.text.toString())
+            createUserModel.userDataChanged(
+                username.text.toString(), password.text.toString(),
+                confirmPassword.text.toString()
+            )
         }
+        avatar.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            startActivityForResult(intent, 0)
+        }
+
+        create.setOnClickListener {
+            val socket = SocketHandler.connect()
+            socket.on(Socket.EVENT_CONNECT, ({
+                SocketHandler.login(User(username.text.toString(), password.text.toString()))
+            }))
+                .on(Socket.EVENT_CONNECT_ERROR, ({
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        Toast.makeText(applicationContext, "Unable to connect", Toast.LENGTH_SHORT).show()
+                    })
+                    SocketHandler.disconnect()
+                }))
+                .on("user_signed_in", ({ data ->
+                    if (data.last().toString().toBoolean()) {
+                        val intent = Intent(applicationContext, Lobby::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Handler(Looper.getMainLooper()).post(Runnable {
+                            Toast.makeText(applicationContext, "Username already taken", Toast.LENGTH_SHORT).show()
+                        })
+                        SocketHandler.disconnect()
+                    }
+                }))
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == 0 && resultCode == Activity.RESULT_OK && data!=null){
+            //proceed and check what the selected image was
+            avatarUri = data.data //uri represent where the image is located on the device
+            val bitmap = MediaStore.Images.Media.getBitmap(contentResolver,avatarUri)
+            val avatarCircleImageView = findViewById<CircleImageView>(R.id.avatar_circleImageView)
+            val uploadAvatar = findViewById<Button>(R.id.button_upload_avatar)
+            avatarCircleImageView.setImageBitmap(bitmap)
+            uploadAvatar.alpha = 0f
+
+        }
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -71,4 +141,22 @@ class CreateUserActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
+  /*  private fun signup(){
+        val uFirstname = firstName.text.toString()
+        val uLastname = lastName.text.toString()
+        val uUsername = username.text.toString()
+
+        if(uFirstname.isEmpty()|| uLastname.isEmpty() || uUsername.isEmpty()) {
+            Toast.makeText(this, "Please fill up all the form fields", Toast.LENGTH_SHORT).show()
+            return
+        }
+        // add here call to add user to the data base
+    }*/
+
+
+
+    //private fun uploadImageToDB(){}
+    //private fun saveUserToDB(){}
+
 }

@@ -11,8 +11,8 @@ object SocketHandler {
     var socket: Socket? = null
 
 
-    fun connect(ipAddress: String): Socket {
-        socket = IO.socket("http://" + ipAddress + ":5000")
+    fun connect(): Socket {
+        socket = IO.socket("http://10.200.30.73:5000")
         return socket!!.connect()
     }
 

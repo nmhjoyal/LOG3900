@@ -17,10 +17,8 @@ class LoginViewModel : ViewModel() {
 
 
 
-    fun loginDataChanged(ipAddress: String,username: String) {
-        if (!isIPAddressValid(ipAddress)) {
-            _loginForm.value = LoginFormState(ipAddressError = R.string.invalid_ip)
-        } else if (!isUserNameValid(username)) {
+    fun loginDataChanged(username: String) {
+     if (!isUserNameValid(username)) {
             _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
         } else {
             _loginForm.value = LoginFormState(isDataValid = true)
@@ -31,7 +29,7 @@ class LoginViewModel : ViewModel() {
         return (username.isNotBlank() && username.length < 21)
     }
 
-    private fun isIPAddressValid(ipAddress: String): Boolean {
+    /*private fun isIPAddressValid(ipAddress: String): Boolean {
         val splitIP = ipAddress.split(".")
         if (splitIP.size == 4) {
             for (strByte in splitIP) {
@@ -46,5 +44,5 @@ class LoginViewModel : ViewModel() {
             return false
         }
         return true
-    }
+    }*/
 }

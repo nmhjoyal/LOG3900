@@ -1,6 +1,7 @@
 package com.example.thin_client.ui.login
 
 import android.app.Activity
+
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -17,8 +18,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.thin_client.R
+
 import com.example.thin_client.data.model.User
 import com.example.thin_client.server.SocketHandler
+
+import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
+import com.example.thin_client.ui.createUser.CreateUserActivity
 import com.example.thin_client.ui.Lobby
 import com.example.thin_client.ui.chat.ChatActivity
 import com.github.nkzawa.socketio.client.Socket
@@ -33,8 +38,9 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         val username = findViewById<EditText>(R.id.username)
-        val ipAddress = findViewById<EditText>(R.id.ipAddress)
+       // val ipAddress = findViewById<EditText>(R.id.ipAddress)
         val login = findViewById<Button>(R.id.login)
+        val signup = findViewById<Button>(R.id.signup)
         val loading = findViewById<ProgressBar>(R.id.loading)
 
         loading.visibility = View.INVISIBLE
@@ -50,9 +56,7 @@ class LoginActivity : AppCompatActivity() {
             if (loginState.usernameError != null) {
                 username.error = getString(loginState.usernameError)
             }
-            if (loginState.ipAddressError != null) {
-               ipAddress.error = getString(loginState.ipAddressError)
-            }
+
         })
 
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
@@ -69,26 +73,19 @@ class LoginActivity : AppCompatActivity() {
 
         username.afterTextChanged {
             loginViewModel.loginDataChanged(
-                ipAddress.text.toString(),
                 username.text.toString()
             )
         }
 
-        ipAddress.afterTextChanged {
-            loginViewModel.loginDataChanged(
-                ipAddress.text.toString(),
-                username.text.toString()
-            )
-        }
 
         login.setOnClickListener {
-            loading.visibility = ProgressBar.VISIBLE
-            login.isEnabled = false
-            val socket = SocketHandler.connect(ipAddress.text.toString())
-            socket.on(Socket.EVENT_CONNECT, ({
+                loading.visibility = ProgressBar.VISIBLE
+                login.isEnabled = false
+                val socket = SocketHandler.connect()
+                socket.on(Socket.EVENT_CONNECT, ({
                     SocketHandler.login(User(username.text.toString(), "testpass"))
                 }))
-                .on(Socket.EVENT_CONNECT_ERROR, ({
+                    .on(Socket.EVENT_CONNECT_ERROR, ({
                     Handler(Looper.getMainLooper()).post(Runnable {
                         Toast.makeText(applicationContext, "Unable to connect", Toast.LENGTH_SHORT).show()
                         loading.visibility = ProgressBar.GONE
@@ -103,14 +100,26 @@ class LoginActivity : AppCompatActivity() {
                         finish()
                     } else {
                         Handler(Looper.getMainLooper()).post(Runnable {
-                            Toast.makeText(applicationContext, "Username already taken", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                applicationContext,
+                                "Unable to connect",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             loading.visibility = ProgressBar.GONE
                             login.isEnabled = true
                         })
                         SocketHandler.disconnect()
                     }
-                }))
+                    }))
+
+
         }
+
+            signup.setOnClickListener {
+            val intent = Intent(this, CreateUserActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
