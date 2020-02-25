@@ -14,7 +14,6 @@ class ProfileDB {
         // Connect to database
         mongoClient.connect((err, db) => {
             if (err) throw err;
-            console.log("Connected to database.")
             this.db = db;
         });
     }

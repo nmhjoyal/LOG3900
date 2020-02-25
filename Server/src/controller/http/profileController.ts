@@ -4,7 +4,7 @@ import PublicProfile from "../../models/publicProfile";
 import PrivateProfile from "../../models/privateProfile";
 
 /**
- * HTTPController is used only to manage user database and game database. 
+ * ProfileController is used to manage user profiles in the database. 
  */
 @JsonController("/profile")
 export class ProfileController {
