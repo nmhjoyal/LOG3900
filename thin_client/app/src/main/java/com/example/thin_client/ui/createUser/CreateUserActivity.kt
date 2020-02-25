@@ -18,6 +18,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.thin_client.R
 import com.example.thin_client.data.model.User
+import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.Lobby
 import com.example.thin_client.ui.login.afterTextChanged
@@ -39,7 +40,7 @@ class CreateUserActivity : AppCompatActivity() {
 
         val username = findViewById<EditText>(R.id.username)
         val password = findViewById<EditText>(R.id.password)
-        var confirmPassword = findViewById<EditText>(R.id.confirmPass)
+        val confirmPassword = findViewById<EditText>(R.id.confirmPass)
         val create = findViewById<Button>(R.id.create)
         val avatar = findViewById<Button>(R.id.button_upload_avatar)
 
@@ -98,18 +99,18 @@ class CreateUserActivity : AppCompatActivity() {
             }))
                 .on(Socket.EVENT_CONNECT_ERROR, ({
                     Handler(Looper.getMainLooper()).post(Runnable {
-                        Toast.makeText(applicationContext, "Unable to connect", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext, R.string.login_failed, Toast.LENGTH_SHORT).show()
                     })
                     SocketHandler.disconnect()
                 }))
-                .on("user_signed_in", ({ data ->
+                .on(SocketEvent.USER_SIGNED_IN, ({ data ->
                     if (data.last().toString().toBoolean()) {
                         val intent = Intent(applicationContext, Lobby::class.java)
                         startActivity(intent)
                         finish()
                     } else {
                         Handler(Looper.getMainLooper()).post(Runnable {
-                            Toast.makeText(applicationContext, "Username already taken", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(applicationContext, R.string.error_username_taken, Toast.LENGTH_SHORT).show()
                         })
                         SocketHandler.disconnect()
                     }

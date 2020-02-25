@@ -1,23 +1,15 @@
 package com.example.thin_client.ui.chat
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.KeyEvent
-
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
-
-
 import androidx.appcompat.app.AppCompatActivity
 import com.example.thin_client.R
 import com.example.thin_client.data.Message
-import com.example.thin_client.data.Preferences
+import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
-import com.example.thin_client.ui.login.LoginActivity
 import com.example.thin_client.ui.login.afterTextChanged
 import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
@@ -38,7 +30,7 @@ class ChatActivity : AppCompatActivity() {
         SocketHandler.joinRoom()
         recyclerview_chat.adapter = adapter
 
-        SocketHandler.socket?.on("new_message", ({ data ->
+        SocketHandler.socket?.on(SocketEvent.NEW_MESSAGE, ({ data ->
             val jsonData = Gson().fromJson(data.first().toString(), Message::class.java)
             val username = jsonData.author.username
             val timestamp = jsonData.date

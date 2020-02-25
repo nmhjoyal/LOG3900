@@ -22,6 +22,13 @@ class Lobby : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lobby)
 
+        val prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
+        if (!prefs.getBoolean(Preferences.LOGGED_IN_KEY, false)) {
+            val intent = Intent(applicationContext, LoginActivity::class.java)
+            startActivity(intent)
+        }
+
+
         free_draw.setOnClickListener(({
             val intent = Intent(applicationContext, FreeDrawActivity::class.java)
             startActivity(intent)
@@ -56,6 +63,9 @@ class Lobby : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu:Menu): Boolean{
         menuInflater.inflate(R.menu.nav_menu, menu)
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onBackPressed() {
     }
 
 }

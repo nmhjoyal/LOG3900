@@ -5,7 +5,7 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.MediaType.Companion.toMediaType
 
-class OkHttpRequest( var client: OkHttpClient) {
+class OkHttpRequest(private val client: OkHttpClient) {
 
     fun GET(url: String, callback: Callback): Call {
         val request = Request.Builder()

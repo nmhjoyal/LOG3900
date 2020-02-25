@@ -1,7 +1,5 @@
 package com.example.thin_client.ui.login
 
-import android.app.Activity
-
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -13,98 +11,52 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.example.thin_client.R
 
 import com.example.thin_client.data.model.User
+import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
 
-import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
 import com.example.thin_client.ui.createUser.CreateUserActivity
-import com.example.thin_client.ui.Lobby
-import com.example.thin_client.ui.chat.ChatActivity
 import com.github.nkzawa.socketio.client.Socket
 
 
 class LoginActivity : AppCompatActivity() {
-
-    private lateinit var loginViewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         val username = findViewById<EditText>(R.id.username)
-       // val ipAddress = findViewById<EditText>(R.id.ipAddress)
+        val password = findViewById<EditText>(R.id.password)
         val login = findViewById<Button>(R.id.login)
         val signup = findViewById<Button>(R.id.signup)
         val loading = findViewById<ProgressBar>(R.id.loading)
 
         loading.visibility = View.INVISIBLE
-        loginViewModel = ViewModelProviders.of(this, LoginViewModelFactory())
-            .get(LoginViewModel::class.java)
-
-        loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
-            val loginState = it ?: return@Observer
-
-            // disable login button unless both username / password is valid
-            login.isEnabled = loginState.isDataValid
-
-            if (loginState.usernameError != null) {
-                username.error = getString(loginState.usernameError)
-            }
-
-        })
-
-        loginViewModel.loginResult.observe(this@LoginActivity, Observer {
-            val loginResult = it ?: return@Observer
-
-            if (loginResult.error != null) {
-                showLoginFailed(loginResult.error)
-            }
-            if (loginResult.success != null) {
-                updateUiWithUser(loginResult.success)
-            }
-            setResult(Activity.RESULT_OK)
-        })
-
-        username.afterTextChanged {
-            loginViewModel.loginDataChanged(
-                username.text.toString()
-            )
-        }
-
 
         login.setOnClickListener {
                 loading.visibility = ProgressBar.VISIBLE
                 login.isEnabled = false
                 val socket = SocketHandler.connect()
                 socket.on(Socket.EVENT_CONNECT, ({
-                    SocketHandler.login(User(username.text.toString(), "testpass"))
+                    SocketHandler.login(User(username.text.toString(), password.text.toString()))
                 }))
                     .on(Socket.EVENT_CONNECT_ERROR, ({
                     Handler(Looper.getMainLooper()).post(Runnable {
-                        Toast.makeText(applicationContext, "Unable to connect", Toast.LENGTH_SHORT).show()
+                        showLoginFailed()
                         loading.visibility = ProgressBar.GONE
                         login.isEnabled = true
                     })
                     SocketHandler.disconnect()
                 }))
-                .on("user_signed_in", ({ data ->
+                .on(SocketEvent.USER_SIGNED_IN, ({ data ->
                     if (data.last().toString().toBoolean()) {
-                        val intent = Intent(applicationContext, Lobby::class.java)
-                        startActivity(intent)
                         finish()
                     } else {
                         Handler(Looper.getMainLooper()).post(Runnable {
-                            Toast.makeText(
-                                applicationContext,
-                                "Unable to connect",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            showLoginFailed()
                             loading.visibility = ProgressBar.GONE
                             login.isEnabled = true
                         })
@@ -115,26 +67,15 @@ class LoginActivity : AppCompatActivity() {
 
         }
 
-            signup.setOnClickListener {
+        signup.setOnClickListener {
             val intent = Intent(this, CreateUserActivity::class.java)
             startActivity(intent)
         }
 
     }
 
-    private fun updateUiWithUser(model: LoggedInUserView) {
-        val welcome = getString(R.string.welcome)
-        val displayName = model.displayName
-        // TODO : initiate successful logged in experience
-        Toast.makeText(
-            applicationContext,
-            "$welcome $displayName",
-            Toast.LENGTH_LONG
-        ).show()
-    }
-
-    private fun showLoginFailed(@StringRes errorString: Int) {
-        Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
+    private fun showLoginFailed() {
+        Toast.makeText(applicationContext, R.string.login_failed, Toast.LENGTH_SHORT).show()
     }
 }
 

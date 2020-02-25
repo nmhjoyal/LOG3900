@@ -12,7 +12,8 @@
     <string name="welcome">"Welcome !"</string>
     <string name="invalid_username">Username cannot be blank and cannot exceed 10 characters.</string>
     <string name="invalid_password">Invalid Password</string>
-    <string name="login_failed">"Failed Connection"</string>
+    <string name="login_failed">"Failed to connect"</string>
+    <string name="error_username_taken">"Failed to connect"</string>
 
     <!-- Strings related to chat -->
     <string name="default_message">Type message here</string>
