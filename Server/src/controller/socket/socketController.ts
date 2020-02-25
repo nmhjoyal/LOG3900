@@ -19,21 +19,19 @@ export class SocketProtoController {
  
     @OnDisconnect()
     disconnect(@ConnectedSocket() socket: SocketIO.Socket) {
-        this.server.signOut(socket.id);
+        this.server.signOut(socket);
         console.log("client disconnected");
     }
 
     @OnMessage("sign_in")
-    sign_in(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() signIn: SignIn) {
-        let canConnect: boolean =  this.server.signIn(socket.id, signIn);
-        socket.emit("user_signed_in", JSON.stringify(canConnect));
+    async sign_in(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() signIn: SignIn) {
+        // A tester pas sur que ca fonctionne
+        await socket.emit("user_signed_in", this.server.signIn(socket, signIn));
     }
 
     @OnMessage("sign_out")
     sign_out(@ConnectedSocket() socket: SocketIO.Socket) {
-        this.server.signOut(socket.id);
-        // Quitter toutes les rooms dans lequel le user est
-        socket.emit("user_signed_out", JSON.stringify(this.server.signOut(socket.id)));
+        socket.emit("user_signed_out", this.server.signOut(socket));
     }
 
     @OnMessage("create_chat_room")

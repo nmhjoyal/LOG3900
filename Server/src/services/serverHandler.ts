@@ -2,10 +2,13 @@ import SignIn from "../models/signIn";
 import ChatRoom from "./chatRoom";
 import Message from "../models/message"
 import PublicProfile from "../models/publicProfile";
+import PrivateProfile from "../models/privateProfile";
+import SignInFeedBack from "../models/signInFeedBack";
+import { ConnectionStatus } from "../models/signInFeedBack";
 import { profileDB } from "../services/Database/profileDB";
 
 export default class ServerHandler {
-    private users: Map<string/*socketID*/, PublicProfile/*{ username, avatar }*/>; 
+    private users: Map<string, PublicProfile>; 
     private chatRooms: ChatRoom[];
 
     public constructor() {
@@ -13,70 +16,85 @@ export default class ServerHandler {
         this.chatRooms = [];
     }
 
-    public signIn(socketId: string, signIn: SignIn): boolean {
-        let canSignIn: boolean = false;
-
-        // a changer, il faut dabord recuperer les infos de lutilisateur avec le username
-        // puis ensuite il faut verifier si cest le bon password
-        // si oui retourner true et set Map(socketid, PublicProfile)
-        
-
-        if (!this.isConnected(signIn.username)) {
-            console.log("User " + signIn.username + " signed in")
-            // this.users.set(socketId, username);
-            canSignIn = true;
+    public async signIn(socket: SocketIO.Socket, signIn: SignIn): Promise<SignInFeedBack> {
+        const privateProfile: PrivateProfile | null = await profileDB.getPrivateProfile(signIn.username);
+        let status: boolean = false;
+        let log: ConnectionStatus;
+        if(privateProfile) {
+            if(signIn.password == privateProfile.password) {
+                if(this.isConnected(signIn.username)) {
+                    log = ConnectionStatus.AlreadyConnected
+                } else {
+                    const publicProfile: PublicProfile = {
+                        username: privateProfile.username,
+                        avatar: privateProfile.avatar
+                    }
+                    this.users.set(socket.id, publicProfile);
+                    status = true;
+                    log = ConnectionStatus.Connect;
+                    console.log(signIn.username + " signed in");
+                }
+            } else {
+                log = ConnectionStatus.InvalidPassword;
+            }
+        } else {
+            log = ConnectionStatus.InvalidUsername;
         }
-
-        return canSignIn;
+        const signInFeedback: SignInFeedBack = {
+            status: status,
+            log: log
+        }
+        return signInFeedback;
     }
 
-    public signOut(socketId: string): boolean {
-        let user: PublicProfile | undefined = this.getUser(socketId);
+    public signOut(socket: SocketIO.Socket): boolean {
+        const user: PublicProfile | undefined = this.users.get(socket.id);
         if (user) {
+            this.getAllUsersChatRooms(user.username).forEach((chatRoom) => {
+                socket.leave(chatRoom.name);
+            });
             console.log("User " + user.username + " signed out")
+        } else {
+           // To handle: Could not sign out
         }
-
-        return this.users.delete(socketId);
-    }
-
-    public getUsers(): Map<string, PublicProfile> {
-        return this.users;
-    }
-
-    public getUser(socketId: string): PublicProfile | undefined {
-        return this.users.get(socketId);
+        return this.users.delete(socket.id);
     }
 
     public createChatRoom(io: SocketIO.Socket, socket: SocketIO.Socket, roomId: string): void {
-        if(this.getChatRoomByName(roomId) == undefined) {
+        if(this.getChatRoomByName(roomId)) {
+            socket.emit("room_already_exists");
+        } else {
             this.chatRooms.push(new ChatRoom(roomId));
             io.emit("room_created", roomId);
-        } else {
-            socket.emit("room_already_exists");
         }
         console.log(this.chatRooms.toString());
     }
 
     public joinChatRoom(socket: SocketIO.Socket, roomId: string): void {
-        let user: PublicProfile | undefined = this.users.get(socket.id);
+        const user: PublicProfile | undefined = this.users.get(socket.id);
         let chatRoom: ChatRoom | undefined = this.getChatRoomByName(roomId);
         if (user && chatRoom) {
             socket.join(roomId);
-            socket.to(roomId).emit("user_joined_room", this.getUser(socket.id)?.username);
+            socket.to(roomId).emit("user_joined_room", user.username);
             chatRoom.addUser(user);
             socket.emit("load_messages", JSON.stringify(chatRoom.getMessages()));
             console.log(this.chatRooms.toString());
+        } else {
+            // To handle: Could not join chat room
         }
     }
 
     public leaveChatRoom(socket: SocketIO.Socket, roomId: string): void {
         socket.leave(roomId);
-        let user: PublicProfile | undefined = this.users.get(socket.id);
-        if (user) {
-            this.getChatRoomByName(roomId)?.removeUser(user);
+        const user: PublicProfile | undefined = this.users.get(socket.id);
+        const chatRoom: ChatRoom | undefined = this.getChatRoomByName(roomId);
+        if (user && chatRoom) {
+            chatRoom.removeUser(user);
+            socket.to(roomId).emit("user_left_room", user.username);
+            console.log(this.chatRooms.toString());
+        } else {
+            // To handle: Could not leave chat room
         }
-        socket.to(roomId).emit("user_left_room", this.getUser(socket.id)?.username);
-        console.log(this.chatRooms.toString());
     }
 
     public sendMessage(io: SocketIO.Socket, socket: SocketIO.Socket, roomId: string, message: Message): void {
@@ -85,8 +103,16 @@ export default class ServerHandler {
         if (chatRoom) {
             chatRoom.addMessage(message);
             io.in(roomId).emit("new_message", JSON.stringify(message));
-            console.log("*" + message.content + "* has been sent by " + this.getUser(socket.id)?.username + " in " + roomId);
+            console.log("*" + message.content + "* has been sent by " + this.users.get(socket.id)?.username + " in " + roomId);
         }
+    }
+
+    public getUsers(): Map<string, PublicProfile> {
+        return this.users;
+    }
+
+    public getUser(socketId: string): PublicProfile | undefined {
+        return this.users.get(socketId);
     }
 
     private isConnected(username: string): boolean {
@@ -105,21 +131,13 @@ export default class ServerHandler {
         return this.chatRooms.find(room => room.name == roomId)
     }
 
-    private getUsersRooms(socketId: string): ChatRoom[] {
-        let user: PublicProfile | undefined = this.users.get(socketId);
-        if (user) {
-            user: user;
-        }
+    private getAllUsersChatRooms(username: string): ChatRoom[] {
         let chatRooms: ChatRoom[] = [];
-        /*
-        if (user) {
-            this.chatRooms.forEach((chatRoom) => {
-                if(chatRoom.contains(user)) {
-                    
-                }         
-            });
-        }
-        */
-       return chatRooms;
+        this.chatRooms.forEach((chatRoom) => {
+            if(chatRoom.contains(username)) {
+                chatRooms.push(chatRoom);
+            }
+        });
+        return chatRooms;
     }
 }

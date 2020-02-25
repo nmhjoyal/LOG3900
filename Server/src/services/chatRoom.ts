@@ -46,11 +46,12 @@ export default class ChatRoom {
     }
 
     public contains(username: string): boolean {
+        let isIn: boolean = false;
         this.users.forEach((user) => {
             if (username == user.username) {
-                return true;
+                isIn = true;
             }
         });
-        return false;
+        return isIn;
     }
 }
