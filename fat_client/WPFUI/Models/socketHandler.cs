@@ -91,19 +91,28 @@ namespace WPFUI.Models
         public void sendMessage()
         {
             Message message = new Message(_user, _userdata.currentMessage, 0);
-            if(message.content.Trim() != "")
+            if (message.content.Trim() != "")
             {
                 _socket.Emit("send_message", JsonConvert.SerializeObject(message));
             }
         }
 
-        public void createUser(User user)
+        public void createUser(PrivateProfile privateProfile)
         {
-            TestPOSTWebRequest(user, "/user/add");
+            try
+            {
+                TestPOSTWebRequest(privateProfile, "/profile/create/");
+            }
+
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            
         }
         public static void TestPOSTWebRequest(Object obj, string url)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000" + url);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://" + "10.200.31.12" + ":5000" + url);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 

@@ -67,7 +67,9 @@ namespace WPFUI.ViewModels
             _events = events;
             _socketHandler = socketHandler;
             _userData = userdata;
-            _messages = _userData.messages;
+            _messages = userdata.messages;
+            currentMessage = "gros test sale";
+
         }
 
         public string welcomeMessage

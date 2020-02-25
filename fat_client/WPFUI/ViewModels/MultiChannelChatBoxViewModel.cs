@@ -4,13 +4,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using WPFUI.Commands;
 using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
     class MultiChannelChatBoxViewModel: Screen
     {
+
+        private IUserData _userdata;
+
         private BindableCollection<Channel> _channels;
+
+        private BindableCollection<MessageModel> _messages;
+
+        public BindableCollection<MessageModel> messages
+        {
+            get { return _messages; }
+            set { _messages = value; }
+        }
+
+
+        public IchangeChannelCommand changeChannelCommand { get; set; }
 
         public BindableCollection<Channel> channels
         {
@@ -18,16 +34,13 @@ namespace WPFUI.ViewModels
             set { _channels = value; }
         }
 
-        public MultiChannelChatBoxViewModel()
+        public MultiChannelChatBoxViewModel(IUserData userdata)
         {
-            _channels = new BindableCollection<Channel>();
-            getFakeChannels();
+            _userdata = userdata;
+            _channels = userdata.channels;
+            _messages = _channels.Last().messages;
+            changeChannelCommand = new changeChannelCommand(userdata);
         }
-        public void getFakeChannels()
-        {
-            channels.Add(new Channel());
-            channels.Add(new Channel());
-            channels.Add(new Channel());
-        }
+
     }
 }

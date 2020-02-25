@@ -60,13 +60,22 @@ namespace WPFUI.ViewModels
 			set { _confirmedPassword = value; }
 		}
 
+		private string _avatar;
+
+		public string avatar
+		{
+			get { return _avatar; }
+			set { _avatar = value; }
+		}
+
 		public void createUser()
 		{
 			if (isValid() & isSamePassword())
 			{
 				_userData.userName = _userName;
 				_userData.password = _password;
-				_socketHandler.connectionAttempt();
+
+				_socketHandler.createUser(new PrivateProfile(_userName,_firstName,_lastName,_password,_avatar));
 				
 			}
 		}

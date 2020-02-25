@@ -15,6 +15,15 @@ namespace WPFUI.Models
         private string _currentMessage;
         private BindableCollection<MessageModel> _messages;
 
+        private BindableCollection<Channel> _channels;
+
+        public BindableCollection<Channel> channels
+        {
+            get { return _channels; }
+            set { _channels = value; }
+        }
+
+
         public BindableCollection<MessageModel> messages
         {
             get { return _messages; }
@@ -53,9 +62,17 @@ namespace WPFUI.Models
             _ipAdress = ipAdress;
             _password = password;
             _messages = new BindableCollection<MessageModel>();
-            clearData();
+            _channels = new BindableCollection<Channel>();
+            addFakeChannels();
+            _messages = _channels.Last().messages;
         }
 
+        public void addFakeChannels()
+        {
+            _channels.Add(new Channel(1, "channel1"));
+            _channels.Add(new Channel(4, "channel3"));
+            _channels.Add(new Channel(9, "channel5"));
+        }
         public void clearData()
         {
             _currentMessage = "";
@@ -66,6 +83,10 @@ namespace WPFUI.Models
 
         }
 
+        public void changeChannel(int channelID)
+        {
+            messages = _channels.Single(i => i.channelID == channelID).messages;
+        }
 
     }
 }

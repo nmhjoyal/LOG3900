@@ -4,7 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WPFUI.Views"
-             mc:Ignorable="d" 
+			 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:cal="http://www.caliburnproject.org"
+			 mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 	<Grid Background="#FFF1F2F1">
 		<Grid.ColumnDefinitions>
@@ -23,6 +25,15 @@
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
 						<StackPanel Orientation="Vertical">
+
+							<StackPanel.InputBindings>
+								<MouseBinding 
+									MouseAction="LeftClick" 
+									Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.changeChannelCommand}"
+									CommandParameter="{Binding channelID}">
+								</MouseBinding>		
+							</StackPanel.InputBindings>
+
 							<TextBlock Text="{Binding channelName}" Foreground="DarkSlateGray"/>
 							<TextBlock Text="{Binding lastMessageContent}" Foreground="Black" TextWrapping="Wrap" Margin="10,0,0,0"/>
 							<TextBlock Text="{Binding formattedTimeStamp}" Foreground="DarkSlateGray" HorizontalAlignment="Left" FontSize="12" Margin="10,0,0,10"/>
@@ -31,6 +42,6 @@
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>
 		</ScrollViewer>
-		<local:chatBoxView  Grid.Column="1" Grid.Row="2"/>
+		<local:chatBoxView Grid.Column="1" Grid.Row="2"/>
 	</Grid>
 </UserControl>

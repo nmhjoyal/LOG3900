@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace WPFUI.Models
 {
@@ -12,6 +13,15 @@ namespace WPFUI.Models
         private BindableCollection<MessageModel> _messages;
 
         private string _channelName;
+
+        private int _channelID;
+
+        public int channelID
+        {
+            get { return _channelID; }
+            set { _channelID = value; }
+        }
+
 
         public string channelName
         {
@@ -25,9 +35,10 @@ namespace WPFUI.Models
             set { _messages = value; }
         }
 
-        public Channel()
+        public Channel(int channelID, string channelName)
         {
-            _channelName = "Default Channel Name";
+            _channelID = channelID;
+            _channelName = channelName;
             _messages = new BindableCollection<MessageModel>();
             addFakeMessages();
         }
