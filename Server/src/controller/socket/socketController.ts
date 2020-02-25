@@ -26,7 +26,7 @@ export class SocketProtoController {
     @OnMessage("sign_in")
     async sign_in(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() signIn: SignIn) {
         // A tester pas sur que ca fonctionne
-        await socket.emit("user_signed_in", this.server.signIn(socket, signIn));
+        socket.emit("user_signed_in", await this.server.signIn(socket, signIn));
     }
 
     @OnMessage("sign_out")

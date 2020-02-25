@@ -19,7 +19,7 @@ export default class ServerHandler {
 
     public async signIn(socket: SocketIO.Socket, signIn: SignIn): Promise<SignInFeedBack> {
         const privateProfile: PrivateProfile | null = await profileDB.getPrivateProfile(signIn.username);
-        let status: boolean = false;
+        let signed_in: boolean = false;
         let log: ConnectionStatus;
         if(privateProfile) {
             if(signIn.password == privateProfile.password) {
@@ -31,7 +31,7 @@ export default class ServerHandler {
                         avatar: privateProfile.avatar
                     }
                     this.users.set(socket.id, publicProfile);
-                    status = true;
+                    signed_in = true;
                     log = ConnectionStatus.Connect;
                     console.log(signIn.username + " signed in");
                 }
@@ -42,7 +42,7 @@ export default class ServerHandler {
             log = ConnectionStatus.InvalidUsername;
         }
         const signInFeedback: SignInFeedBack = {
-            status: status,
+            signed_in: signed_in,
             log: log
         }
         return signInFeedback;
@@ -78,7 +78,7 @@ export default class ServerHandler {
             socket.join(roomId);
             socket.to(roomId).emit("user_joined_room", user.username);
             chatRoom.addUser(user);
-            socket.emit("load_messages", JSON.stringify(chatRoom.getMessages()));
+            socket.emit("load_history", JSON.stringify(chatRoom.getMessages()));
             console.log(this.chatRooms.toString());
         } else {
             // To handle: Could not join chat room
