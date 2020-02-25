@@ -40,14 +40,11 @@ namespace WPFUI.Models
             set { _ipAdress = value; }
         }
 
-
-
         public string password
         {
             get { return _password; }
             set { _password = value; }
         }
-
 
 
         public UserData(string userName, string ipAdress, string password)

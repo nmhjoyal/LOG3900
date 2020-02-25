@@ -11,7 +11,7 @@ using WPFUI.Models;
 namespace WPFUI.ViewModels
 {
     class ShellViewModel: Conductor<object>, IHandle<LogInEvent>, IHandle<logOutEvent>, IHandle<joinChatEvent>,
-						  IHandle<DisconnectEvent>, IHandle<userNameTakenEvent>,IHandle<signUpEvent>, IHandle<goBackEvent>,
+						  IHandle<DisconnectEvent>, IHandle<userNameTakenEvent>,IHandle<signUpEvent>, IHandle<goBackEvent>, IHandle<joinChatroomEvent>,
 						  IHandle<passwordMismatchEvent>, IHandle<viewProfileEvent>, IHandle<goBackMainEvent>, IHandle<freeDrawEvent>, IHandle<fullScreenChatEvent>
 	{
 		private IEventAggregator _events;
@@ -72,7 +72,7 @@ namespace WPFUI.ViewModels
 
 		public void Handle(joinChatroomEvent message)
 		{
-			ActivateItem(_container.GetInstance<ChatRoomChannelsViewModel>());
+			ActivateItem(_container.GetInstance<MultiChannelChatBoxViewModel>());
 		}
 
 		public void Handle(DisconnectEvent message)

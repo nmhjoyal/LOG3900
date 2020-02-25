@@ -25,7 +25,6 @@ namespace WPFUI.Models
 			{
 				_timeStamp = DateTime.Now;
 			}
-			
 		}
 
 		public string content

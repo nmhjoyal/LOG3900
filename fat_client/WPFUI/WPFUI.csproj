@@ -111,6 +111,7 @@
     <Compile Include="EventModels\signUpEvent.cs" />
     <Compile Include="EventModels\userNameTakenEvent.cs" />
     <Compile Include="EventModels\viewProfileEvent.cs" />
+    <Compile Include="Models\Channel.cs" />
     <Compile Include="Models\Editeur.cs" />
     <Compile Include="Models\ISocketHandler.cs" />
     <Compile Include="Models\IUserData.cs" />
@@ -126,6 +127,7 @@
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
+    <Compile Include="ViewModels\MultiChannelChatBoxViewModel.cs" />
     <Compile Include="ViewModels\NewUserViewModel.cs" />
     <Compile Include="ViewModels\profileViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
@@ -143,6 +145,9 @@
     </Compile>
     <Compile Include="Views\MainMenuView.xaml.cs">
       <DependentUpon>MainMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MultiChannelChatBoxView.xaml.cs">
+      <DependentUpon>MultiChannelChatBoxView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\NewUserView.xaml.cs">
       <DependentUpon>NewUserView.xaml</DependentUpon>
@@ -200,6 +205,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainMenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MultiChannelChatBoxView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
