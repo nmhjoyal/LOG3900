@@ -1,6 +1,6 @@
 export default interface SignInFeedback {
     signed_in: boolean,
-    log: ConnectionStatus
+    log_message: ConnectionStatus
 }
 
 export enum ConnectionStatus {

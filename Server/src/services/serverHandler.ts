@@ -43,7 +43,7 @@ export default class ServerHandler {
         }
         const signInFeedback: SignInFeedBack = {
             signed_in: signed_in,
-            log: log
+            log_message: log
         }
         return signInFeedback;
     }
@@ -51,7 +51,8 @@ export default class ServerHandler {
     public signOut(socket: SocketIO.Socket): boolean {
         const user: PublicProfile | undefined = this.users.get(socket.id);
         if (user) {
-            this.getAllUsersChatRooms(user.username).forEach((chatRoom) => {
+            this.getAllUsersChatRooms(user).forEach((chatRoom) => {
+                chatRoom.removeUser(user);
                 socket.leave(chatRoom.name);
             });
             console.log("User " + user.username + " signed out")
@@ -86,11 +87,11 @@ export default class ServerHandler {
     }
 
     public leaveChatRoom(socket: SocketIO.Socket, roomId: string): void {
-        socket.leave(roomId);
         const user: PublicProfile | undefined = this.users.get(socket.id);
         const chatRoom: ChatRoom | undefined = this.getChatRoomByName(roomId);
         if (user && chatRoom) {
             chatRoom.removeUser(user);
+            socket.leave(roomId);
             socket.to(roomId).emit("user_left_room", user.username);
             console.log(this.chatRooms.toString());
         } else {
@@ -102,7 +103,7 @@ export default class ServerHandler {
         message.date = Math.floor(Date.now() / 1000);
         let chatRoom: ChatRoom | undefined = this.getChatRoomByName(roomId);
         if (chatRoom) {
-            message.content = ChatFilter.filter(message.content);
+            // message.content = ChatFilter.filter(message.content);
             chatRoom.addMessage(message);
             io.in(roomId).emit("new_message", JSON.stringify(message));
             console.log("*" + message.content + "* has been sent by " + this.users.get(socket.id)?.username + " in " + roomId);
@@ -133,10 +134,10 @@ export default class ServerHandler {
         return this.chatRooms.find(room => room.name == roomId)
     }
 
-    private getAllUsersChatRooms(username: string): ChatRoom[] {
+    private getAllUsersChatRooms(user: PublicProfile): ChatRoom[] {
         let chatRooms: ChatRoom[] = [];
         this.chatRooms.forEach((chatRoom) => {
-            if(chatRoom.contains(username)) {
+            if(chatRoom.contains(user)) {
                 chatRooms.push(chatRoom);
             }
         });

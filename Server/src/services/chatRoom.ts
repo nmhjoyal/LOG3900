@@ -45,13 +45,7 @@ export default class ChatRoom {
         return chatRoom;
     }
 
-    public contains(username: string): boolean {
-        let isIn: boolean = false;
-        this.users.forEach((user) => {
-            if (username == user.username) {
-                isIn = true;
-            }
-        });
-        return isIn;
+    public contains(user: PublicProfile): boolean {
+        return this.users.includes(user);
     }
 }
