@@ -12,7 +12,7 @@ object SocketHandler {
 
 
     fun connect(): Socket {
-        socket = IO.socket("http://10.200.30.73:5000")
+        socket = IO.socket("http://10.200.18.78:5000")
         return socket!!.connect()
     }
 
