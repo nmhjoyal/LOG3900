@@ -75,6 +75,10 @@ class LoginActivity : AppCompatActivity() {
     private fun showLoginFailed() {
         Toast.makeText(applicationContext, R.string.login_failed, Toast.LENGTH_SHORT).show()
     }
+
+    override fun onBackPressed() {
+        // Disable native back
+    }
 }
 
 /**

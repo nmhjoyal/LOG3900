@@ -2,6 +2,7 @@ package com.example.thin_client.server
 
 import com.example.thin_client.data.Message
 import com.example.thin_client.data.model.User
+import com.example.thin_client.data.server.HTTPRequest
 import com.github.nkzawa.socketio.client.IO
 import com.github.nkzawa.socketio.client.Socket
 import com.google.gson.Gson
@@ -12,7 +13,7 @@ object SocketHandler {
 
 
     fun connect(): Socket {
-        socket = IO.socket("http://10.200.30.73:5000")
+        socket = IO.socket(HTTPRequest.BASE_URL)
         return socket!!.connect()
     }
 

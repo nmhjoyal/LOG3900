@@ -10,14 +10,17 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.thin_client.R
+import com.example.thin_client.data.model.PrivateProfile
 import com.example.thin_client.data.model.User
 import com.example.thin_client.data.server.HTTPRequest
 import com.example.thin_client.data.server.SocketEvent
@@ -25,9 +28,15 @@ import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.Lobby
 import com.example.thin_client.ui.login.afterTextChanged
 import com.github.nkzawa.socketio.client.Socket
+import com.google.gson.Gson
+import com.squareup.okhttp.Callback
 import com.squareup.okhttp.OkHttpClient
+import com.squareup.okhttp.Request
+import com.squareup.okhttp.Response
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_createuser.*
+import okhttp3.Call
+import java.io.IOException
 
 
 class CreateUserActivity : AppCompatActivity() {
@@ -40,6 +49,7 @@ class CreateUserActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_createuser)
+        loading.visibility = View.INVISIBLE
 
         val firstName = findViewById<EditText>(R.id.firstName)
         val lastName = findViewById<EditText>(R.id.lastName)
@@ -124,9 +134,30 @@ class CreateUserActivity : AppCompatActivity() {
         }
 
         create.setOnClickListener {
+            loading.visibility = ProgressBar.VISIBLE
+            create.isEnabled = false
             val httpClient = OkHttpRequest(okhttp3.OkHttpClient())
+            val gson = Gson()
+            val profile = gson.toJson(PrivateProfile(username.text.toString(), firstName.text.toString(),
+                lastName.text.toString(), password.text.toString(), "banane"))
+            httpClient.POST(HTTPRequest.BASE_URL + HTTPRequest.URL_CREATE, profile.toString(),
+                object: okhttp3.Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        runOnUiThread(({
+                            loading.visibility = ProgressBar.GONE
+                            create.isEnabled = true
+                        }))
+                    }
 
-//            httpClient.POST(HTTPRequest.URL_CREATE, )
+                    override fun onResponse(call: Call, response: okhttp3.Response) {
+                        runOnUiThread(({
+                            loading.visibility = ProgressBar.GONE
+                            create.isEnabled = true
+                            finish()
+                        }))
+                    }
+                }
+            )
         }
     }
 
@@ -153,6 +184,10 @@ class CreateUserActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        // Disable native back
     }
 
   /*  private fun signup(){

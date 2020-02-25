@@ -17,10 +17,10 @@ class CreateUserModel : ViewModel() {
             _createUserForm.value = CreateUserForm(lastNameError = R.string.invalid_name)
         } else if (!isUsernameValid(username)) {
             _createUserForm.value = CreateUserForm(usernameError = R.string.invalid_username)
-        } else if (isPasswordValid(password)){
+        } else if (!isPasswordValid(password)){
             _createUserForm.value = CreateUserForm(passwordError = R.string.invalid_password)
-        } else if (isConfirmPasswordValid(password, confirmPassword)) {
-            _createUserForm.value = CreateUserForm(passwordError = R.string.invalid_password_confirm)
+        } else if (!isConfirmPasswordValid(password, confirmPassword)) {
+            _createUserForm.value = CreateUserForm(passwordConfirmError = R.string.invalid_password_confirm)
         } else {
             _createUserForm.value = CreateUserForm(isDataValid = true)
         }
@@ -35,7 +35,7 @@ class CreateUserModel : ViewModel() {
     }
 
     private fun isUsernameValid(username: String): Boolean {
-        if (username.length in 4..20) {
+        if (username.length < 4 || username.length > 20) {
             _createUserForm.value = CreateUserForm(usernameError = R.string.invalid_username)
             return false
         }
@@ -43,7 +43,7 @@ class CreateUserModel : ViewModel() {
     }
 
     private fun isPasswordValid(password: String): Boolean {
-        if (password.length in 8..20) {
+        if (password.length < 8 || password.length > 20) {
             _createUserForm.value = CreateUserForm(passwordError = R.string.invalid_password)
             return false
         }
