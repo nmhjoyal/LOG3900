@@ -7,7 +7,8 @@
 			 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:cal="http://www.caliburnproject.org"
 			 mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+			 MinWidth="400">
 	<Grid Background="#FFF1F2F1">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="20"/>

@@ -9,7 +9,7 @@ using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    class profileViewModel
+    class profileViewModel: Screen 
     {
 		private string _changedUsername;
 		private string _changedFirstName;

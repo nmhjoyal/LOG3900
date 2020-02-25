@@ -106,13 +106,12 @@
                         TickFrequency="10" TickPlacement="BottomRight" IsSnapToTickEnabled="False">
                 </Slider>
                 <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Click="Button_Click" Content="Capture Image" Width="150"/>
+                    <Button Click="Button_Click" Content="Capture Image" Width="120" Margin="20,0,0,0" FontSize="12" BorderBrush="{x:Null}" Background="#FFF3F3F3"/>
 
-                    <Button Click="Button_Click_1" Content="Save To Disk" Width="150"/>
+					<Button Click="Button_Click_1" Content="Save To Disk" Width="120" Margin="20,0,0,0" FontSize="12" BorderBrush="{x:Null}" Background="#FFF0F0F0"/>
                     <TextBox Name="txtEditor" TextWrapping="Wrap" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" />
                 </StackPanel>
-                <Button x:Name="fullScreenChat" Style="{DynamicResource MaterialDesignRaisedAccentButton}" MaxWidth =" 200" Content="Full Screen Chat" Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="5" Margin="10" Foreground="White" Background="#FFCFD1D0">
-                </Button>
+                
             </StackPanel>
 
         </Border>
@@ -147,9 +146,8 @@
                     <DropShadowEffect Opacity="0.3" BlurRadius="10"/>
                 </Border.Effect>
             </Border>
-            <Image x:Name="PART_Image" Grid.Row="1" Grid.Column="1" Stretch="None"/>
-            <local:chatBoxView x:Name="resizeChat" Grid.Column="1" Margin="0.333,0,-342.667,-193.667" Grid.RowSpan="2"/>
-            <Button x:Name="mainMenu" Style="{DynamicResource MaterialDesignRaisedAccentButton}" MaxWidth =" 100" Content="Go Back" Grid.Column="0" Grid.Row="1" Margin="-196,155.333,209.667,-180.667" Foreground="White" Background="#FFCFD1D0"/>
+			<Image x:Name="PART_Image" Grid.Row="1" Grid.Column="1" Stretch="None"/>
+			<Button x:Name="mainMenu" Style="{DynamicResource MaterialDesignRaisedAccentButton}" MaxWidth =" 100" Content="Go Back" Grid.Column="0" Grid.Row="1" Margin="-196,155.333,209.667,-180.667" Foreground="White" Background="#FFCBD4E4" BorderBrush="{x:Null}"/>
         </Grid>
 
     </DockPanel>

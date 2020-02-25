@@ -127,6 +127,7 @@
     <Compile Include="Utilitaires\RelayCommand.cs" />
     <Compile Include="ViewModels\chatBoxViewModel.cs" />
     <Compile Include="ViewModels\ChatRoomChannelsViewModel.cs" />
+    <Compile Include="ViewModels\EmptyViewModel.cs" />
     <Compile Include="ViewModels\FenetreDessinViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="Models\Message.cs" />
@@ -140,6 +141,9 @@
     </Compile>
     <Compile Include="Views\ChatRoomChannelsView.xaml.cs">
       <DependentUpon>ChatRoomChannelsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EmptyView.xaml.cs">
+      <DependentUpon>EmptyView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FenetreDessinView.xaml.cs">
       <DependentUpon>FenetreDessinView.xaml</DependentUpon>
@@ -197,6 +201,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ChatRoomChannelsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EmptyView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -21,7 +21,7 @@ namespace WPFUI.ViewModels
         /// Expose des commandes et propriétés connectées au modèle aux des éléments de la vue peuvent se lier.
         /// Reçoit des avis de changement du modèle et envoie des avis de changements à la vue.
         /// </summary>
-        class FenetreDessinViewModel : INotifyPropertyChanged
+        class FenetreDessinViewModel : Screen, INotifyPropertyChanged
         {
             public event PropertyChangedEventHandler PropertyChanged;
             private Editeur editeur = new Editeur();

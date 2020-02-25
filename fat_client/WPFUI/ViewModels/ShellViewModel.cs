@@ -10,74 +10,136 @@ using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    class ShellViewModel: Conductor<object>.Collection.OneActive, IHandle<LogInEvent>, IHandle<logOutEvent>, IHandle<joinChatEvent>,
+    class ShellViewModel: Conductor<Screen>.Collection.AllActive, IHandle<LogInEvent>, IHandle<logOutEvent>, IHandle<joinChatEvent>,
 						  IHandle<DisconnectEvent>, IHandle<userNameTakenEvent>,IHandle<signUpEvent>, IHandle<goBackEvent>, IHandle<joinChatroomEvent>,
 						  IHandle<passwordMismatchEvent>, IHandle<viewProfileEvent>, IHandle<goBackMainEvent>, IHandle<freeDrawEvent>, IHandle<fullScreenChatEvent>
 	{
 		private IEventAggregator _events;
 		private SimpleContainer _container;
+		private IWindowManager _windowManager;
+		private IUserData _userData;
+		private ISocketHandler _socketHandler;
 
-		public ShellViewModel(IEventAggregator events, SimpleContainer container)
+		public ShellViewModel(IWindowManager windowManager, IEventAggregator events, SimpleContainer container,
+							  IUserData userdata, ISocketHandler socketHandler)
 		{
 			_container = container;
+			_windowManager = windowManager;
 			_events = events;
-			_events.Subscribe(this);
-			//ActivateItem(_container.GetInstance<FenetreDessinViewModel>());
-			ActivateItem(_container.GetInstance<LoginViewModel>());
+			_userData = userdata;
+			_socketHandler = socketHandler;
+			_events.Subscribe(this);
+
+			Items.Add(_container.GetInstance<LoginViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+		}
+
+		public Screen FirstSubViewModel
+		{
+			get { return Items.ElementAt(0); }
+		}
+
+		public Screen SecondSubViewModel
+		{
+			get { return Items.ElementAt(1); }
 		}
 
 		public void Handle(LogInEvent message)
 		{
-			ActivateItem(_container.GetInstance<MainMenuViewModel>());
+			Items.Clear();
+			Items.Add(_container.GetInstance<MainMenuViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
 
 		public void Handle(viewProfileEvent message)
 		{
-			ActivateItem(_container.GetInstance<profileViewModel>());
+			Items.Clear();
+			Items.Add(_container.GetInstance<profileViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
 
 		public void Handle(freeDrawEvent message)
 		{
-			ActivateItem(_container.GetInstance<FenetreDessinViewModel>());
+			Items.Clear();
+			Items.Add(_container.GetInstance<FenetreDessinViewModel>());
+			Items.Add(_container.GetInstance<chatBoxViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
 		public void Handle(fullScreenChatEvent message)
 		{
-			ActivateItem(_container.GetInstance<chatBoxViewModel>());
+			Items.Clear();
+			Items.Add(_container.GetInstance<chatBoxViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
 
 		public void Handle(goBackEvent message)
 		{
-			ActivateItem(_container.GetInstance<LoginViewModel>());
+			Items.Clear();
+			Items.Add(_container.GetInstance<LoginViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
 
 		public void Handle(goBackMainEvent message)
 		{
-			ActivateItem(_container.GetInstance<MainMenuViewModel>());
+			Items.Clear();
+			Items.Add(_container.GetInstance<MainMenuViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
 
 		public void Handle(signUpEvent message)
 		{
-			ActivateItem(_container.GetInstance<NewUserViewModel>());
+			Items.Clear();
+			Items.Add(_container.GetInstance<NewUserViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
 
 		public void Handle(logOutEvent message)
 		{
-			ActivateItem(_container.GetInstance<LoginViewModel>());
+			Items.Clear();
+			Items.Add(_container.GetInstance<LoginViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
 
 		public void Handle(joinChatEvent message)
 		{
-			ActivateItem(_container.GetInstance<chatBoxViewModel>());
+			Items.Clear();
+			Items.Add(_container.GetInstance<chatBoxViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
 
 		public void Handle(joinChatroomEvent message)
 		{
-			ActivateItem(_container.GetInstance<MultiChannelChatBoxViewModel>());
+			Items.Clear();
+			Items.Add(_container.GetInstance<MultiChannelChatBoxViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
 
 		public void Handle(DisconnectEvent message)
 		{
-			ActivateItem(_container.GetInstance<LoginViewModel>());
+			Items.Clear();
+			Items.Add(_container.GetInstance<LoginViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
 
 		public void Handle(userNameTakenEvent message)
@@ -90,13 +152,12 @@ namespace WPFUI.ViewModels
 			MessageBox.Show(messageBoxText, caption, button, icon);
 		}
 
-		public void Handle(passwordMismatchEvent message)
-		{
+		public void Handle(passwordMismatchEvent message)
+		{
 			string messageBoxText = "passwords don't match";
 			string caption = "Warning";
 			MessageBoxButton button = MessageBoxButton.OK;
 			MessageBoxImage icon = MessageBoxImage.Warning;
-
 			MessageBox.Show(messageBoxText, caption, button, icon);
 		}
 	}
