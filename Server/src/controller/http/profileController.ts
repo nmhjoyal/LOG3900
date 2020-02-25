@@ -1,5 +1,4 @@
-import { JsonController, Get, Param, Post, Body, HttpError, Delete } from "routing-controllers";
-import Profile from "../../models/privateProfile";
+import { JsonController, Get, Param, Post, Body, HttpError, Delete, NotFoundError, Put } from "routing-controllers";
 import { profileDB } from "../../services/Database/profileDB";
 import PublicProfile from "../../models/publicProfile";
 import PrivateProfile from "../../models/privateProfile";
@@ -11,40 +10,36 @@ import PrivateProfile from "../../models/privateProfile";
 export class ProfileController {
    
     @Post("/create")
-    public async createUser(@Body() profile: Profile) {
-        const profileCreated: boolean = await profileDB.createProfile(profile);
-        if (profileCreated) {
-            return "Profile " + profile.username + " created!";
-        } else {
+    public async createUser(@Body() profile: PrivateProfile) {
+        try {
+            await profileDB.createProfile(profile);
+        } catch {
             throw new HttpError(400);
         }
-    }
-
-    @Get("/public/:userName")
-    public getPublicUserInfos(@Param("userName") userName: string) {
-        let profileRetrieved : PublicProfile = {
-            username : "string",
-            avatar : "string"
-        }
-        return profileRetrieved;
-    }
-
-    @Get("/private/:userName")
-    public getPrivateUserInfos(@Param("userName") userName: string) {
-        let profileRetrieved : PrivateProfile = {
-            firstname : "string",
-            lastname : "string",
-            username : "string",
-            password : "string",
-            avatar : "string"
-        }
-        return profileRetrieved;
+        // Querry worked
+        return "Profile " + profile.username + " created!";
     }
 
     @Delete("/:userName")
-    public deleteUserInfos(@Param("userName") userName: string) {
-
+    public async deleteUserInfos(@Param("userName") userName: string) {
+        await profileDB.deleteProfile(userName);
+        return "Profile " + userName + " deleted!"
     }
+
+    // @Put("/update/firstname/:username/:new")
+
+    // TEST DB : 
+    // @Get("/public/:userName")
+    // public async getPublicUserInfos(@Param("userName") userName: string) {
+    //     const profileRetrieved: PublicProfile | null = await profileDB.getPublicProfile(userName);
+    //     return profileRetrieved;
+    // }
+
+    // @Get("/private/:userName")
+    // public async getPrivateUserInfos(@Param("userName") userName: string) {
+    //     const profileRetrieved: PrivateProfile | null = await profileDB.getPrivateProfile(userName);
+    //     return profileRetrieved;
+    // }
 }
 
 // Ref : https://www.npmjs.com/package/routing-controllers

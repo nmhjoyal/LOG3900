@@ -4,45 +4,54 @@ import PublicProfile from "../../models/publicProfile"
 
 const CONNECTION_URL: string = "mongodb+srv://Admin:HeB6OZmfIA6n9pfu@projet3db-jehvq.mongodb.net/test?retryWrites=true&w=majority"; 
 
-export default class ProfileDB {
-    private db: any;
+class ProfileDB {
+    private db: MongoClient;
 
     public constructor() { 
         const mongoClient: MongoClient = new MongoClient(CONNECTION_URL, 
-            {useUnifiedTopology: true, useNewUrlParser: true})
+            {useUnifiedTopology: true, useNewUrlParser: true});
 
         // Connect to database
         mongoClient.connect((err, db) => {
             if (err) throw err;
+            console.log("Connected to database.")
             this.db = db;
         });
     }
 
-    public async createProfile(profile: PrivateProfile): Promise<boolean> {
-        return this.db.db("Profiles").collection("profiles").insertOne(profile, (err: any) => {
-            // False if the username is already taken.
-            return err.message.indexOf("11000"/*username already taken error code*/) != -1;
+    public async createProfile(profile: PrivateProfile): Promise<void> {
+        await this.db.db("Profiles").collection("profiles").insertOne(profile).catch((err: any) => {
+            throw err;
         });
-        return true;
     }
 
-    public async getPublicProfile(username: string): Promise<PublicProfile> {
-        const publicProfile: PublicProfile = {
-            username : "testreturn",
-            avatar : "testavatar"
+    public async getPublicProfile(username: string): Promise<PublicProfile | null> {
+        
+        const privateProfile: PrivateProfile | null = await this.db.db("Profiles").collection("profiles")
+            .findOne({username: { $eq: username}})
+
+        if (privateProfile) {
+            const publicProfile: PublicProfile = {
+                username: privateProfile.username,
+                avatar: privateProfile.avatar
+            }
+            return publicProfile;
+        } else {
+            return null;
         }
-        return publicProfile;
     }
 
-    public async getPrivateProfile(username: string): Promise<PrivateProfile> {
-        const privateProfile: PrivateProfile = {
-            firstname : "string",
-            lastname : "string",
-            username : "string",
-            password : "string",
-            avatar : "string"/*String for the moment eventually needs to be image*/
-        }
+    public async getPrivateProfile(username: string): Promise<PrivateProfile | null> {
+
+        const privateProfile: PrivateProfile | null = await this.db.db("Profiles").collection("profiles")
+            .findOne({username: { $eq: username}})
+
         return privateProfile;
+        
+    }
+
+    public async deleteProfile(username: string): Promise<void> {
+        await this.db.db("Profiles").collection("profiles").deleteOne({ username: username });
     }
 }
 
