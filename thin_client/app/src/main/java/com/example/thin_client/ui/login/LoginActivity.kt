@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.thin_client.R
+import com.example.thin_client.data.SignedInResponse
 
 import com.example.thin_client.data.model.User
 import com.example.thin_client.server.SocketHandler
@@ -27,6 +28,7 @@ import com.example.thin_client.ui.createUser.CreateUserActivity
 import com.example.thin_client.ui.Lobby
 import com.example.thin_client.ui.chat.ChatActivity
 import com.github.nkzawa.socketio.client.Socket
+import com.google.gson.Gson
 
 
 class LoginActivity : AppCompatActivity() {
@@ -83,7 +85,7 @@ class LoginActivity : AppCompatActivity() {
                 login.isEnabled = false
                 val socket = SocketHandler.connect()
                 socket.on(Socket.EVENT_CONNECT, ({
-                    SocketHandler.login(User(username.text.toString(), "testpass"))
+                    SocketHandler.login(User(username.text.toString(), "test123"))
                 }))
                     .on(Socket.EVENT_CONNECT_ERROR, ({
                     Handler(Looper.getMainLooper()).post(Runnable {
@@ -94,7 +96,10 @@ class LoginActivity : AppCompatActivity() {
                     SocketHandler.disconnect()
                 }))
                 .on("user_signed_in", ({ data ->
-                    if (data.last().toString().toBoolean()) {
+                    val gson = Gson()
+                    val signedInResponse = gson.fromJson(data.first().toString(), SignedInResponse::class.java )
+
+                    if (signedInResponse.signed_in) {
                         val intent = Intent(applicationContext, Lobby::class.java)
                         startActivity(intent)
                         finish()
@@ -102,7 +107,7 @@ class LoginActivity : AppCompatActivity() {
                         Handler(Looper.getMainLooper()).post(Runnable {
                             Toast.makeText(
                                 applicationContext,
-                                "Unable to connect",
+                                signedInResponse.log_message,
                                 Toast.LENGTH_SHORT
                             ).show()
                             loading.visibility = ProgressBar.GONE

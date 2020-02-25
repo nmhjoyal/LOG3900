@@ -12,7 +12,7 @@ object SocketHandler {
 
 
     fun connect(): Socket {
-        socket = IO.socket("http://10.200.18.78:5000")
+        socket = IO.socket("http://10.200.24.193:5000")
         return socket!!.connect()
     }
 
@@ -42,8 +42,9 @@ object SocketHandler {
         socket!!.emit("send_message", message)
     }
 
-    fun joinRoom() {
-        socket!!.emit("join_chat_room")
+    fun joinChatRoom() {
+        socket!!.emit("join_chat_room", "room1")
     }
+
 
 }

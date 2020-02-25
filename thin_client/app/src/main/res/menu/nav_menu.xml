@@ -7,5 +7,9 @@
     app:showAsAction="ifRoom"/>
 
 
+    <item android:id="@+id/new_room"
+        android:title="Create new room"
+        app:showAsAction="ifRoom"/>
+
 
 </menu>
