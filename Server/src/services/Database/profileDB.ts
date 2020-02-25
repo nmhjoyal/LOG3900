@@ -53,6 +53,12 @@ class ProfileDB {
     public async deleteProfile(username: string): Promise<void> {
         await this.db.db("Profiles").collection("profiles").deleteOne({ username: username });
     }
+
+    public async updateProfile(profile: PrivateProfile): Promise<void>{
+        await this.db.db("Profiles").collection("profiles").replaceOne({username: { $eq: profile.username}}, profile).catch((err: any) => {
+            throw err;
+        });
+    }
 }
 
 export var profileDB: ProfileDB = new ProfileDB();
