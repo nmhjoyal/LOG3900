@@ -37,13 +37,13 @@ class LoginActivity : AppCompatActivity() {
         loading.visibility = View.INVISIBLE
 
         login.setOnClickListener {
-                loading.visibility = ProgressBar.VISIBLE
-                login.isEnabled = false
-                val socket = SocketHandler.connect()
-                socket.on(Socket.EVENT_CONNECT, ({
-                    SocketHandler.login(User(username.text.toString(), password.text.toString()))
-                }))
-                    .on(Socket.EVENT_CONNECT_ERROR, ({
+            loading.visibility = ProgressBar.VISIBLE
+            login.isEnabled = false
+            val socket = SocketHandler.connect()
+            socket.on(Socket.EVENT_CONNECT, ({
+                SocketHandler.login(User(username.text.toString(), password.text.toString()))
+            }))
+                .on(Socket.EVENT_CONNECT_ERROR, ({
                     Handler(Looper.getMainLooper()).post(Runnable {
                         showLoginFailed()
                         loading.visibility = ProgressBar.GONE
@@ -62,9 +62,7 @@ class LoginActivity : AppCompatActivity() {
                         })
                         SocketHandler.disconnect()
                     }
-                    }))
-
-
+                }))
         }
 
         signup.setOnClickListener {

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -14,28 +13,22 @@
         android:selectAllOnFocus="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintHorizontal_bias="0.25"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.316" />
+        app:layout_constraintVertical_bias="0.25" />
 
     <Button
         android:id="@+id/create"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="48dp"
-        android:layout_marginBottom="64dp"
         android:enabled="false"
         android:text="@string/action_create"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password"
-        app:layout_constraintVertical_bias="0.224" />
+        app:layout_constraintBottom_toBottomOf="@+id/confirmPass"
+        app:layout_constraintEnd_toEndOf="@+id/button_upload_avatar"
+        app:layout_constraintStart_toStartOf="@+id/button_upload_avatar"
+        app:layout_constraintTop_toBottomOf="@+id/button_upload_avatar" />
 
     <EditText
         android:id="@+id/confirmPass"
@@ -99,18 +92,19 @@
         android:layout_height="122dp"
         android:background="@drawable/rounded_signup_photo"
         android:text="Upload avatar"
-        app:layout_constraintBottom_toTopOf="@+id/firstName"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.75"
+        app:layout_constraintVertical_bias="0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.672" />
+        app:layout_constraintTop_toTopOf="@+id/firstName" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/avatar_circleImageView"
         android:layout_width="122dp"
         android:layout_height="122dp"
-        app:layout_constraintBottom_toBottomOf="@+id/button_upload_avatar"
         app:layout_constraintEnd_toEndOf="@+id/button_upload_avatar"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/button_upload_avatar"
         app:layout_constraintTop_toTopOf="@+id/button_upload_avatar" />
 

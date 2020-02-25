@@ -1,5 +1,6 @@
 package com.example.thin_client.ui.createUser
 
+import OkHttpRequest
 import android.app.Activity
 import android.content.Intent
 
@@ -18,13 +19,15 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.thin_client.R
 import com.example.thin_client.data.model.User
+import com.example.thin_client.data.server.HTTPRequest
 import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.Lobby
 import com.example.thin_client.ui.login.afterTextChanged
 import com.github.nkzawa.socketio.client.Socket
+import com.squareup.okhttp.OkHttpClient
 import de.hdodenhof.circleimageview.CircleImageView
-
+import kotlinx.android.synthetic.main.activity_createuser.*
 
 
 class CreateUserActivity : AppCompatActivity() {
@@ -38,6 +41,8 @@ class CreateUserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_createuser)
 
+        val firstName = findViewById<EditText>(R.id.firstName)
+        val lastName = findViewById<EditText>(R.id.lastName)
         val username = findViewById<EditText>(R.id.username)
         val password = findViewById<EditText>(R.id.password)
         val confirmPassword = findViewById<EditText>(R.id.confirmPass)
@@ -52,9 +57,15 @@ class CreateUserActivity : AppCompatActivity() {
         createUserModel.createUserForm.observe(this@CreateUserActivity, Observer {
             val createUserState = it ?: return@Observer
 
-            // disable login button unless both username / password is valid
+            // disable login button unless all fields are correctly filled
             create.isEnabled = createUserState.isDataValid
 
+            if (createUserState.firstNameError != null) {
+                firstName.error = getString(createUserState.firstNameError)
+            }
+            if (createUserState.lastNameError != null) {
+                lastName.error = getString(createUserState.lastNameError)
+            }
             if (createUserState.usernameError != null) {
                 username.error = getString(createUserState.usernameError)
             }
@@ -66,8 +77,25 @@ class CreateUserActivity : AppCompatActivity() {
             }
         })
 
+        firstName.afterTextChanged {
+            createUserModel.userDataChanged(
+                firstName.text.toString(), lastName.text.toString(),
+                username.text.toString(), password.text.toString(),
+                confirmPassword.text.toString()
+            )
+        }
+
+        lastName.afterTextChanged {
+            createUserModel.userDataChanged(
+                firstName.text.toString(), lastName.text.toString(),
+                username.text.toString(), password.text.toString(),
+                confirmPassword.text.toString()
+            )
+        }
+
         username.afterTextChanged {
             createUserModel.userDataChanged(
+                firstName.text.toString(), lastName.text.toString(),
                 username.text.toString(), password.text.toString(),
                 confirmPassword.text.toString()
             )
@@ -75,6 +103,7 @@ class CreateUserActivity : AppCompatActivity() {
 
         password.afterTextChanged {
             createUserModel.userDataChanged(
+                firstName.text.toString(), lastName.text.toString(),
                 username.text.toString(), password.text.toString(),
                 confirmPassword.text.toString()
             )
@@ -82,10 +111,12 @@ class CreateUserActivity : AppCompatActivity() {
 
         confirmPassword.afterTextChanged {
             createUserModel.userDataChanged(
+                firstName.text.toString(), lastName.text.toString(),
                 username.text.toString(), password.text.toString(),
                 confirmPassword.text.toString()
             )
         }
+
         avatar.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
@@ -93,28 +124,9 @@ class CreateUserActivity : AppCompatActivity() {
         }
 
         create.setOnClickListener {
-            val socket = SocketHandler.connect()
-            socket.on(Socket.EVENT_CONNECT, ({
-                SocketHandler.login(User(username.text.toString(), password.text.toString()))
-            }))
-                .on(Socket.EVENT_CONNECT_ERROR, ({
-                    Handler(Looper.getMainLooper()).post(Runnable {
-                        Toast.makeText(applicationContext, R.string.login_failed, Toast.LENGTH_SHORT).show()
-                    })
-                    SocketHandler.disconnect()
-                }))
-                .on(SocketEvent.USER_SIGNED_IN, ({ data ->
-                    if (data.last().toString().toBoolean()) {
-                        val intent = Intent(applicationContext, Lobby::class.java)
-                        startActivity(intent)
-                        finish()
-                    } else {
-                        Handler(Looper.getMainLooper()).post(Runnable {
-                            Toast.makeText(applicationContext, R.string.error_username_taken, Toast.LENGTH_SHORT).show()
-                        })
-                        SocketHandler.disconnect()
-                    }
-                }))
+            val httpClient = OkHttpRequest(okhttp3.OkHttpClient())
+
+//            httpClient.POST(HTTPRequest.URL_CREATE, )
         }
     }
 
