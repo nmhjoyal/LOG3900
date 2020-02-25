@@ -26,7 +26,8 @@
         </activity>
         <activity
             android:name=".ui.createUser.CreateUserActivity"
-            android:label="@string/sign_up">
+            android:label="@string/sign_up"
+            android:screenOrientation="landscape">
         </activity>
         <activity
             android:name=".ui.Lobby"
