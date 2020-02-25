@@ -1,7 +1,7 @@
-import User from "./user";
+import PublicProfile from "./publicProfile";
 
 export default interface Message {
-    author : User
+    author : PublicProfile
     content : string
     date : number
 }
