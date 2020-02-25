@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/select_avatar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:padding="10sp"
+        android:layout_marginBottom="32dp"
+        android:text="@string/prompt_avatar"
+        android:textAllCaps="true"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/avocado_avatar"
+        app:layout_constraintStart_toStartOf="@+id/avocado_avatar" />
 
     <EditText
         android:id="@+id/firstName"
@@ -12,23 +28,10 @@
         android:inputType="text"
         android:selectAllOnFocus="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintEnd_toStartOf="@+id/midpoint"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.25" />
-
-    <Button
-        android:id="@+id/create"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:enabled="false"
-        android:text="@string/action_create"
-        app:layout_constraintBottom_toBottomOf="@+id/confirmPass"
-        app:layout_constraintEnd_toEndOf="@+id/button_upload_avatar"
-        app:layout_constraintStart_toStartOf="@+id/button_upload_avatar"
-        app:layout_constraintTop_toBottomOf="@+id/button_upload_avatar" />
 
     <EditText
         android:id="@+id/confirmPass"
@@ -42,7 +45,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/password"
         app:layout_constraintTop_toBottomOf="@+id/password"
-        app:layout_constraintVertical_bias="0.003" />
+        app:layout_constraintVertical_bias="0.025" />
 
     <EditText
         android:id="@+id/username"
@@ -56,7 +59,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/lastName"
         app:layout_constraintTop_toBottomOf="@+id/lastName"
-        app:layout_constraintVertical_bias="0.021" />
+        app:layout_constraintVertical_bias="0.025" />
 
     <EditText
         android:id="@+id/password"
@@ -70,7 +73,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/username"
         app:layout_constraintTop_toBottomOf="@+id/username"
-        app:layout_constraintVertical_bias="0.016" />
+        app:layout_constraintVertical_bias="0.025" />
 
     <EditText
         android:id="@+id/lastName"
@@ -86,40 +89,185 @@
         app:layout_constraintTop_toBottomOf="@+id/firstName"
         app:layout_constraintVertical_bias="0.025" />
 
-    <Button
-        android:id="@+id/button_upload_avatar"
-        android:layout_width="122dp"
-        android:layout_height="122dp"
-        android:background="@drawable/rounded_signup_photo"
-        android:text="Upload avatar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.75"
-        app:layout_constraintVertical_bias="0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/firstName" />
+    <ImageButton
+        android:id="@+id/avocado_avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/circle_primary_dark"
+        android:contentDescription="@string/avocado_cd"
+        app:layout_constraintEnd_toStartOf="@+id/banana_avatar"
+        app:layout_constraintTop_toTopOf="@+id/firstName"
+        app:srcCompat="@drawable/ic_avocado" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/avatar_circleImageView"
-        android:layout_width="122dp"
-        android:layout_height="122dp"
-        app:layout_constraintEnd_toEndOf="@+id/button_upload_avatar"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/button_upload_avatar"
-        app:layout_constraintTop_toTopOf="@+id/button_upload_avatar" />
+    <ImageButton
+        android:id="@+id/banana_avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/avatar_background"
+        android:contentDescription="@string/banana_cd"
+        app:layout_constraintEnd_toStartOf="@+id/quarterpoint"
+        app:layout_constraintTop_toTopOf="@+id/firstName"
+        app:srcCompat="@drawable/ic_banana" />
+
+    <ImageButton
+        android:id="@+id/strawberry_avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/avatar_background"
+        android:contentDescription="@string/strawberry_cd"
+        app:layout_constraintStart_toStartOf="@+id/quarterpoint"
+        app:layout_constraintTop_toTopOf="@+id/firstName"
+        app:srcCompat="@drawable/ic_strawberry" />
+
+    <ImageButton
+        android:id="@+id/watermelon_avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/avatar_background"
+        android:contentDescription="@string/watermelon_cd"
+        app:layout_constraintStart_toEndOf="@+id/strawberry_avatar"
+        app:layout_constraintTop_toTopOf="@+id/firstName"
+        app:srcCompat="@drawable/ic_watermelon" />
+
+    <ImageButton
+        android:id="@+id/grape_avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/avatar_background"
+        android:layout_marginTop="16dp"
+        android:contentDescription="@string/grape_cd"
+        app:layout_constraintStart_toStartOf="@+id/avocado_avatar"
+        app:layout_constraintTop_toBottomOf="@+id/avocado_avatar"
+        app:srcCompat="@drawable/ic_grape" />
+
+    <ImageButton
+        android:id="@+id/kiwi_avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/avatar_background"
+        android:contentDescription="@string/kiwi_cd"
+        app:layout_constraintStart_toEndOf="@+id/grape_avatar"
+        app:layout_constraintTop_toTopOf="@+id/grape_avatar"
+        app:srcCompat="@drawable/ic_kiwi" />
+
+    <ImageButton
+        android:id="@+id/orange_avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/avatar_background"
+        android:contentDescription="@string/orange_cd"
+        app:layout_constraintStart_toStartOf="@+id/strawberry_avatar"
+        app:layout_constraintTop_toTopOf="@+id/grape_avatar"
+        app:srcCompat="@drawable/ic_orange" />
+
+    <ImageButton
+        android:id="@+id/pineapple_avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/avatar_background"
+        android:contentDescription="@string/pineapple_cd"
+        app:layout_constraintStart_toEndOf="@+id/orange_avatar"
+        app:layout_constraintTop_toTopOf="@+id/grape_avatar"
+        app:srcCompat="@drawable/ic_pineapple" />
+
+    <ImageButton
+        android:id="@+id/apple_avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/avatar_background"
+        android:contentDescription="@string/apple_cd"
+        app:layout_constraintStart_toStartOf="@+id/grape_avatar"
+        app:layout_constraintTop_toTopOf="@+id/username"
+        app:srcCompat="@drawable/ic_apple" />
+
+    <ImageButton
+        android:id="@+id/lemon_avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/avatar_background"
+        android:contentDescription="@string/lemon_cd"
+        app:layout_constraintStart_toEndOf="@+id/apple_avatar"
+        app:layout_constraintTop_toTopOf="@+id/apple_avatar"
+        app:srcCompat="@drawable/ic_lemon" />
+
+    <ImageButton
+        android:id="@+id/cherry_avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/avatar_background"
+        android:contentDescription="@string/cherry_cd"
+        app:layout_constraintStart_toStartOf="@+id/orange_avatar"
+        app:layout_constraintTop_toTopOf="@+id/apple_avatar"
+        app:srcCompat="@drawable/ic_cherry" />
+
+    <ImageButton
+        android:id="@+id/pear_avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/avatar_background"
+        android:contentDescription="@string/pear_cd"
+        app:layout_constraintStart_toEndOf="@+id/cherry_avatar"
+        app:layout_constraintTop_toTopOf="@+id/apple_avatar"
+        app:srcCompat="@drawable/ic_pear" />
+
+    <TextView
+        android:id="@+id/author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fruit_icon_author"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toEndOf="@+id/pear_avatar"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/apple_avatar"
+        app:layout_constraintTop_toBottomOf="@+id/apple_avatar" />
 
     <ProgressBar
         android:id="@+id/loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="64dp"
-        android:layout_marginBottom="64dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/create"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_margin="32dp"
+        android:background="@drawable/button_primary"
+        android:enabled="false"
+        android:text="@string/action_create"
+        android:textColor="@color/color_white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/midpoint"
+        app:layout_constraintTop_toBottomOf="@+id/author" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/midpoint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/quarterpoint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.75" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

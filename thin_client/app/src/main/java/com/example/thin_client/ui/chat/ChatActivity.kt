@@ -27,7 +27,6 @@ class ChatActivity : AppCompatActivity() {
         setContentView(R.layout.activity_chat)
         val roomname = intent.getStringExtra(ChatRoomsFragment.ROOM_KEY)
         supportActionBar?.title = roomname
-        SocketHandler.joinRoom()
         recyclerview_chat.adapter = adapter
 
         SocketHandler.socket?.on(SocketEvent.NEW_MESSAGE, ({ data ->

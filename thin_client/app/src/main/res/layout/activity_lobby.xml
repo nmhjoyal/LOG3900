@@ -13,14 +13,14 @@
         android:layout_height="wrap_content"
         android:text="@string/title_activity_free_draw"
         android:textSize="16sp"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/button_primary"
         android:textColor="#ffffff"
         android:textStyle="bold"
         android:padding="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></Button>
+        app:layout_constraintTop_toTopOf="parent" />
     <FrameLayout
         android:id="@+id/chatrooms_container"
         android:layout_width="wrap_content"

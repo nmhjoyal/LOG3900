@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.thin_client.R
+import com.example.thin_client.data.AvatarID
 import com.example.thin_client.data.model.PrivateProfile
 import com.example.thin_client.data.model.User
 import com.example.thin_client.data.server.HTTPRequest
@@ -44,6 +45,7 @@ class CreateUserActivity : AppCompatActivity() {
     private lateinit var createUserModel: CreateUserModel
 
     var avatarUri: Uri ?=null
+    var selectedAvatar: AvatarID = AvatarID.AVOCADO
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,7 +59,8 @@ class CreateUserActivity : AppCompatActivity() {
         val password = findViewById<EditText>(R.id.password)
         val confirmPassword = findViewById<EditText>(R.id.confirmPass)
         val create = findViewById<Button>(R.id.create)
-        val avatar = findViewById<Button>(R.id.button_upload_avatar)
+
+        setupAvatarButtons()
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -127,19 +130,13 @@ class CreateUserActivity : AppCompatActivity() {
             )
         }
 
-        avatar.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type = "image/*"
-            startActivityForResult(intent, 0)
-        }
-
         create.setOnClickListener {
             loading.visibility = ProgressBar.VISIBLE
             create.isEnabled = false
             val httpClient = OkHttpRequest(okhttp3.OkHttpClient())
             val gson = Gson()
             val profile = gson.toJson(PrivateProfile(username.text.toString(), firstName.text.toString(),
-                lastName.text.toString(), password.text.toString(), "banane"))
+                lastName.text.toString(), password.text.toString(), selectedAvatar.name))
             httpClient.POST(HTTPRequest.BASE_URL + HTTPRequest.URL_CREATE, profile.toString(),
                 object: okhttp3.Callback {
                     override fun onFailure(call: Call, e: IOException) {
@@ -161,20 +158,99 @@ class CreateUserActivity : AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == 0 && resultCode == Activity.RESULT_OK && data!=null){
-            //proceed and check what the selected image was
-            avatarUri = data.data //uri represent where the image is located on the device
-            val bitmap = MediaStore.Images.Media.getBitmap(contentResolver,avatarUri)
-            val avatarCircleImageView = findViewById<CircleImageView>(R.id.avatar_circleImageView)
-            val uploadAvatar = findViewById<Button>(R.id.button_upload_avatar)
-            avatarCircleImageView.setImageBitmap(bitmap)
-            uploadAvatar.alpha = 0f
-
-        }
-
+    /* Icons source https://www.flaticon.com/authors/freepik author https://www.flaticon.com/ */
+    private fun setupAvatarButtons() {
+        avocado_avatar.setOnClickListener(({
+            resetAvatarSelection()
+            avocado_avatar.setBackgroundResource(R.drawable.circle_primary_dark)
+            selectedAvatar = AvatarID.AVOCADO
+        }))
+        banana_avatar.setOnClickListener(({
+            resetAvatarSelection()
+            banana_avatar.setBackgroundResource(R.drawable.circle_primary_dark)
+            selectedAvatar = AvatarID.BANANA
+        }))
+        strawberry_avatar.setOnClickListener(({
+            resetAvatarSelection()
+            strawberry_avatar.setBackgroundResource(R.drawable.circle_primary_dark)
+            selectedAvatar = AvatarID.STRAWBERRY
+        }))
+        watermelon_avatar.setOnClickListener(({
+            resetAvatarSelection()
+            watermelon_avatar.setBackgroundResource(R.drawable.circle_primary_dark)
+            selectedAvatar = AvatarID.WATERMELON
+        }))
+        grape_avatar.setOnClickListener(({
+            resetAvatarSelection()
+            grape_avatar.setBackgroundResource(R.drawable.circle_primary_dark)
+            selectedAvatar = AvatarID.GRAPE
+        }))
+        kiwi_avatar.setOnClickListener(({
+            resetAvatarSelection()
+            kiwi_avatar.setBackgroundResource(R.drawable.circle_primary_dark)
+            selectedAvatar = AvatarID.KIWI
+        }))
+        orange_avatar.setOnClickListener(({
+            resetAvatarSelection()
+            orange_avatar.setBackgroundResource(R.drawable.circle_primary_dark)
+            selectedAvatar = AvatarID.ORANGE
+        }))
+        pineapple_avatar.setOnClickListener(({
+            resetAvatarSelection()
+            pineapple_avatar.setBackgroundResource(R.drawable.circle_primary_dark)
+            selectedAvatar = AvatarID.PINEAPPLE
+        }))
+        apple_avatar.setOnClickListener(({
+            resetAvatarSelection()
+            apple_avatar.setBackgroundResource(R.drawable.circle_primary_dark)
+            selectedAvatar = AvatarID.APPLE
+        }))
+        lemon_avatar.setOnClickListener(({
+            resetAvatarSelection()
+            lemon_avatar.setBackgroundResource(R.drawable.circle_primary_dark)
+            selectedAvatar = AvatarID.LEMON
+        }))
+        cherry_avatar.setOnClickListener(({
+            resetAvatarSelection()
+            cherry_avatar.setBackgroundResource(R.drawable.circle_primary_dark)
+            selectedAvatar = AvatarID.CHERRY
+        }))
+        pear_avatar.setOnClickListener(({
+            resetAvatarSelection()
+            pear_avatar.setBackgroundResource(R.drawable.circle_primary_dark)
+            selectedAvatar = AvatarID.PEAR
+        }))
     }
+
+    private fun resetAvatarSelection() {
+        avocado_avatar.setBackgroundResource(R.drawable.avatar_background)
+        banana_avatar.setBackgroundResource(R.drawable.avatar_background)
+        strawberry_avatar.setBackgroundResource(R.drawable.avatar_background)
+        watermelon_avatar.setBackgroundResource(R.drawable.avatar_background)
+        grape_avatar.setBackgroundResource(R.drawable.avatar_background)
+        kiwi_avatar.setBackgroundResource(R.drawable.avatar_background)
+        orange_avatar.setBackgroundResource(R.drawable.avatar_background)
+        pineapple_avatar.setBackgroundResource(R.drawable.avatar_background)
+        apple_avatar.setBackgroundResource(R.drawable.avatar_background)
+        lemon_avatar.setBackgroundResource(R.drawable.avatar_background)
+        cherry_avatar.setBackgroundResource(R.drawable.avatar_background)
+        pear_avatar.setBackgroundResource(R.drawable.avatar_background)
+    }
+
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        if(requestCode == 0 && resultCode == Activity.RESULT_OK && data!=null){
+//            //proceed and check what the selected image was
+//            avatarUri = data.data //uri represent where the image is located on the device
+//            val bitmap = MediaStore.Images.Media.getBitmap(contentResolver,avatarUri)
+//            val avatarCircleImageView = findViewById<CircleImageView>(R.id.avatar_circleImageView)
+//            val uploadAvatar = findViewById<Button>(R.id.button_upload_avatar)
+//            avatarCircleImageView.setImageBitmap(bitmap)
+//            uploadAvatar.alpha = 0f
+//
+//        }
+//
+//    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {

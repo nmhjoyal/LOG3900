@@ -3,6 +3,7 @@ package com.example.thin_client.ui.chatrooms
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -38,18 +39,30 @@ class ChatRoomsFragment : Fragment() {
     }
 
 
-    private fun fetchRooms() {
-        adapter.add(ChatRoomItem("Room # 1"))
-        adapter.add(ChatRoomItem("Room # 2"))
+    private fun fetchRooms(){
+        adapter.add(ChatRoomItem("room1"))
         adapter.add(ChatRoomItem("Room # 3"))
 
-        adapter.setOnItemClickListener{ item, view ->
+        adapter.setOnItemClickListener{ item,view ->
+            SocketHandler.joinChatRoom()
             val room = item as ChatRoomItem
             val intent= Intent(view.context, ChatActivity::class.java)
             intent.putExtra(ROOM_KEY,room.roomname)
             startActivity(intent)
         }
         recyclerview_chatrooms.adapter = adapter
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.new_room -> {
+                createNewRoom("Room #4")
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    fun createNewRoom(roomname:String) {
+        adapter.add(ChatRoomItem(roomname))
     }
 
 }

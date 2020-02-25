@@ -8,12 +8,11 @@
     <!-- Strings related to login -->
     <string name="prompt_password">Password</string>
     <string name="action_register">Sign up</string>
-    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_sign_in_short">Login</string>
     <string name="welcome">"Welcome !"</string>
     <string name="invalid_username">Username cannot be blank and cannot exceed 20 characters.</string>
     <string name="invalid_password">Invalid Password</string>
-    <string name="login_failed">"Failed to connect"</string>
-    <string name="error_username_taken">"Failed to connect"</string>
+    <string name="login_failed">Failed to connect</string>
 
     <!-- Strings related to chat -->
     <string name="default_message">Type message here</string>
@@ -27,6 +26,7 @@
     <string name="prompt_last_name">Last Name</string>
     <string name="prompt_username">Username</string>
     <string name="prompt_confirm_password">Confirm password</string>
+    <string name="prompt_avatar">Select an avatar</string>
     <string name="action_create">Create</string>
     <string name="invalid_password_confirm">Passwords do not match</string>
     <string name="invalid_name">Name cannot be blank</string>
@@ -54,4 +54,22 @@
     <string name="save">Save</string>
     <string name="filename">File name</string>
     <string name="desc">Description</string>
+
+    <!-- Avatar content descriptions -->
+    <string name="fruit_icon_author">
+        Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+    </string>
+    <string name="avocado_cd">Avocado avatar</string>
+    <string name="banana_cd">Banana avatar</string>
+    <string name="strawberry_cd">Strawberry avatar</string>
+    <string name="watermelon_cd">Watermelon avatar</string>
+    <string name="grape_cd">Grape avatar</string>
+    <string name="kiwi_cd">Kiwi avatar</string>
+    <string name="orange_cd">Orange avatar</string>
+    <string name="pineapple_cd">Pineapple avatar</string>
+    <string name="apple_cd">Apple avatar</string>
+    <string name="lemon_cd">Lemon avatar</string>
+    <string name="cherry_cd">Cherry avatar</string>
+    <string name="pear_cd">Pear avatar</string>
+
 </resources>

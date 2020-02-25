@@ -30,6 +30,30 @@ class OkHttpRequest(private val client: OkHttpClient) {
         return call
     }
 
+    fun PUT(url: String, jsonStr: String, callback: Callback): Call {
+        val body = jsonStr.toRequestBody(JSONMediaType)
+
+        val request = Request.Builder()
+            .url(url)
+            .put(body)
+            .build()
+
+        val call = client.newCall(request)
+        call.enqueue(callback)
+        return call
+    }
+
+    fun DELETE(url: String, callback: Callback): Call {
+        val request = Request.Builder()
+            .url(url)
+            .delete()
+            .build()
+
+        val call = client.newCall(request)
+        call.enqueue(callback)
+        return call
+    }
+
     companion object {
         val JSONMediaType = "application/json; charset=utf-8".toMediaType()
     }
