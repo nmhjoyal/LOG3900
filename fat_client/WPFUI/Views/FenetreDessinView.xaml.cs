@@ -35,11 +35,11 @@ namespace WPFUI.Views
 
 
         // Pour la gestion de l'affichage de position du pointeur.
-        private void surfaceDessin_MouseLeave(object sender, MouseEventArgs e) => textBlockPosition.Text = "";
+        //private void surfaceDessin_MouseLeave(object sender, MouseEventArgs e) => textBlockPosition.Text = "";
         private void surfaceDessin_MouseMove(object sender, MouseEventArgs e)
         {
             Point p = e.GetPosition(surfaceDessin);
-            textBlockPosition.Text = Math.Round(p.X) + ", " + Math.Round(p.Y) + "px";
+            //textBlockPosition.Text = Math.Round(p.X) + ", " + Math.Round(p.Y) + "px";
         }
 
         //code pris de: https://stackoverflow.com/questions/8881865/saving-a-wpf-canvas-as-an-image
@@ -51,7 +51,7 @@ namespace WPFUI.Views
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.FileName = txtEditor.Text;
+            //saveFileDialog.FileName = txtEditor.Text;
             if (saveFileDialog.ShowDialog() == true) {
                 RenderVisualService.RenderToPNGFile(PART_Canvas, saveFileDialog.FileName);
             }
