@@ -1,6 +1,5 @@
-import { JsonController, Get, Param, Post, Body, HttpError, Delete, NotFoundError, Put } from "routing-controllers";
+import { JsonController, Param, Post, Body, HttpError, Delete } from "routing-controllers";
 import { profileDB } from "../../services/Database/profileDB";
-import PublicProfile from "../../models/publicProfile";
 import PrivateProfile from "../../models/privateProfile";
 
 /**

@@ -3,8 +3,7 @@ import ChatRoom from "./chatRoom";
 import Message from "../models/message"
 import PublicProfile from "../models/publicProfile";
 import PrivateProfile from "../models/privateProfile";
-import SignInFeedBack from "../models/signInFeedBack";
-import { ConnectionStatus } from "../models/signInFeedBack";
+import SignInFeedback, { ConnectionStatus } from "../models/signInFeedBack";
 import { profileDB } from "../services/Database/profileDB";
 import ChatFilter from "./chatFilter";
 
@@ -17,7 +16,7 @@ export default class ServerHandler {
         this.chatRooms = [];
     }
 
-    public async signIn(socket: SocketIO.Socket, signIn: SignIn): Promise<SignInFeedBack> {
+    public async signIn(socket: SocketIO.Socket, signIn: SignIn): Promise<SignInFeedback> {
         const privateProfile: PrivateProfile | null = await profileDB.getPrivateProfile(signIn.username);
         let signed_in: boolean = false;
         let log: ConnectionStatus;
@@ -41,7 +40,7 @@ export default class ServerHandler {
         } else {
             log = ConnectionStatus.InvalidUsername;
         }
-        const signInFeedback: SignInFeedBack = {
+        const signInFeedback: SignInFeedback = {
             signed_in: signed_in,
             log: log
         }
