@@ -3,7 +3,7 @@ import ChatRoom from "./chatRoom";
 import Message from "../models/message"
 import PublicProfile from "../models/publicProfile";
 import PrivateProfile from "../models/privateProfile";
-import SignInFeedback, { ConnectionStatus } from "../models/signInFeedBack";
+import SignInFeedback, { ConnectionStatus } from "../models/signInFeedback";
 import { profileDB } from "../services/Database/profileDB";
 import ChatFilter from "./chatFilter";
 
