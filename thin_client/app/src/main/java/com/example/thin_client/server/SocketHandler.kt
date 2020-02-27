@@ -43,8 +43,8 @@ object SocketHandler {
         socket!!.emit("send_message", message)
     }
 
-    fun joinChatRoom() {
-        socket!!.emit("join_chat_room", "room1")
+    fun joinChatRoom(roomid: String) {
+        socket!!.emit("join_chat_room", roomid)
     }
 
 }

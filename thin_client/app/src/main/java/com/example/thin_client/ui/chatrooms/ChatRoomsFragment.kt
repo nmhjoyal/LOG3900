@@ -44,7 +44,7 @@ class ChatRoomsFragment : Fragment() {
         adapter.add(ChatRoomItem("Room # 3"))
 
         adapter.setOnItemClickListener{ item,view ->
-            SocketHandler.joinChatRoom()
+            SocketHandler.joinChatRoom("room1")
             val room = item as ChatRoomItem
             val intent= Intent(view.context, ChatActivity::class.java)
             intent.putExtra(ROOM_KEY,room.roomname)

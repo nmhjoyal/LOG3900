@@ -1,7 +1,7 @@
 package com.example.thin_client.data
 
 
-data class SignedInResponse(
-    val signed_in: Boolean,
+data class Feedback(
+    val status: Boolean,
     val log_message: String
 )

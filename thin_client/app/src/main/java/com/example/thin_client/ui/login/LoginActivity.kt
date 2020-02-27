@@ -15,7 +15,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.thin_client.R
 import com.example.thin_client.data.Preferences
-import com.example.thin_client.data.SignedInResponse
+import com.example.thin_client.data.Feedback
+import com.example.thin_client.data.SignInFeedback
 
 import com.example.thin_client.data.model.User
 import com.example.thin_client.data.server.SocketEvent
@@ -58,9 +59,9 @@ class LoginActivity : AppCompatActivity() {
                 }))
                 .on(SocketEvent.USER_SIGNED_IN, ({ data ->
                     val gson = Gson()
-                    val signedInResponse = gson.fromJson(data.first().toString(), SignedInResponse::class.java )
+                    val signInFeedback = gson.fromJson(data.first().toString(), SignInFeedback::class.java )
 
-                    if (signedInResponse.signed_in) {
+                    if (signInFeedback.feedback.status) {
                         val prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
                         prefs.edit().putBoolean(Preferences.LOGGED_IN_KEY, true).apply()
                         val intent = Intent(applicationContext, Lobby::class.java)
@@ -70,7 +71,7 @@ class LoginActivity : AppCompatActivity() {
                         Handler(Looper.getMainLooper()).post(Runnable {
                             Toast.makeText(
                                 applicationContext,
-                                signedInResponse.log_message,
+                                signInFeedback.feedback.log_message,
                                 Toast.LENGTH_SHORT
                             ).show()
                             loading.visibility = ProgressBar.GONE
