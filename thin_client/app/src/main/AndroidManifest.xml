@@ -36,8 +36,6 @@
         <activity
             android:name=".ui.Lobby"
             android:label="@string/app_name">
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.login.LoginActivity"/>
         </activity>
         <activity android:name=".ui.chatrooms.ChatRoomsFragment"
             android:label="@string/chat_rooms">

@@ -34,7 +34,6 @@ object SocketHandler {
 
     fun logout() {
         socket!!.emit("sign_out")
-        disconnect()
     }
 
     fun sendMessage(text: String) {

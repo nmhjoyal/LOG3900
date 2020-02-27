@@ -22,13 +22,19 @@ import com.example.thin_client.data.model.User
 import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.Lobby
+import com.example.thin_client.ui.chatrooms.ChatRoomItem
 
 import com.example.thin_client.ui.createUser.CreateUserActivity
 import com.github.nkzawa.socketio.client.Socket
 import com.google.gson.Gson
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
+import kotlinx.android.synthetic.main.chatrooms_fragment.*
 
 
 class LoginActivity : AppCompatActivity() {
+
+    val adapter = GroupAdapter<GroupieViewHolder>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,8 +65,7 @@ class LoginActivity : AppCompatActivity() {
                 }))
                 .on(SocketEvent.USER_SIGNED_IN, ({ data ->
                     val gson = Gson()
-                    val signInFeedback = gson.fromJson(data.first().toString(), SignInFeedback::class.java )
-
+                    val signInFeedback = gson.fromJson(data.first().toString(), SignInFeedback::class.java)
                     if (signInFeedback.feedback.status) {
                         val prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
                         prefs.edit().putBoolean(Preferences.LOGGED_IN_KEY, true).apply()
@@ -77,7 +82,6 @@ class LoginActivity : AppCompatActivity() {
                             loading.visibility = ProgressBar.GONE
                             login.isEnabled = true
                         })
-                        SocketHandler.disconnect()
                     }
                 }))
         }
