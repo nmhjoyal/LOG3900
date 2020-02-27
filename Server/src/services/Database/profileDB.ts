@@ -1,33 +1,33 @@
-import { MongoClient} from "mongodb"
+import { MongoClient } from "mongodb";
 import PrivateProfile from "../../models/privateProfile";
-import PublicProfile from "../../models/publicProfile"
-
-const CONNECTION_URL: string = "mongodb+srv://Admin:HeB6OZmfIA6n9pfu@projet3db-jehvq.mongodb.net/test?retryWrites=true&w=majority"; 
+import PublicProfile from "../../models/publicProfile";
+import * as ServerConfig from "../../serverConfig.json";
 
 class ProfileDB {
-    private db: MongoClient;
+    private mongoDB: MongoClient;
 
     public constructor() { 
-        const mongoClient: MongoClient = new MongoClient(CONNECTION_URL, 
+        const mongoClient: MongoClient = new MongoClient(ServerConfig["connection-url"], 
             {useUnifiedTopology: true, useNewUrlParser: true});
 
         // Connect to database
         mongoClient.connect((err, db) => {
             if (err) throw err;
-            console.log("Connected to database.")
-            this.db = db;
+            console.log("Connected to database.");
+            // Laisser la ligne qui definit l'index?
+            this.mongoDB = db;
         });
     }
 
     public async createProfile(profile: PrivateProfile): Promise<void> {
-        await this.db.db("Profiles").collection("profiles").insertOne(profile).catch((err: any) => {
+        await this.mongoDB.db("Profiles").collection("profiles").insertOne(profile).catch((err: any) => {
             throw err;
         });
     }
 
     public async getPublicProfile(username: string): Promise<PublicProfile | null> {
         
-        const privateProfile: PrivateProfile | null = await this.db.db("Profiles").collection("profiles")
+        const privateProfile: PrivateProfile | null = await this.mongoDB.db("Profiles").collection("profiles")
             .findOne({username: { $eq: username}})
 
         if (privateProfile) {
@@ -42,16 +42,30 @@ class ProfileDB {
     }
 
     public async getPrivateProfile(username: string): Promise<PrivateProfile | null> {
+        const privateProfile: PrivateProfile | null = await this.mongoDB.db("Profiles").collection("profiles")
+            .findOne({ username: { $eq: username } })
 
-        const privateProfile: PrivateProfile | null = await this.db.db("Profiles").collection("profiles")
-            .findOne({username: { $eq: username}})
-
+        // console.log(privateProfile);
         return privateProfile;
         
     }
 
     public async deleteProfile(username: string): Promise<void> {
-        await this.db.db("Profiles").collection("profiles").deleteOne({ username: username });
+        await this.mongoDB.db("Profiles").collection("profiles").deleteOne({ username: username });
+    }
+
+    public async joinRoom(username: string, roomId: string): Promise<void> {
+        await this.mongoDB.db("Profiles").collection("profiles").updateOne(
+            { username: username },
+            { $push: { rooms_joined : roomId } }
+        );
+    }
+
+    public async leaveRoom(username: string, roomId: string): Promise<void> {
+        await this.mongoDB.db("Profiles").collection("profiles").updateOne(
+            { username: username },
+            { $pull: { rooms_joined : roomId } }
+        );
     }
 }
 

@@ -25,35 +25,33 @@ export class SocketProtoController {
 
     @OnMessage("sign_in")
     public async sign_in(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() signIn: SignIn) {
-        socket.emit("user_signed_in", await this.server.signIn(socket, signIn));
+        socket.emit("user_signed_in", JSON.stringify(await this.server.signIn(socket, signIn)));
     }
 
     @OnMessage("sign_out")
-    public sign_out(@ConnectedSocket() socket: SocketIO.Socket) {
-        socket.emit("user_signed_out", this.server.signOut(socket));
+    public async sign_out(@ConnectedSocket() socket: SocketIO.Socket) {
+        socket.emit("user_signed_out", JSON.stringify(await this.server.signOut(socket)));
     }
 
     @OnMessage("create_chat_room")
-    public create_chat_room(@SocketIO() io: SocketIO.Socket, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() roomId: string) {
-        this.server.createChatRoom(io, socket, roomId);
+    public async create_chat_room(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() roomId: string) {
+        socket.emit("room_created", JSON.stringify(await this.server.createChatRoom(roomId)));
     }
 
     @OnMessage("join_chat_room")
-    public join_chat_room(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() roomId: string) {
-        this.server.joinChatRoom(socket, roomId);
+    public async join_chat_room(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() roomId: string) {
+        socket.emit("user_joined_room", JSON.stringify(await this.server.joinChatRoom(socket, roomId)));
     }
 
     @OnMessage("leave_chat_room")
-    public leave_chat_room(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() roomId: string) {
-        this.server.leaveChatRoom(socket, roomId);
+    public async leave_chat_room(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() roomId: string) {
+        socket.emit("user_left_room", JSON.stringify(await this.server.leaveChatRoom(socket, roomId)));
     }
-
     
     @OnMessage("send_message")
-    public send_message(@SocketIO() io: SocketIO.Socket, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() roomId: string, @MessageBody() message: Message) {
-        this.server.sendMessage(io, socket, roomId, message);
+    public async send_message(@SocketIO() io: SocketIO.Socket, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() message: Message) {
+        await this.server.sendMessage(io, socket, message);
     }
-
 }
 
 // Ref : https://www.npmjs.com/package/socket-controllers?activeTab=readme

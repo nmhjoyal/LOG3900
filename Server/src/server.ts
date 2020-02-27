@@ -25,7 +25,7 @@ export class Server {
     }
 
     public init(): void {
-        let port: number = ServerConfig.port;
+        let port: number = ServerConfig["port"];
 
         this.app.set("port", port);
         this.server = http.createServer(this.app);
