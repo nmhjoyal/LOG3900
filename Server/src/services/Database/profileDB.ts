@@ -67,6 +67,12 @@ class ProfileDB {
             { $pull: { rooms_joined : roomId } }
         );
     }
+
+    public async updateProfile(profile: PrivateProfile): Promise<void>{
+        await this.mongoDB.db("Profiles").collection("profiles").replaceOne({username: { $eq: profile.username}}, profile).catch((err: any) => {
+            throw err;
+        });
+    }
 }
 
 export var profileDB: ProfileDB = new ProfileDB();
