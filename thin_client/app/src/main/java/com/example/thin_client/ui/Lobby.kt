@@ -8,15 +8,13 @@ import android.os.Handler
 import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ProgressBar
 import android.widget.Toast
 import com.example.thin_client.R
 import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.Preferences
-import com.example.thin_client.data.SignInFeedback
+import com.example.thin_client.data.model.User
 import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
-import com.example.thin_client.ui.chat.ChatActivity
 import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
 import com.example.thin_client.ui.game_mode.free_draw.FreeDrawActivity
 import com.example.thin_client.ui.login.LoginActivity
@@ -24,7 +22,7 @@ import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_lobby.*
 
 class Lobby : AppCompatActivity() {
-    val manager = supportFragmentManager
+    private val manager = supportFragmentManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +32,18 @@ class Lobby : AppCompatActivity() {
         if (!prefs.getBoolean(Preferences.LOGGED_IN_KEY, false)) {
             val intent = Intent(applicationContext, LoginActivity::class.java)
             startActivity(intent)
+        } else if (SocketHandler.socket == null) {
+            SocketHandler.connect()
+            val username = prefs.getString(Preferences.USERNAME, "")
+            val password = prefs.getString(Preferences.PASSWORD, "")
+            if (username!!.isNotBlank() && password!!.isNotBlank()) {
+                SocketHandler.login(User(username, password))
+            } else {
+                Toast.makeText(applicationContext, R.string.error_logging_in, Toast.LENGTH_LONG).show()
+                val intent = Intent(applicationContext, LoginActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
         }
 
 

@@ -3,6 +3,7 @@ package com.example.thin_client.server
 import com.example.thin_client.data.Message
 import com.example.thin_client.data.model.User
 import com.example.thin_client.data.server.HTTPRequest
+import com.example.thin_client.data.server.SocketEvent
 import com.github.nkzawa.socketio.client.IO
 import com.github.nkzawa.socketio.client.Socket
 import com.google.gson.Gson
@@ -29,21 +30,23 @@ object SocketHandler {
         this.user = user
         val gson = Gson()
         val jsonUser = gson.toJson(user)
-        socket!!.emit("sign_in", jsonUser)
+        socket!!.emit(SocketEvent.SIGN_IN, jsonUser)
     }
 
     fun logout() {
-        socket!!.emit("sign_out")
+        if (socket != null) {
+            socket!!.emit(SocketEvent.SIGN_OUT)
+        }
+        disconnect()
     }
 
     fun sendMessage(text: String) {
         val gson = Gson()
         val message = gson.toJson(Message(text, user!!, 0))
-        socket!!.emit("send_message", message)
+        socket!!.emit(SocketEvent.SEND_MESSAGE, message)
     }
 
     fun joinChatRoom(roomid: String) {
-        socket!!.emit("join_chat_room", roomid)
-    }
+        socket!!.emit(SocketEvent.JOIN_ROOM, roomid)    }
 
 }

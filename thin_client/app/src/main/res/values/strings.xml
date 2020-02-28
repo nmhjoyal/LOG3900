@@ -13,6 +13,7 @@
     <string name="invalid_username">Username cannot be blank and cannot exceed 20 characters.</string>
     <string name="invalid_password">Invalid Password</string>
     <string name="login_failed">Failed to connect</string>
+    <string name="error_logging_in">Error logging in, please sign in again.</string>
 
     <!-- Strings related to chat -->
     <string name="default_message">Type message here</string>

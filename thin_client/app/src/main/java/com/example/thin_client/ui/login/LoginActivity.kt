@@ -17,6 +17,7 @@ import com.example.thin_client.R
 import com.example.thin_client.data.Preferences
 import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.SignInFeedback
+import com.example.thin_client.data.model.RoomManager
 
 import com.example.thin_client.data.model.User
 import com.example.thin_client.data.server.SocketEvent
@@ -49,13 +50,15 @@ class LoginActivity : AppCompatActivity() {
         loading.visibility = View.INVISIBLE
 
         login.setOnClickListener {
-                loading.visibility = ProgressBar.VISIBLE
-                login.isEnabled = false
-                val socket = SocketHandler.connect()
-                socket.on(Socket.EVENT_CONNECT, ({
-                    SocketHandler.login(User(username.text.toString(), password.text.toString()))
+            loading.visibility = ProgressBar.VISIBLE
+            login.isEnabled = false
+            val socket = SocketHandler.connect()
+            val user = User(username.text.toString(), password.text.toString())
+            socket
+                .on(Socket.EVENT_CONNECT, ({
+                    SocketHandler.login(user)
                 }))
-                    .on(Socket.EVENT_CONNECT_ERROR, ({
+                .on(Socket.EVENT_CONNECT_ERROR, ({
                     Handler(Looper.getMainLooper()).post(Runnable {
                         showLoginFailed()
                         loading.visibility = ProgressBar.GONE
@@ -67,8 +70,11 @@ class LoginActivity : AppCompatActivity() {
                     val gson = Gson()
                     val signInFeedback = gson.fromJson(data.first().toString(), SignInFeedback::class.java)
                     if (signInFeedback.feedback.status) {
+                        RoomManager.createRoomList(signInFeedback.rooms_joined)
                         val prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
                         prefs.edit().putBoolean(Preferences.LOGGED_IN_KEY, true).apply()
+                        prefs.edit().putString(Preferences.USERNAME, user.username).apply()
+                        prefs.edit().putString(Preferences.PASSWORD, user.password).apply()
                         val intent = Intent(applicationContext, Lobby::class.java)
                         startActivity(intent)
                         finish()
