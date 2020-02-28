@@ -1,44 +1,73 @@
-import { JsonController, Param, Post, Body, HttpError, Delete } from "routing-controllers";
+import { JsonController, Get, Param, Post, Body, Delete, Put } from "routing-controllers";
 import { profileDB } from "../../services/Database/profileDB";
 import PrivateProfile from "../../models/privateProfile";
+import Feedback from "../../models/feedback";
+import Admin from "../../models/admin";
 
 /**
- * HTTPController is used only to manage user database and game database. 
+ * ProfileController is used to manage user profiles in the database. 
  */
 @JsonController("/profile")
 export class ProfileController {
    
     @Post("/create")
     public async createUser(@Body() profile: PrivateProfile) {
-        try {
-            await profileDB.createProfile(profile);
-        } catch {
-            throw new HttpError(400);
+
+        let feedback: Feedback = {
+            status: true,
+            log_message: "Profile " + profile.username + " created!"
+        };
+
+        if ((profile.username).toUpperCase() === (Admin.admin).toUpperCase()) {
+            feedback.status = false;
+            feedback.log_message = "Username Admin is reserved.";
+        } else {
+            try {
+                await profileDB.createProfile(profile);
+            } catch {
+                feedback.status = false;
+                feedback.log_message = "Could not create profile.";
+            }
         }
-        // Querry worked
-        return "Profile " + profile.username + " created!";
+        
+        return feedback;
     }
 
     @Delete("/:userName")
     public async deleteUserInfos(@Param("userName") userName: string) {
+
         await profileDB.deleteProfile(userName);
-        return "Profile " + userName + " deleted!"
+        let feedback: Feedback = {
+            status: true,
+            log_message: "Profile " + userName + " deleted!"
+        };
+        
+        return feedback;
     }
 
-    // @Put("/update/firstname/:username/:new")
+    @Put("/update")
+    public async updateProfile(@Body() profile: PrivateProfile) {
 
-    // TEST DB : 
-    // @Get("/public/:userName")
-    // public async getPublicUserInfos(@Param("userName") userName: string) {
-    //     const profileRetrieved: PublicProfile | null = await profileDB.getPublicProfile(userName);
-    //     return profileRetrieved;
-    // }
+        let feedback: Feedback = {
+            status: true,
+            log_message: "Profile " + profile.username + " updated!"
+        };
 
-    // @Get("/private/:userName")
-    // public async getPrivateUserInfos(@Param("userName") userName: string) {
-    //     const profileRetrieved: PrivateProfile | null = await profileDB.getPrivateProfile(userName);
-    //     return profileRetrieved;
-    // }
+        try {
+            await profileDB.updateProfile(profile);
+        } catch {
+            feedback.status = false;
+            feedback.log_message = "Could not update profile.";
+        }
+        
+        return feedback;
+    }
+
+    @Get("/private/:userName")
+    public async getPrivateUserInfos(@Param("userName") userName: string) {
+        const profileRetrieved: PrivateProfile | null = await profileDB.getPrivateProfile(userName);
+        return profileRetrieved;
+    }
 }
 
 // Ref : https://www.npmjs.com/package/routing-controllers

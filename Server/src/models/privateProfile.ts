@@ -4,4 +4,5 @@ export default interface PrivateProfile {
     lastname : string
     password : string
     avatar : string /* String for the moment eventually needs to be image */
+    rooms_joined: string[]
 }

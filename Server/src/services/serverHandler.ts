@@ -1,144 +1,211 @@
 import SignIn from "../models/signIn";
-import ChatRoom from "./chatRoom";
 import Message from "../models/message"
-import PublicProfile from "../models/publicProfile";
 import PrivateProfile from "../models/privateProfile";
-import SignInFeedback, { ConnectionStatus } from "../models/signInFeedback";
+import Room from "../models/room";
+import Feedback from "../models/feedback";
+import { SignInFeedback } from "../models/feedback";
+import { SignInStatus } from "../models/feedback";
+import { SignOutStatus } from "../models/feedback";
+import { CreateRoomStatus } from "../models/feedback";
+import { JoinRoomStatus } from "../models/feedback";
+import { LeaveRoomStatus } from "../models/feedback";
+import Admin from "../models/admin";
 import { profileDB } from "../services/Database/profileDB";
-import ChatFilter from "./chatFilter";
+import { roomDB } from "../services/Database/roomDB";
+// import ChatFilter from "./chatFilter";
 
 export default class ServerHandler {
-    private users: Map<string, PublicProfile>; 
-    private chatRooms: ChatRoom[];
+    private users: Map<string, PrivateProfile>;
 
     public constructor() {
         this.users = new Map();
-        this.chatRooms = [];
     }
 
     public async signIn(socket: SocketIO.Socket, signIn: SignIn): Promise<SignInFeedback> {
-        const privateProfile: PrivateProfile | null = await profileDB.getPrivateProfile(signIn.username);
+        const user: PrivateProfile | null = await profileDB.getPrivateProfile(signIn.username);
         let signed_in: boolean = false;
-        let log: ConnectionStatus;
-        if(privateProfile) {
-            if(signIn.password == privateProfile.password) {
+        let log_message: SignInStatus;
+        let rooms_joined: string[] = [];
+        if(user) {
+            if(signIn.password == user.password) {
                 if(this.isConnected(signIn.username)) {
-                    log = ConnectionStatus.AlreadyConnected
+                    log_message = SignInStatus.AlreadyConnected
                 } else {
-                    const publicProfile: PublicProfile = {
-                        username: privateProfile.username,
-                        avatar: privateProfile.avatar
-                    }
-                    this.users.set(socket.id, publicProfile);
+                    this.users.set(socket.id, user);
                     signed_in = true;
-                    log = ConnectionStatus.Connect;
-                    console.log(signIn.username + " signed in");
+                    log_message = SignInStatus.SignIn;
+                    rooms_joined = user.rooms_joined;
+                    user.rooms_joined.forEach(async (room_joined: string) => {
+                        socket.join(room_joined);
+                        const message: Message = Admin.createAdminMessage(user.username + " is connected.", room_joined);
+                        socket.to(room_joined).emit("new_message", JSON.stringify(message));
+                        const room: Room | null = await roomDB.getRoom(room_joined);
+                        if(room) {
+                            socket.emit("load_history", JSON.stringify({
+                                name: room.name,
+                                messages: room.messages
+                            }));
+                        } else {
+                            console.log("This room does not exist : " + room_joined);
+                        }
+                    });
                 }
             } else {
-                log = ConnectionStatus.InvalidPassword;
+                log_message = SignInStatus.InvalidPassword;
             }
         } else {
-            log = ConnectionStatus.InvalidUsername;
+            log_message = SignInStatus.InvalidUsername;
         }
-        const signInFeedback: SignInFeedback = {
-            signed_in: signed_in,
-            log: log
-        }
-        return signInFeedback;
+        return {
+            feedback: {
+                status: signed_in,
+                log_message: log_message 
+            },
+            rooms_joined: rooms_joined
+        };
     }
 
-    public signOut(socket: SocketIO.Socket): boolean {
-        const user: PublicProfile | undefined = this.users.get(socket.id);
-        if (user) {
-            this.getAllUsersChatRooms(user.username).forEach((chatRoom) => {
-                socket.leave(chatRoom.name);
+    public async signOut(socket: SocketIO.Socket): Promise<Feedback> {
+        const user: PrivateProfile | undefined = this.getUser(socket.id);
+        let status: boolean = false;
+        let log_message: SignOutStatus = SignOutStatus.Error;
+        if(user) {
+            user.rooms_joined.forEach((room_joined: string) => {
+                const message: Message = Admin.createAdminMessage(user.username + " is disconnected.", room_joined);
+                socket.to(room_joined).emit("new_message", JSON.stringify(message));
+                socket.leave(room_joined);
             });
-            console.log("User " + user.username + " signed out")
+            this.users.delete(socket.id);
+            status = true;
+            log_message = SignOutStatus.SignedOut;
+        }
+        return {
+            status: status,
+            log_message: log_message
+        };
+    }
+
+    public async createChatRoom(roomId: string): Promise<Feedback> {
+        let status: boolean = false;
+        let log_message: CreateRoomStatus;
+        try {
+            await roomDB.createRoom(roomId);
+            status = true;
+            log_message = CreateRoomStatus.Create;
+        } catch {
+            // Room already exists
+            log_message = CreateRoomStatus.AlreadyCreated
+        }
+        return {
+            status: status,
+            log_message: log_message
+        };
+    }
+
+    public async joinChatRoom(socket: SocketIO.Socket, roomId: string): Promise<Feedback> {
+        const user: PrivateProfile | undefined = this.getUser(socket.id);
+        const room: Room | null = await roomDB.getRoom(roomId);
+        let status: boolean = false;
+        let log_message: JoinRoomStatus;
+
+        if(user && room) {
+            if(user.rooms_joined.includes(roomId)) {
+                log_message = JoinRoomStatus.AlreadyJoined;
+            } else {
+                await profileDB.joinRoom(user.username, roomId);
+                socket.join(roomId);
+                const message: Message = Admin.createAdminMessage(user.username + " joined the room.", roomId);
+                socket.to(roomId).emit("new_message", JSON.stringify(message));
+                socket.emit("load_history", JSON.stringify({
+                    name: room.name,
+                    messages: room.messages
+                }));
+                status = true;
+                log_message = JoinRoomStatus.Join;
+            }
         } else {
-           // To handle: Could not sign out
+            log_message = JoinRoomStatus.InvalidRoom;
         }
-        return this.users.delete(socket.id);
+        return {
+            status: status,
+            log_message: log_message
+        };
     }
 
-    public createChatRoom(io: SocketIO.Socket, socket: SocketIO.Socket, roomId: string): void {
-        if(this.getChatRoomByName(roomId)) {
-            socket.emit("room_already_exists");
+    public async leaveChatRoom(socket: SocketIO.Socket, roomId: string): Promise<Feedback> {
+        const user: PrivateProfile | undefined = this.getUser(socket.id);
+        const room: Room | null = await roomDB.getRoom(roomId);
+        let status: boolean = false;
+        let log_message: LeaveRoomStatus;
+
+        if(user && room) {
+            if(user.rooms_joined.includes(roomId)) {
+                await profileDB.leaveRoom(user.username, roomId);
+                socket.leave(roomId);
+                status = true;
+                log_message = LeaveRoomStatus.Leave;
+                const message: Message = Admin.createAdminMessage( user.username + " left the room.", roomId);
+                socket.to(roomId).emit("new_message", JSON.stringify(message));
+            } else {
+                log_message = LeaveRoomStatus.NeverJoined;
+            }
         } else {
-            this.chatRooms.push(new ChatRoom(roomId));
-            io.emit("room_created", roomId);
+            log_message = LeaveRoomStatus.InvalidRoom;
         }
-        console.log(this.chatRooms.toString());
+        const leaveRoomFeedback: Feedback = {
+            status: status,
+            log_message: log_message
+        }
+        return leaveRoomFeedback;
     }
 
-    public joinChatRoom(socket: SocketIO.Socket, roomId: string): void {
-        const user: PublicProfile | undefined = this.users.get(socket.id);
-        let chatRoom: ChatRoom | undefined = this.getChatRoomByName(roomId);
-        if (user && chatRoom) {
-            socket.join(roomId);
-            socket.to(roomId).emit("user_joined_room", user.username);
-            chatRoom.addUser(user);
-            socket.emit("load_history", JSON.stringify(chatRoom.getMessages()));
-            console.log(this.chatRooms.toString());
-        } else {
-            // To handle: Could not join chat room
-        }
-    }
-
-    public leaveChatRoom(socket: SocketIO.Socket, roomId: string): void {
-        socket.leave(roomId);
-        const user: PublicProfile | undefined = this.users.get(socket.id);
-        const chatRoom: ChatRoom | undefined = this.getChatRoomByName(roomId);
-        if (user && chatRoom) {
-            chatRoom.removeUser(user);
-            socket.to(roomId).emit("user_left_room", user.username);
-            console.log(this.chatRooms.toString());
-        } else {
-            // To handle: Could not leave chat room
+    public async sendMessage(io: SocketIO.Socket, socket: SocketIO.Socket, message: Message): Promise<void> {
+        const user: PrivateProfile | undefined = this.getUser(socket.id);
+        const room: Room | null = await roomDB.getRoom(message.roomId);
+        if(user && room) {
+            // message.author.username == user.username
+            if(user.rooms_joined.includes(message.roomId)) {
+                /*await*/ roomDB.addMessage(message, message.roomId);
+                io.in(message.roomId).emit("new_message", JSON.stringify(message));
+            } else {
+                console.log(user.username + " trying to send a message in " + message.roomId + " that he did not join");
+            }
+        } else if(user) {
+            console.log(user?.username + " trying to send a message in " + message.roomId + " that does not exist");
         }
     }
 
-    public sendMessage(io: SocketIO.Socket, socket: SocketIO.Socket, roomId: string, message: Message): void {
-        message.date = Math.floor(Date.now() / 1000);
-        let chatRoom: ChatRoom | undefined = this.getChatRoomByName(roomId);
-        if (chatRoom) {
-            message.content = ChatFilter.filter(message.content);
-            chatRoom.addMessage(message);
-            io.in(roomId).emit("new_message", JSON.stringify(message));
-            console.log("*" + message.content + "* has been sent by " + this.users.get(socket.id)?.username + " in " + roomId);
-        }
-    }
-
-    public getUsers(): Map<string, PublicProfile> {
-        return this.users;
-    }
-
-    public getUser(socketId: string): PublicProfile | undefined {
+    public getUser(socketId: string): PrivateProfile | undefined {
         return this.users.get(socketId);
     }
 
     private isConnected(username: string): boolean {
-        let userIsConnected: boolean = false;
+        let isConnected: boolean = false;
 
-        this.users.forEach((value: PublicProfile) => {
-            if (value.username === username) {
-                userIsConnected = true;
+        this.users.forEach((user: PrivateProfile) => {
+            if (user.username === username) {
+                isConnected = true;
             }
         });
 
-        return userIsConnected;
+        return isConnected;
     }
 
+    // Pour deleteChatRoom : Room exists? -> Empty? -> Delete
+
+    /*
     private getChatRoomByName(roomId: string): ChatRoom | undefined {
         return this.chatRooms.find(room => room.name == roomId)
     }
 
-    private getAllUsersChatRooms(username: string): ChatRoom[] {
+    private getAllUsersChatRooms(user: PublicProfile): ChatRoom[] {
         let chatRooms: ChatRoom[] = [];
         this.chatRooms.forEach((chatRoom) => {
-            if(chatRoom.contains(username)) {
+            if(chatRoom.contains(user)) {
                 chatRooms.push(chatRoom);
             }
         });
         return chatRooms;
     }
+    */
 }
