@@ -1,6 +1,7 @@
 package com.example.thin_client.server
 
 import com.example.thin_client.data.Message
+import com.example.thin_client.data.model.PublicProfile
 import com.example.thin_client.data.model.User
 import com.example.thin_client.data.server.HTTPRequest
 import com.example.thin_client.data.server.SocketEvent
@@ -37,16 +38,23 @@ object SocketHandler {
         if (socket != null) {
             socket!!.emit(SocketEvent.SIGN_OUT)
         }
-        disconnect()
     }
 
-    fun sendMessage(text: String) {
+    fun sendMessage(text: String, roomid: String) {
         val gson = Gson()
-        val message = gson.toJson(Message(text, user!!, 0))
+        val message = gson.toJson(Message(PublicProfile(user!!.username, "BANANE"), text, 0, roomid))
         socket!!.emit(SocketEvent.SEND_MESSAGE, message)
     }
 
     fun joinChatRoom(roomid: String) {
-        socket!!.emit(SocketEvent.JOIN_ROOM, roomid)    }
+        socket!!.emit(SocketEvent.JOIN_ROOM, roomid)
+    }
 
+    fun leaveChatRoom(roomid: String) {
+        socket!!.emit(SocketEvent.LEAVE_ROOM, roomid)
+    }
+
+    fun createChatRoom(roomid: String) {
+        socket!!.emit(SocketEvent.CREATE_ROOM, roomid)
+    }
 }

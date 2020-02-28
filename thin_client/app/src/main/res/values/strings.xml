@@ -17,10 +17,16 @@
 
     <!-- Strings related to chat -->
     <string name="default_message">Type message here</string>
-    <string name="prompt_ip">IP Address</string>
-    <string name="prompt_port">Port</string>
-    <string name="invalid_ip">IP address invalid. Must be in the form 127.0.0.1</string>
-    <string name="invalid_port">Port not a valid number.</string>
+    <string name="send_button">Send</string>
+    <string name="user_joined">User %1$s has joined the chat.</string>
+    <string name="user_left">User %1$s has left the chat.</string>
+
+    <!-- Strings related to rooms -->
+    <string name="rooms_title">Rooms</string>
+    <string name="leave_room_cd">Leave room</string>
+    <string name="create_room">Create a room</string>
+    <string name="room_name">Enter room name</string>
+    <string name="error_roomname">Room name cannot be blank</string>
 
     <!-- Strings for create user -->
     <string name="prompt_first_name">First Name</string>

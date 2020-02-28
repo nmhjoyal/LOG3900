@@ -15,22 +15,19 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.thin_client.R
 import com.example.thin_client.data.Preferences
-import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.SignInFeedback
-import com.example.thin_client.data.model.RoomManager
+import com.example.thin_client.data.rooms.RoomManager
 
 import com.example.thin_client.data.model.User
 import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.Lobby
-import com.example.thin_client.ui.chatrooms.ChatRoomItem
 
 import com.example.thin_client.ui.createUser.CreateUserActivity
 import com.github.nkzawa.socketio.client.Socket
 import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import kotlinx.android.synthetic.main.chatrooms_fragment.*
 
 
 class LoginActivity : AppCompatActivity() {
@@ -87,6 +84,7 @@ class LoginActivity : AppCompatActivity() {
                             ).show()
                             loading.visibility = ProgressBar.GONE
                             login.isEnabled = true
+                            SocketHandler.socket!!.disconnect()
                         })
                     }
                 }))

@@ -1,40 +1,22 @@
 package com.example.thin_client.ui.createUser
 
 import OkHttpRequest
-import android.app.Activity
-import android.content.Intent
-
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.provider.MediaStore
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
-
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.thin_client.R
 import com.example.thin_client.data.AvatarID
 import com.example.thin_client.data.model.PrivateProfile
-import com.example.thin_client.data.model.User
 import com.example.thin_client.data.server.HTTPRequest
-import com.example.thin_client.data.server.SocketEvent
-import com.example.thin_client.server.SocketHandler
-import com.example.thin_client.ui.Lobby
 import com.example.thin_client.ui.login.afterTextChanged
-import com.github.nkzawa.socketio.client.Socket
 import com.google.gson.Gson
-import com.squareup.okhttp.Callback
-import com.squareup.okhttp.OkHttpClient
-import com.squareup.okhttp.Request
-import com.squareup.okhttp.Response
-import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_createuser.*
 import okhttp3.Call
 import java.io.IOException

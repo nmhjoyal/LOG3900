@@ -1,9 +1,10 @@
 package com.example.thin_client.data
 
-import com.example.thin_client.data.model.User
+import com.example.thin_client.data.model.PublicProfile
 
 data class Message(
+    val author: PublicProfile,
     val content: String,
-    val author: User,
-    val date: Long
+    val date: Long,
+    val roomId: String
 )

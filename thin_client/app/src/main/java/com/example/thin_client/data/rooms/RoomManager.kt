@@ -1,4 +1,4 @@
-package com.example.thin_client.data.model
+package com.example.thin_client.data.rooms
 
 object RoomManager {
     var roomsJoined: ArrayList<String> = ArrayList()

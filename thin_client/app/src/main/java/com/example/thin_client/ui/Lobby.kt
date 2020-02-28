@@ -12,7 +12,10 @@ import android.widget.Toast
 import com.example.thin_client.R
 import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.Preferences
+import com.example.thin_client.data.SignInFeedback
 import com.example.thin_client.data.model.User
+import com.example.thin_client.data.rooms.RoomManager
+import com.example.thin_client.data.server.HTTPRequest
 import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
@@ -37,14 +40,45 @@ class Lobby : AppCompatActivity() {
             val username = prefs.getString(Preferences.USERNAME, "")
             val password = prefs.getString(Preferences.PASSWORD, "")
             if (username!!.isNotBlank() && password!!.isNotBlank()) {
+                SocketHandler.socket!!.on(SocketEvent.USER_SIGNED_IN, ({ data ->
+                    val gson = Gson()
+                    val signInFeedback =
+                        gson.fromJson(data.first().toString(), SignInFeedback::class.java)
+                    if (signInFeedback.feedback.status) {
+                        RoomManager.createRoomList(signInFeedback.rooms_joined)
+                        showChatRoomsFragment()
+                    } else {
+                        runOnUiThread(({
+                            SocketHandler.socket!!.off(SocketEvent.USER_SIGNED_IN)
+                            Toast.makeText(applicationContext, R.string.error_logging_in, Toast.LENGTH_LONG).show()
+                            val intent = Intent(applicationContext, LoginActivity::class.java)
+                            startActivity(intent)
+                            SocketHandler.socket!!.disconnect()
+                        }))
+                    }
+                }))
                 SocketHandler.login(User(username, password))
-            } else {
-                Toast.makeText(applicationContext, R.string.error_logging_in, Toast.LENGTH_LONG).show()
-                val intent = Intent(applicationContext, LoginActivity::class.java)
-                startActivity(intent)
-                finish()
             }
         }
+
+        SocketHandler.socket?.on(SocketEvent.USER_SIGNED_OUT, ({ data ->
+            val gson = Gson()
+            val feedback = gson.fromJson(data.first().toString(),Feedback::class.java)
+            if (feedback.status) {
+                prefs.edit().putBoolean(Preferences.LOGGED_IN_KEY, false).apply()
+                val intent = Intent(applicationContext, LoginActivity::class.java)
+                startActivity(intent)
+                SocketHandler.disconnect()
+            } else {
+                Handler(Looper.getMainLooper()).post(Runnable {
+                    Toast.makeText(
+                        applicationContext,
+                        feedback.log_message,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                })
+            }
+        }))
 
 
         free_draw.setOnClickListener(({
@@ -56,7 +90,7 @@ class Lobby : AppCompatActivity() {
     }
 
 
-    fun showChatRoomsFragment(){
+    fun showChatRoomsFragment() {
         val transaction = manager.beginTransaction()
         val chatroomsFragment = ChatRoomsFragment()
         transaction.replace(R.id.chatrooms_container, chatroomsFragment)
@@ -68,25 +102,6 @@ class Lobby : AppCompatActivity() {
         when(item.itemId) {
             R.id.menu_sign_out -> {
                 SocketHandler.logout()
-                SocketHandler.socket?.on(SocketEvent.USER_SIGNED_OUT, ({ data ->
-                    val gson = Gson()
-                    val feedback = gson.fromJson(data.first().toString(),Feedback::class.java)
-                    if (feedback.status) {
-                        val prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
-                        prefs.edit().putBoolean(Preferences.LOGGED_IN_KEY, false).apply()
-                        val intent = Intent(applicationContext, LoginActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                    } else {
-                        Handler(Looper.getMainLooper()).post(Runnable {
-                            Toast.makeText(
-                                applicationContext,
-                                feedback.log_message,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        })
-                    }
-                }))
             }
         }
         return super.onOptionsItemSelected(item)
