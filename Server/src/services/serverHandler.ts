@@ -1,6 +1,6 @@
 import SignIn from "../models/signIn";
 import Message from "../models/message"
-import PublicProfile from "../models/publicProfile";
+import ClientMessage from "../models/message"
 import PrivateProfile from "../models/privateProfile";
 import Room from "../models/room";
 import Feedback from "../models/feedback";
@@ -57,13 +57,15 @@ export default class ServerHandler {
         } else {
             log_message = SignInStatus.InvalidUsername;
         }
-        return {
-            feedback: {
-                status: signed_in,
-                log_message: log_message 
-            },
+        const feedback: Feedback = {
+            status: signed_in,
+            log_message: log_message
+        }
+        const signInFeedback: SignInFeedback = {
+            feedback: feedback,
             rooms_joined: rooms_joined
-        };
+        }
+        return signInFeedback;
     }
 
     public async signOut(socket: SocketIO.Socket): Promise<Feedback> {
@@ -80,10 +82,11 @@ export default class ServerHandler {
             status = true;
             log_message = SignOutStatus.SignedOut;
         }
-        return {
+        const feedback: Feedback = {
             status: status,
             log_message: log_message
-        };
+        }
+        return feedback;
     }
 
     public async createChatRoom(roomId: string): Promise<Feedback> {
@@ -97,10 +100,11 @@ export default class ServerHandler {
             // Room already exists
             log_message = CreateRoomStatus.AlreadyCreated
         }
-        return {
+        const feedback: Feedback = {
             status: status,
             log_message: log_message
-        };
+        }
+        return feedback;
     }
 
     public async joinChatRoom(socket: SocketIO.Socket, roomId: string): Promise<Feedback> {
@@ -127,10 +131,11 @@ export default class ServerHandler {
         } else {
             log_message = JoinRoomStatus.InvalidRoom;
         }
-        return {
+        const feedback: Feedback = {
             status: status,
             log_message: log_message
-        };
+        }
+        return feedback;
     }
 
     public async leaveChatRoom(socket: SocketIO.Socket, roomId: string): Promise<Feedback> {
@@ -160,19 +165,26 @@ export default class ServerHandler {
         return leaveRoomFeedback;
     }
 
-    public async sendMessage(io: SocketIO.Socket, socket: SocketIO.Socket, message: Message): Promise<void> {
+    public async sendMessage(io: SocketIO.Socket, socket: SocketIO.Socket, clientMessage: ClientMessage): Promise<void> {
         const user: PrivateProfile | undefined = this.getUser(socket.id);
-        const room: Room | null = await roomDB.getRoom(message.roomId);
+        const room: Room | null = await roomDB.getRoom(clientMessage.roomId);
         if(user && room) {
             // message.author.username == user.username
-            if(user.rooms_joined.includes(message.roomId)) {
-                /*await*/ roomDB.addMessage(message, message.roomId);
+            if(user.rooms_joined.includes(clientMessage.roomId)) {
+                const message: Message = {
+                    username : user.username,
+                    content : clientMessage.content,
+                    date : Date.now(),
+                    roomId : clientMessage.roomId
+                }
+                /*await*/ roomDB.addMessage(message);
+
                 io.in(message.roomId).emit("new_message", JSON.stringify(message));
             } else {
-                console.log(user.username + " trying to send a message in " + message.roomId + " that he did not join");
+                console.log(user.username + " trying to send a message in " + clientMessage.roomId + " that he did not join");
             }
         } else if(user) {
-            console.log(user?.username + " trying to send a message in " + message.roomId + " that does not exist");
+            console.log(user?.username + " trying to send a message in " + clientMessage.roomId + " that does not exist");
         }
     }
 
@@ -209,4 +221,13 @@ export default class ServerHandler {
         return chatRooms;
     }
     */
+
+    public updateUser(updatedUser: PrivateProfile): void {
+        this.users.forEach((user: PrivateProfile, socketId: string) => {
+            if(user.username == updatedUser.username) {
+                this.users.set(socketId, updatedUser);
+            }
+        });
+        // emit updated avatar
+    }
 }

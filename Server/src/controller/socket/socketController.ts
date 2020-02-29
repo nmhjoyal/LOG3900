@@ -1,6 +1,6 @@
 import { OnConnect, SocketController, ConnectedSocket, OnDisconnect, MessageBody, OnMessage, SocketIO } from "socket-controllers";
 import ServerHandler from "../../services/serverHandler";
-import Message from "../../models/message";
+import ClientMessage from "../../models/message";
 import SignIn from "../../models/signIn";
  
 @SocketController()
@@ -49,7 +49,7 @@ export class SocketProtoController {
     }
     
     @OnMessage("send_message")
-    public async send_message(@SocketIO() io: SocketIO.Socket, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() message: Message) {
+    public async send_message(@SocketIO() io: SocketIO.Socket, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() message: ClientMessage) {
         await this.server.sendMessage(io, socket, message);
     }
 }
