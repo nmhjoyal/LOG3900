@@ -15,6 +15,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.core.view.isNotEmpty
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.thin_client.R
@@ -93,7 +94,8 @@ class ChatRoomsFragment : Fragment() {
 
         val itemTouchHelperCallBack = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT){
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, position: Int) {
-                adapter.remove(ChatRoomItem(selectedRoom))
+                adapter.removeGroupAtAdapterPosition(viewHolder.position)
+                adapter.notifyItemRemoved(viewHolder.position)
             }
 
             override fun onMove(
@@ -109,6 +111,8 @@ class ChatRoomsFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(recyclerview_chatrooms)
 
         fetchRooms()
+
+        recyclerview_chatrooms.addItemDecoration(DividerItemDecoration(recyclerview_chatrooms.context, DividerItemDecoration.VERTICAL))
     }
 
     override fun onCreateView(
