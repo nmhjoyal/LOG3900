@@ -28,9 +28,9 @@ class RoomDB {
         });
     }
 
-    public async addMessage(message: Message, roomId: string): Promise<void> {
+    public async addMessage(message: Message): Promise<void> {
         await this.mongoDB.db("Rooms").collection("rooms").updateOne(
-            { name: roomId },
+            { name: message.roomId },
             { $push: { messages : message } }
         );
     }
