@@ -6,6 +6,7 @@ import Admin from "../models/admin";
 import { Message, ClientMessage } from "../models/message";
 import { profileDB } from "./Database/profileDB";
 import { serverHandler } from "./serverHandler";
+import ChatFilter from "./Filter/chatFilter";
 
 
 export default class ChatHandler {
@@ -86,7 +87,7 @@ export default class ChatHandler {
             if(user.rooms_joined.includes(clientMessage.roomId)) {
                 const message: Message = {
                     username : user.username,
-                    content : clientMessage.content,
+                    content : ChatFilter.filter(clientMessage.content),
                     date : Date.now(),
                     roomId : clientMessage.roomId
                 }

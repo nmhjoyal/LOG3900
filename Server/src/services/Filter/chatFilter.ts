@@ -1,18 +1,12 @@
-import Filt from "bad-words";
-import FrenchList from "french-badwords-list";
+const leoProfanity = require('leo-profanity');
+const frenchBadwordsList = require('french-badwords-list');
+leoProfanity.add(frenchBadwordsList.array);
 
-class ChatFilter {
+export default class ChatFilter {
 
-    private filt: any;
-
-    public constructor () {
-        this.filt = new Filt();
-        this.filt.addWords(...FrenchList);
-    }
-
-    private filter(message: string): string {
-        return this.filt.clean(message);
+    public static filter(message: string): string {
+        return leoProfanity.clean(message);
     }
 }
 
-export var chatFilter: ChatFilter = new ChatFilter();
+// Ref: https://www.npmjs.com/package/leo-profanity

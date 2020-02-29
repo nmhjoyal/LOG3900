@@ -1,13 +1,10 @@
 //client.js
 var io = require('socket.io-client');
 var socket1 = io.connect('http://localhost:5000', { reconnect: true });
-var publicProfile = {
-    username : "zak2",
-    avatar : "my-avatar"
-}
+
 var message = {
-    author : publicProfile,
-    content : "hello",
+    author : "zak2",
+    content : "Fuck you, va chier",
     date : Date.now(),
     roomId: "room1"
 }
@@ -19,9 +16,8 @@ socket1.on("connect", function (data) {
 socket1.on("user_signed_in", function (data) {
     console.log("signed in : " + data);
     // socket1.emit("create_chat_room", "room3");
-    socket1.emit("join_chat_room", "room1");
     // socket1.emit("join_chat_room", "room1");
-    // socket1.emit("send_message", JSON.stringify(message));
+    socket1.emit("send_message", JSON.stringify(message));
 });
 
 socket1.on("room_created", function(data) {
@@ -38,7 +34,7 @@ socket1.on("user_left_room", function(data) {
 
 socket1.on("new_message", function(data) {
     // console.log("new message :" + data);
-    console.log("new message : " + JSON.parse(data).content + " in " +  JSON.parse(data).roomId + " *by* " + JSON.parse(data).author.username);
+    console.log("new message : " + JSON.parse(data).content + " in " +  JSON.parse(data).roomId + " *by* " + JSON.parse(data).username);
 });
 
 socket1.on("user_signed_out", function(data) {

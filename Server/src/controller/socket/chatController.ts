@@ -1,7 +1,6 @@
 import ChatHandler from "../../services/chatHandler";
 import { OnMessage, SocketController, MessageBody, ConnectedSocket, SocketIO } from "socket-controllers";
 import { ClientMessage } from "../../models/message";
-import { serverHandler } from "../../services/serverHandler";
 
 @SocketController()
 export class ChatController {
