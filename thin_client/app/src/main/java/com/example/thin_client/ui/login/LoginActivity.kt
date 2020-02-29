@@ -32,7 +32,6 @@ import com.xwray.groupie.GroupieViewHolder
 
 class LoginActivity : AppCompatActivity() {
 
-    val adapter = GroupAdapter<GroupieViewHolder>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

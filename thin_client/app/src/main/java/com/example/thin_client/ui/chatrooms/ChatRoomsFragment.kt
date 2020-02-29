@@ -13,7 +13,10 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.view.isNotEmpty
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.example.thin_client.R
 import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.rooms.RoomArgs
@@ -25,6 +28,9 @@ import com.xwray.groupie.GroupAdapter
 
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.chatrooms_fragment.*
+import kotlinx.android.synthetic.main.room_row.*
+import okhttp3.internal.notify
+import java.net.Socket
 
 
 class ChatRoomsFragment : Fragment() {
@@ -40,6 +46,7 @@ class ChatRoomsFragment : Fragment() {
             SocketHandler.joinChatRoom(selectedRoom)
         }
 
+
         SocketHandler.socket!!.on(SocketEvent.USER_JOINED_ROOM, ({
             val bundle = Bundle()
             bundle.putString(RoomArgs.ROOM_ID, selectedRoom)
@@ -51,7 +58,7 @@ class ChatRoomsFragment : Fragment() {
             transaction.commit()
         }))
             .on(SocketEvent.ROOM_CREATED, ({ data ->
-                val roomCreateFeedback = Gson().fromJson(data.first().toString(), Feedback::class.java)
+                 val roomCreateFeedback = Gson().fromJson(data.first().toString(), Feedback::class.java)
                 if (roomCreateFeedback.status) {
                     adapter.add(ChatRoomItem(newRoomName))
                 } else {
@@ -72,6 +79,8 @@ class ChatRoomsFragment : Fragment() {
                     newRoomName = roomname.text.toString()
                     if (newRoomName.isNotBlank()) {
                         SocketHandler.createChatRoom(newRoomName)
+                        adapter.add(ChatRoomItem(newRoomName))
+                        RoomManager.addRoom((newRoomName))
                     } else {
                         roomname.error = Resources.getSystem().getString(R.string.error_roomname)
                     }
@@ -81,6 +90,23 @@ class ChatRoomsFragment : Fragment() {
             dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
             dialog.show()
         }))
+
+        val itemTouchHelperCallBack = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT){
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, position: Int) {
+                adapter.remove(ChatRoomItem(selectedRoom))
+            }
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallBack)
+        itemTouchHelper.attachToRecyclerView(recyclerview_chatrooms)
 
         fetchRooms()
     }
@@ -94,7 +120,6 @@ class ChatRoomsFragment : Fragment() {
         return inflater.inflate(R.layout.chatrooms_fragment, container, false)
     }
 
-
     private fun fetchRooms() {
         for (room in RoomManager.roomsJoined) {
             adapter.add(ChatRoomItem(room))
@@ -102,4 +127,5 @@ class ChatRoomsFragment : Fragment() {
         }
         recyclerview_chatrooms.adapter = adapter
     }
+
 }

@@ -1,5 +1,6 @@
 package com.example.thin_client.ui.chatrooms
 import com.example.thin_client.R
+import com.example.thin_client.data.rooms.RoomManager
 import com.example.thin_client.server.SocketHandler
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item

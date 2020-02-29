@@ -1,9 +1,9 @@
 package com.example.thin_client.data.rooms
 
 object RoomManager {
-    var roomsJoined: ArrayList<String> = ArrayList()
+    var roomsJoined: MutableList<String> = arrayListOf()
 
-    fun createRoomList(roomArray: Array<String>) {
+    fun createRoomList(roomArray: MutableList<String>) {
         roomsJoined = roomArray.toCollection(ArrayList())
     }
 
