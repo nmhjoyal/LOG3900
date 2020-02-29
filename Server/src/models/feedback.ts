@@ -1,4 +1,4 @@
-export default interface Feedback {
+export interface Feedback {
     status: boolean
     log_message: string
 }

@@ -1,7 +1,7 @@
 import { JsonController, Get, Param, Post, Body, Delete, Put } from "routing-controllers";
 import { profileDB } from "../../services/Database/profileDB";
 import PrivateProfile from "../../models/privateProfile";
-import Feedback from "../../models/feedback";
+import { Feedback } from "../../models/feedback";
 import Admin from "../../models/admin";
 
 /**

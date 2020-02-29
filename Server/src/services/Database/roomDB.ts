@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
 import * as ServerConfig from "../../serverConfig.json";
 import Room from "../../models/room";
-import Message from "../../models/message";
+import { Message } from "../../models/message";
 
 class RoomDB {
     private mongoDB: MongoClient;
@@ -18,7 +18,6 @@ class RoomDB {
     }
 
     public async createRoom(roomId: string): Promise<void> {
-        console.log("roomId " + roomId);
         const room: Room = {
             name: roomId,
             messages: []

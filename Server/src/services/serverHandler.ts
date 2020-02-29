@@ -1,24 +1,16 @@
 import SignIn from "../models/signIn";
-import Message from "../models/message"
-import ClientMessage from "../models/message"
 import PrivateProfile from "../models/privateProfile";
 import Room from "../models/room";
-import Feedback from "../models/feedback";
-import { SignInFeedback } from "../models/feedback";
-import { SignInStatus } from "../models/feedback";
-import { SignOutStatus } from "../models/feedback";
-import { CreateRoomStatus } from "../models/feedback";
-import { JoinRoomStatus } from "../models/feedback";
-import { LeaveRoomStatus } from "../models/feedback";
-import Admin from "../models/admin";
+import { Feedback, SignInFeedback, SignInStatus, SignOutStatus } from "../models/feedback";
 import { profileDB } from "../services/Database/profileDB";
 import { roomDB } from "../services/Database/roomDB";
-// import ChatFilter from "./chatFilter";
+import Admin from "../models/admin";
+import { Message } from "../models/message";
 
-export default class ServerHandler {
-    private users: Map<string, PrivateProfile>;
+class ServerHandler {
+    public users: Map<string, PrivateProfile>;
 
-    public constructor() {
+    public constructor () {
         this.users = new Map();
     }
 
@@ -36,20 +28,7 @@ export default class ServerHandler {
                     signed_in = true;
                     log_message = SignInStatus.SignIn;
                     rooms_joined = user.rooms_joined;
-                    user.rooms_joined.forEach(async (room_joined: string) => {
-                        socket.join(room_joined);
-                        const message: Message = Admin.createAdminMessage(user.username + " is connected.", room_joined);
-                        socket.to(room_joined).emit("new_message", JSON.stringify(message));
-                        const room: Room | null = await roomDB.getRoom(room_joined);
-                        if(room) {
-                            socket.emit("load_history", JSON.stringify({
-                                name: room.name,
-                                messages: room.messages
-                            }));
-                        } else {
-                            console.log("This room does not exist : " + room_joined);
-                        }
-                    });
+                    await this.connectToJoinedRooms(socket, user);
                 }
             } else {
                 log_message = SignInStatus.InvalidPassword;
@@ -73,11 +52,7 @@ export default class ServerHandler {
         let status: boolean = false;
         let log_message: SignOutStatus = SignOutStatus.Error;
         if(user) {
-            user.rooms_joined.forEach((room_joined: string) => {
-                const message: Message = Admin.createAdminMessage(user.username + " is disconnected.", room_joined);
-                socket.to(room_joined).emit("new_message", JSON.stringify(message));
-                socket.leave(room_joined);
-            });
+            this.diconnectFromJoinedRooms(socket, user);
             this.users.delete(socket.id);
             status = true;
             log_message = SignOutStatus.SignedOut;
@@ -87,105 +62,6 @@ export default class ServerHandler {
             log_message: log_message
         }
         return feedback;
-    }
-
-    public async createChatRoom(roomId: string): Promise<Feedback> {
-        let status: boolean = false;
-        let log_message: CreateRoomStatus;
-        try {
-            await roomDB.createRoom(roomId);
-            status = true;
-            log_message = CreateRoomStatus.Create;
-        } catch {
-            // Room already exists
-            log_message = CreateRoomStatus.AlreadyCreated
-        }
-        const feedback: Feedback = {
-            status: status,
-            log_message: log_message
-        }
-        return feedback;
-    }
-
-    public async joinChatRoom(socket: SocketIO.Socket, roomId: string): Promise<Feedback> {
-        const user: PrivateProfile | undefined = this.getUser(socket.id);
-        const room: Room | null = await roomDB.getRoom(roomId);
-        let status: boolean = false;
-        let log_message: JoinRoomStatus;
-
-        if(user && room) {
-            if(user.rooms_joined.includes(roomId)) {
-                log_message = JoinRoomStatus.AlreadyJoined;
-            } else {
-                await profileDB.joinRoom(user.username, roomId);
-                socket.join(roomId);
-                const message: Message = Admin.createAdminMessage(user.username + " joined the room.", roomId);
-                socket.to(roomId).emit("new_message", JSON.stringify(message));
-                socket.emit("load_history", JSON.stringify({
-                    name: room.name,
-                    messages: room.messages
-                }));
-                status = true;
-                log_message = JoinRoomStatus.Join;
-            }
-        } else {
-            log_message = JoinRoomStatus.InvalidRoom;
-        }
-        const feedback: Feedback = {
-            status: status,
-            log_message: log_message
-        }
-        return feedback;
-    }
-
-    public async leaveChatRoom(socket: SocketIO.Socket, roomId: string): Promise<Feedback> {
-        const user: PrivateProfile | undefined = this.getUser(socket.id);
-        const room: Room | null = await roomDB.getRoom(roomId);
-        let status: boolean = false;
-        let log_message: LeaveRoomStatus;
-
-        if(user && room) {
-            if(user.rooms_joined.includes(roomId)) {
-                await profileDB.leaveRoom(user.username, roomId);
-                socket.leave(roomId);
-                status = true;
-                log_message = LeaveRoomStatus.Leave;
-                const message: Message = Admin.createAdminMessage( user.username + " left the room.", roomId);
-                socket.to(roomId).emit("new_message", JSON.stringify(message));
-            } else {
-                log_message = LeaveRoomStatus.NeverJoined;
-            }
-        } else {
-            log_message = LeaveRoomStatus.InvalidRoom;
-        }
-        const leaveRoomFeedback: Feedback = {
-            status: status,
-            log_message: log_message
-        }
-        return leaveRoomFeedback;
-    }
-
-    public async sendMessage(io: SocketIO.Socket, socket: SocketIO.Socket, clientMessage: ClientMessage): Promise<void> {
-        const user: PrivateProfile | undefined = this.getUser(socket.id);
-        const room: Room | null = await roomDB.getRoom(clientMessage.roomId);
-        if(user && room) {
-            // message.author.username == user.username
-            if(user.rooms_joined.includes(clientMessage.roomId)) {
-                const message: Message = {
-                    username : user.username,
-                    content : clientMessage.content,
-                    date : Date.now(),
-                    roomId : clientMessage.roomId
-                }
-                /*await*/ roomDB.addMessage(message);
-
-                io.in(message.roomId).emit("new_message", JSON.stringify(message));
-            } else {
-                console.log(user.username + " trying to send a message in " + clientMessage.roomId + " that he did not join");
-            }
-        } else if(user) {
-            console.log(user?.username + " trying to send a message in " + clientMessage.roomId + " that does not exist");
-        }
     }
 
     public getUser(socketId: string): PrivateProfile | undefined {
@@ -204,23 +80,32 @@ export default class ServerHandler {
         return isConnected;
     }
 
-    // Pour deleteChatRoom : Room exists? -> Empty? -> Delete
-
-    /*
-    private getChatRoomByName(roomId: string): ChatRoom | undefined {
-        return this.chatRooms.find(room => room.name == roomId)
-    }
-
-    private getAllUsersChatRooms(user: PublicProfile): ChatRoom[] {
-        let chatRooms: ChatRoom[] = [];
-        this.chatRooms.forEach((chatRoom) => {
-            if(chatRoom.contains(user)) {
-                chatRooms.push(chatRoom);
+    private async connectToJoinedRooms(socket: SocketIO.Socket, user: PrivateProfile): Promise<void> {
+        user.rooms_joined.forEach(async (room_joined: string) => {
+            socket.join(room_joined);
+            const message: Message = Admin.createAdminMessage(user.username + " is connected.", room_joined);
+            socket.to(room_joined).emit("new_message", JSON.stringify(message));
+            const room: Room | null = await roomDB.getRoom(room_joined);
+            if(room) {
+                socket.emit("load_history", JSON.stringify({
+                    name: room.name,
+                    messages: room.messages
+                }));
+            } else {
+                console.log("This room does not exist : " + room_joined);
             }
         });
-        return chatRooms;
     }
-    */
+
+    private diconnectFromJoinedRooms(socket: SocketIO.Socket, user: PrivateProfile): void {
+        user.rooms_joined.forEach((room_joined: string) => {
+            const message: Message = Admin.createAdminMessage(user.username + " is disconnected.", room_joined);
+            socket.to(room_joined).emit("new_message", JSON.stringify(message));
+            socket.leave(room_joined);
+        });
+    }
+
+    // Pour deleteChatRoom : Room exists? -> Empty? -> Delete
 
     public updateUser(updatedUser: PrivateProfile): void {
         this.users.forEach((user: PrivateProfile, socketId: string) => {
@@ -231,3 +116,6 @@ export default class ServerHandler {
         // emit updated avatar
     }
 }
+
+export var serverHandler: ServerHandler = new ServerHandler();
+// export var users: Map<string, PrivateProfile> = serverHandler.users;
