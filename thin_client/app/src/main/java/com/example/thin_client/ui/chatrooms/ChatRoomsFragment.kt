@@ -2,17 +2,23 @@ package com.example.thin_client.ui.chatrooms
 
 import android.app.AlertDialog
 import android.content.res.Resources
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import com.example.thin_client.ui.chat.ChatFragment
 
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.view.isNotEmpty
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -28,7 +34,9 @@ import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 
 import com.xwray.groupie.GroupieViewHolder
+import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.chatrooms_fragment.*
+import kotlinx.android.synthetic.main.chatrooms_row.*
 import kotlinx.android.synthetic.main.room_row.*
 import okhttp3.internal.notify
 import java.net.Socket
@@ -38,9 +46,12 @@ class ChatRoomsFragment : Fragment() {
     val adapter = GroupAdapter<GroupieViewHolder>()
     private var selectedRoom : String = ""
     private var newRoomName : String = ""
-
+    private var swipeBackground: ColorDrawable = ColorDrawable(Color.parseColor("#FF0000"))
+    private lateinit var deleteIcon: Drawable
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        deleteIcon  = ContextCompat.getDrawable(recyclerview_chatrooms.context, R.drawable.ic_delete)!!
 
         adapter.setOnItemClickListener{ item, v ->
             selectedRoom = (item as ChatRoomItem).roomname
@@ -92,12 +103,55 @@ class ChatRoomsFragment : Fragment() {
             dialog.show()
         }))
 
-        val itemTouchHelperCallBack = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT){
+        val itemTouchHelperCallBack = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT){
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, position: Int) {
                 adapter.removeGroupAtAdapterPosition(viewHolder.position)
                 adapter.notifyItemRemoved(viewHolder.position)
+
+
             }
 
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                val itemView = viewHolder.itemView
+                val iconMargin = (itemView.height - deleteIcon.intrinsicHeight)/2
+
+                if(dX > 0) {
+                    swipeBackground.setBounds(itemView.left, itemView.top, dX.toInt(), itemView.bottom)
+                    deleteIcon.setBounds(itemView.left + iconMargin, itemView.top + iconMargin,
+                        itemView.left + iconMargin+ deleteIcon.intrinsicWidth, itemView.bottom - iconMargin )
+                } else  {
+                    swipeBackground.setBounds(itemView.right + dX.toInt(), itemView.top,itemView.right, itemView.bottom)
+                    deleteIcon.setBounds(itemView.right - iconMargin - deleteIcon.intrinsicWidth, itemView.top + iconMargin,
+                        itemView.right - iconMargin, itemView.bottom - iconMargin )
+                }
+                swipeBackground.draw(c)
+                c.save()
+                if(dX > 0)
+                    c.clipRect(itemView.left, itemView.top, dX.toInt(), itemView.bottom)
+                else
+                    c.clipRect(itemView.right + dX.toInt(), itemView.top,itemView.right, itemView.bottom)
+
+                deleteIcon.draw(c)
+                c.restore()
+
+                super.onChildDraw(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
+            }
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,

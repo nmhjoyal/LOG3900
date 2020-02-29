@@ -28,6 +28,7 @@ import com.github.nkzawa.socketio.client.Socket
 import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
+import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 
 
 class LoginActivity : AppCompatActivity() {
@@ -36,7 +37,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
+        UIUtil.hideKeyboard(this)
         val username = findViewById<EditText>(R.id.username)
         val password = findViewById<EditText>(R.id.password)
         val login = findViewById<Button>(R.id.login)

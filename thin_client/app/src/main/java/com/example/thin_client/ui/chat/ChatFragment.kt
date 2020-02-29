@@ -1,9 +1,11 @@
 package com.example.thin_client.ui.chat
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import com.example.thin_client.R
 import com.example.thin_client.data.Feedback
@@ -17,6 +19,7 @@ import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.activity_chat.*
+import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 
 class ChatFragment : Fragment() {
 
@@ -27,6 +30,7 @@ class ChatFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerview_chat.adapter = adapter
+
 
         roomID = arguments!!.getString(RoomArgs.ROOM_ID)
         room_id.text = roomID
@@ -74,6 +78,7 @@ class ChatFragment : Fragment() {
                 if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
                     SocketHandler.sendMessage(editText_chat.text.replace("\\n".toRegex(), ""), roomID!!)
                     editText_chat.setText("")
+                    UIUtil.hideKeyboard(activity!!)
                     return@OnKeyListener true
                 }
             }
