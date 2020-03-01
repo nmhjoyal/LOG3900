@@ -6,6 +6,8 @@ import { profileDB } from "../services/Database/profileDB";
 import { roomDB } from "../services/Database/roomDB";
 import Admin from "../models/admin";
 import { Message } from "../models/message";
+import AvatarUpdate from "../models/avatarUpdate";
+import PublicProfile from "../models/publicProfile";
 
 class ServerHandler {
     public users: Map<string, PrivateProfile>;
@@ -85,12 +87,11 @@ class ServerHandler {
             socket.join(room_joined);
             const message: Message = Admin.createAdminMessage(user.username + " is connected.", room_joined);
             socket.to(room_joined).emit("new_message", JSON.stringify(message));
+
+            // Load history
             const room: Room | null = await roomDB.getRoom(room_joined);
             if(room) {
-                socket.emit("load_history", JSON.stringify({
-                    name: room.name,
-                    messages: room.messages
-                }));
+                socket.emit("load_history", JSON.stringify(room));
             } else {
                 console.log("This room does not exist : " + room_joined);
             }
@@ -107,15 +108,52 @@ class ServerHandler {
 
     // Pour deleteChatRoom : Room exists? -> Empty? -> Delete
 
-    public updateUser(updatedUser: PrivateProfile): void {
-        this.users.forEach((user: PrivateProfile, socketId: string) => {
-            if(user.username == updatedUser.username) {
-                this.users.set(socketId, updatedUser);
-            }
-        });
-        // emit updated avatar
+    public async updateProfile(io: SocketIO.Server, socket: SocketIO.Socket, updatedProfile: PrivateProfile): Promise<Feedback> {
+        const user: PrivateProfile | undefined = serverHandler.users.get(socket.id);
+        let status: boolean;
+        let log_message: string;
+
+        // S'assurer que serverHandler.users.get(socket.id) correspond au updatedProfile.username
+        
+        let feedback: Feedback = {
+            status: true,
+            log_message: "Profile " + updatedProfile.username + " updated!"
+        };
+
+        try {
+            updatedProfile.rooms_joined = (user as PrivateProfile).rooms_joined;
+            await profileDB.updateProfile(updatedProfile);
+
+            // No errors, so update PrivateProfile 
+            // and if necessary notify rooms that the user's avatar has changed.
+            this.users.forEach((user: PrivateProfile, socketId: string) => {
+                if(user.username == updatedProfile.username) {
+                    if (user.avatar != updatedProfile.avatar) {
+                        // Notify all rooms joined by user that his avatar has changed.
+                        const updatedPublicProfile: PublicProfile = {
+                            username: user.username,
+                            avatar: updatedProfile.avatar
+                        };
+                        user.rooms_joined.forEach(async (roomId: string) => {
+                            await roomDB.mapAvatar(updatedPublicProfile, roomId);
+                            const avatarUpdate: AvatarUpdate = {
+                                roomId: roomId,
+                                updatedProfile: updatedPublicProfile 
+                            };
+                            io.in(roomId).emit("avatar_update", JSON.stringify(avatarUpdate));
+                        });
+                    }
+                    this.users.set(socketId, updatedProfile);
+                }
+            });
+
+        } catch {
+            feedback.status = false;
+            feedback.log_message = "Could not update profile.";
+        }
+        
+        return feedback;
     }
 }
 
 export var serverHandler: ServerHandler = new ServerHandler();
-// export var users: Map<string, PrivateProfile> = serverHandler.users;

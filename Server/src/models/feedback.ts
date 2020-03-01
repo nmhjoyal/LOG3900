@@ -21,8 +21,9 @@ export enum SignOutStatus {
 }
 
 export enum CreateRoomStatus {
-    Create = "You created the room!",
-    AlreadyCreated = "This room is already created"
+    Create = "You created and joined the room!",
+    AlreadyCreated = "This room is already created",
+    UserNotConnected = "The user is not connected"
 }
 
 export enum JoinRoomStatus {

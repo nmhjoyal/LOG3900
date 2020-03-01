@@ -7,17 +7,31 @@ import { Message, ClientMessage } from "../models/message";
 import { profileDB } from "./Database/profileDB";
 import { serverHandler } from "./serverHandler";
 import ChatFilter from "./Filter/chatFilter";
+import PublicProfile from "../models/publicProfile";
 
 
 export default class ChatHandler {
 
-    public async createChatRoom(roomId: string): Promise<Feedback> {
+    public async createChatRoom(socket: SocketIO.Socket, roomId: string): Promise<Feedback> {
         let status: boolean = false;
         let log_message: CreateRoomStatus;
         try {
-            await roomDB.createRoom(roomId);
-            status = true;
-            log_message = CreateRoomStatus.Create;
+            const user: PrivateProfile | undefined = serverHandler.users.get(socket.id);
+            if(user) {
+                const publicProfile: PublicProfile = {
+                    username: user.username,
+                    avatar : user.avatar
+                };
+                await roomDB.createRoom(publicProfile, roomId);
+                await profileDB.joinRoom(publicProfile.username, roomId);
+                socket.join(roomId);
+                const message: Message = Admin.createAdminMessage(user.username + " joined the room.", roomId);
+                socket.to(roomId).emit("new_message", JSON.stringify(message));
+                status = true;
+                log_message = CreateRoomStatus.Create;
+            } else {
+                log_message = CreateRoomStatus.UserNotConnected;
+            }
         } catch {
             // Room already exists
             log_message = CreateRoomStatus.AlreadyCreated
@@ -40,6 +54,11 @@ export default class ChatHandler {
                 log_message = JoinRoomStatus.AlreadyJoined;
             } else {
                 await profileDB.joinRoom(user.username, room.name);
+                const publicProfile : PublicProfile = {
+                    username : user.username,
+                    avatar : user.avatar
+                };
+                await roomDB.mapAvatar(publicProfile, room.name);
                 this.connectToRoom(socket, user, room);
                 status = true;
                 log_message = JoinRoomStatus.Join;
@@ -106,10 +125,7 @@ export default class ChatHandler {
         socket.join(room.name);
         const message: Message = Admin.createAdminMessage(user.username + " joined the room.", room.name);
         socket.to(room.name).emit("new_message", JSON.stringify(message));
-        socket.emit("load_history", JSON.stringify({
-            name: room.name,
-            messages: room.messages
-        }));
+        socket.emit("load_history", JSON.stringify(room));
     }
 
     private disconnectFromRoom(socket: SocketIO.Socket, user: PrivateProfile, roomId: string) {

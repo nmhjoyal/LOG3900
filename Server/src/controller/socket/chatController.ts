@@ -13,7 +13,7 @@ export class ChatController {
 
     @OnMessage("create_chat_room")
     public async create_chat_room(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() roomId: string) {
-        socket.emit("room_created", JSON.stringify(await this.chatHandler.createChatRoom(roomId)));
+        socket.emit("room_created", JSON.stringify(await this.chatHandler.createChatRoom(socket, roomId)));
     }
 
     @OnMessage("join_chat_room")

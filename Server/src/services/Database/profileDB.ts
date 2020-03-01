@@ -1,6 +1,7 @@
 import { MongoClient } from "mongodb";
 import PrivateProfile from "../../models/privateProfile";
 import * as ServerConfig from "../../serverConfig.json";
+import { serverHandler } from "../serverHandler";
 
 class ProfileDB {
     private mongoDB: MongoClient;
@@ -28,7 +29,7 @@ class ProfileDB {
         const privateProfileDB: any =  await this.mongoDB.db("Profiles").collection("profiles")
             .findOne({ username: { $eq: username } });
         
-        var privateProfile: PrivateProfile | null = null;
+        let privateProfile: PrivateProfile | null = null;
         if(privateProfileDB) {
             // Otherwise _id (database id) is added to the object.
             privateProfile = {

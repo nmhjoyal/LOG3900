@@ -1,8 +1,10 @@
-import { JsonController, Get, Param, Post, Body, Delete, Put } from "routing-controllers";
+import { JsonController, Get, Param, Post, Body, Delete } from "routing-controllers";
 import { profileDB } from "../../services/Database/profileDB";
 import PrivateProfile from "../../models/privateProfile";
 import { Feedback } from "../../models/feedback";
 import Admin from "../../models/admin";
+import { roomDB } from "../../services/Database/roomDB";
+import PublicProfile from "../../models/publicProfile";
 
 /**
  * ProfileController is used to manage user profiles in the database. 
@@ -11,7 +13,7 @@ import Admin from "../../models/admin";
 export class ProfileController {
    
     @Post("/create")
-    public async createUser(@Body() profile: PrivateProfile) {
+    public async createUser(@Body() profile: PrivateProfile): Promise<Feedback> {
 
         let feedback: Feedback = {
             status: true,
@@ -23,7 +25,14 @@ export class ProfileController {
             feedback.log_message = "Username Admin is reserved.";
         } else {
             try {
+                const generalRoomId: string = "General";
+                profile.rooms_joined.push(generalRoomId);
+                const publicProfile: PublicProfile = {
+                    username: profile.username,
+                    avatar: profile.avatar
+                };
                 await profileDB.createProfile(profile);
+                await roomDB.mapAvatar(publicProfile, generalRoomId);
             } catch {
                 feedback.status = false;
                 feedback.log_message = "Could not create profile.";
@@ -34,7 +43,7 @@ export class ProfileController {
     }
 
     @Delete("/:userName")
-    public async deleteUserInfos(@Param("userName") userName: string) {
+    public async deleteUserInfos(@Param("userName") userName: string): Promise<Feedback> {
 
         await profileDB.deleteProfile(userName);
         let feedback: Feedback = {
@@ -45,26 +54,8 @@ export class ProfileController {
         return feedback;
     }
 
-    @Put("/update")
-    public async updateProfile(@Body() profile: PrivateProfile) {
-
-        let feedback: Feedback = {
-            status: true,
-            log_message: "Profile " + profile.username + " updated!"
-        };
-
-        try {
-            await profileDB.updateProfile(profile);
-        } catch {
-            feedback.status = false;
-            feedback.log_message = "Could not update profile.";
-        }
-        
-        return feedback;
-    }
-
     @Get("/private/:userName")
-    public async getPrivateUserInfos(@Param("userName") userName: string) {
+    public async getPrivateUserInfos(@Param("userName") userName: string): Promise<PrivateProfile | null> {
         const profileRetrieved: PrivateProfile | null = await profileDB.getPrivateProfile(userName);
         return profileRetrieved;
     }
