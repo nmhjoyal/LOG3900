@@ -8,7 +8,9 @@ import android.os.Handler
 import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
+import androidx.core.view.isVisible
 import com.example.thin_client.R
 import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.Preferences
@@ -21,6 +23,7 @@ import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
 import com.example.thin_client.ui.game_mode.free_draw.FreeDrawActivity
 import com.example.thin_client.ui.login.LoginActivity
+import com.example.thin_client.ui.profile.ProfileActivity
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_lobby.*
 
@@ -86,11 +89,20 @@ class Lobby : AppCompatActivity() {
             startActivity(intent)
         }))
 
+        show_rooms_button.setOnClickListener(({
+            if (chatrooms_container.isVisible) {
+                chatrooms_container.visibility = View.GONE
+                show_rooms_button.setImageResource(R.drawable.ic_open)
+            } else {
+                chatrooms_container.visibility = View.VISIBLE
+                show_rooms_button.setImageResource(R.drawable.ic_close)
+            }
+        }))
         showChatRoomsFragment()
     }
 
 
-    fun showChatRoomsFragment() {
+    private fun showChatRoomsFragment() {
         val transaction = manager.beginTransaction()
         val chatroomsFragment = ChatRoomsFragment()
         transaction.replace(R.id.chatrooms_container, chatroomsFragment)
@@ -102,6 +114,10 @@ class Lobby : AppCompatActivity() {
         when(item.itemId) {
             R.id.menu_sign_out -> {
                 SocketHandler.logout()
+            }
+            R.id.menu_profile -> {
+                val intent = Intent(applicationContext, ProfileActivity::class.java)
+                startActivity(intent)
             }
         }
         return super.onOptionsItemSelected(item)

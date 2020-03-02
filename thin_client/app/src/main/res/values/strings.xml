@@ -4,6 +4,17 @@
     <string name="ok">OK</string>
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
+    <string name="sign_out">Sign out</string>
+    <string name="profile">User profile</string>
+
+    <!-- Profile -->
+    <style name="profile">Profile</style>
+    <string name="edit_profile">Edit profile</string>
+    <string name="undo_changes">Undo</string>
+    <string name="stats">Stats</string>
+    <string name="game_stats">Game stats</string>
+    <string name="user_stats">User stats</string>
+    <string name="stat_placeholder">PLACEHOLDER</string>
 
     <!-- Strings related to login -->
     <string name="prompt_password">Password</string>
@@ -27,6 +38,7 @@
     <string name="create_room">Create a room</string>
     <string name="room_name">Enter room name</string>
     <string name="error_roomname">Room name cannot be blank</string>
+    <string name="show_rooms">Show rooms</string>
 
     <!-- Strings for create user -->
     <string name="prompt_first_name">First Name</string>
