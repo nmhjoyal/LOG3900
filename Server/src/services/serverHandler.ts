@@ -110,8 +110,6 @@ class ServerHandler {
 
     public async updateProfile(io: SocketIO.Server, socket: SocketIO.Socket, updatedProfile: PrivateProfile): Promise<Feedback> {
         const user: PrivateProfile | undefined = serverHandler.users.get(socket.id);
-        let status: boolean;
-        let log_message: string;
 
         // S'assurer que serverHandler.users.get(socket.id) correspond au updatedProfile.username
         
