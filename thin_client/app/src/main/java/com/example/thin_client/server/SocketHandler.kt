@@ -1,7 +1,6 @@
 package com.example.thin_client.server
 
-import com.example.thin_client.data.Message
-import com.example.thin_client.data.model.PublicProfile
+import com.example.thin_client.data.ClientMessage
 import com.example.thin_client.data.model.User
 import com.example.thin_client.data.server.HTTPRequest
 import com.example.thin_client.data.server.SocketEvent
@@ -42,7 +41,7 @@ object SocketHandler {
 
     fun sendMessage(text: String, roomid: String) {
         val gson = Gson()
-        val message = gson.toJson(Message(PublicProfile(user!!.username, "BANANE"), text, 0, roomid))
+        val message = gson.toJson(ClientMessage( text,  roomid))
         socket!!.emit(SocketEvent.SEND_MESSAGE, message)
     }
 

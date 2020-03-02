@@ -3,16 +3,20 @@ package com.example.thin_client.ui.createUser
 import OkHttpRequest
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.thin_client.R
 import com.example.thin_client.data.AvatarID
+import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.model.PrivateProfile
 import com.example.thin_client.data.server.HTTPRequest
 import com.example.thin_client.ui.login.afterTextChanged
@@ -118,9 +122,10 @@ class CreateUserActivity : AppCompatActivity() {
             val httpClient = OkHttpRequest(okhttp3.OkHttpClient())
             val gson = Gson()
             val profile = gson.toJson(PrivateProfile(username.text.toString(), firstName.text.toString(),
-                lastName.text.toString(), password.text.toString(), selectedAvatar.name))
+                lastName.text.toString(), password.text.toString(), selectedAvatar.name, arrayListOf()))
             httpClient.POST(HTTPRequest.BASE_URL + HTTPRequest.URL_CREATE, profile.toString(),
                 object: okhttp3.Callback {
+                    //N'entre pas dans le on failure
                     override fun onFailure(call: Call, e: IOException) {
                         runOnUiThread(({
                             loading.visibility = ProgressBar.GONE
@@ -129,10 +134,22 @@ class CreateUserActivity : AppCompatActivity() {
                     }
 
                     override fun onResponse(call: Call, response: okhttp3.Response) {
+                        val responseData = response.body?.toString()
+                        val feedback = Gson().fromJson(responseData, Feedback::class.java)
                         runOnUiThread(({
                             loading.visibility = ProgressBar.GONE
                             create.isEnabled = true
-                            finish()
+                            if(feedback.status){
+                               finish()
+                            } else{
+                                Handler(Looper.getMainLooper()).post(Runnable {
+                                    Toast.makeText(
+                                        applicationContext,
+                                        feedback.log_message,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                })
+                            }
                         }))
                     }
                 }
