@@ -44,22 +44,30 @@ export default class ChatHandler {
     }
 
     public async deleteChatRoom(io: SocketIO.Server, socket: SocketIO.Socket, roomId: string): Promise<Feedback> {
+        const user: PrivateProfile | undefined = serverHandler.users.get(socket.id);
         const room: Room | null = await roomDB.getRoom(roomId);
         let status: boolean = false;
         let log_message: DeleteRoomStatus;
         if(roomId == "General") {
             log_message = DeleteRoomStatus.DeleteGeneral;
-        } else if(room) {
+        } else if(room && user) {
             let socketIds: string[] = [];
             try {
                 for (var socketId in io.sockets.adapter.rooms[roomId].sockets) {
                     socketIds.push(socketId);
                 }
             } catch {}
-            console.log(socketIds);
             if(socketIds.length == 0) {
+                await roomDB.deleteRoom(roomId);
+                await profileDB.deleteRoom(roomId);
+                status = true;
                 log_message = DeleteRoomStatus.Delete;
             } else if(socketIds.length == 1 && socketIds[0] == socket.id) {
+                user.rooms_joined.splice(user.rooms_joined.indexOf(roomId), 1);
+                socket.leave(roomId);
+                await roomDB.deleteRoom(roomId);
+                await profileDB.deleteRoom(roomId);
+                status = true;
                 log_message = DeleteRoomStatus.LeaveAndDelete;
             } else {
                 log_message = DeleteRoomStatus.NotEmpty;
@@ -113,11 +121,15 @@ export default class ChatHandler {
 
         if(user && room) {
             if(user.rooms_joined.includes(room.name)) {
-                this.disconnectFromRoom(socket, user, room.name);
-                user.rooms_joined.splice(user.rooms_joined.indexOf(room.name), 1);
-                await profileDB.leaveRoom(user.username, room.name);
-                status = true;
-                log_message = LeaveRoomStatus.Leave;
+                if(roomId == "General") {
+                    log_message = LeaveRoomStatus.General;
+                } else {
+                    this.disconnectFromRoom(socket, user, room.name);
+                    user.rooms_joined.splice(user.rooms_joined.indexOf(room.name), 1);
+                    await profileDB.leaveRoom(user.username, room.name);
+                    status = true;
+                    log_message = LeaveRoomStatus.Leave;
+                }
             } else {
                 log_message = LeaveRoomStatus.NeverJoined;
             }

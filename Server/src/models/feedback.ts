@@ -42,6 +42,7 @@ export enum JoinRoomStatus {
 
 export enum LeaveRoomStatus {
     Leave = "You left the room!",
+    General = "You can not leave General",
     InvalidRoom = "This room does not exist",
     NeverJoined = "You are not in this room"
 }

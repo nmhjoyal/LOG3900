@@ -65,13 +65,21 @@ class ProfileDB {
             );
     }
 
-    public async updateProfile(profile: PrivateProfile): Promise<void>{
+    public async updateProfile(profile: PrivateProfile): Promise<void> {
         await this.mongoDB.db("Profiles").collection("profiles")
             .replaceOne(
                 {username: { $eq: profile.username}}, profile)
             .catch((err: any) => {
                 throw err;
             });
+    }
+
+    public async deleteRoom(roomId: string): Promise<void> {
+        await this.mongoDB.db("Profiles").collection("profiles")
+            .updateMany(
+                {},
+                { $pull: { rooms_joined : roomId } }
+            );
     }
 }
 
