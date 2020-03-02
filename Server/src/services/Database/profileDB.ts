@@ -1,7 +1,6 @@
 import { MongoClient } from "mongodb";
 import PrivateProfile from "../../models/privateProfile";
 import * as ServerConfig from "../../serverConfig.json";
-import { serverHandler } from "../serverHandler";
 
 class ProfileDB {
     private mongoDB: MongoClient;

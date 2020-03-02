@@ -126,7 +126,7 @@ class ServerHandler {
 
             // No errors, so update PrivateProfile 
             // and if necessary notify rooms that the user's avatar has changed.
-            this.users.forEach((user: PrivateProfile, socketId: string) => {
+            this.users.forEach(async (user: PrivateProfile, socketId: string) => {
                 if(user.username == updatedProfile.username) {
                     if (user.avatar != updatedProfile.avatar) {
                         // Notify all rooms joined by user that his avatar has changed.
@@ -134,7 +134,8 @@ class ServerHandler {
                             username: user.username,
                             avatar: updatedProfile.avatar
                         };
-                        user.rooms_joined.forEach(async (roomId: string) => {
+                        // For each room retrieved from db
+                        (await roomDB.getRoomsByUser(user.username)).forEach(async (roomId: string) => {
                             await roomDB.mapAvatar(updatedPublicProfile, roomId);
                             const avatarUpdate: AvatarUpdate = {
                                 roomId: roomId,

@@ -26,6 +26,14 @@ export enum CreateRoomStatus {
     UserNotConnected = "The user is not connected"
 }
 
+export enum DeleteRoomStatus {
+    Delete = "You deleted the room",
+    LeaveAndDelete = "You left and deleted the room",
+    DeleteGeneral = "You can not delete General",
+    NotEmpty = "There is someone else in the room",
+    InvalidRoom = "This room does not exist"
+}
+
 export enum JoinRoomStatus {
     Join = "You joined the room!",
     InvalidRoom = "This room does not exist",

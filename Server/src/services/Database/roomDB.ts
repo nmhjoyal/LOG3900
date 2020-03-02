@@ -57,13 +57,28 @@ class RoomDB {
         return room;
     }
 
+    public async deleteRoom(roomId: string): Promise<void> {
+        await this.mongoDB.db("Rooms").collection("rooms")
+            .deleteOne({ name: roomId });
+    }
+
     public async mapAvatar(publicProfile: PublicProfile, roomId: string): Promise<void> {
-        var qstr = `{ "$set": { "users.` + publicProfile.username + `" : "` + publicProfile.avatar + `"}}`;
+        var qstr = `{ "$set": { "avatars.` + publicProfile.username + `" : "` + publicProfile.avatar + `"}}`;
         var query = JSON.parse(qstr);
         await this.mongoDB.db("Rooms").collection("rooms").updateOne(
                 { name: roomId }, 
                 query
             );
+    }
+
+    public async getRoomsByUser(username: string): Promise<string[]> {
+        let rooms: string[] = [];
+        await this.mongoDB.db("Rooms").collection("rooms").find(
+            JSON.parse(`{ "avatars.` + username + `" : { "$exists": "true" } }`), 
+            { projection: { name : 1 } }).forEach((room: Room) => {
+            rooms.push(room.name);
+        });
+        return rooms;
     }
 }
 

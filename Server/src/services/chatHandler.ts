@@ -1,6 +1,6 @@
 import Room from "../models/room";
 import PrivateProfile from "../models/privateProfile";
-import { Feedback, CreateRoomStatus, JoinRoomStatus, LeaveRoomStatus } from "../models/feedback";
+import { Feedback, CreateRoomStatus, DeleteRoomStatus, JoinRoomStatus, LeaveRoomStatus } from "../models/feedback";
 import { roomDB } from "./Database/roomDB";
 import Admin from "../models/admin";
 import { Message, ClientMessage } from "../models/message";
@@ -43,6 +43,37 @@ export default class ChatHandler {
         return feedback;
     }
 
+    public async deleteChatRoom(io: SocketIO.Server, socket: SocketIO.Socket, roomId: string): Promise<Feedback> {
+        const room: Room | null = await roomDB.getRoom(roomId);
+        let status: boolean = false;
+        let log_message: DeleteRoomStatus;
+        if(roomId == "General") {
+            log_message = DeleteRoomStatus.DeleteGeneral;
+        } else if(room) {
+            let socketIds: string[] = [];
+            try {
+                for (var socketId in io.sockets.adapter.rooms[roomId].sockets) {
+                    socketIds.push(socketId);
+                }
+            } catch {}
+            console.log(socketIds);
+            if(socketIds.length == 0) {
+                log_message = DeleteRoomStatus.Delete;
+            } else if(socketIds.length == 1 && socketIds[0] == socket.id) {
+                log_message = DeleteRoomStatus.LeaveAndDelete;
+            } else {
+                log_message = DeleteRoomStatus.NotEmpty;
+            }
+        } else {
+            log_message = DeleteRoomStatus.InvalidRoom;
+        }
+        const feedback: Feedback = {
+            status: status,
+            log_message: log_message
+        }
+        return feedback;
+    }
+
     public async joinChatRoom(socket: SocketIO.Socket, roomId: string): Promise<Feedback> {
         const user: PrivateProfile | undefined = serverHandler.users.get(socket.id);
         const room: Room | null = await roomDB.getRoom(roomId);
@@ -54,6 +85,7 @@ export default class ChatHandler {
                 log_message = JoinRoomStatus.AlreadyJoined;
             } else {
                 await profileDB.joinRoom(user.username, room.name);
+                user.rooms_joined.push(room.name);
                 const publicProfile : PublicProfile = {
                     username : user.username,
                     avatar : user.avatar
@@ -82,6 +114,7 @@ export default class ChatHandler {
         if(user && room) {
             if(user.rooms_joined.includes(room.name)) {
                 this.disconnectFromRoom(socket, user, room.name);
+                user.rooms_joined.splice(user.rooms_joined.indexOf(room.name), 1);
                 await profileDB.leaveRoom(user.username, room.name);
                 status = true;
                 log_message = LeaveRoomStatus.Leave;

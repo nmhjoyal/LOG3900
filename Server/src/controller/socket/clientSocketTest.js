@@ -3,35 +3,44 @@ var io = require('socket.io-client');
 var socket1 = io.connect('http://localhost:5000', { reconnect: true });
 
 var message = {
-    author : "zak3",
     content : "Fuck you, va chier",
-    date : Date.now(),
     roomId: "room1"
 }
 
 socket1.on("connect", function (data) {
-    socket1.emit("sign_in", { username : "zak2", password: "banane" });
+    socket1.emit("sign_in", { username : "zak3", password: "banane" });
 });
 
 socket1.on("user_signed_in", function (data) {
     console.log("signed in : " + data);
     // socket1.emit("getroom_test", "room99");
-    // socket1.emit("create_chat_room", "General");
-    // socket1.emit("join_chat_room", "room99");
+    // socket1.emit("create_chat_room", "room1");
+    socket1.emit("join_chat_room", "room1");
+    // socket1.emit("leave_chat_room", "room1");
     // socket1.emit("send_message", JSON.stringify(message));
 
+    /*
     socket1.emit("update_profile", JSON.stringify({
         firstname: "rahal",
         lastname: "zakari",
         password: "banane",
-        username: "zak2",
+        username: "zak3",
         avatar: "avatar3333",
         rooms_joined: []
     }));
+    */
+});
+
+socket1.on("get_res", function(data) {
+    console.log("*" + data);
 });
 
 socket1.on("room_created", function(data) {
     console.log("room created : " + data);
+});
+
+socket1.on("room_deleted", function(data) {
+    console.log("room deleted : " + data);
 });
 
 socket1.on("user_joined_room", function(data) {

@@ -16,6 +16,11 @@ export class ChatController {
         socket.emit("room_created", JSON.stringify(await this.chatHandler.createChatRoom(socket, roomId)));
     }
 
+    @OnMessage("delete_chat_room")
+    public async delete_chat_room(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() roomId: string) {
+        socket.emit("room_deleted", JSON.stringify(await this.chatHandler.deleteChatRoom(io, socket, roomId)));
+    }
+
     @OnMessage("join_chat_room")
     public async join_chat_room(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() roomId: string) {
         socket.emit("user_joined_room", JSON.stringify(await this.chatHandler.joinChatRoom(socket, roomId)));
