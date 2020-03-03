@@ -5,7 +5,7 @@ import SprintCoop from "../services/Match/matchSprintCoop";
 import OneVsOne from "../services/Match/matchOneVsOne";
 import Inverted from "../services/Match/matchInverted";
 
-export enum GameMode {
+export enum MatchMode {
     freeForAll = 1,
     sprintSolo = 2,
     sprintCoop = 3,
@@ -13,18 +13,18 @@ export enum GameMode {
     inverted = 5
 }
 
-export class Game {
-    public static getMatchClassInstance(gameMode: GameMode): Match {
-        switch (gameMode) {
-            case GameMode.freeForAll:
+export class MatchInstance {
+    public static getMatchClassInstance(matchMode: MatchMode): Match {
+        switch (matchMode) {
+            case MatchMode.freeForAll:
                 return new FreeForAll();
-            case GameMode.sprintSolo:
+            case MatchMode.sprintSolo:
                 return new SprintSolo();
-            case GameMode.sprintCoop:
+            case MatchMode.sprintCoop:
                 return new SprintCoop();
-            case GameMode.oneVsOne:
+            case MatchMode.oneVsOne:
                 return new OneVsOne();
-            case GameMode.inverted:
+            case MatchMode.inverted:
                 return new Inverted();
         }
     }

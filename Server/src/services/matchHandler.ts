@@ -1,5 +1,5 @@
 import Match from "./Match/match"
-import { GameMode, Game } from "../models/gameMode";
+import { MatchMode, MatchInstance } from "../models/matchMode";
 
 export default class MatchHandler {
     private currentMatches: Match[];
@@ -8,7 +8,7 @@ export default class MatchHandler {
         this.currentMatches = new Array<Match>();
     }
 
-    public startMatch(gameMode: GameMode) {
-        this.currentMatches.push(Game.getMatchClassInstance(gameMode));
+    public startMatch(matchMode: MatchMode) {
+        this.currentMatches.push(MatchInstance.getMatchClassInstance(matchMode));
     }
 }

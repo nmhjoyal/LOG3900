@@ -1,11 +1,20 @@
-export default interface Feedback {
+import Room from "./room";
+
+export interface Feedback {
     status: boolean
     log_message: string
 }
 
 export interface SignInFeedback {
     feedback: Feedback
-    rooms_joined: string[]
+    // Contains histories
+    rooms_joined: Room[]
+}
+
+export interface JoinRoomFeedback {
+    feedback: Feedback
+    // Contains history
+    room_joined: Room | null
 }
 
 export enum SignInStatus {
@@ -21,8 +30,17 @@ export enum SignOutStatus {
 }
 
 export enum CreateRoomStatus {
-    Create = "You created the room!",
-    AlreadyCreated = "This room is already created"
+    Create = "You created and joined the room!",
+    AlreadyCreated = "This room is already created",
+    UserNotConnected = "The user is not connected"
+}
+
+export enum DeleteRoomStatus {
+    Delete = "You deleted the room",
+    LeaveAndDelete = "You left and deleted the room",
+    DeleteGeneral = "You can not delete General",
+    NotEmpty = "There is someone else in the room",
+    InvalidRoom = "This room does not exist"
 }
 
 export enum JoinRoomStatus {
@@ -33,6 +51,13 @@ export enum JoinRoomStatus {
 
 export enum LeaveRoomStatus {
     Leave = "You left the room!",
+    General = "You can not leave General",
     InvalidRoom = "This room does not exist",
     NeverJoined = "You are not in this room"
+}
+
+export enum UpdateProfileStatus {
+    Update = "The profile has been updated",
+    InvalidProfile = "This profile is disconnected or does not exist",
+    UnexpectedError = "Unexpected error"
 }
