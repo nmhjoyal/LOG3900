@@ -1,7 +1,7 @@
 import SignIn from "../models/signIn";
 import PrivateProfile from "../models/privateProfile";
 import Room from "../models/room";
-import { Feedback, SignInFeedback, SignInStatus, SignOutStatus } from "../models/feedback";
+import { Feedback, SignInFeedback, SignInStatus, SignOutStatus, UpdateProfileStatus } from "../models/feedback";
 import { profileDB } from "../services/Database/profileDB";
 import { roomDB } from "../services/Database/roomDB";
 import Admin from "../models/admin";
@@ -125,49 +125,50 @@ class ServerHandler {
 
     public async updateProfile(io: SocketIO.Server, socket: SocketIO.Socket, updatedProfile: PrivateProfile): Promise<Feedback> {
         const user: PrivateProfile | undefined = serverHandler.users.get(socket.id);
-        let status: boolean;
-        let log_message: string;
+        let status: boolean = false;
+        let log_message: UpdateProfileStatus;
 
-        // S'assurer que serverHandler.users.get(socket.id) correspond au updatedProfile.username
-        
-        let feedback: Feedback = {
-            status: true,
-            log_message: "Profile " + updatedProfile.username + " updated!"
-        };
-
-        try {
-            updatedProfile.rooms_joined = (user as PrivateProfile).rooms_joined;
-            await profileDB.updateProfile(updatedProfile);
-
-            // No errors, so update PrivateProfile 
-            // and if necessary notify rooms that the user's avatar has changed.
-            this.users.forEach(async (user: PrivateProfile, socketId: string) => {
-                if(user.username == updatedProfile.username) {
-                    if (user.avatar != updatedProfile.avatar) {
-                        // Notify all rooms joined by user that his avatar has changed.
-                        const updatedPublicProfile: PublicProfile = {
-                            username: user.username,
-                            avatar: updatedProfile.avatar
-                        };
-                        // For each room retrieved from db
-                        (await roomDB.getRoomsByUser(user.username)).forEach(async (roomId: string) => {
-                            await roomDB.mapAvatar(updatedPublicProfile, roomId);
-                            const avatarUpdate: AvatarUpdate = {
-                                roomId: roomId,
-                                updatedProfile: updatedPublicProfile 
+        if(user) {
+            try {
+                // Making sure rooms_joined is not updated
+                updatedProfile.rooms_joined = (user as PrivateProfile).rooms_joined;
+                await profileDB.updateProfile(updatedProfile);
+    
+                // No errors, so update PrivateProfile 
+                // and if necessary notify rooms that the user's avatar has changed.
+                this.users.forEach(async (user: PrivateProfile, socketId: string) => {
+                    if(user.username == updatedProfile.username) {
+                        if (user.avatar != updatedProfile.avatar) {
+                            // Notify all rooms joined by user that his avatar has changed.
+                            const updatedPublicProfile: PublicProfile = {
+                                username: user.username,
+                                avatar: updatedProfile.avatar
                             };
-                            io.in(roomId).emit("avatar_updated", JSON.stringify(avatarUpdate));
-                        });
+                            // For each room retrieved from db
+                            (await roomDB.getRoomsByUser(user.username)).forEach(async (roomId: string) => {
+                                await roomDB.mapAvatar(updatedPublicProfile, roomId);
+                                const avatarUpdate: AvatarUpdate = {
+                                    roomId: roomId,
+                                    updatedProfile: updatedPublicProfile 
+                                };
+                                io.in(roomId).emit("avatar_updated", JSON.stringify(avatarUpdate));
+                            });
+                        }
+                        this.users.set(socketId, updatedProfile);
                     }
-                    this.users.set(socketId, updatedProfile);
-                }
-            });
-
-        } catch {
-            feedback.status = false;
-            feedback.log_message = "Could not update profile.";
+                });
+                status = true;
+                log_message = UpdateProfileStatus.Update;
+            } catch {
+                log_message = UpdateProfileStatus.UnexpectedError;
+            }
+        } else {
+            log_message = UpdateProfileStatus.InvalidProfile;
         }
-        
+        const feedback: Feedback = {
+            status: status,
+            log_message: log_message
+        }
         return feedback;
     }
 }

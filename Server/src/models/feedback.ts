@@ -55,3 +55,9 @@ export enum LeaveRoomStatus {
     InvalidRoom = "This room does not exist",
     NeverJoined = "You are not in this room"
 }
+
+export enum UpdateProfileStatus {
+    Update = "The profile has been updated",
+    InvalidProfile = "This profile is disconnected or does not exist",
+    UnexpectedError = "Unexpected error"
+}
