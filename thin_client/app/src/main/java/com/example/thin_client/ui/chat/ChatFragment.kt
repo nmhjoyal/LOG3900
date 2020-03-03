@@ -1,14 +1,18 @@
 package com.example.thin_client.ui.chat
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import com.example.thin_client.R
 import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.Message
+import com.example.thin_client.data.model.Room
 import com.example.thin_client.data.rooms.RoomArgs
+import com.example.thin_client.data.rooms.RoomManager
 import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
@@ -17,21 +21,40 @@ import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.activity_chat.*
+import kotlinx.android.synthetic.main.activity_login.*
+import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 
 class ChatFragment : Fragment() {
 
     private val adapter = GroupAdapter<GroupieViewHolder>()
     private var roomID : String ?= ""
+    private val admin : String ?="Admin"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerview_chat.adapter = adapter
 
+
         roomID = arguments!!.getString(RoomArgs.ROOM_ID)
         room_id.text = roomID
 
-        SocketHandler.socket?.on(SocketEvent.USER_JOINED_ROOM, ({ data ->
+        val roomsJoined = RoomManager.roomsJoined
+        val messages = roomsJoined[roomID]
+        for(i in 0 until messages!!.size){
+            if(messages[i]?.username == SocketHandler.user!!.username){
+                showToMessage(messages[i].content,messages[i].date)
+            } else {
+                showFromMessage(messages[i].content, messages[i].username, messages[i].date)
+            }
+
+            if(messages[i].username == admin){
+                showFromMessage(messages[i].content, messages[i].username, messages[i].date)
+            }
+        }
+
+
+        SocketHandler.socket?./*on(SocketEvent.USER_JOINED_ROOM, ({ data ->
             val jsonData = Gson().fromJson(data.first().toString(), Feedback::class.java)
             showUserJoined(jsonData.log_message, true)
         }))
@@ -39,9 +62,9 @@ class ChatFragment : Fragment() {
                 val jsonData = Gson().fromJson(data.first().toString(), Feedback::class.java)
                 showUserJoined(jsonData.log_message, false)
             }))
-            ?.on(SocketEvent.NEW_MESSAGE, ({ data ->
+            ?*/on(SocketEvent.NEW_MESSAGE, ({ data ->
                 val jsonData = Gson().fromJson(data.first().toString(), Message::class.java)
-                val username = jsonData.author.username
+                val username = jsonData.username
                 val timestamp = jsonData.date
                 Handler(Looper.getMainLooper()).post(Runnable {
                     if (username == SocketHandler.user!!.username) {
@@ -49,6 +72,10 @@ class ChatFragment : Fragment() {
                     } else {
                         showFromMessage(jsonData.content, username, timestamp)
                     }
+                    if (username == admin){
+                        showFromMessage(jsonData.content, username, timestamp)
+                    }
+
                 })
             }))
 
@@ -74,6 +101,7 @@ class ChatFragment : Fragment() {
                 if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
                     SocketHandler.sendMessage(editText_chat.text.replace("\\n".toRegex(), ""), roomID!!)
                     editText_chat.setText("")
+                    UIUtil.hideKeyboard(activity!!)
                     return@OnKeyListener true
                 }
             }
@@ -99,6 +127,10 @@ class ChatFragment : Fragment() {
         }
     }
 
+    private fun showAdminMessage(text:String, date: Long){
+        adapter.add(ChatToItem(text.replace("\\n".toRegex(), ""), date))
+        //TODO
+    }
     private fun showUserJoined(author:String, hasJoined: Boolean) {
         adapter.add(ChatUserJoined(author, hasJoined))
         if (recyclerview_chat != null){
@@ -111,7 +143,6 @@ class ChatFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         return inflater.inflate(R.layout.activity_chat, container, false)
     }
 }

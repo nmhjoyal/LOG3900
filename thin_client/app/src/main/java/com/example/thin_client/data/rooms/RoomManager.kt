@@ -1,14 +1,24 @@
 package com.example.thin_client.data.rooms
 
-object RoomManager {
-    var roomsJoined: MutableList<String> = arrayListOf()
+import com.example.thin_client.data.Message
+import com.example.thin_client.data.model.Room
 
-    fun createRoomList(roomArray: MutableList<String>) {
-        roomsJoined = roomArray.toCollection(ArrayList())
+object RoomManager {
+    var roomsJoined: MutableMap<String, ArrayList<Message>> = mutableMapOf()
+
+    fun createRoomList(rooms: MutableList<Room>) {
+        for(room in rooms){
+            roomsJoined.put(room.name,room.messages)
+        }
+
     }
 
-    fun addRoom(room: String) {
-        roomsJoined.add(room)
+    fun addRoom(roomId: String) {
+        roomsJoined.put(roomId, arrayListOf())
+    }
+
+    fun loadHistory(roomId:String, messagesList: ArrayList<Message>){
+        roomsJoined.put(roomId, messagesList)
     }
 
     fun leaveRoom(room: String) {
