@@ -1,0 +1,57 @@
+stages:
+  - build
+  - test
+
+cache:
+  key: "$CI_COMMIT_REF_NAME"
+  paths:
+    - thin_client/.gradle/
+    - Server/node_modules/
+  policy: pull
+
+build:thin_client:
+  stage: build
+  image: jangrewe/gitlab-ci-android
+  before_script:
+    - pushd thin_client
+    - export GRADLE_USER_HOME=$(pwd)/.gradle
+    - chmod +x ./gradlew
+  after_script:
+    - popd
+  script:
+    - ./gradlew assembleDebug
+  artifacts:
+    paths:
+    - app/build/outputs/
+
+# build:fat_client:
+#   stage: build
+#   image: mono:latest
+#   script:
+#     - pushd fat_client
+#     - nuget install
+#     - nuget restore
+#     - msbuild
+
+build:server:
+  stage: build
+  image: kkarczmarczyk/node-yarn:latest
+  script:
+    - pushd Server
+    - yarn
+    - yarn tsc
+    - popd
+
+test:thin_client:
+  stage: test
+  image: jangrewe/gitlab-ci-android
+  before_script:
+    - pushd thin_client
+    - export GRADLE_USER_HOME=$(pwd)/.gradle
+    - chmod +x ./gradlew
+  after_script:
+    - popd
+  script:
+    - ./gradlew -Pci --console=plain testDebug
+  dependencies:
+    - build:thin_client
