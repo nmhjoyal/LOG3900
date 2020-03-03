@@ -1,3 +1,5 @@
+import Room from "./room";
+
 export interface Feedback {
     status: boolean
     log_message: string
@@ -5,7 +7,14 @@ export interface Feedback {
 
 export interface SignInFeedback {
     feedback: Feedback
-    rooms_joined: string[]
+    // Contains histories
+    rooms_joined: Room[]
+}
+
+export interface JoinRoomFeedback {
+    feedback: Feedback
+    // Contains history
+    room_joined: Room | null
 }
 
 export enum SignInStatus {

@@ -20,7 +20,7 @@ class ServerHandler {
         const user: PrivateProfile | null = await profileDB.getPrivateProfile(signIn.username);
         let signed_in: boolean = false;
         let log_message: SignInStatus;
-        let rooms_joined: string[] = [];
+        let rooms_joined: Room[] = [];
         if(user) {
             if(signIn.password == user.password) {
                 if(this.isConnected(signIn.username)) {
@@ -29,8 +29,7 @@ class ServerHandler {
                     this.users.set(socket.id, user);
                     signed_in = true;
                     log_message = SignInStatus.SignIn;
-                    rooms_joined = user.rooms_joined;
-                    await this.connectToJoinedRooms(socket, user);
+                    rooms_joined = await this.connectToJoinedRooms(socket, user);
                 }
             } else {
                 log_message = SignInStatus.InvalidPassword;
@@ -82,20 +81,36 @@ class ServerHandler {
         return isConnected;
     }
 
-    private async connectToJoinedRooms(socket: SocketIO.Socket, user: PrivateProfile): Promise<void> {
-        user.rooms_joined.forEach(async (room_joined: string) => {
+    private async connectToJoinedRooms(socket: SocketIO.Socket, user: PrivateProfile): Promise<Room[]> {
+        const rooms: Room[] = [];
+        for(let room_joined of user.rooms_joined) {
             socket.join(room_joined);
             const message: Message = Admin.createAdminMessage(user.username + " is connected.", room_joined);
             socket.to(room_joined).emit("new_message", JSON.stringify(message));
-
-            // Load history
             const room: Room | null = await roomDB.getRoom(room_joined);
             if(room) {
-                socket.emit("load_history", JSON.stringify(room));
+                rooms.push(room);
+            } else {
+                console.log("This room does not exist : " + room_joined);
+            }
+        }
+        /*
+        user.rooms_joined.forEach(async (room_joined: string) => {
+            // console.log(room_joined);
+            socket.join(room_joined);
+            const message: Message = Admin.createAdminMessage(user.username + " is connected.", room_joined);
+            socket.to(room_joined).emit("new_message", JSON.stringify(message));
+            const room: Room | null = await roomDB.getRoom(room_joined);
+            // console.log(room);
+            if(room) {
+                console.log("here");
+                rooms.push(room);
             } else {
                 console.log("This room does not exist : " + room_joined);
             }
         });
+        */
+        return rooms;
     }
 
     private diconnectFromJoinedRooms(socket: SocketIO.Socket, user: PrivateProfile): void {
@@ -139,7 +154,7 @@ class ServerHandler {
                                 roomId: roomId,
                                 updatedProfile: updatedPublicProfile 
                             };
-                            io.in(roomId).emit("avatar_update", JSON.stringify(avatarUpdate));
+                            io.in(roomId).emit("avatar_updated", JSON.stringify(avatarUpdate));
                         });
                     }
                     this.users.set(socketId, updatedProfile);

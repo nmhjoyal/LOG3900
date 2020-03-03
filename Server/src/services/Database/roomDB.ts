@@ -20,14 +20,14 @@ class RoomDB {
     }
 
     public async createRoom(publicProfile: PublicProfile, roomId: string): Promise<void> {
-        let profilesConnected: Map<string, string> = new Map<string, string>();
+        let avatars: Map<string, string> = new Map<string, string>();
         // Map avatar du createur de la room, car il join directement à la création.
-        profilesConnected.set(publicProfile.username, publicProfile.avatar);
+        avatars.set(publicProfile.username, publicProfile.avatar);
         
         const room: Room = {
             name: roomId,
             messages: [],
-            avatars: profilesConnected
+            avatars: avatars
         };
         await this.mongoDB.db("Rooms").collection("rooms").insertOne(room).catch((err: any) => {
             throw err;
@@ -60,6 +60,7 @@ class RoomDB {
     public async deleteRoom(roomId: string): Promise<void> {
         await this.mongoDB.db("Rooms").collection("rooms")
             .deleteOne({ name: roomId });
+        
     }
 
     public async mapAvatar(publicProfile: PublicProfile, roomId: string): Promise<void> {
