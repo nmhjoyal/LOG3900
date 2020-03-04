@@ -8,6 +8,8 @@ using Quobject.SocketIoClientDotNet.Client;
 using Socket = Quobject.SocketIoClientDotNet.Client.Socket;
 using WPFUI.EventModels;
 
+
+
 namespace WPFUI.Models
 {
     public partial class SocketHandler : ISocketHandler
@@ -48,56 +50,75 @@ namespace WPFUI.Models
             _events = events;
             // TestPOSTWebRequest(user);
             // TestGETWebRequest("Testing get...");
-        }
-
-        public void connectionAttempt()
-        {
-
-            _user = new User(_userdata.userName, _userdata.password);
-
-            this._userJSON = JsonConvert.SerializeObject(_user);
-
             this._socket = IO.Socket("http://10.200.23.33:5000");
-            Console.WriteLine(this._userJSON);
-            /*
-            this._socket.On(Socket.EVENT_CONNECT, () =>
+            _socket.On("user_signed_in", (signInFeedback) =>
             {
-                this._socket.Emit("sign_in", this._userJSON);
+                dynamic json = JsonConvert.DeserializeObject(signInFeedback.ToString());
+                if ((Boolean)json.feedback.status)
+                {
+                    _events.PublishOnUIThread(new LogInEvent());
+                }
+                //voir doc
             });
 
-            _socket.On("user_signed_in", (connected) =>
-            {
-                canConnect = JsonConvert.DeserializeObject<bool>(connected.ToString());
-            });
-
-            _socket.On("new_message", (message) =>
-            {
-                Message newMessage = JsonConvert.DeserializeObject<Message>(message.ToString());
-                Console.WriteLine(newMessage.date);
-                MessageModel newMessageModel = new MessageModel(newMessage.content, newMessage.author.username,
-                                                                newMessage.date);
-                _userdata.messages.Add(newMessageModel);
-            });
+            /* _socket.On("new_message", (message) =>
+             {
+                 Message newMessage = JsonConvert.DeserializeObject<Message>(message.ToString());
+                 Console.WriteLine(newMessage.date);
+                 MessageModel newMessageModel = new MessageModel(newMessage.content, newMessage.author.username,
+                                                                 newMessage.date);
+                 _userdata.messages.Add(newMessageModel);
+             });*/
 
             _socket.On("new_client", (socketId) =>
             {
                 MessageModel newMessageModel = new MessageModel("Nouvelle connection de: " + socketId.ToString(), "Server");
                 _userdata.messages.Add(newMessageModel);
                 ///Console.WriteLine(socketId + " is connected");
-            });*/
+            });
+
+            _socket.On("user_signed_out", (feedback) =>
+            {
+                dynamic json = JsonConvert.DeserializeObject(feedback.ToString());
+                if ((Boolean)json.status)
+                {
+                    _events.PublishOnUIThread(new logOutEvent());
+                }
+                //voir doc
+            });
+
+        }
+
+        public void connectionAttempt()
+        {
+            
+
+            _user = new User(_userdata.userName, _userdata.password);
+
+            this._userJSON = JsonConvert.SerializeObject(_user);
+
+            Console.WriteLine(this._userJSON);
+
+            this._socket.Emit("sign_in", this._userJSON);
+
+           
+        }
+        public void SignOut()
+        {
+            this._socket.Emit("sign_out");  
         }
         public void disconnect()
         {
             _socket.Disconnect();
         }
-        public void sendMessage()
+       /* public void sendMessage()
         {
             Message message = new Message(_user, _userdata.currentMessage, 0);
             if(message.content.Trim() != "")
             {
                 _socket.Emit("send_message", JsonConvert.SerializeObject(message));
             }
-        }
+        }*/
 
         public void createUser(PrivateProfile privateProfile)
         { 

@@ -109,10 +109,14 @@
     <Compile Include="EventModels\signUpEvent.cs" />
     <Compile Include="EventModels\userNameTakenEvent.cs" />
     <Compile Include="EventModels\viewProfileEvent.cs" />
+    <Compile Include="Models\Feedback.cs" />
     <Compile Include="Models\ISocketHandler.cs" />
     <Compile Include="Models\IUserData.cs" />
+    <Compile Include="Models\JavaScriptSerializer.cs" />
     <Compile Include="Models\MessageModel.cs" />
     <Compile Include="Models\PrivateProfile.cs" />
+    <Compile Include="Models\Room.cs" />
+    <Compile Include="Models\SignInFeedback.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\socketHandler.cs" />
     <Compile Include="Models\UserData.cs" />
