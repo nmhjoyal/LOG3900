@@ -52,21 +52,25 @@ namespace WPFUI.Models
 
         public void connectionAttempt()
         {
-
-            _user = new User(_userdata.userName, _userdata.password);
+            var options = new IO.Options();
+            options.Reconnection = false;
+            this._socket = IO.Socket("http://10.200.23.33:5000", options);
+           /* _user = new User(_userdata.userName, _userdata.password);
 
             this._userJSON = JsonConvert.SerializeObject(_user);
 
-            this._socket = IO.Socket("http://" + _userdata.ipAdress + ":5000");
+           
+            Console.WriteLine(this._userJSON);
             this._socket.On(Socket.EVENT_CONNECT, () =>
             {
                 this._socket.Emit("sign_in", this._userJSON);
+               
             });
 
             _socket.On("user_signed_in", (connected) =>
             {
                 canConnect = JsonConvert.DeserializeObject<bool>(connected.ToString());
-            });
+            });/*
 
             _socket.On("new_message", (message) =>
             {
@@ -82,7 +86,7 @@ namespace WPFUI.Models
                 MessageModel newMessageModel = new MessageModel("Nouvelle connection de: " + socketId.ToString(), "Server");
                 _userdata.messages.Add(newMessageModel);
                 ///Console.WriteLine(socketId + " is connected");
-            });
+            });*/
         }
         public void disconnect()
         {
@@ -99,9 +103,11 @@ namespace WPFUI.Models
 
         public void createUser(PrivateProfile privateProfile)
         {
+            Console.WriteLine(privateProfile.firstname);
             try
             {
                 TestPOSTWebRequest(privateProfile, "/profile/create/");
+
             }
 
             catch(Exception e)
@@ -113,7 +119,7 @@ namespace WPFUI.Models
         }
         public static void TestPOSTWebRequest(Object obj, string url)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://" + "10.200.31.12" + ":5000" + url);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://" + "10.200.23.33" + ":5000" + url);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 

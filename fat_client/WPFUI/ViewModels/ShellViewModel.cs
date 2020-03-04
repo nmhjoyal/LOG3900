@@ -10,8 +10,8 @@ using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    class ShellViewModel: Conductor<Screen>.Collection.AllActive, IHandle<LogInEvent>, IHandle<logOutEvent>, IHandle<joinChatEvent>,
-						  IHandle<DisconnectEvent>, IHandle<userNameTakenEvent>,IHandle<signUpEvent>, IHandle<goBackEvent>, IHandle<joinChatroomEvent>,
+    class ShellViewModel: Conductor<Screen>.Collection.AllActive, IHandle<LogInEvent>, IHandle<logOutEvent>, IHandle<joinChatEvent>, IHandle<createGameEvent>,
+						  IHandle<DisconnectEvent>, IHandle<manuel1Event>, IHandle<userNameTakenEvent>,IHandle<signUpEvent>, IHandle<goBackEvent>, IHandle<joinChatroomEvent>,
 						  IHandle<passwordMismatchEvent>, IHandle<viewProfileEvent>, IHandle<goBackMainEvent>, IHandle<freeDrawEvent>, IHandle<fullScreenChatEvent>
 	{
 		private IEventAggregator _events;
@@ -52,6 +52,14 @@ namespace WPFUI.ViewModels
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
+		public void Handle(manuel1Event message)
+		{
+			Items.Clear();
+			Items.Add(_container.GetInstance<CreationJeuManuelle1ViewModel>());
+			Items.Add(_container.GetInstance<FenetreDessinViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
+		}
 
 		public void Handle(viewProfileEvent message)
 		{
@@ -70,6 +78,8 @@ namespace WPFUI.ViewModels
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
+
+		
 		public void Handle(fullScreenChatEvent message)
 		{
 			Items.Clear();
@@ -87,7 +97,14 @@ namespace WPFUI.ViewModels
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
-
+		public void Handle(createGameEvent message)
+		{
+			Items.Clear();
+			Items.Add(_container.GetInstance<MenuSelectionModeCreationViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
+		}
 		public void Handle(goBackMainEvent message)
 		{
 			Items.Clear();

@@ -42,7 +42,7 @@
 				</Button>
 
 
-				<toolkit:ColorPicker x:Name="selecteurCouleur"                             
+                <toolkit:ColorPicker x:Name="selecteurCouleur"                             
                   VerticalContentAlignment="Stretch"
                   Background="#00000000"
                   ShowDropDownButton="False"
@@ -56,7 +56,7 @@
                   RecentColorsHeader="Récemment utilisées"
                   UsingAlphaChannel="True"
                   AdvancedButtonHeader="Personnalisé" />
-				<Slider Width="100" Height="26" Minimum="1" Maximum="50"
+                <Slider Width="100" Height="26" Minimum="1" Maximum="50"
                         Value="{Binding Path=TailleTrait, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                         Margin="10,0,0,0"
                         Foreground="#FFCFD1D0"                        

@@ -13,13 +13,16 @@ namespace WPFUI.Models
         public string username;
         public string password;
         public string avatar;
-        public PrivateProfile(string username, string firstname, string lastname, string password, string avatar)
+        public string[] rooms_joined;
+        public PrivateProfile(string username, string firstname, string lastname, string password, string avatar
+ )
         {
             this.username = username;
             this.firstname = firstname;
             this.lastname = lastname;
             this.password = password;
             this.avatar = avatar;
+            this.rooms_joined = new string[50];
         }
 
     }
