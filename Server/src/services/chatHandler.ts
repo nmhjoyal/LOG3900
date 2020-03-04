@@ -311,11 +311,6 @@ export default class ChatHandler {
     }
 
     private connectSocketToRoom(io: SocketIO.Server, socket: SocketIO.Socket, user: PrivateProfile, roomId: string): Message {
-        /*
-        socket.join(roomId, () => {
-            console.log("join private room:", io.sockets.sockets[socket.id].rooms);
-        });
-        */
         socket.join(roomId);
         const message: Message = Admin.createAdminMessage(user.username + " joined the room.", roomId);
         socket.to(roomId).emit("new_message", JSON.stringify(message));
