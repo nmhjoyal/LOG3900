@@ -2,6 +2,7 @@ import { serverHandler } from "../../services/serverHandler";
 import { OnMessage, SocketController, MessageBody, ConnectedSocket, SocketIO } from "socket-controllers";
 import { ClientMessage } from "../../models/message";
 import { CreateRoom, Invitation } from "../../models/room";
+import { roomDB } from "../../services/Database/roomDB";
 
 @SocketController()
 export class ChatController {
@@ -34,5 +35,10 @@ export class ChatController {
     @OnMessage("send_message")
     public async send_message(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() message: ClientMessage) {
         await serverHandler.chatHandler.sendMessage(io, socket, message);
+    }
+
+    @OnMessage("get_rooms")
+    public async getRooms(@ConnectedSocket() socket: SocketIO.Socket) {
+        socket.emit("rooms_retrived", await roomDB.getRooms());
     }
 }
