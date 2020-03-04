@@ -17,20 +17,24 @@ var createroom = {
     isPrivate: true
 }
 
-socket1.on("connect", function (data) {socket1.emit("sign_in", { username : "hub1", password: "banane" });});
+socket1.on("connect", function (data) {socket1.emit("sign_in", { username : "hub2", password: "banane" });});
 
 socket1.on("user_signed_in", function (data) {
     console.log("signed in : " + data);
     
-    socket1.emit("create_chat_room", createroom);
+    socket1.emit("connect_free_draw");
+    // socket1.emit("create_chat_room", createroom);
     // socket1.emit("getroom_test", "room99");
     // socket1.emit("create_chat_room", "room1");
     // socket1.emit("join_chat_room", "test");
     // socket1.emit("leave_chat_room", "room1");
     // socket1.emit("send_message", JSON.stringify(message));
+    // setTimeout(function(){socket1.emit("disconnect_free_draw");} , 20000);
 
-    
 });
+
+socket1.on("drawer", function() {console.log("You are the drawer!");});
+socket1.on("observer", function() {console.log("You are the observer!");});
 
 socket1.on("user_sent_invite", function(data) {console.log("sent invite : " + data);});
 socket1.on("receive_invite", function(data) { console.log("received invite : " + data);});

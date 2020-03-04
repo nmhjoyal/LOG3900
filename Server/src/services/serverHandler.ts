@@ -8,14 +8,17 @@ import Admin from "../models/admin";
 import { Message } from "../models/message";
 import PublicProfile from "../models/publicProfile";
 import ChatHandler from "./chatHandler";
+import MatchHandler from "./matchHandler";
 
 class ServerHandler {
     public users: Map<string, PrivateProfile>;
     public chatHandler: ChatHandler;
+    public matchHandler: MatchHandler;
 
     public constructor () {
         this.users = new Map<string, PrivateProfile>();
         this.chatHandler = new ChatHandler();
+        this.matchHandler = new MatchHandler();
     }
 
     public async signIn(socket: SocketIO.Socket, signIn: SignIn): Promise<SignInFeedback> {
@@ -55,6 +58,10 @@ class ServerHandler {
         let status: boolean = false;
         let log_message: SignOutStatus = SignOutStatus.Error;
         if(user) {
+
+            // TEMPORARY
+            this.matchHandler.leaveFreeDrawTestRoom(io, socket);
+
             this.diconnectFromJoinedRooms(io, socket, user);
             this.users.delete(socket.id);
             status = true;
@@ -64,6 +71,7 @@ class ServerHandler {
             status: status,
             log_message: log_message
         }
+
         return feedback;
     }
 

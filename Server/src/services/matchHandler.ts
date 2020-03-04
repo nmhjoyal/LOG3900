@@ -46,7 +46,7 @@ export default class MatchHandler {
 
     public drawTest(io: SocketIO.Server, socket: SocketIO.Socket, point: DrawPoint) {
         if (socket.id == this.drawer) {
-            io.to("freeDrawRoomTest").emit("drawPoint", point);
+            socket.to("freeDrawRoomTest").emit("drawPoint", point);
         }
     }
 }
