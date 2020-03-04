@@ -46,7 +46,7 @@ class ProfileActivity : AppCompatActivity() {
         privateProfile = PreferenceHandler(this).getPrivateProfile()
 
         username.text = privateProfile.username
-        selectedAvatar = AvatarID.valueOf(privateProfile.avatar)
+        selectedAvatar = AvatarID.valueOf(privateProfile.avatar.capitalize())
 
         resetProfile()
         setupSocketEvents()
@@ -146,7 +146,7 @@ class ProfileActivity : AppCompatActivity() {
             val alertDialog = AlertDialog.Builder(this)
             val dialogView = layoutInflater.inflate(R.layout.dialog_change_avatar, null)
             alertDialog.setView(dialogView)
-            setupAvatarButtons(dialogView)
+            initView(dialogView)
             alertDialog.setTitle(R.string.change_avatar)
                 .setPositiveButton(R.string.ok) { _, _ -> setAvatar(avocado_avatar, selectedAvatar)}
                 .setNegativeButton(R.string.cancel) { _, _ -> }
@@ -155,6 +155,25 @@ class ProfileActivity : AppCompatActivity() {
             dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
             dialog.show()
         }))
+    }
+
+    private fun initView(view: View) {
+        resetAvatarSelection(view)
+        when (selectedAvatar) {
+            AvatarID.PEAR -> view.findViewById<ImageButton>(R.id.pear_avatar).setBackgroundResource(R.drawable.circle_primary_dark)
+            AvatarID.CHERRY -> view.findViewById<ImageButton>(R.id.cherry_avatar).setBackgroundResource(R.drawable.circle_primary_dark)
+            AvatarID.LEMON -> view.findViewById<ImageButton>(R.id.lemon_avatar).setBackgroundResource(R.drawable.circle_primary_dark)
+            AvatarID.APPLE -> view.findViewById<ImageButton>(R.id.apple_avatar).setBackgroundResource(R.drawable.circle_primary_dark)
+            AvatarID.PINEAPPLE -> view.findViewById<ImageButton>(R.id.pineapple_avatar).setBackgroundResource(R.drawable.circle_primary_dark)
+            AvatarID.ORANGE -> view.findViewById<ImageButton>(R.id.orange_avatar).setBackgroundResource(R.drawable.circle_primary_dark)
+            AvatarID.KIWI -> view.findViewById<ImageButton>(R.id.kiwi_avatar).setBackgroundResource(R.drawable.circle_primary_dark)
+            AvatarID.GRAPE -> view.findViewById<ImageButton>(R.id.grape_avatar).setBackgroundResource(R.drawable.circle_primary_dark)
+            AvatarID.WATERMELON -> view.findViewById<ImageButton>(R.id.watermelon_avatar).setBackgroundResource(R.drawable.circle_primary_dark)
+            AvatarID.STRAWBERRY -> view.findViewById<ImageButton>(R.id.strawberry_avatar).setBackgroundResource(R.drawable.circle_primary_dark)
+            AvatarID.BANANA -> view.findViewById<ImageButton>(R.id.banana_avatar).setBackgroundResource(R.drawable.circle_primary_dark)
+            AvatarID.AVOCADO -> view.findViewById<ImageButton>(R.id.avocado_avatar).setBackgroundResource(R.drawable.circle_primary_dark)
+        }
+        setupAvatarButtons(view)
     }
 
     private fun setupAvatarButtons(view: View) {

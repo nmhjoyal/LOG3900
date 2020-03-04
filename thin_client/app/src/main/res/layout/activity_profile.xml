@@ -8,7 +8,7 @@
         android:id="@+id/edit_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="20sp"
         android:fontFamily="sans-serif"
         android:text="@string/edit_profile"
         android:textColor="@color/colorPrimaryDark"
@@ -19,17 +19,16 @@
 
     <ImageButton
         android:id="@+id/avocado_avatar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="fitXY"
         android:background="@drawable/circle_primary_dark"
         android:contentDescription="@string/avocado_cd"
-        android:scaleX="2"
-        android:scaleY="2"
         app:layout_constraintBottom_toBottomOf="@id/horizontal_midpoint"
         app:layout_constraintEnd_toStartOf="@+id/firstName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_title"
-        app:layout_constraintVertical_bias="0.3"
+        app:layout_constraintTop_toTopOf="@+id/firstName"
+        app:layout_constraintVertical_bias="0.1"
         app:srcCompat="@drawable/ic_avocado" />
 
     <TextView
@@ -38,7 +37,7 @@
         android:layout_height="wrap_content"
         android:selectAllOnFocus="true"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/vertical_midpoint"
@@ -121,7 +120,6 @@
         android:layout_gravity="start"
         android:layout_marginTop="32dp"
         android:background="@drawable/button_option"
-        android:enabled="false"
         android:text="@string/undo_changes"
         android:textColor="@color/color_white"
         app:layout_constraintBottom_toTopOf="@+id/horizontal_midpoint"

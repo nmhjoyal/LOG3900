@@ -1,7 +1,6 @@
 package com.example.thin_client.data
 import android.widget.ImageView
 import com.example.thin_client.R
-import kotlinx.android.synthetic.main.activity_profile.*
 
 enum class AvatarID {
     AVOCADO,
