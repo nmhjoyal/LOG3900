@@ -6,7 +6,6 @@ import { profileDB } from "../services/Database/profileDB";
 import { roomDB } from "../services/Database/roomDB";
 import Admin from "../models/admin";
 import { Message } from "../models/message";
-import AvatarUpdate from "../models/avatarUpdate";
 import PublicProfile from "../models/publicProfile";
 import ChatHandler from "./chatHandler";
 
@@ -122,43 +121,30 @@ class ServerHandler {
     }
 
     public async updateProfile(io: SocketIO.Server, socket: SocketIO.Socket, updatedProfile: PrivateProfile): Promise<Feedback> {
-        const user: PrivateProfile | undefined = serverHandler.users.get(socket.id);
+        const user: PrivateProfile | undefined = this.users.get(socket.id);
         let status: boolean = false;
         let log_message: UpdateProfileStatus;
 
-        if(user) {
-            try {
-                // Making sure rooms_joined is not updated
-                updatedProfile.rooms_joined = (user as PrivateProfile).rooms_joined;
-                await profileDB.updateProfile(updatedProfile);
-    
-                // No errors, so update PrivateProfile 
-                // and if necessary notify rooms that the user's avatar has changed.
-                this.users.forEach(async (user: PrivateProfile, socketId: string) => {
-                    if(user.username == updatedProfile.username) {
-                        if (user.avatar != updatedProfile.avatar) {
-                            // Notify all rooms joined by user that his avatar has changed.
-                            const updatedPublicProfile: PublicProfile = {
-                                username: user.username,
-                                avatar: updatedProfile.avatar
-                            };
-                            // For each room retrieved from db
-                            (await roomDB.getRoomsByUser(user.username)).forEach(async (roomId: string) => {
-                                await roomDB.mapAvatar(updatedPublicProfile, roomId);
-                                const avatarUpdate: AvatarUpdate = {
-                                    roomId: roomId,
-                                    updatedProfile: updatedPublicProfile 
-                                };
-                                io.in(roomId).emit("avatar_updated", JSON.stringify(avatarUpdate));
-                            });
-                        }
-                        this.users.set(socketId, updatedProfile);
+        if (user) {
+            if (user.username == updatedProfile.username) {
+                try {
+                    // Updating rooms_joined array
+                    updatedProfile.rooms_joined = (user as PrivateProfile).rooms_joined;
+                    await profileDB.updateProfile(updatedProfile);
+
+                    if (user.avatar != updatedProfile.avatar) {
+                        await this.updateAvatarInRooms(io, user.username, updatedProfile.avatar);
                     }
-                });
-                status = true;
-                log_message = UpdateProfileStatus.Update;
-            } catch {
-                log_message = UpdateProfileStatus.UnexpectedError;
+
+                    this.users.set(socket.id, updatedProfile);
+                    
+                    status = true;
+                    log_message = UpdateProfileStatus.Update;
+                } catch {
+                    log_message = UpdateProfileStatus.UnexpectedError;
+                }
+            } else {
+                log_message = UpdateProfileStatus.InvalidUsername;
             }
         } else {
             log_message = UpdateProfileStatus.InvalidProfile;
@@ -170,21 +156,44 @@ class ServerHandler {
         return feedback;
     }
 
-    /*
-    public getUsersOutsideRoom(roomId: string): PublicProfile[] {
-        let usersOutsideRoom: PublicProfile[] = [];
-        this.users.forEach((user: PrivateProfile) => {
-            if (!user.rooms_joined.includes(roomId)) {
-                const publicProfile: PublicProfile = {
-                    username: user.username,
-                    avatar: user.avatar
-                }
-                usersOutsideRoom.push(publicProfile)
-            }
+    private async updateAvatarInRooms(io: SocketIO.Server, username: string, newAvatar: string): Promise<void> {
+        
+        const updatedPublicProfile: PublicProfile = {
+            username: username,
+            avatar: newAvatar
+        };
+    
+        // For each room retrieved from db (all the rooms that the user has been in or is currently in)
+        // Update and notify that his avatar has changed.
+        (await roomDB.getRoomsByUser(username)).forEach(async (roomId: string) => {
+            await roomDB.mapAvatar(updatedPublicProfile, roomId);
+            this.chatHandler.notifyAvatarUpdate(io, updatedPublicProfile, roomId);
         });
-        return usersOutsideRoom;
+        
+        // Update avatar map in the private rooms and notify the rooms
+        for (let room of this.chatHandler.privateRooms) {
+            if (room.avatars.has(updatedPublicProfile.username)) {
+                room.avatars.set(username, newAvatar);
+                this.chatHandler.notifyAvatarUpdate(io, updatedPublicProfile, room.id);
+            }
+        }
     }
-    */
 }
 
 export var serverHandler: ServerHandler = new ServerHandler();
+
+/*
+public getUsersOutsideRoom(roomId: string): PublicProfile[] {
+    let usersOutsideRoom: PublicProfile[] = [];
+    this.users.forEach((user: PrivateProfile) => {
+        if (!user.rooms_joined.includes(roomId)) {
+            const publicProfile: PublicProfile = {
+                username: user.username,
+                avatar: user.avatar
+            }
+            usersOutsideRoom.push(publicProfile)
+        }
+    });
+    return usersOutsideRoom;
+}
+*/

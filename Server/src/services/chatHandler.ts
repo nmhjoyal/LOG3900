@@ -8,6 +8,7 @@ import { profileDB } from "./Database/profileDB";
 import { serverHandler } from "./serverHandler";
 import ChatFilter from "./Filter/chatFilter";
 import PublicProfile from "../models/publicProfile";
+import AvatarUpdate from "../models/avatarUpdate";
 
 
 export default class ChatHandler {
@@ -51,7 +52,7 @@ export default class ChatHandler {
                 log_message = CreateRoomStatus.AlreadyCreated
             }
         } else {
-            log_message = CreateRoomStatus.UserNotConnected;
+            log_message = CreateRoomStatus.InvalidUser;
         }
         
         const feedback: Feedback = {
@@ -140,6 +141,7 @@ export default class ChatHandler {
                         avatar : user.avatar
                     };
                     await roomDB.mapAvatar(publicProfile, room.id);
+                    this.notifyAvatarUpdate(io, publicProfile, room.id);
                     await roomDB.addMessage(this.connectSocketToRoom(io, socket, user, room.id));
                     room_joined = room;
                     status = true;
@@ -336,5 +338,13 @@ export default class ChatHandler {
         } catch {}
 
         return socketIds;
+    }
+
+    public notifyAvatarUpdate(io: SocketIO.Server, publicProfile: PublicProfile, roomId: string) : void {
+        const avatarUpdate: AvatarUpdate = {
+            roomId: roomId,
+            updatedProfile: publicProfile 
+        };
+        io.in(roomId).emit("avatar_updated", JSON.stringify(avatarUpdate));
     }
 }
