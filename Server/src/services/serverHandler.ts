@@ -50,7 +50,7 @@ class ServerHandler {
         return signInFeedback;
     }
 
-    public async signOut(io: SocketIO.Server, socket: SocketIO.Socket): Promise<Feedback> {
+    public signOut(io: SocketIO.Server, socket: SocketIO.Socket): Feedback {
         const user: PrivateProfile | undefined = this.getUser(socket.id);
         let status: boolean = false;
         let log_message: SignOutStatus = SignOutStatus.Error;
