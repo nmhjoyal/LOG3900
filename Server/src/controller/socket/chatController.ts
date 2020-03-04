@@ -5,7 +5,7 @@ import { CreateRoom, Invitation } from "../../models/room";
 import { roomDB } from "../../services/Database/roomDB";
 
 @SocketController()
-export class ChatController {
+export default class ChatController {
 
     @OnMessage("create_chat_room")
     public async create_chat_room(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() room: CreateRoom) {
