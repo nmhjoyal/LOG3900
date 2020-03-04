@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 import * as ServerConfig from "../../serverConfig.json";
-import Room from "../../models/room";
+import { Room } from "../../models/room";
 import { Message } from "../../models/message";
 import PublicProfile from "../../models/publicProfile.js";
 
@@ -19,16 +19,7 @@ class RoomDB {
         });
     }
 
-    public async createRoom(publicProfile: PublicProfile, roomId: string): Promise<void> {
-        let avatars: Map<string, string> = new Map<string, string>();
-        // Map avatar du createur de la room, car il join directement à la création.
-        avatars.set(publicProfile.username, publicProfile.avatar);
-        
-        const room: Room = {
-            name: roomId,
-            messages: [],
-            avatars: avatars
-        };
+    public async createRoom(room: Room): Promise<void> {
         await this.mongoDB.db("Rooms").collection("rooms").insertOne(room).catch((err: any) => {
             throw err;
         });
@@ -36,19 +27,19 @@ class RoomDB {
 
     public async addMessage(message: Message): Promise<void> {
         await this.mongoDB.db("Rooms").collection("rooms").updateOne(
-            { name: message.roomId },
+            { id: message.roomId },
             { $push: { messages : message } }
         );
     }
 
     public async getRoom(roomId: string): Promise<Room | null> {
         const roomDB: any = await this.mongoDB.db("Rooms").collection("rooms")
-            .findOne({name: { $eq: roomId}});
+            .findOne({id: { $eq: roomId}});
 
         let room: Room | null = null;
         if(roomDB) {
             room = {
-                name: roomDB.name,
+                id: roomDB.id,
                 messages: roomDB.messages,
                 avatars: roomDB.users  
             }
@@ -59,7 +50,7 @@ class RoomDB {
 
     public async deleteRoom(roomId: string): Promise<void> {
         await this.mongoDB.db("Rooms").collection("rooms")
-            .deleteOne({ name: roomId });
+            .deleteOne({ id: roomId });
         
     }
 
@@ -67,7 +58,7 @@ class RoomDB {
         var qstr = `{ "$set": { "avatars.` + publicProfile.username + `" : "` + publicProfile.avatar + `"}}`;
         var query = JSON.parse(qstr);
         await this.mongoDB.db("Rooms").collection("rooms").updateOne(
-                { name: roomId }, 
+                { id: roomId }, 
                 query
             );
     }
@@ -76,9 +67,18 @@ class RoomDB {
         let rooms: string[] = [];
         await this.mongoDB.db("Rooms").collection("rooms").find(
             JSON.parse(`{ "avatars.` + username + `" : { "$exists": "true" } }`), 
-            { projection: { name : 1 } }).forEach((room: Room) => {
-            rooms.push(room.name);
-        });
+            { projection: { id : 1 } }).forEach((room: Room) => {
+                rooms.push(room.id);
+            });
+        return rooms;
+    }
+    
+    public async getRooms(): Promise<string[]> {
+        let rooms: string[] = [];
+        await this.mongoDB.db("Rooms").collection("rooms").find(
+            {}, { projection: { id : 1 } }).forEach((room: Room) => {
+                rooms.push(room.id);
+            });
         return rooms;
     }
 }

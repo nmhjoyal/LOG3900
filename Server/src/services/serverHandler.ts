@@ -1,19 +1,21 @@
 import SignIn from "../models/signIn";
 import PrivateProfile from "../models/privateProfile";
-import Room from "../models/room";
-import { Feedback, SignInFeedback, SignInStatus, SignOutStatus } from "../models/feedback";
+import { Room } from "../models/room";
+import { Feedback, SignInFeedback, SignInStatus, SignOutStatus, UpdateProfileStatus } from "../models/feedback";
 import { profileDB } from "../services/Database/profileDB";
 import { roomDB } from "../services/Database/roomDB";
 import Admin from "../models/admin";
 import { Message } from "../models/message";
-import AvatarUpdate from "../models/avatarUpdate";
 import PublicProfile from "../models/publicProfile";
+import ChatHandler from "./chatHandler";
 
 class ServerHandler {
     public users: Map<string, PrivateProfile>;
+    public chatHandler: ChatHandler;
 
     public constructor () {
-        this.users = new Map();
+        this.users = new Map<string, PrivateProfile>();
+        this.chatHandler = new ChatHandler();
     }
 
     public async signIn(socket: SocketIO.Socket, signIn: SignIn): Promise<SignInFeedback> {
@@ -48,12 +50,12 @@ class ServerHandler {
         return signInFeedback;
     }
 
-    public async signOut(socket: SocketIO.Socket): Promise<Feedback> {
+    public signOut(io: SocketIO.Server, socket: SocketIO.Socket): Feedback {
         const user: PrivateProfile | undefined = this.getUser(socket.id);
         let status: boolean = false;
         let log_message: SignOutStatus = SignOutStatus.Error;
         if(user) {
-            this.diconnectFromJoinedRooms(socket, user);
+            this.diconnectFromJoinedRooms(io, socket, user);
             this.users.delete(socket.id);
             status = true;
             log_message = SignOutStatus.SignedOut;
@@ -94,80 +96,104 @@ class ServerHandler {
                 console.log("This room does not exist : " + room_joined);
             }
         }
-        /*
-        user.rooms_joined.forEach(async (room_joined: string) => {
-            // console.log(room_joined);
-            socket.join(room_joined);
-            const message: Message = Admin.createAdminMessage(user.username + " is connected.", room_joined);
-            socket.to(room_joined).emit("new_message", JSON.stringify(message));
-            const room: Room | null = await roomDB.getRoom(room_joined);
-            // console.log(room);
-            if(room) {
-                console.log("here");
-                rooms.push(room);
-            } else {
-                console.log("This room does not exist : " + room_joined);
-            }
-        });
-        */
         return rooms;
     }
 
-    private diconnectFromJoinedRooms(socket: SocketIO.Socket, user: PrivateProfile): void {
+    private diconnectFromJoinedRooms(io: SocketIO.Server, socket: SocketIO.Socket, user: PrivateProfile): void {
+        // Public rooms
         user.rooms_joined.forEach((room_joined: string) => {
             const message: Message = Admin.createAdminMessage(user.username + " is disconnected.", room_joined);
             socket.to(room_joined).emit("new_message", JSON.stringify(message));
             socket.leave(room_joined);
         });
+        // Private rooms
+        for (let roomId in socket.rooms) {
+            let socketIds: string[] = this.chatHandler.getSocketIds(io, roomId);
+            if (socketIds.length == 1 && socketIds[0] == socket.id) {
+                this.chatHandler.deleteChatRoom(io, socket, roomId);
+            } else {
+                const message: Message = Admin.createAdminMessage(user.username + " is disconnected.", roomId);
+                this.chatHandler.privateRooms.find(room => room.id == roomId)?.messages.push(message);
+                socket.to(roomId).emit("new_message", JSON.stringify(message));
+                socket.leave(roomId);
+            }
+        }
     }
 
-    // Pour deleteChatRoom : Room exists? -> Empty? -> Delete
-
     public async updateProfile(io: SocketIO.Server, socket: SocketIO.Socket, updatedProfile: PrivateProfile): Promise<Feedback> {
-        const user: PrivateProfile | undefined = serverHandler.users.get(socket.id);
+        const user: PrivateProfile | undefined = this.users.get(socket.id);
+        let status: boolean = false;
+        let log_message: UpdateProfileStatus;
 
-        // S'assurer que serverHandler.users.get(socket.id) correspond au updatedProfile.username
-        
-        let feedback: Feedback = {
-            status: true,
-            log_message: "Profile " + updatedProfile.username + " updated!"
-        };
+        if (user) {
+            if (user.username == updatedProfile.username) {
+                try {
+                    // Updating rooms_joined array
+                    updatedProfile.rooms_joined = (user as PrivateProfile).rooms_joined;
+                    await profileDB.updateProfile(updatedProfile);
 
-        try {
-            updatedProfile.rooms_joined = (user as PrivateProfile).rooms_joined;
-            await profileDB.updateProfile(updatedProfile);
-
-            // No errors, so update PrivateProfile 
-            // and if necessary notify rooms that the user's avatar has changed.
-            this.users.forEach(async (user: PrivateProfile, socketId: string) => {
-                if(user.username == updatedProfile.username) {
                     if (user.avatar != updatedProfile.avatar) {
-                        // Notify all rooms joined by user that his avatar has changed.
-                        const updatedPublicProfile: PublicProfile = {
-                            username: user.username,
-                            avatar: updatedProfile.avatar
-                        };
-                        // For each room retrieved from db
-                        (await roomDB.getRoomsByUser(user.username)).forEach(async (roomId: string) => {
-                            await roomDB.mapAvatar(updatedPublicProfile, roomId);
-                            const avatarUpdate: AvatarUpdate = {
-                                roomId: roomId,
-                                updatedProfile: updatedPublicProfile 
-                            };
-                            io.in(roomId).emit("avatar_updated", JSON.stringify(avatarUpdate));
-                        });
+                        await this.updateAvatarInRooms(io, user.username, updatedProfile.avatar);
                     }
-                    this.users.set(socketId, updatedProfile);
-                }
-            });
 
-        } catch {
-            feedback.status = false;
-            feedback.log_message = "Could not update profile.";
+                    this.users.set(socket.id, updatedProfile);
+                    
+                    status = true;
+                    log_message = UpdateProfileStatus.Update;
+                } catch {
+                    log_message = UpdateProfileStatus.UnexpectedError;
+                }
+            } else {
+                log_message = UpdateProfileStatus.InvalidUsername;
+            }
+        } else {
+            log_message = UpdateProfileStatus.InvalidProfile;
         }
-        
+        const feedback: Feedback = {
+            status: status,
+            log_message: log_message
+        }
         return feedback;
+    }
+
+    private async updateAvatarInRooms(io: SocketIO.Server, username: string, newAvatar: string): Promise<void> {
+        
+        const updatedPublicProfile: PublicProfile = {
+            username: username,
+            avatar: newAvatar
+        };
+    
+        // For each room retrieved from db (all the rooms that the user has been in or is currently in)
+        // Update and notify that his avatar has changed.
+        (await roomDB.getRoomsByUser(username)).forEach(async (roomId: string) => {
+            await roomDB.mapAvatar(updatedPublicProfile, roomId);
+            this.chatHandler.notifyAvatarUpdate(io, updatedPublicProfile, roomId);
+        });
+        
+        // Update avatar map in the private rooms and notify the rooms
+        for (let room of this.chatHandler.privateRooms) {
+            if (room.avatars.has(updatedPublicProfile.username)) {
+                room.avatars.set(username, newAvatar);
+                this.chatHandler.notifyAvatarUpdate(io, updatedPublicProfile, room.id);
+            }
+        }
     }
 }
 
 export var serverHandler: ServerHandler = new ServerHandler();
+
+/*
+public getUsersOutsideRoom(roomId: string): PublicProfile[] {
+    let usersOutsideRoom: PublicProfile[] = [];
+    this.users.forEach((user: PrivateProfile) => {
+        if (!user.rooms_joined.includes(roomId)) {
+            const publicProfile: PublicProfile = {
+                username: user.username,
+                avatar: user.avatar
+            }
+            usersOutsideRoom.push(publicProfile)
+        }
+    });
+    return usersOutsideRoom;
+}
+*/
