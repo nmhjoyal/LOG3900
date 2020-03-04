@@ -2,6 +2,7 @@ package com.example.thin_client.ui
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -9,80 +10,51 @@ import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import com.example.thin_client.R
 import com.example.thin_client.data.Feedback
-import com.example.thin_client.data.Preferences
+import com.example.thin_client.data.app_preferences.Preferences
 import com.example.thin_client.data.SignInFeedback
+import com.example.thin_client.data.app_preferences.PreferenceHandler
 import com.example.thin_client.data.model.User
 import com.example.thin_client.data.rooms.RoomManager
-import com.example.thin_client.data.server.HTTPRequest
 import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
 import com.example.thin_client.ui.game_mode.free_draw.FreeDrawActivity
 import com.example.thin_client.ui.login.LoginActivity
 import com.example.thin_client.ui.profile.ProfileActivity
+import com.github.nkzawa.socketio.client.Socket
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_lobby.*
 
 class Lobby : AppCompatActivity() {
     private val manager = supportFragmentManager
+    private lateinit var prefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lobby)
 
-        val prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
+        prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
+
+        if (SocketHandler.socket == null) {
+            SocketHandler.connect()
+        }
+
+        setupSocketEvents()
+
         if (!prefs.getBoolean(Preferences.LOGGED_IN_KEY, false)) {
             val intent = Intent(applicationContext, LoginActivity::class.java)
             startActivity(intent)
-        } else if (SocketHandler.socket == null) {
-            SocketHandler.connect()
-            val username = prefs.getString(Preferences.USERNAME, "")
-            val password = prefs.getString(Preferences.PASSWORD, "")
-            if (username!!.isNotBlank() && password!!.isNotBlank()) {
-                SocketHandler.socket!!.on(SocketEvent.USER_SIGNED_IN, ({ data ->
-                    val gson = Gson()
-                    val signInFeedback =
-                        gson.fromJson(data.first().toString(), SignInFeedback::class.java)
-                    if (signInFeedback.feedback.status) {
-                        RoomManager.createRoomList(signInFeedback.rooms_joined)
-                        showChatRoomsFragment()
-                    } else {
-                        runOnUiThread(({
-                            SocketHandler.socket!!.off(SocketEvent.USER_SIGNED_IN)
-                            Toast.makeText(applicationContext, R.string.error_logging_in, Toast.LENGTH_LONG).show()
-                            val intent = Intent(applicationContext, LoginActivity::class.java)
-                            startActivity(intent)
-                            SocketHandler.socket!!.disconnect()
-                        }))
-                    }
-                }))
-                SocketHandler.login(User(username, password))
-            }
+            SocketHandler.disconnect()
+        } else {
+            val user = PreferenceHandler(applicationContext).getUser()
+            SocketHandler.login(User(user.username, user.password))
         }
-
-        SocketHandler.socket?.on(SocketEvent.USER_SIGNED_OUT, ({ data ->
-            val gson = Gson()
-            val feedback = gson.fromJson(data.first().toString(),Feedback::class.java)
-            if (feedback.status) {
-                prefs.edit().putBoolean(Preferences.LOGGED_IN_KEY, false).apply()
-                val intent = Intent(applicationContext, LoginActivity::class.java)
-                startActivity(intent)
-                SocketHandler.disconnect()
-            } else {
-                Handler(Looper.getMainLooper()).post(Runnable {
-                    Toast.makeText(
-                        applicationContext,
-                        feedback.log_message,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                })
-            }
-        }))
-
 
         free_draw.setOnClickListener(({
             val intent = Intent(applicationContext, FreeDrawActivity::class.java)
@@ -129,9 +101,57 @@ class Lobby : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-
     }
 
+    private fun setupSocketEvents() {
+        SocketHandler.socket!!
+            .on(SocketEvent.USER_SIGNED_IN, ({ data ->
+                val gson = Gson()
+                val signInFeedback =
+                    gson.fromJson(data.first().toString(), SignInFeedback::class.java)
+                if (signInFeedback.feedback.status) {
+                    RoomManager.createRoomList(signInFeedback.rooms_joined)
+                    showChatRoomsFragment()
+                } else {
+                    runOnUiThread(({
+                        Toast.makeText(applicationContext, R.string.error_logging_in, Toast.LENGTH_LONG).show()
+                        val intent = Intent(applicationContext, LoginActivity::class.java)
+                        startActivity(intent)
+                    }))
+                    SocketHandler.disconnect()
+                }
+            }))
+            .on(Socket.EVENT_CONNECT_ERROR, ({
+                runOnUiThread(({
+                    val alertDialog = AlertDialog.Builder(this)
+                    alertDialog.setTitle(R.string.error_connect_title)
+                        .setCancelable(false)
+                        .setMessage(R.string.error_connect)
+                        .setPositiveButton(R.string.ok) { _, _ -> finishAffinity() }
 
-
+                    val dialog = alertDialog.create()
+                    dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+                    dialog.show()
+                }))
+                SocketHandler.disconnect()
+            }))
+            .on(SocketEvent.USER_SIGNED_OUT, ({ data ->
+                val gson = Gson()
+                val feedback = gson.fromJson(data.first().toString(),Feedback::class.java)
+                if (feedback.status) {
+                    PreferenceHandler(this).resetUserPrefs()
+                    val intent = Intent(applicationContext, LoginActivity::class.java)
+                    startActivity(intent)
+                    SocketHandler.disconnect()
+                } else {
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        Toast.makeText(
+                            applicationContext,
+                            feedback.log_message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    })
+                }
+            }))
+    }
 }

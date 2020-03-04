@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.thin_client.R
 import com.example.thin_client.data.AvatarID
 import com.example.thin_client.data.Feedback
+import com.example.thin_client.data.app_preferences.PreferenceHandler
 import com.example.thin_client.data.model.PrivateProfile
 import com.example.thin_client.data.server.HTTPRequest
 import com.example.thin_client.ui.login.afterTextChanged
@@ -120,10 +121,11 @@ class CreateUserActivity : AppCompatActivity() {
             loading.visibility = ProgressBar.VISIBLE
             create.isEnabled = false
             val httpClient = OkHttpRequest(okhttp3.OkHttpClient())
-            val gson = Gson()
-            val profile = gson.toJson(PrivateProfile(username.text.toString(), firstName.text.toString(),
-                lastName.text.toString(), password.text.toString(), selectedAvatar.name, arrayListOf()))
-            httpClient.POST(HTTPRequest.BASE_URL + HTTPRequest.URL_CREATE, profile.toString(),
+            val privateProfile = PrivateProfile(username.text.toString(), firstName.text.toString(),
+                lastName.text.toString(), password.text.toString(), selectedAvatar.name, mutableMapOf())
+            PreferenceHandler(this).setUser(privateProfile)
+            val gsonProfile = Gson().toJson(privateProfile)
+            httpClient.POST(HTTPRequest.BASE_URL + HTTPRequest.URL_CREATE, gsonProfile.toString(),
                 object: okhttp3.Callback {
                     //N'entre pas dans le on failure
                     override fun onFailure(call: Call, e: IOException) {

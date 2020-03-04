@@ -8,7 +8,7 @@ object RoomManager {
 
     fun createRoomList(rooms: MutableList<Room>) {
         for(room in rooms){
-            roomsJoined.put(room.name,room.messages)
+            roomsJoined.put(room.name, room.messages)
         }
 
     }

@@ -1,6 +1,7 @@
 package com.example.thin_client.server
 
 import com.example.thin_client.data.ClientMessage
+import com.example.thin_client.data.model.PrivateProfile
 import com.example.thin_client.data.model.User
 import com.example.thin_client.data.server.HTTPRequest
 import com.example.thin_client.data.server.SocketEvent
@@ -55,5 +56,11 @@ object SocketHandler {
 
     fun createChatRoom(roomid: String) {
         socket!!.emit(SocketEvent.CREATE_ROOM, roomid)
+    }
+
+    fun updateProfile(privateProfile: PrivateProfile) {
+        val gson = Gson()
+        val args = gson.toJson(privateProfile)
+        socket!!.emit(SocketEvent.UPDATE_PROFILE, args)
     }
 }
