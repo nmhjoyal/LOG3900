@@ -1,5 +1,4 @@
-import Match from "./Match/match"
-import { MatchMode, MatchInstance } from "../models/matchMode";
+import { MatchMode } from "../models/matchMode";
 import DrawPoint from "../models/drawPoint";
 
 export default class MatchHandler {
