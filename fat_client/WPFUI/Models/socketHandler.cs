@@ -57,7 +57,9 @@ namespace WPFUI.Models
 
             this._userJSON = JsonConvert.SerializeObject(_user);
 
-            this._socket = IO.Socket("http://" + _userdata.ipAdress + ":5000");
+            this._socket = IO.Socket("http://10.200.23.33:5000");
+            Console.WriteLine(this._userJSON);
+            /*
             this._socket.On(Socket.EVENT_CONNECT, () =>
             {
                 this._socket.Emit("sign_in", this._userJSON);
@@ -82,7 +84,7 @@ namespace WPFUI.Models
                 MessageModel newMessageModel = new MessageModel("Nouvelle connection de: " + socketId.ToString(), "Server");
                 _userdata.messages.Add(newMessageModel);
                 ///Console.WriteLine(socketId + " is connected");
-            });
+            });*/
         }
         public void disconnect()
         {
@@ -97,13 +99,14 @@ namespace WPFUI.Models
             }
         }
 
-        public void createUser(User user)
-        {
-            TestPOSTWebRequest(user, "/user/add");
+        public void createUser(PrivateProfile privateProfile)
+        { 
+                TestPOSTWebRequest(privateProfile, "/profile/create/");
+
         }
         public static void TestPOSTWebRequest(Object obj, string url)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000" + url);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://10.200.23.33:5000" + url);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
@@ -124,7 +127,7 @@ namespace WPFUI.Models
 
         public static void TestGETWebRequest(string request)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000/user/" + request);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://10.200.23.33:5000/user/" + request);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "GET";
 

@@ -63,14 +63,13 @@ namespace WPFUI.ViewModels
         }
         public void logIn()
         {   
-            if (loginOk())
-            {
+           
                 setUserName();
                 setIpAdress();
                 
                 _socketHandler.connectionAttempt();
               
-            }
+            
             //ajouter dans la condition
             _events.PublishOnUIThread(new LogInEvent());
 

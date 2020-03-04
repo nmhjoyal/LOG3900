@@ -9,8 +9,8 @@ using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    class NewUserViewModel : Screen
-    {
+	class NewUserViewModel : Screen
+	{
 		private string _userName;
 		private IUserData _userData;
 		private IEventAggregator _events;
@@ -27,7 +27,7 @@ namespace WPFUI.ViewModels
 			get { return _userName; }
 			set { _userName = value; }
 		}
-		
+
 		private string _firstName;
 
 		public string firstName
@@ -60,14 +60,23 @@ namespace WPFUI.ViewModels
 			set { _confirmedPassword = value; }
 		}
 
+		private string _avatar;
+
+		public string avatar
+		{
+			get { return _avatar; }
+			set { _avatar = value; }
+		}
+
 		public void createUser()
 		{
 			if (isValid() & isSamePassword())
 			{
 				_userData.userName = _userName;
 				_userData.password = _password;
-				_socketHandler.connectionAttempt();
-				
+
+				_socketHandler.createUser(new PrivateProfile(_userName, _firstName, _lastName, _password, _avatar));
+
 			}
 		}
 
@@ -81,13 +90,13 @@ namespace WPFUI.ViewModels
 			{
 				return false;
 			}
-				
+
 		}
 
 		public Boolean fieldsAreNotEmpty()
 		{
 			return (_userName != "" & _firstName != "" & _lastName != "" & _password != "" & _confirmedPassword != "");
-			
+
 		}
 
 		public Boolean isSamePassword()

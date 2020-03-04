@@ -112,6 +112,7 @@
     <Compile Include="Models\ISocketHandler.cs" />
     <Compile Include="Models\IUserData.cs" />
     <Compile Include="Models\MessageModel.cs" />
+    <Compile Include="Models\PrivateProfile.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\socketHandler.cs" />
     <Compile Include="Models\UserData.cs" />
