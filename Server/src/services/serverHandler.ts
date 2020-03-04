@@ -1,6 +1,6 @@
 import SignIn from "../models/signIn";
 import PrivateProfile from "../models/privateProfile";
-import Room from "../models/room";
+import { Room } from "../models/room";
 import { Feedback, SignInFeedback, SignInStatus, SignOutStatus, UpdateProfileStatus } from "../models/feedback";
 import { profileDB } from "../services/Database/profileDB";
 import { roomDB } from "../services/Database/roomDB";
@@ -8,12 +8,15 @@ import Admin from "../models/admin";
 import { Message } from "../models/message";
 import AvatarUpdate from "../models/avatarUpdate";
 import PublicProfile from "../models/publicProfile";
+import ChatHandler from "./chatHandler";
 
 class ServerHandler {
     public users: Map<string, PrivateProfile>;
+    public chatHandler: ChatHandler;
 
     public constructor () {
-        this.users = new Map();
+        this.users = new Map<string, PrivateProfile>();
+        this.chatHandler = new ChatHandler();
     }
 
     public async signIn(socket: SocketIO.Socket, signIn: SignIn): Promise<SignInFeedback> {
@@ -48,12 +51,12 @@ class ServerHandler {
         return signInFeedback;
     }
 
-    public async signOut(socket: SocketIO.Socket): Promise<Feedback> {
+    public async signOut(io: SocketIO.Server, socket: SocketIO.Socket): Promise<Feedback> {
         const user: PrivateProfile | undefined = this.getUser(socket.id);
         let status: boolean = false;
         let log_message: SignOutStatus = SignOutStatus.Error;
         if(user) {
-            this.diconnectFromJoinedRooms(socket, user);
+            this.diconnectFromJoinedRooms(io, socket, user);
             this.users.delete(socket.id);
             status = true;
             log_message = SignOutStatus.SignedOut;
@@ -94,34 +97,29 @@ class ServerHandler {
                 console.log("This room does not exist : " + room_joined);
             }
         }
-        /*
-        user.rooms_joined.forEach(async (room_joined: string) => {
-            // console.log(room_joined);
-            socket.join(room_joined);
-            const message: Message = Admin.createAdminMessage(user.username + " is connected.", room_joined);
-            socket.to(room_joined).emit("new_message", JSON.stringify(message));
-            const room: Room | null = await roomDB.getRoom(room_joined);
-            // console.log(room);
-            if(room) {
-                console.log("here");
-                rooms.push(room);
-            } else {
-                console.log("This room does not exist : " + room_joined);
-            }
-        });
-        */
         return rooms;
     }
 
-    private diconnectFromJoinedRooms(socket: SocketIO.Socket, user: PrivateProfile): void {
+    private diconnectFromJoinedRooms(io: SocketIO.Server, socket: SocketIO.Socket, user: PrivateProfile): void {
+        // Public rooms
         user.rooms_joined.forEach((room_joined: string) => {
             const message: Message = Admin.createAdminMessage(user.username + " is disconnected.", room_joined);
             socket.to(room_joined).emit("new_message", JSON.stringify(message));
             socket.leave(room_joined);
         });
+        // Private rooms
+        for (let roomId in socket.rooms) {
+            let socketIds: string[] = this.chatHandler.getSocketIds(io, roomId);
+            if (socketIds.length == 1 && socketIds[0] == socket.id) {
+                this.chatHandler.deleteChatRoom(io, socket, roomId);
+            } else {
+                const message: Message = Admin.createAdminMessage(user.username + " is disconnected.", roomId);
+                this.chatHandler.privateRooms.find(room => room.id == roomId)?.messages.push(message);
+                socket.to(roomId).emit("new_message", JSON.stringify(message));
+                socket.leave(roomId);
+            }
+        }
     }
-
-    // Pour deleteChatRoom : Room exists? -> Empty? -> Delete
 
     public async updateProfile(io: SocketIO.Server, socket: SocketIO.Socket, updatedProfile: PrivateProfile): Promise<Feedback> {
         const user: PrivateProfile | undefined = serverHandler.users.get(socket.id);
@@ -171,6 +169,22 @@ class ServerHandler {
         }
         return feedback;
     }
+
+    /*
+    public getUsersOutsideRoom(roomId: string): PublicProfile[] {
+        let usersOutsideRoom: PublicProfile[] = [];
+        this.users.forEach((user: PrivateProfile) => {
+            if (!user.rooms_joined.includes(roomId)) {
+                const publicProfile: PublicProfile = {
+                    username: user.username,
+                    avatar: user.avatar
+                }
+                usersOutsideRoom.push(publicProfile)
+            }
+        });
+        return usersOutsideRoom;
+    }
+    */
 }
 
 export var serverHandler: ServerHandler = new ServerHandler();

@@ -7,15 +7,28 @@ var message = {
     roomId: "room1"
 }
 
+var invitation = {
+    id: "room",
+    username: "zak1"
+}
+
+var createroom = {
+    id: "room",
+    isPrivate: true
+}
+
 socket1.on("connect", function (data) {
-    socket1.emit("sign_in", { username : "zak3", password: "banane" });
+    socket1.emit("sign_in", { username : "zak2", password: "banane" });
 });
 
 socket1.on("user_signed_in", function (data) {
     console.log("signed in : " + data);
+
+    socket1.emit("create_chat_room", createroom);
+    
     // socket1.emit("getroom_test", "room99");
     // socket1.emit("create_chat_room", "room1");
-    socket1.emit("join_chat_room", "room1");
+    // socket1.emit("join_chat_room", "room1");
     // socket1.emit("leave_chat_room", "room1");
     // socket1.emit("send_message", JSON.stringify(message));
 
@@ -31,12 +44,21 @@ socket1.on("user_signed_in", function (data) {
     */
 });
 
+socket1.on("user_sent_invite", function(data) {
+    console.log("sent invite : " + data);
+});
+
+socket1.on("receive_invite", function(data) {
+    console.log("received invite : " + data);
+});
+
 socket1.on("get_res", function(data) {
     console.log("*" + data);
 });
 
 socket1.on("room_created", function(data) {
     console.log("room created : " + data);
+    socket1.emit("send_invite", invitation);
 });
 
 socket1.on("room_deleted", function(data) {

@@ -12,8 +12,8 @@ export class ServerController {
     }
  
     @OnDisconnect()
-    public disconnect(@ConnectedSocket() socket: SocketIO.Socket) {
-        serverHandler.signOut(socket);
+    public disconnect(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
+        serverHandler.signOut(io, socket);
         console.log("client disconnected");
     }
 
@@ -23,8 +23,8 @@ export class ServerController {
     }
 
     @OnMessage("sign_out")
-    public async sign_out(@ConnectedSocket() socket: SocketIO.Socket) {
-        socket.emit("user_signed_out", JSON.stringify(await serverHandler.signOut(socket)));
+    public async sign_out(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
+        socket.emit("user_signed_out", JSON.stringify(await serverHandler.signOut(io, socket)));
     }
 
     @OnMessage("update_profile")
@@ -32,6 +32,10 @@ export class ServerController {
         socket.emit("profile_updated", JSON.stringify(await serverHandler.updateProfile(io, socket, profile)));
     }
 
+    // @OnMessage("get_users_outside_room")
+    // public get_rooms(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() roomId: string) {
+    //     socket.emit("users_outside_room", JSON.stringify(serverHandler.getUsersOutsideRoom(roomId)));
+    // }
     // @OnMessage("getroom_test")
     // public async getroom_test(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() roomId: string) {
     //     socket.emit("getroom_test_res", JSON.stringify(await roomDB.getRoom(roomId)));

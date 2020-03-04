@@ -1,4 +1,4 @@
-import Room from "./room";
+import { Room } from "./room";
 
 export interface Feedback {
     status: boolean
@@ -15,6 +15,7 @@ export interface JoinRoomFeedback {
     feedback: Feedback
     // Contains history
     room_joined: Room | null
+    isPrivate: boolean | null
 }
 
 export enum SignInStatus {
@@ -32,7 +33,8 @@ export enum SignOutStatus {
 export enum CreateRoomStatus {
     Create = "You created and joined the room!",
     AlreadyCreated = "This room is already created",
-    UserNotConnected = "The user is not connected"
+    UserNotConnected = "The user is not connected",
+    Error = "Unexpected error"
 }
 
 export enum DeleteRoomStatus {
@@ -40,18 +42,23 @@ export enum DeleteRoomStatus {
     LeaveAndDelete = "You left and deleted the room",
     DeleteGeneral = "You can not delete General",
     NotEmpty = "There is someone else in the room",
-    InvalidRoom = "This room does not exist"
+    InvalidUser = "You are not connected",
+    InvalidRoom = "This room does not exist",
+    Error = "Unexpected error"
 }
 
 export enum JoinRoomStatus {
     Join = "You joined the room!",
+    InvalidUser = "You are not connected",
     InvalidRoom = "This room does not exist",
     AlreadyJoined = "You already are in this room"
 }
 
 export enum LeaveRoomStatus {
     Leave = "You left the room!",
+    LeaveAndDelete = "You left and deleted the room!",
     General = "You can not leave General",
+    InvalidUser = "You are not connected",
     InvalidRoom = "This room does not exist",
     NeverJoined = "You are not in this room"
 }
@@ -60,4 +67,13 @@ export enum UpdateProfileStatus {
     Update = "The profile has been updated",
     InvalidProfile = "This profile is disconnected or does not exist",
     UnexpectedError = "Unexpected error"
+}
+
+export enum InviteStatus {
+    Invite = "Invite sent",
+    ReceiverInRoom = "The user you are trying to invite is already in the room",
+    InvalidReceiver = "This user does not exist",
+    SenderOutRoom = "You can not send an invite in a room you did not join",
+    InvalidSender = "You are not connected",
+    InvalidRoom = "This room does not exist"
 }
