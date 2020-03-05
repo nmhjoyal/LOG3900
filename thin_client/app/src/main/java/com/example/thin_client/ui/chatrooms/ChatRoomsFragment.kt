@@ -107,17 +107,7 @@ class ChatRoomsFragment : Fragment() {
         }
 
 
-        SocketHandler.socket!!.on(SocketEvent.USER_JOINED_ROOM, ({
-            val bundle = Bundle()
-            bundle.putString(RoomArgs.ROOM_ID, selectedRoom)
-            val transaction = fragmentManager!!.beginTransaction()
-            val chatFragment = ChatFragment()
-            chatFragment.arguments = bundle
-            transaction.replace(R.id.chatrooms_container, chatFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
-        }))
-            .on(SocketEvent.ROOM_CREATED, ({ data ->
+        SocketHandler.socket!!.on(SocketEvent.ROOM_CREATED, ({ data ->
                 val roomCreateFeedback = Gson().fromJson(data.first().toString(), Feedback::class.java)
                 if (roomCreateFeedback.status) {
                     activity!!.runOnUiThread(({

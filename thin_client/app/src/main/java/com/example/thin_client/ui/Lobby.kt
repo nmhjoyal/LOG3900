@@ -14,15 +14,19 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
+import androidx.fragment.app.FragmentManager
 import com.example.thin_client.R
 import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.app_preferences.Preferences
 import com.example.thin_client.data.SignInFeedback
 import com.example.thin_client.data.app_preferences.PreferenceHandler
 import com.example.thin_client.data.model.User
+import com.example.thin_client.data.rooms.JoinRoomFeedback
+import com.example.thin_client.data.rooms.RoomArgs
 import com.example.thin_client.data.rooms.RoomManager
 import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
+import com.example.thin_client.ui.chat.ChatFragment
 import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
 import com.example.thin_client.ui.game_mode.free_draw.FreeDrawActivity
 import com.example.thin_client.ui.login.LoginActivity
@@ -32,12 +36,13 @@ import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_lobby.*
 
 class Lobby : AppCompatActivity() {
-    private val manager = supportFragmentManager
+    private lateinit var manager: FragmentManager
     private lateinit var prefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lobby)
+        manager = supportFragmentManager
 
         prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
 
@@ -73,6 +78,11 @@ class Lobby : AppCompatActivity() {
                 show_rooms_button.setImageResource(R.drawable.ic_close)
             }
         }))
+    }
+
+    override fun onResume() {
+        super.onResume()
+        manager = supportFragmentManager
     }
 
 
@@ -154,6 +164,21 @@ class Lobby : AppCompatActivity() {
                         ).show()
                     })
                 }
+            })).on(SocketEvent.USER_JOINED_ROOM, ({ data ->
+                val feedback = Gson().fromJson(data.first().toString(), JoinRoomFeedback::class.java)
+                val roomID = if (feedback.room_joined == null) "General" else feedback.room_joined.id
+                Handler(Looper.getMainLooper()).post(Runnable {
+                    val bundle = Bundle()
+                    bundle.putString(RoomArgs.ROOM_ID, roomID)
+                    val transaction = manager.beginTransaction()
+                    val chatFragment = ChatFragment()
+                    chatFragment.arguments = bundle
+                    transaction.replace(R.id.chatrooms_container, chatFragment)
+                    transaction.addToBackStack(null)
+                    transaction.commitAllowingStateLoss()
+                })
+
             }))
+
     }
 }

@@ -83,6 +83,6 @@
         android:textColor="@color/color_white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@drawable/button_primary"/>
+        android:background="@drawable/button_primary_selector"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
