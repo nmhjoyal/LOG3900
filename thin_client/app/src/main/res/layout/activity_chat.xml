@@ -35,6 +35,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
+        <ImageButton
+            android:id="@+id/leave_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/colorPrimaryDark"
+            app:srcCompat="@drawable/ic_meeting_room_24px"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView

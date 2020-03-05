@@ -12,6 +12,8 @@ object SocketEvent {
     const val SEND_MESSAGE = "send_message"
     const val JOIN_ROOM = "join_chat_room"
     const val LEAVE_ROOM = "leave_chat_room"
+    const val DELETE_ROOM = "delete_chat_room"
+    const val ROOM_DELETED = "room_deleted"
     const val CREATE_ROOM = "create_chat_room"
     const val ROOM_CREATED = "room_created"
     const val UPDATE_PROFILE = "update_profile"

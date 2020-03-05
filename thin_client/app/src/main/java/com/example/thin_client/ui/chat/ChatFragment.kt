@@ -1,16 +1,15 @@
 package com.example.thin_client.ui.chat
 
-import android.content.Context
+import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.*
-import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.thin_client.R
 import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.Message
-import com.example.thin_client.data.model.Room
 import com.example.thin_client.data.rooms.RoomArgs
 import com.example.thin_client.data.rooms.RoomManager
 import com.example.thin_client.data.server.SocketEvent
@@ -21,14 +20,13 @@ import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.activity_chat.*
-import kotlinx.android.synthetic.main.activity_login.*
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 
 class ChatFragment : Fragment() {
 
     private val adapter = GroupAdapter<GroupieViewHolder>()
     private var roomID : String ?= ""
-    private val admin : String ?="Admin"
+    private val admin : String ="Admin"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -42,7 +40,7 @@ class ChatFragment : Fragment() {
         val roomsJoined = RoomManager.roomsJoined
         val messages = roomsJoined[roomID]
         for(i in 0 until messages!!.size){
-            if(messages[i]?.username == SocketHandler.user!!.username){
+            if(messages[i].username == SocketHandler.user!!.username){
                 showToMessage(messages[i].content,messages[i].date)
             } else {
                 showFromMessage(messages[i].content, messages[i].username, messages[i].date)
@@ -54,15 +52,7 @@ class ChatFragment : Fragment() {
         }
 
 
-        SocketHandler.socket?./*on(SocketEvent.USER_JOINED_ROOM, ({ data ->
-            val jsonData = Gson().fromJson(data.first().toString(), Feedback::class.java)
-            showUserJoined(jsonData.log_message, true)
-        }))
-            ?.on(SocketEvent.USER_LEFT_ROOM, ({ data ->
-                val jsonData = Gson().fromJson(data.first().toString(), Feedback::class.java)
-                showUserJoined(jsonData.log_message, false)
-            }))
-            ?*/on(SocketEvent.NEW_MESSAGE, ({ data ->
+        SocketHandler.socket?.on(SocketEvent.NEW_MESSAGE, ({ data ->
                 val jsonData = Gson().fromJson(data.first().toString(), Message::class.java)
                 val username = jsonData.username
                 val timestamp = jsonData.date
@@ -78,13 +68,21 @@ class ChatFragment : Fragment() {
 
                 })
             }))
+            ?.on(SocketEvent.USER_LEFT_ROOM, ({ data ->
+                val jsonData = Gson().fromJson(data.first().toString(), Feedback::class.java)
+                val message = if (jsonData.status) Resources.getSystem().getString(R.string.left_chat) else jsonData.log_message
+                Handler(Looper.getMainLooper()).post(Runnable {
+                    Toast.makeText(
+                        context,
+                        message,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                })
+                goBackToRooms()
+            }))
 
         back_button.setOnClickListener(({
-            val transaction = fragmentManager!!.beginTransaction()
-            val chatRoomsFragment = ChatRoomsFragment()
-            transaction.replace(R.id.chatrooms_container, chatRoomsFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
+            goBackToRooms()
         }))
 
         send_button_chat.setOnClickListener {
@@ -107,6 +105,10 @@ class ChatFragment : Fragment() {
             }
             false
         })
+
+        leave_button.setOnClickListener(({
+            SocketHandler.leaveChatRoom(roomID!!)
+        }))
 
         editText_chat.afterTextChanged {
             send_button_chat.isEnabled = editText_chat.text.isNotBlank()
@@ -136,6 +138,14 @@ class ChatFragment : Fragment() {
         if (recyclerview_chat != null){
             recyclerview_chat.scrollToPosition(adapter.itemCount - 1)
         }
+    }
+
+    private fun goBackToRooms() {
+        val transaction = fragmentManager!!.beginTransaction()
+        val chatRoomsFragment = ChatRoomsFragment()
+        transaction.replace(R.id.chatrooms_container, chatRoomsFragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 
     override fun onCreateView(

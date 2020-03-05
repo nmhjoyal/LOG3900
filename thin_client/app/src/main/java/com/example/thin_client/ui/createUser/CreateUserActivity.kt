@@ -122,9 +122,11 @@ class CreateUserActivity : AppCompatActivity() {
             create.isEnabled = false
             val httpClient = OkHttpRequest(okhttp3.OkHttpClient())
             val privateProfile = PrivateProfile(username.text.toString(), firstName.text.toString(),
-                lastName.text.toString(), password.text.toString(), selectedAvatar.name, mutableMapOf())
+                lastName.text.toString(), password.text.toString(), selectedAvatar.name, arrayListOf()
+            )
             PreferenceHandler(this).setUser(privateProfile)
-            val gsonProfile = Gson().toJson(privateProfile)
+            val gson = Gson()
+            val gsonProfile = gson.toJson(privateProfile)
             httpClient.POST(HTTPRequest.BASE_URL + HTTPRequest.URL_CREATE, gsonProfile.toString(),
                 object: okhttp3.Callback {
                     //N'entre pas dans le on failure
@@ -136,8 +138,8 @@ class CreateUserActivity : AppCompatActivity() {
                     }
 
                     override fun onResponse(call: Call, response: okhttp3.Response) {
-                        val responseData = response.body?.toString()
-                        val feedback = Gson().fromJson(responseData, Feedback::class.java)
+                        val responseData = response.body?.charStream()
+                        val feedback = gson.fromJson(responseData, Feedback::class.java)
                         runOnUiThread(({
                             loading.visibility = ProgressBar.GONE
                             create.isEnabled = true

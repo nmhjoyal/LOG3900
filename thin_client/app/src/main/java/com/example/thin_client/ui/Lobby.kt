@@ -51,9 +51,12 @@ class Lobby : AppCompatActivity() {
             val intent = Intent(applicationContext, LoginActivity::class.java)
             startActivity(intent)
             SocketHandler.disconnect()
-        } else {
+        } else if (!SocketHandler.isLoggedIn){
             val user = PreferenceHandler(applicationContext).getUser()
             SocketHandler.login(User(user.username, user.password))
+            SocketHandler.isLoggedIn = true
+        } else {
+            showChatRoomsFragment()
         }
 
         free_draw.setOnClickListener(({
@@ -70,7 +73,6 @@ class Lobby : AppCompatActivity() {
                 show_rooms_button.setImageResource(R.drawable.ic_close)
             }
         }))
-        showChatRoomsFragment()
     }
 
 

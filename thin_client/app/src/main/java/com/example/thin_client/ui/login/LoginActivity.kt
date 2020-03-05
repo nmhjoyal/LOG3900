@@ -81,17 +81,19 @@ class LoginActivity : AppCompatActivity() {
                                 override fun onFailure(call: Call, e: IOException) {
                                 }
                                 override fun onResponse(call: Call, response: okhttp3.Response) {
-                                    val responseData = response.body?.toString()
+                                    val responseData = response.body?.charStream()
                                     val profileInfo = Gson().fromJson(responseData, PrivateProfile::class.java)
                                     runOnUiThread(({
                                         PreferenceHandler(applicationContext).setUser(profileInfo)
+                                        val intent = Intent(applicationContext, Lobby::class.java)
+                                        startActivity(intent)
+                                        SocketHandler.isLoggedIn = true
+                                        SocketHandler.socket!!.off(SocketEvent.USER_SIGNED_IN)
+                                        finish()
                                     }))
                                 }
                             }
                         )
-                        val intent = Intent(applicationContext, Lobby::class.java)
-                        startActivity(intent)
-                        finish()
                     } else {
                         Handler(Looper.getMainLooper()).post(Runnable {
                             Toast.makeText(
@@ -101,7 +103,7 @@ class LoginActivity : AppCompatActivity() {
                             ).show()
                             loading.visibility = ProgressBar.GONE
                             login.isEnabled = true
-                            SocketHandler.socket!!.disconnect()
+                            SocketHandler.disconnect()
                         })
                     }
                 }))

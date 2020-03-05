@@ -8,5 +8,5 @@ data class PrivateProfile (
     val lastname : String,
     val password : String,
     val avatar : String /* String for the moment eventually needs to be image */,
-    val rooms_joined: MutableMap<String, ArrayList<Message>>
+    val rooms_joined: ArrayList<String>
 )

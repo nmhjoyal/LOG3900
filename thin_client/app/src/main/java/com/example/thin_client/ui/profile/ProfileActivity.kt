@@ -266,7 +266,7 @@ class ProfileActivity : AppCompatActivity() {
             }
 
             override fun onResponse(call: Call, response: okhttp3.Response) {
-                val responseData = response.body?.toString()
+                val responseData = response.body?.charStream()
                 val feedback = Gson().fromJson(responseData, Feedback::class.java)
                 runOnUiThread(({
                     if (feedback.status) {

@@ -47,6 +47,6 @@ class PreferenceHandler(context: Context) {
             mUserPrefs.getString(Preferences.LAST_NAME, "")!!,
             mUserPrefs.getString(Preferences.PASSWORD, "")!!,
             mUserPrefs.getString(Preferences.AVATAR, "BANANA")!!,
-            RoomManager.roomsJoined)
+            ArrayList(RoomManager.roomsJoined.keys))
     }
 }

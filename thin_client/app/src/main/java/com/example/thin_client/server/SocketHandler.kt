@@ -12,6 +12,7 @@ import com.google.gson.Gson
 object SocketHandler {
     var user: User? = null
     var socket: Socket? = null
+    var isLoggedIn = false
 
 
     fun connect(): Socket {
@@ -25,6 +26,7 @@ object SocketHandler {
             socket!!.disconnect()
             socket = null
         }
+        isLoggedIn = false
     }
 
     fun login(user: User) {
@@ -52,6 +54,10 @@ object SocketHandler {
 
     fun leaveChatRoom(roomid: String) {
         socket!!.emit(SocketEvent.LEAVE_ROOM, roomid)
+    }
+
+    fun deleteChatRoom(roomid: String) {
+        socket!!.emit(SocketEvent.DELETE_ROOM, roomid)
     }
 
     fun createChatRoom(roomid: String) {
