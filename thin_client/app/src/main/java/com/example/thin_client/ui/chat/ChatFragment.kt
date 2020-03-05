@@ -70,11 +70,10 @@ class ChatFragment : Fragment() {
             }))
             ?.on(SocketEvent.USER_LEFT_ROOM, ({ data ->
                 val jsonData = Gson().fromJson(data.first().toString(), Feedback::class.java)
-                val message = if (jsonData.status) Resources.getSystem().getString(R.string.left_chat) else jsonData.log_message
                 Handler(Looper.getMainLooper()).post(Runnable {
                     Toast.makeText(
                         context,
-                        message,
+                        jsonData.log_message,
                         Toast.LENGTH_SHORT
                     ).show()
                 })

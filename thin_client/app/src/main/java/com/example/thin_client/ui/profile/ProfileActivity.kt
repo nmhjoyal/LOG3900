@@ -2,7 +2,6 @@ package com.example.thin_client.ui.profile
 
 import OkHttpRequest
 import android.content.Intent
-import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -20,6 +19,7 @@ import com.example.thin_client.data.AvatarID
 import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.app_preferences.PreferenceHandler
 import com.example.thin_client.data.model.PrivateProfile
+import com.example.thin_client.data.rooms.RoomManager
 import com.example.thin_client.data.server.HTTPRequest
 import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.data.setAvatar
@@ -50,6 +50,7 @@ class ProfileActivity : AppCompatActivity() {
 
         resetProfile()
         setupSocketEvents()
+        loading.visibility = View.GONE
 
         createUserModel = ViewModelProviders.of(this, CreateUserModelFactory())
             .get(CreateUserModel::class.java)
@@ -135,7 +136,12 @@ class ProfileActivity : AppCompatActivity() {
         }))
 
         save_button.setOnClickListener(({
-            SocketHandler.updateProfile(privateProfile)
+            loading.visibility = View.VISIBLE
+            val updatedProfile = PrivateProfile(username.text.toString(),
+                firstName.text.toString(), lastName.text.toString(),
+                password.text.toString(), selectedAvatar.name,
+                ArrayList(RoomManager.roomsJoined.keys))
+            SocketHandler.updateProfile(updatedProfile)
         }))
 
         undo_button.setOnClickListener(({
@@ -301,11 +307,18 @@ class ProfileActivity : AppCompatActivity() {
     private fun setupSocketEvents() {
         SocketHandler.socket!!.on(SocketEvent.PROFILE_UPDATED, ({ data ->
             val feedback = Gson().fromJson(data.first().toString(),Feedback::class.java)
-            val message: String = if (feedback.status) Resources.getSystem().getString(R.string.default_message) else feedback.log_message
             Handler(Looper.getMainLooper()).post(Runnable {
+                loading.visibility = View.GONE
+                if (feedback.status) {
+                    privateProfile = PrivateProfile(username.text.toString(),
+                        firstName.text.toString(), lastName.text.toString(),
+                        password.text.toString(), selectedAvatar.name,
+                        ArrayList(RoomManager.roomsJoined.keys))
+                    PreferenceHandler(applicationContext).setUser(privateProfile)
+                }
                 Toast.makeText(
                     applicationContext,
-                    message,
+                    feedback.log_message,
                     Toast.LENGTH_SHORT
                 ).show()
             })
