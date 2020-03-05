@@ -266,7 +266,7 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun deleteProfile() {
         val httpClient = OkHttpRequest(okhttp3.OkHttpClient())
-        httpClient.DELETE(HTTPRequest.BASE_URL + "/:" + username.text.toString(), object: okhttp3.Callback {
+        httpClient.DELETE(HTTPRequest.BASE_URL + HTTPRequest.URL_PROFILE + username.text.toString(), object: okhttp3.Callback {
             //N'entre pas dans le on failure
             override fun onFailure(call: Call, e: IOException) {
             }
