@@ -1,6 +1,7 @@
 package com.example.thin_client.server
 
 import com.example.thin_client.data.ClientMessage
+import com.example.thin_client.data.drawing.DrawPoint
 import com.example.thin_client.data.model.PrivateProfile
 import com.example.thin_client.data.model.User
 import com.example.thin_client.data.server.HTTPRequest
@@ -68,5 +69,19 @@ object SocketHandler {
         val gson = Gson()
         val args = gson.toJson(privateProfile)
         socket!!.emit(SocketEvent.UPDATE_PROFILE, args)
+    }
+
+    fun connectOnlineDraw() {
+        socket!!.emit(SocketEvent.CONNECT_FREE_DRAW)
+    }
+
+    fun disconnectOnlineDraw() {
+        socket!!.emit(SocketEvent.DISCONNECT_FREE_DRAW)
+    }
+
+    fun drawPoint(drawPoint: DrawPoint) {
+        val gson = Gson()
+        val args = gson.toJson(drawPoint)
+        socket!!.emit(SocketEvent.DRAW_TEST, args)
     }
 }

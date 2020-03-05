@@ -29,6 +29,7 @@ import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.chat.ChatFragment
 import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
 import com.example.thin_client.ui.game_mode.free_draw.FreeDrawActivity
+import com.example.thin_client.ui.game_mode.free_draw.TestOnlineDrawActivity
 import com.example.thin_client.ui.login.LoginActivity
 import com.example.thin_client.ui.profile.ProfileActivity
 import com.github.nkzawa.socketio.client.Socket
@@ -69,6 +70,10 @@ class Lobby : AppCompatActivity() {
             startActivity(intent)
         }))
 
+        test_online_draw.setOnClickListener(({
+            SocketHandler.connectOnlineDraw()
+        }))
+
         show_rooms_button.setOnClickListener(({
             if (chatrooms_container.isVisible) {
                 chatrooms_container.visibility = View.GONE
@@ -91,7 +96,7 @@ class Lobby : AppCompatActivity() {
         val chatroomsFragment = ChatRoomsFragment()
         transaction.replace(R.id.chatrooms_container, chatroomsFragment)
         transaction.addToBackStack(null)
-        transaction.commit()
+        transaction.commitAllowingStateLoss()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -178,6 +183,12 @@ class Lobby : AppCompatActivity() {
                     transaction.commitAllowingStateLoss()
                 })
 
+            })).on(SocketEvent.DRAWER, ({
+                val intent = Intent(applicationContext, FreeDrawActivity::class.java)
+                startActivity(intent)
+            })).on(SocketEvent.OBSERVER, ({
+                val intent = Intent(applicationContext, TestOnlineDrawActivity::class.java)
+                startActivity(intent)
             }))
 
     }

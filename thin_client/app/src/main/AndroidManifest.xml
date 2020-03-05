@@ -56,6 +56,12 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.Lobby"/>
         </activity>
+        <activity android:name=".ui.game_mode.free_draw.TestOnlineDrawActivity"
+            android:label="@string/title_activity_free_draw_test"
+            android:screenOrientation="landscape">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.Lobby"/>
+        </activity>
     </application>
 
 </manifest>

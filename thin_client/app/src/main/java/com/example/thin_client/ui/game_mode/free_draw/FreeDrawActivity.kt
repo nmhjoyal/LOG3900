@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.Paint
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.MenuItem
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.SeekBar
@@ -15,6 +16,7 @@ import androidx.core.content.ContextCompat
 import com.example.thin_client.R
 import com.example.thin_client.data.PermissionHandler
 import com.example.thin_client.data.RequestCodes
+import com.example.thin_client.server.SocketHandler
 import kotlinx.android.synthetic.main.activity_free_draw.*
 import java.util.*
 
@@ -187,6 +189,17 @@ class FreeDrawActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         // Disable native back
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                SocketHandler.disconnectOnlineDraw()
+                finish()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

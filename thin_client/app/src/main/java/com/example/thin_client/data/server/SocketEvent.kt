@@ -18,4 +18,10 @@ object SocketEvent {
     const val ROOM_CREATED = "room_created"
     const val UPDATE_PROFILE = "update_profile"
     const val PROFILE_UPDATED = "profile_updated"
+    const val DRAWER = "drawer"
+    const val OBSERVER = "observer"
+    const val DRAW_POINT = "drawPoint"
+    const val DRAW_TEST = "drawTest"
+    const val CONNECT_FREE_DRAW = "connect_free_draw"
+    const val DISCONNECT_FREE_DRAW = "disconnect_free_draw"
 }

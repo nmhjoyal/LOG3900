@@ -6,6 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".ui.Lobby">
 
+    <Button
+        android:id="@+id/test_online_draw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_primary_selector"
+        android:padding="12dp"
+        android:layout_margin="16dp"
+        android:text="@string/title_activity_free_draw_test"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/free_draw"
+        app:layout_constraintEnd_toStartOf="@+id/chatrooms_container"
+        app:layout_constraintStart_toStartOf="parent" />
+
 
     <Button
         android:id="@+id/free_draw"
