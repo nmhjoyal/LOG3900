@@ -1,0 +1,19 @@
+POST http://localhost:5000/profile/create/
+content-type: application/json
+
+{
+    "username" : "hub1",
+    "firstname" : "hubert",
+    "lastname" : "m-d",
+    "password" : "banane",
+    "avatar" : "my-avatar",
+    "rooms_joined" : []
+}
+
+###
+
+GET http://localhost:5000/profile/private/hub1
+
+###
+
+DELETE http://localhost:5000/profile/hub1
