@@ -58,7 +58,9 @@ class ChatFragment : Fragment() {
                         else -> showFromMessage(jsonData.content, username, timestamp)
                     }
                     if (RoomManager.roomsJoined.containsKey(roomID)) {
-                        RoomManager.roomsJoined.get(roomID)!!.add(jsonData)
+                        if (!RoomManager.roomsJoined.get(roomID)!!.contains(jsonData)) {
+                            RoomManager.roomsJoined.get(roomID)!!.add(jsonData)
+                        }
                     }
                 })
             }))
