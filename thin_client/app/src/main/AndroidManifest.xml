@@ -29,6 +29,8 @@
             android:name=".ui.createUser.CreateUserActivity"
             android:label="@string/sign_up"
             android:screenOrientation="landscape">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.login.LoginActivity"/>
         </activity>
         <activity
             android:name=".ui.Lobby"

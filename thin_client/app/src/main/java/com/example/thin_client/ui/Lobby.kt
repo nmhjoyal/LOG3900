@@ -47,24 +47,6 @@ class Lobby : AppCompatActivity() {
 
         prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
 
-        if (SocketHandler.socket == null) {
-            SocketHandler.connect()
-        }
-
-        setupSocketEvents()
-
-        if (!prefs.getBoolean(Preferences.LOGGED_IN_KEY, false)) {
-            val intent = Intent(applicationContext, LoginActivity::class.java)
-            startActivity(intent)
-            SocketHandler.disconnect()
-        } else if (!SocketHandler.isLoggedIn){
-            val user = PreferenceHandler(applicationContext).getUser()
-            SocketHandler.login(User(user.username, user.password))
-            SocketHandler.isLoggedIn = true
-        } else {
-            showChatRoomsFragment()
-        }
-
         free_draw.setOnClickListener(({
             val intent = Intent(applicationContext, FreeDrawActivity::class.java)
             startActivity(intent)
@@ -85,9 +67,35 @@ class Lobby : AppCompatActivity() {
         }))
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         manager = supportFragmentManager
+        setupSocket()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        turnOffSocketEvents()
+    }
+
+    private fun setupSocket() {
+        if (SocketHandler.socket == null) {
+            SocketHandler.connect()
+        }
+
+        setupSocketEvents()
+
+        if (!prefs.getBoolean(Preferences.LOGGED_IN_KEY, false)) {
+            val intent = Intent(applicationContext, LoginActivity::class.java)
+            startActivity(intent)
+            SocketHandler.disconnect()
+        } else if (!SocketHandler.isLoggedIn){
+            val user = PreferenceHandler(applicationContext).getUser()
+            SocketHandler.login(User(user.username, user.password))
+            SocketHandler.isLoggedIn = true
+        } else {
+            showChatRoomsFragment()
+        }
     }
 
 
@@ -118,6 +126,16 @@ class Lobby : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+    }
+
+    private fun turnOffSocketEvents() {
+        if (SocketHandler.socket != null) {
+            SocketHandler.socket!!.off(SocketEvent.USER_SIGNED_IN)
+                .off(SocketEvent.USER_SIGNED_OUT)
+                .off(SocketEvent.USER_JOINED_ROOM)
+                .off(SocketEvent.OBSERVER)
+                .off(SocketEvent.DRAWER)
+        }
     }
 
     private fun setupSocketEvents() {
@@ -153,14 +171,11 @@ class Lobby : AppCompatActivity() {
                 SocketHandler.disconnect()
             }))
             .on(SocketEvent.USER_SIGNED_OUT, ({ data ->
-                val gson = Gson()
-                val feedback = gson.fromJson(data.first().toString(),Feedback::class.java)
-                if (feedback.status) {
+                val feedback = Gson().fromJson(data.first().toString(),Feedback::class.java)
                     PreferenceHandler(this).resetUserPrefs()
                     val intent = Intent(applicationContext, LoginActivity::class.java)
                     startActivity(intent)
                     SocketHandler.disconnect()
-                } else {
                     Handler(Looper.getMainLooper()).post(Runnable {
                         Toast.makeText(
                             applicationContext,
@@ -168,10 +183,8 @@ class Lobby : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                     })
-                }
             })).on(SocketEvent.USER_JOINED_ROOM, ({ data ->
-                val feedback = Gson().fromJson(data.first().toString(), JoinRoomFeedback::class.java)
-                val roomID = if (feedback.room_joined == null) "General" else feedback.room_joined.id
+                val roomID = if (RoomManager.currentRoom == "") "General" else RoomManager.currentRoom
                 Handler(Looper.getMainLooper()).post(Runnable {
                     val bundle = Bundle()
                     bundle.putString(RoomArgs.ROOM_ID, roomID)

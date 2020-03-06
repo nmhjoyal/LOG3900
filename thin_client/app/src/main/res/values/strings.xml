@@ -46,6 +46,8 @@
     <string name="room_name">Enter room name</string>
     <string name="error_roomname">Room name cannot be blank</string>
     <string name="show_rooms">Show rooms</string>
+    <string name="public_room">Public</string>
+    <string name="private_room">Private</string>
 
     <!-- Strings for create user -->
     <string name="prompt_first_name">First Name</string>

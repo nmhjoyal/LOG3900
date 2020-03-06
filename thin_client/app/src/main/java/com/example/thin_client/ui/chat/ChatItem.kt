@@ -1,8 +1,5 @@
 package com.example.thin_client.ui.chat
 
-import android.content.res.Resources
-import android.provider.Settings.Global.getString
-import androidx.core.content.ContextCompat
 import com.example.thin_client.R
 import com.example.thin_client.server.SocketHandler
 
@@ -13,7 +10,6 @@ import kotlinx.android.synthetic.main.chat_to_row.view.*
 import kotlinx.android.synthetic.main.chat_user_joinedorleft.view.*
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.coroutines.coroutineContext
 
 const val stringDate = "[HH:mm:ss]"
 val simpleDateFormat = SimpleDateFormat(stringDate, Locale.US)
@@ -43,16 +39,12 @@ class ChatFromItem(val text:String, val author:String, val date: Long): Item<Gro
     }
 }
 
-class ChatUserJoined(val author: String, val hasJoined: Boolean): Item<GroupieViewHolder>(){
+class ChatUserJoined(val text: String): Item<GroupieViewHolder>(){
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        if (hasJoined) {
-            viewHolder.itemView.text_joined_or_left.text = Resources.getSystem().getString(R.string.user_joined, author)
-        } else {
-            viewHolder.itemView.text_joined_or_left.text = Resources.getSystem().getString(R.string.user_left, author)
-        }
+        viewHolder.itemView.text_joined_or_left.text = text
     }
 
     override fun getLayout(): Int {
-        return R.layout.chat_from_row
+        return R.layout.chat_user_joinedorleft
     }
 }

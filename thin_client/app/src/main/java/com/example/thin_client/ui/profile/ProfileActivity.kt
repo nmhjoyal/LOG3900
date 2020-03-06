@@ -163,6 +163,11 @@ class ProfileActivity : AppCompatActivity() {
         }))
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        turnOffSocketEvents()
+    }
+
     private fun initView(view: View) {
         resetAvatarSelection(view)
         when (selectedAvatar) {
@@ -323,5 +328,9 @@ class ProfileActivity : AppCompatActivity() {
                 ).show()
             })
         }))
+    }
+
+    private fun turnOffSocketEvents() {
+        SocketHandler.socket!!.off(SocketEvent.PROFILE_UPDATED)
     }
 }

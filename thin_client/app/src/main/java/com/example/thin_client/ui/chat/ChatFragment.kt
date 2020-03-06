@@ -1,6 +1,5 @@
 package com.example.thin_client.ui.chat
 
-import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -40,14 +39,10 @@ class ChatFragment : Fragment() {
         val roomsJoined = RoomManager.roomsJoined
         val messages = roomsJoined[roomID]
         for(i in 0 until messages!!.size){
-            if(messages[i].username == SocketHandler.user!!.username){
-                showToMessage(messages[i].content,messages[i].date)
-            } else {
-                showFromMessage(messages[i].content, messages[i].username, messages[i].date)
-            }
-
-            if(messages[i].username == admin){
-                showFromMessage(messages[i].content, messages[i].username, messages[i].date)
+            when (messages[i].username) {
+                admin -> showAdminMessage(messages[i].content)
+                SocketHandler.user!!.username -> showToMessage(messages[i].content, messages[i].date)
+                else -> showFromMessage(messages[i].content, messages[i].username, messages[i].date)
             }
         }
 
@@ -57,15 +52,14 @@ class ChatFragment : Fragment() {
                 val username = jsonData.username
                 val timestamp = jsonData.date
                 Handler(Looper.getMainLooper()).post(Runnable {
-                    if (username == SocketHandler.user!!.username) {
-                        showToMessage(jsonData.content, timestamp)
-                    } else {
-                        showFromMessage(jsonData.content, username, timestamp)
+                    when (username) {
+                        admin -> showAdminMessage(jsonData.content)
+                        SocketHandler.user!!.username -> showToMessage(jsonData.content, timestamp)
+                        else -> showFromMessage(jsonData.content, username, timestamp)
                     }
-                    if (username == admin){
-                        showFromMessage(jsonData.content, username, timestamp)
+                    if (RoomManager.roomsJoined.containsKey(roomID)) {
+                        RoomManager.roomsJoined.get(roomID)!!.add(jsonData)
                     }
-
                 })
             }))
             ?.on(SocketEvent.USER_LEFT_ROOM, ({ data ->
@@ -128,15 +122,9 @@ class ChatFragment : Fragment() {
         }
     }
 
-    private fun showAdminMessage(text:String, date: Long){
-        adapter.add(ChatToItem(text.replace("\\n".toRegex(), ""), date))
+    private fun showAdminMessage(text:String){
+        adapter.add(ChatUserJoined(text))
         //TODO
-    }
-    private fun showUserJoined(author:String, hasJoined: Boolean) {
-        adapter.add(ChatUserJoined(author, hasJoined))
-        if (recyclerview_chat != null){
-            recyclerview_chat.scrollToPosition(adapter.itemCount - 1)
-        }
     }
 
     private fun goBackToRooms() {

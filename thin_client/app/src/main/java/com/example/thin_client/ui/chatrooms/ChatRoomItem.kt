@@ -11,6 +11,10 @@ class ChatRoomItem(val roomname: String): Item<GroupieViewHolder>(){
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.room_name.text = roomname
 
+        viewHolder.itemView.leave_button.setOnClickListener(({
+            RoomManager.roomToDelete = roomname
+            SocketHandler.deleteChatRoom(roomname)
+        }))
     }
 
     override fun getLayout(): Int {

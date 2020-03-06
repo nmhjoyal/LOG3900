@@ -4,6 +4,7 @@ import com.example.thin_client.data.ClientMessage
 import com.example.thin_client.data.drawing.DrawPoint
 import com.example.thin_client.data.model.PrivateProfile
 import com.example.thin_client.data.model.User
+import com.example.thin_client.data.rooms.CreateRoom
 import com.example.thin_client.data.server.HTTPRequest
 import com.example.thin_client.data.server.SocketEvent
 import com.github.nkzawa.socketio.client.IO
@@ -61,8 +62,9 @@ object SocketHandler {
         socket!!.emit(SocketEvent.DELETE_ROOM, roomid)
     }
 
-    fun createChatRoom(roomid: String) {
-        socket!!.emit(SocketEvent.CREATE_ROOM, roomid)
+    fun createChatRoom(roomid: String, isPrivate: Boolean) {
+        val newRoom = Gson().toJson(CreateRoom(roomid,  isPrivate))
+        socket!!.emit(SocketEvent.CREATE_ROOM, newRoom)
     }
 
     fun updateProfile(privateProfile: PrivateProfile) {

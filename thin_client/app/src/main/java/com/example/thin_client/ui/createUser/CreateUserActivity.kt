@@ -1,7 +1,6 @@
 package com.example.thin_client.ui.createUser
 
 import OkHttpRequest
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -31,7 +30,6 @@ class CreateUserActivity : AppCompatActivity() {
 
     private lateinit var createUserModel: CreateUserModel
 
-    var avatarUri: Uri ?=null
     var selectedAvatar: AvatarID = AvatarID.AVOCADO
 
 
@@ -48,8 +46,6 @@ class CreateUserActivity : AppCompatActivity() {
         val create = findViewById<Button>(R.id.create)
 
         setupAvatarButtons()
-
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         createUserModel = ViewModelProviders.of(this, CreateUserModelFactory())
             .get(CreateUserModel::class.java)
@@ -122,9 +118,7 @@ class CreateUserActivity : AppCompatActivity() {
             create.isEnabled = false
             val httpClient = OkHttpRequest(okhttp3.OkHttpClient())
             val privateProfile = PrivateProfile(username.text.toString(), firstName.text.toString(),
-                lastName.text.toString(), password.text.toString(), selectedAvatar.name, arrayListOf()
-            )
-            PreferenceHandler(this).setUser(privateProfile)
+                lastName.text.toString(), password.text.toString(), selectedAvatar.name, arrayListOf())
             val gson = Gson()
             val gsonProfile = gson.toJson(privateProfile)
             httpClient.POST(HTTPRequest.BASE_URL + HTTPRequest.URL_CREATE, gsonProfile.toString(),
@@ -144,7 +138,8 @@ class CreateUserActivity : AppCompatActivity() {
                             loading.visibility = ProgressBar.GONE
                             create.isEnabled = true
                             if(feedback.status){
-                               finish()
+                                PreferenceHandler(applicationContext).setUser(privateProfile)
+                                finish()
                             } else{
                                 Handler(Looper.getMainLooper()).post(Runnable {
                                     Toast.makeText(
@@ -240,50 +235,8 @@ class CreateUserActivity : AppCompatActivity() {
         pear_avatar.setBackgroundResource(R.drawable.avatar_background)
     }
 
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if(requestCode == 0 && resultCode == Activity.RESULT_OK && data!=null){
-//            //proceed and check what the selected image was
-//            avatarUri = data.data //uri represent where the image is located on the device
-//            val bitmap = MediaStore.Images.Media.getBitmap(contentResolver,avatarUri)
-//            val avatarCircleImageView = findViewById<CircleImageView>(R.id.avatar_circleImageView)
-//            val uploadAvatar = findViewById<Button>(R.id.button_upload_avatar)
-//            avatarCircleImageView.setImageBitmap(bitmap)
-//            uploadAvatar.alpha = 0f
-//
-//        }
-//
-//    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                finish()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     override fun onBackPressed() {
         // Disable native back
     }
-
-  /*  private fun signup(){
-        val uFirstname = firstName.text.toString()
-        val uLastname = lastName.text.toString()
-        val uUsername = username.text.toString()
-
-        if(uFirstname.isEmpty()|| uLastname.isEmpty() || uUsername.isEmpty()) {
-            Toast.makeText(this, "Please fill up all the form fields", Toast.LENGTH_SHORT).show()
-            return
-        }
-        // add here call to add user to the data base
-    }*/
-
-
-
-    //private fun uploadImageToDB(){}
-    //private fun saveUserToDB(){}
 
 }

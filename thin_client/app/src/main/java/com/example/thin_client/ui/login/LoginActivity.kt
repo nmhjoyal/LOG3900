@@ -116,12 +116,23 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        turnOffSocketEvents()
+    }
+
     private fun showLoginFailed() {
         Toast.makeText(applicationContext, R.string.login_failed, Toast.LENGTH_SHORT).show()
     }
 
     override fun onBackPressed() {
         // Disable native back
+    }
+
+    private fun turnOffSocketEvents() {
+        SocketHandler.socket!!.off(SocketEvent.USER_SIGNED_IN)
+            .off(Socket.EVENT_CONNECT)
+            .off(Socket.EVENT_CONNECT_ERROR)
     }
 }
 
