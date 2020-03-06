@@ -10,7 +10,7 @@ using WPFUI.EventModels;
 
 namespace WPFUI.Models
 {
-    public partial class SocketHandler : ISocketHandler
+    public partial class SocketHandler : ISocketHandler1
     {
         public IUserData _userdata;
         public IEventAggregator _events;
@@ -54,23 +54,23 @@ namespace WPFUI.Models
         {
             var options = new IO.Options();
             options.Reconnection = false;
-            this._socket = IO.Socket("http://10.200.23.33:5000", options);
-           /* _user = new User(_userdata.userName, _userdata.password);
-
+            this._socket = IO.Socket("http://10.200.9.99:5000", options);
+            _user = new User(_userdata.userName, _userdata.password);
+            Console.WriteLine(_user);
+            Console.WriteLine("hello");
             this._userJSON = JsonConvert.SerializeObject(_user);
-
-           
             Console.WriteLine(this._userJSON);
+            Console.WriteLine("hello2");
             this._socket.On(Socket.EVENT_CONNECT, () =>
             {
                 this._socket.Emit("sign_in", this._userJSON);
-               
+
             });
 
             _socket.On("user_signed_in", (connected) =>
             {
                 canConnect = JsonConvert.DeserializeObject<bool>(connected.ToString());
-            });/*
+            });
 
             _socket.On("new_message", (message) =>
             {
@@ -86,7 +86,7 @@ namespace WPFUI.Models
                 MessageModel newMessageModel = new MessageModel("Nouvelle connection de: " + socketId.ToString(), "Server");
                 _userdata.messages.Add(newMessageModel);
                 ///Console.WriteLine(socketId + " is connected");
-            });*/
+            });
         }
         public void disconnect()
         {
@@ -110,12 +110,12 @@ namespace WPFUI.Models
 
             }
 
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
 
             }
-            
+
         }
         public static void TestPOSTWebRequest(Object obj, string url)
         {

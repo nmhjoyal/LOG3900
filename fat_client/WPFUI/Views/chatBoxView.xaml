@@ -42,10 +42,30 @@
             <RowDefinition Height="35"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
+		
+		<ScrollViewer Grid.Column="1" Grid.Row="1" VerticalScrollBarVisibility="Visible" Grid.ColumnSpan="4" Grid.RowSpan="2">
+			<ItemsControl x:Name="channels">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<StackPanel Orientation="Vertical">
+							<StackPanel.InputBindings>
+								<MouseBinding 
+									MouseAction="LeftClick" 
+									Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.changeChannelCommand}"
+									CommandParameter="{Binding channelID}">
+								</MouseBinding>
+							</StackPanel.InputBindings>
+							<TextBlock Text="{Binding channelName}" Foreground="DarkSlateGray"/>
+							<TextBlock Text="{Binding lastMessageContent}" Foreground="Black" TextWrapping="Wrap" Margin="10,0,0,0"/>
+							<TextBlock Text="{Binding formattedTimeStamp}" Foreground="DarkSlateGray" HorizontalAlignment="Left" FontSize="12" Margin="10,0,0,10"/>
+						</StackPanel>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+		</ScrollViewer>
 
-        <Image Source="chat logo png.png" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" HorizontalAlignment="Left" MaxHeight="60"/>
-        <TextBlock x:Name="welcomeMessage" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment ="Center" Grid.ColumnSpan="3" Foreground="DarkSlateGray" FontSize="14"/>
-        <ScrollViewer Grid.Column="1" Grid.Row="3" Grid.RowSpan="3" Grid.ColumnSpan="6" VerticalScrollBarVisibility="Visible" Margin="0,10,0,0">
+		<Image Source="chat logo png.png" Grid.Column="6" Grid.Row="2" HorizontalAlignment="Right" MaxHeight="60" Margin="0,20,5,5"/>
+		<ScrollViewer Grid.Column="1" Grid.Row="3" Grid.RowSpan="3" Grid.ColumnSpan="6" VerticalScrollBarVisibility="Visible" Margin="0,10,0,0">
             <ItemsControl x:Name="messages">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -67,10 +87,7 @@
         <Button x:Name ="disconnect" Style="{DynamicResource MaterialDesignRaisedAccentButton}" Grid.Column="6" Grid.Row="1" Foreground="White" Background="#FF00867A">
             Disconnect
         </Button>
-        <Button x:Name ="resize" Style="{DynamicResource MaterialDesignRaisedAccentButton}" Grid.Column="6" Grid.Row="2" Foreground="White" Background="#FFCFD1D0">
-            Game View
-        </Button>
-       
+
         <Button x:Name ="sendMessage" Style="{DynamicResource MaterialDesignRaisedLightButton}" Grid.Column="6" Grid.Row="6" Background="#FF008679" Foreground="White" Click="refocus">
             Send
         </Button>

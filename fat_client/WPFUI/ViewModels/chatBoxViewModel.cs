@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using WPFUI.Commands;
 using WPFUI.EventModels;
 using WPFUI.Models;
 
@@ -17,6 +18,14 @@ namespace WPFUI.ViewModels
         private BindableCollection<MessageModel> _messages;
         private string _currentMessage;
         private ISocketHandler _socketHandler;
+        private BindableCollection<Channel> _channels;
+        public IchangeChannelCommand changeChannelCommand { get; set; }
+
+        public BindableCollection<Channel> channels
+        {
+            get { return _channels; }
+            set { _channels = value; }
+        }
 
         public string currentMessage
         {
@@ -68,7 +77,7 @@ namespace WPFUI.ViewModels
             _socketHandler = socketHandler;
             _userData = userdata;
             _messages = userdata.messages;
-            currentMessage = "gros test sale";
+            _channels = userdata.channels;
 
         }
 

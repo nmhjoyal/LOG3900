@@ -26,15 +26,13 @@
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
 						<StackPanel Orientation="Vertical">
-
 							<StackPanel.InputBindings>
 								<MouseBinding 
 									MouseAction="LeftClick" 
 									Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.changeChannelCommand}"
 									CommandParameter="{Binding channelID}">
-								</MouseBinding>		
+								</MouseBinding>
 							</StackPanel.InputBindings>
-
 							<TextBlock Text="{Binding channelName}" Foreground="DarkSlateGray"/>
 							<TextBlock Text="{Binding lastMessageContent}" Foreground="Black" TextWrapping="Wrap" Margin="10,0,0,0"/>
 							<TextBlock Text="{Binding formattedTimeStamp}" Foreground="DarkSlateGray" HorizontalAlignment="Left" FontSize="12" Margin="10,0,0,10"/>

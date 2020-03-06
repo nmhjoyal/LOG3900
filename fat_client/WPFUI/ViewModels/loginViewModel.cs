@@ -58,21 +58,23 @@ namespace WPFUI.ViewModels
             _userdata.ipAdress = ipAdress;
         }
 
+        public void setPassword()
+        {
+            _userdata.password = password;
+        }
+
         public bool loginOk()
         {
-            return (userName != null & ipAdress !=null);
+            return (userName != null & password !=null);
         }
         public void logIn()
         {   
-           
+            if (loginOk())
+            {
                 setUserName();
-                
-                
-                _socketHandler.connectionAttempt();
-       
-            //ajouter dans la condition
-            _events.PublishOnUIThread(new LogInEvent());
-
+                //_socketHandler.connectionAttempt();
+                _events.PublishOnUIThread(new LogInEvent());
+            }
         }
 
         public void signUp()
