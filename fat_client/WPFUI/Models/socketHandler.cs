@@ -50,7 +50,7 @@ namespace WPFUI.Models
             _events = events;
             // TestPOSTWebRequest(user);
             // TestGETWebRequest("Testing get...");
-            this._socket = IO.Socket("http://10.200.23.33:5000");
+            this._socket = IO.Socket("http://192.168.0.103:5000");
             _socket.On("user_signed_in", (signInFeedback) =>
             {
                 dynamic json = JsonConvert.DeserializeObject(signInFeedback.ToString());
