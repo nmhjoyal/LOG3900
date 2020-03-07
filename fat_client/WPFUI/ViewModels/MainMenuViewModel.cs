@@ -45,6 +45,10 @@ namespace WPFUI.ViewModels
         {
             _events.PublishOnUIThread(new freeDrawEvent());
         }
+        public void creationJeu()
+        {
+            _events.PublishOnUIThread(new createGameEvent());
+        }
 
         public void joinGame()
         {

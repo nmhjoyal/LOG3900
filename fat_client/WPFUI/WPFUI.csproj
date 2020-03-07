@@ -111,7 +111,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Converters\Converters.cs" />
+    <Compile Include="EventModels\AssisteIEvent.cs" />
     <Compile Include="EventModels\connectionEvent.cs" />
+    <Compile Include="EventModels\createGameEvent.cs" />
     <Compile Include="EventModels\DisconnectEvent.cs" />
     <Compile Include="EventModels\freeDrawEvent.cs" />
     <Compile Include="EventModels\fullScreenChatEvent.cs" />
@@ -122,6 +124,8 @@
     <Compile Include="EventModels\joinGameEvent.cs" />
     <Compile Include="EventModels\LogInEvent.cs" />
     <Compile Include="EventModels\logOutEvent.cs" />
+    <Compile Include="EventModels\ManuelIEvent.cs" />
+    <Compile Include="EventModels\ManuelleIIEvent.cs" />
     <Compile Include="EventModels\passwordMismatchEvent.cs" />
     <Compile Include="EventModels\sendMessageEvent.cs" />
     <Compile Include="EventModels\signUpEvent.cs" />
@@ -143,12 +147,14 @@
     <Compile Include="Utilitaires\RelayCommand.cs" />
     <Compile Include="ViewModels\chatBoxViewModel.cs" />
     <Compile Include="ViewModels\ChatRoomChannelsViewModel.cs" />
+    <Compile Include="ViewModels\CreationJeuManuelle1ViewModel.cs" />
     <Compile Include="ViewModels\EmptyViewModel.cs" />
     <Compile Include="ViewModels\FenetreDessinViewModel.cs" />
     <Compile Include="ViewModels\gameViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
+    <Compile Include="ViewModels\MenuSelectionModeCreationViewModel.cs" />
     <Compile Include="ViewModels\NewUserViewModel.cs" />
     <Compile Include="ViewModels\profileViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
@@ -157,6 +163,9 @@
     </Compile>
     <Compile Include="Views\ChatRoomChannelsView.xaml.cs">
       <DependentUpon>ChatRoomChannelsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CreationJeuManuelle1View.xaml.cs">
+      <DependentUpon>CreationJeuManuelle1View.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FenetreDessinView.xaml.cs">
       <DependentUpon>FenetreDessinView.xaml</DependentUpon>
@@ -172,6 +181,9 @@
     </Compile>
     <Compile Include="Views\MainMenuView.xaml.cs">
       <DependentUpon>MainMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MenuSelectionModeCreationView.xaml.cs">
+      <DependentUpon>MenuSelectionModeCreationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\NewUserView.xaml.cs">
       <DependentUpon>NewUserView.xaml</DependentUpon>
@@ -220,6 +232,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\CreationJeuManuelle1View.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\FenetreDessinView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -237,6 +253,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainMenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MenuSelectionModeCreationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
