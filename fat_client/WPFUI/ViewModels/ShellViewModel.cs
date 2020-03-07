@@ -14,7 +14,7 @@ namespace WPFUI.ViewModels
     class ShellViewModel: Conductor<Screen>.Collection.AllActive, IHandle<LogInEvent>, IHandle<logOutEvent>, IHandle<joinChatEvent>,
 						  IHandle<DisconnectEvent>, IHandle<userNameTakenEvent>,IHandle<signUpEvent>, IHandle<goBackEvent>,
 						  IHandle<passwordMismatchEvent>, IHandle<viewProfileEvent>, IHandle<goBackMainEvent>,
-						  IHandle<joinGameEvent>, IHandle<freeDrawEvent>
+						  IHandle<joinGameEvent>, IHandle<freeDrawEvent>, IHandle<joinChatroomEvent>
 	{
 		private IEventAggregator _events;
 		private SimpleContainer _container;
@@ -51,7 +51,11 @@ namespace WPFUI.ViewModels
 
 		public void Handle(viewProfileEvent message)
 		{
-			//ActivateItem(_container.GetInstance<profileViewModel>());
+			Items.Clear();
+			Items.Add(_container.GetInstance<profileViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
 
 		public void Handle(goBackEvent message)
@@ -89,7 +93,11 @@ namespace WPFUI.ViewModels
 
 		public void Handle(joinChatroomEvent message)
 		{
-			//ActivateItem(_container.GetInstance<ChatRoomChannelsViewModel>());
+			Items.Clear();
+			Items.Add(_container.GetInstance<ChatRoomChannelsViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
 
 		public void Handle(DisconnectEvent message)
@@ -107,14 +115,13 @@ namespace WPFUI.ViewModels
 			MessageBox.Show(messageBoxText, caption, button, icon);
 		}
 
-		public void Handle(passwordMismatchEvent message)
-		{
+		public void Handle(passwordMismatchEvent message)
+		{
 			string messageBoxText = "passwords don't match";
 			string caption = "Warning";
 			MessageBoxButton button = MessageBoxButton.OK;
 			MessageBoxImage icon = MessageBoxImage.Warning;
-
-			MessageBox.Show(messageBoxText, caption, button, icon);
+			MessageBox.Show(messageBoxText, caption, button, icon);
 		}
 
 		public void Handle(joinGameEvent message)

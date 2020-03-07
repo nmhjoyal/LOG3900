@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WPFUI.Models
 {
-    class Room
+    public class Room
     {
         string id;
         Message[] messages;
@@ -19,6 +19,12 @@ namespace WPFUI.Models
             this.id = id;
             this.messages = messages;
             this.avatars = avatars;
+        }
+
+        public string roomName
+        {
+            get { return id; }
+            set { id = value; }
         }
     }
 }
