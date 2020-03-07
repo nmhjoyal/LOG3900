@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,59 +18,75 @@ namespace WPFUI.ViewModels
 	{
 		private IEventAggregator _events;
 		private SimpleContainer _container;
+		private IWindowManager _windowManager;
 
-		public ShellViewModel(IEventAggregator events, SimpleContainer container)
+		public ShellViewModel(IWindowManager windowManager, IEventAggregator events, SimpleContainer container)
 		{
+			_windowManager = windowManager;
 			_container = container;
 			_events = events;
-			_events.Subscribe(this);
-			ActivateItem(_container.GetInstance<LoginViewModel>());
-			//ActivateItem(_container.GetInstance<MainMenuViewModel>());
+			_events.Subscribe(this);
+			Items.Add(_container.GetInstance<LoginViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+		}
+
+		public Screen FirstSubViewModel
+		{
+			get { return Items.ElementAt(0); }
+		}
+
+		public Screen SecondSubViewModel
+		{
+			get { return Items.ElementAt(1); }
 		}
 
 		public void Handle(LogInEvent message)
 		{
-			ActivateItem(_container.GetInstance<MainMenuViewModel>());
+			Items.Clear();
+			Items.Add(_container.GetInstance<MainMenuViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
 
 		public void Handle(viewProfileEvent message)
 		{
-			ActivateItem(_container.GetInstance<profileViewModel>());
+			//ActivateItem(_container.GetInstance<profileViewModel>());
 		}
 
 		public void Handle(goBackEvent message)
 		{
-			ActivateItem(_container.GetInstance<LoginViewModel>());
+			//ActivateItem(_container.GetInstance<LoginViewModel>());
 		}
 
 		public void Handle(goBackMainEvent message)
 		{
-			ActivateItem(_container.GetInstance<MainMenuViewModel>());
+			//ActivateItem(_container.GetInstance<MainMenuViewModel>());
 		}
 
 		public void Handle(signUpEvent message)
 		{
-			ActivateItem(_container.GetInstance<NewUserViewModel>());
+			//ActivateItem(_container.GetInstance<NewUserViewModel>());
 		}
 
 		public void Handle(logOutEvent message)
 		{
-			ActivateItem(_container.GetInstance<LoginViewModel>());
+			//ActivateItem(_container.GetInstance<LoginViewModel>());
 		}
 
 		public void Handle(joinChatEvent message)
 		{
-			ActivateItem(_container.GetInstance<chatBoxViewModel>());
+			//ActivateItem(_container.GetInstance<chatBoxViewModel>());
 		}
 
 		public void Handle(joinChatroomEvent message)
 		{
-			ActivateItem(_container.GetInstance<ChatRoomChannelsViewModel>());
+			//ActivateItem(_container.GetInstance<ChatRoomChannelsViewModel>());
 		}
 
 		public void Handle(DisconnectEvent message)
 		{
-			ActivateItem(_container.GetInstance<LoginViewModel>());
+			//ActivateItem(_container.GetInstance<LoginViewModel>());
 		}
 
 		public void Handle(userNameTakenEvent message)
@@ -94,7 +111,7 @@ namespace WPFUI.ViewModels
 
 		public void Handle(joinGameEvent message)
 		{
-			ActivateItem(_container.GetInstance<gameViewModel>());
+			//ActivateItem(_container.GetInstance<gameViewModel>());
 		}
 	}
 }

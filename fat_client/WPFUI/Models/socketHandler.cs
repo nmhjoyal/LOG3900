@@ -53,10 +53,16 @@ namespace WPFUI.Models
             this._socket = IO.Socket("http://192.168.0.103:5000");
             _socket.On("user_signed_in", (signInFeedback) =>
             {
+                Console.WriteLine("hello");
                 dynamic json = JsonConvert.DeserializeObject(signInFeedback.ToString());
                 if ((Boolean)json.feedback.status)
                 {
+                    Console.WriteLine("connect");
                     _events.PublishOnUIThread(new LogInEvent());
+                }
+                else
+                {
+                    Console.WriteLine("cant connect");
                 }
                 //voir doc
             });

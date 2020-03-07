@@ -10,7 +10,7 @@ using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    class MainMenuViewModel
+    class MainMenuViewModel: Screen
     {
         private IEventAggregator _events;
         private ISocketHandler _socketHandler;
