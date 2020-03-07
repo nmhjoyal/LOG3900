@@ -24,7 +24,6 @@ namespace WPFUI.ViewModels
         public void logOut()
         {
             _socketHandler.SignOut();
-           
             _events.PublishOnUIThread(new logOutEvent());
         }
         public void viewProfile()
@@ -32,17 +31,25 @@ namespace WPFUI.ViewModels
             _events.PublishOnUIThread(new viewProfileEvent());
         }
 
-
         public void joinChatroom()
         {
             _events.PublishOnUIThread(new joinChatroomEvent());
         }
 
-        public void joinGame()
+        public void viewLeaderboard()
         {
-            _events.PublishOnUIThread(new joinGameEvent());
+            //_events.PublishOnUIThread(new joinChatroomEvent());
         }
 
+        public void freeDraw()
+        {
+            _events.PublishOnUIThread(new freeDrawEvent());
+        }
+
+        public void joinGame()
+        {
+            //_events.PublishOnUIThread(new joinGameEvent());
+        }
 
     }
 }

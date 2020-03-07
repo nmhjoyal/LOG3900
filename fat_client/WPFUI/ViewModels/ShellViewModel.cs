@@ -14,7 +14,7 @@ namespace WPFUI.ViewModels
     class ShellViewModel: Conductor<Screen>.Collection.AllActive, IHandle<LogInEvent>, IHandle<logOutEvent>, IHandle<joinChatEvent>,
 						  IHandle<DisconnectEvent>, IHandle<userNameTakenEvent>,IHandle<signUpEvent>, IHandle<goBackEvent>,
 						  IHandle<passwordMismatchEvent>, IHandle<viewProfileEvent>, IHandle<goBackMainEvent>,
-						  IHandle<joinGameEvent>
+						  IHandle<joinGameEvent>, IHandle<freeDrawEvent>
 	{
 		private IEventAggregator _events;
 		private SimpleContainer _container;
@@ -66,12 +66,20 @@ namespace WPFUI.ViewModels
 
 		public void Handle(signUpEvent message)
 		{
-			//ActivateItem(_container.GetInstance<NewUserViewModel>());
+			Items.Clear();
+			Items.Add(_container.GetInstance<NewUserViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
 
 		public void Handle(logOutEvent message)
 		{
-			//ActivateItem(_container.GetInstance<LoginViewModel>());
+			Items.Clear();
+			Items.Add(_container.GetInstance<LoginViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
 
 		public void Handle(joinChatEvent message)
@@ -112,6 +120,15 @@ namespace WPFUI.ViewModels
 		public void Handle(joinGameEvent message)
 		{
 			//ActivateItem(_container.GetInstance<gameViewModel>());
+		}
+
+		public void Handle(freeDrawEvent message)
+		{
+			Items.Clear();
+			Items.Add(_container.GetInstance<FenetreDessinViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
 	}
 }
