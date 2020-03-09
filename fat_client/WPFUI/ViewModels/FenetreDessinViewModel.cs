@@ -7,8 +7,10 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Ink;
 using System.Windows.Media;
+using System.Windows.Shapes;
 using WPFUI.EventModels;
 using WPFUI.Models;
 using WPFUI.Utilitaires;
@@ -16,7 +18,7 @@ using WPFUI.Utilitaires;
 namespace WPFUI.ViewModels
 {
 
-
+    
     /// <summary>
     /// Sert d'intermédiaire entre la vue et le modèle.
     /// Expose des commandes et propriétés connectées au modèle aux des éléments de la vue peuvent se lier.
@@ -26,7 +28,8 @@ namespace WPFUI.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private Editeur editeur = new Editeur();
-
+        public IUserData userdata;
+        public IEventAggregator events;
         // Ensemble d'attributs qui définissent l'apparence d'un trait.
         public DrawingAttributes AttributsDessin { get; set; } = new DrawingAttributes();
 
@@ -54,7 +57,12 @@ namespace WPFUI.ViewModels
             set { editeur.TailleTrait = value; }
         }
 
-        public StrokeCollection Traits { get; set; }
+        private StrokeCollection _traits;
+        public StrokeCollection Traits
+        {
+            get { return _traits;  }
+            set { _traits = value; ProprieteModifiee(); }
+        }
 
         // Commandes sur lesquels la vue pourra se connecter.
 
@@ -73,8 +81,17 @@ namespace WPFUI.ViewModels
         private IUserData _userdata;
 
         private ISocketHandler _socketHandler;
-        public FenetreDessinViewModel(IEventAggregator events, ISocketHandler socketHandler)
+
+        private InkCanvas _canvas;
+        public InkCanvas Canvas
+        { 
+            get { return _canvas; }
+            set { _canvas = value; ProprieteModifiee(); }
+        }
+
+        public FenetreDessinViewModel(IEventAggregator events, ISocketHandler socketHandler, InkCanvas canvas)
         {
+            Canvas = canvas;
             SendStroke = new RelayCommand<object>(sendStrokeAction);
             _socketHandler = socketHandler;
             _events = events;
@@ -93,7 +110,7 @@ namespace WPFUI.ViewModels
             // Donc, aucune vérification de type Peut"Action" à faire.
             ChoisirPointe = new RelayCommand<string>(editeur.ChoisirPointe);
             ChoisirOutil = new RelayCommand<string>(editeur.ChoisirOutil);
-
+            _socketHandler.getStrokes(Canvas);
         }
 
         private void sendStrokeAction(Object o)
@@ -102,8 +119,11 @@ namespace WPFUI.ViewModels
             string width = Traits[Traits.Count - 1].DrawingAttributes.Width.ToString();
             bool stylusTip = true;//Traits[Traits.Count - 1].DrawingAttributes.StylusTip;
             string color = Traits[Traits.Count - 1].DrawingAttributes.Color.ToString();
-
+            SocketHandler socketHandler = new SocketHandler(userdata,events);
+            socketHandler.sendStroke(path, color, width, stylusTip);
         }
+
+        
 
         /// <summary>
         /// Appelee lorsqu'une propriété de VueModele est modifiée.

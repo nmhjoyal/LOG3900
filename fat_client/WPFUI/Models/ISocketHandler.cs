@@ -1,5 +1,6 @@
 ﻿using Quobject.SocketIoClientDotNet.Client;
 using System;
+using System.Windows.Controls;
 
 namespace WPFUI.Models
 {
@@ -12,9 +13,11 @@ namespace WPFUI.Models
         void connectionAttempt();
         void createUser(PrivateProfile privateProfile);
         void disconnect();
-       // void On(object eVENT_DISCONNECT, Action p);
-       // void On(object eVENT_DISCONNECT);
+        // void On(object eVENT_DISCONNECT, Action p);
+        // void On(object eVENT_DISCONNECT);
         //void sendMessage();
+
+        void getStrokes(InkCanvas Canvas);
         void SignOut();
     }
 }

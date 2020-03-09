@@ -7,8 +7,8 @@ using Newtonsoft.Json;
 using Quobject.SocketIoClientDotNet.Client;
 using Socket = Quobject.SocketIoClientDotNet.Client.Socket;
 using WPFUI.EventModels;
-
-
+using System.Windows.Media;
+using System.Windows.Controls;
 
 namespace WPFUI.Models
 {
@@ -179,13 +179,30 @@ namespace WPFUI.Models
         public void sendStroke(string path, string couleur, string width, bool stylusTip)
         {
 
-
+            
             _trait = new Trait(path,couleur,width,stylusTip);
-
+            Console.WriteLine(_trait.ToString());
             this._traitJSON = JsonConvert.SerializeObject(_trait);
+            Console.WriteLine(_traitJSON.ToString());
 
             this._socket.Emit("sent_path", this._traitJSON);
 
+        }
+        private void getStrokes(InkCanvas Canvas)
+        {
+            _socket.On("receive_path", (response) =>
+            {
+                Trait json = JsonConvert.DeserializeObject<Trait>(response.ToString());
+                System.Windows.Shapes.Path path = new System.Windows.Shapes.Path();
+                path.Data = Geometry.Parse(json.path);
+                path.StrokeThickness = 1;
+                path.Stroke = System.Windows.Media.Brushes.Blue;
+                path.StrokeEndLineCap = PenLineCap.Round;
+                path.StrokeStartLineCap = PenLineCap.Round;
+                path.StrokeLineJoin = PenLineJoin.Round;
+
+                Canvas.Children.Add(path);
+            });
         }
 
     }
