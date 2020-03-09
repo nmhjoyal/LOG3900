@@ -33,7 +33,7 @@ namespace WPFUI.ViewModels
 
             if (keyArgs != null && keyArgs.Key == Key.Enter)
             {
-                sendMessage();
+                //sendMessage();
             }
         }
         public BindableCollection<MessageModel> messages
@@ -43,7 +43,7 @@ namespace WPFUI.ViewModels
                   NotifyOfPropertyChange(() => messages); }
         }
 
-        public void sendMessage( string content = null)
+        /*public void sendMessage( string content = null)
         {
             if (content != null)
             {
@@ -60,7 +60,7 @@ namespace WPFUI.ViewModels
                 _userData.currentMessage = "";
             }
 
-        }
+        }*/
 
         public chatBoxViewModel(IUserData userdata, IEventAggregator events, ISocketHandler socketHandler)
         {
