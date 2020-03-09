@@ -186,7 +186,6 @@ namespace WPFUI.Models
 
             this._socket.Emit("sent_path", this._traitJSON);
 
-
         }
 
     }
