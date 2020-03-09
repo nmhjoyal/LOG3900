@@ -98,7 +98,11 @@ namespace WPFUI.ViewModels
 
         private void sendStrokeAction(Object o)
         {
-            MessageBox.Show("SALUT");
+            string path = Traits[Traits.Count - 1].GetGeometry().ToString();
+            string width = Traits[Traits.Count - 1].DrawingAttributes.Width.ToString();
+            bool stylusTip = true;//Traits[Traits.Count - 1].DrawingAttributes.StylusTip;
+            string color = Traits[Traits.Count - 1].DrawingAttributes.Color.ToString();
+
         }
 
         /// <summary>

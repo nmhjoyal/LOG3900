@@ -17,9 +17,12 @@ namespace WPFUI.Models
         public IUserData _userdata;
         public IEventAggregator _events;
         public User _user;
+        public Trait _trait;
         public string _userJSON;
         Socket _socket;
         public bool _canConnect;
+        private string _traitJSON;
+
 
         public bool canConnect
         {
@@ -40,6 +43,13 @@ namespace WPFUI.Models
         {
             get { return _user; }
             set { _user = value; }
+        }
+       
+
+        public string traitJSon
+        {
+            get { return _traitJSON; }
+            set { _traitJSON = value; }
         }
 
         public Socket socket { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -164,6 +174,19 @@ namespace WPFUI.Models
                 var result = streamReader.ReadToEnd();
                 Console.WriteLine(result);
             }
+        }
+
+        public void sendStroke(string path, string couleur, string width, bool stylusTip)
+        {
+
+
+            _trait = new Trait(path,couleur,width,stylusTip);
+
+            this._traitJSON = JsonConvert.SerializeObject(_trait);
+
+            this._socket.Emit("sent_path", this._traitJSON);
+
+
         }
 
     }
