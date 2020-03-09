@@ -50,7 +50,7 @@ namespace WPFUI.Models
             _events = events;
             // TestPOSTWebRequest(user);
             // TestGETWebRequest("Testing get...");
-            this._socket = IO.Socket("http://192.168.0.152:5000");
+            this._socket = IO.Socket("http://10.200.11.8:5000");
             _socket.On("user_signed_in", (signInFeedback) =>
             {
                 Console.WriteLine("hello");
@@ -133,7 +133,7 @@ namespace WPFUI.Models
         }
         public static void TestPOSTWebRequest(Object obj, string url)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://192.168.0.152:5000" + url);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://10.200.11.8:5000" + url);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
@@ -154,7 +154,7 @@ namespace WPFUI.Models
 
         public static void TestGETWebRequest(string request)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://192.168.0.152:5000/user/" + request);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://10.200.11.8:5000/user/" + request);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "GET";
 

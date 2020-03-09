@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Ink;
 using System.Windows.Media;
 using WPFUI.EventModels;
@@ -59,6 +60,8 @@ namespace WPFUI.ViewModels
 
         public RelayCommand<string> ChoisirPointe { get; set; }
         public RelayCommand<string> ChoisirOutil { get; set; }
+        public RelayCommand<object> SendStroke { get; set; }
+
 
 
         /// <summary>
@@ -72,7 +75,7 @@ namespace WPFUI.ViewModels
         private ISocketHandler _socketHandler;
         public FenetreDessinViewModel(IEventAggregator events, ISocketHandler socketHandler)
         {
-
+            SendStroke = new RelayCommand<object>(sendStrokeAction);
             _socketHandler = socketHandler;
             _events = events;
             // On écoute pour des changements sur le modèle. Lorsqu'il y en a, EditeurProprieteModifiee est appelée.
@@ -91,6 +94,11 @@ namespace WPFUI.ViewModels
             ChoisirPointe = new RelayCommand<string>(editeur.ChoisirPointe);
             ChoisirOutil = new RelayCommand<string>(editeur.ChoisirOutil);
 
+        }
+
+        private void sendStrokeAction(Object o)
+        {
+            MessageBox.Show("SALUT");
         }
 
         /// <summary>
@@ -154,6 +162,8 @@ namespace WPFUI.ViewModels
         {
             _events.PublishOnUIThread(new goBackMainEvent());
         }
+
+
 
     }
 

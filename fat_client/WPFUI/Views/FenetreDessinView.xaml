@@ -66,6 +66,7 @@
                     <Button Click="Button_Click" Content="Capture Image" Width="120" Margin="20,0,0,0" FontSize="12" BorderBrush="{x:Null}" Background="#FFCFD1D0" Foreground="White"/>
 
                     <Button Click="Button_Click_1" Content="Save To Disk" Width="120" Margin="10,0,0,0" FontSize="12" BorderBrush="{x:Null}" Background="#FFCFD1D0" Foreground="White"/>
+                    <Button Command="{Binding SendStroke}" Content="Send" Width="120" Margin="10,0,0,0" FontSize="12" BorderBrush="{x:Null}" Background="#FFCFD1D0" Foreground="White"/>
                     <Button x:Name="mainMenu" Style="{DynamicResource MaterialDesignRaisedAccentButton}" FontSize="12" MaxWidth =" 100" Margin="10,0,0,0" Content="Go Back" Background="#FFB4745C" BorderBrush="{x:Null}" Foreground="White"/>
                 </StackPanel>
 
