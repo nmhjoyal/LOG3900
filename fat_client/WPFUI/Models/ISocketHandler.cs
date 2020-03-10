@@ -17,7 +17,7 @@ namespace WPFUI.Models
         // void On(object eVENT_DISCONNECT);
         //void sendMessage();
 
-        void getStrokes(InkCanvas Canvas);
+       // void getStrokes(InkCanvas Canvas);
         void SignOut();
     }
 }

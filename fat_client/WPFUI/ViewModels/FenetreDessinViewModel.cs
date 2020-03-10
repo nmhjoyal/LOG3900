@@ -68,8 +68,8 @@ namespace WPFUI.ViewModels
 
         public RelayCommand<string> ChoisirPointe { get; set; }
         public RelayCommand<string> ChoisirOutil { get; set; }
-        public RelayCommand<object> SendStroke { get; set; }
 
+        public RelayCommand<object> SendPoint { get; set; }
 
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace WPFUI.ViewModels
         public FenetreDessinViewModel(IEventAggregator events, ISocketHandler socketHandler, InkCanvas canvas)
         {
             Canvas = canvas;
-            SendStroke = new RelayCommand<object>(sendStrokeAction);
+            SendPoint = new RelayCommand<object>(sendStrokeAction);
             _socketHandler = socketHandler;
             _events = events;
             // On écoute pour des changements sur le modèle. Lorsqu'il y en a, EditeurProprieteModifiee est appelée.
@@ -110,17 +110,29 @@ namespace WPFUI.ViewModels
             // Donc, aucune vérification de type Peut"Action" à faire.
             ChoisirPointe = new RelayCommand<string>(editeur.ChoisirPointe);
             ChoisirOutil = new RelayCommand<string>(editeur.ChoisirOutil);
-            _socketHandler.getStrokes(Canvas);
+            //_socketHandler.getStrokes(Canvas);
         }
 
         private void sendStrokeAction(Object o)
         {
+           for(int i = 0; i < Traits.Count; i++)
+            {
+                string width = Traits[i].DrawingAttributes.Width.ToString();
+                bool stylusTip = true;//Traits[Traits.Count - 1].DrawingAttributes.StylusTip;
+                string color = Traits[i].DrawingAttributes.Color.ToString();
+                for (int j = 0; j < Traits[i].StylusPoints.Count; j++)
+                {
+                    Console.WriteLine(j);
+                    double x = Traits[i].StylusPoints[j].X;
+                    double y = Traits[i].StylusPoints[j].Y;
+                    SocketHandler.sendPoint(x, y, color, width, stylusTip);
+                }
+            }
+           /*
             string path = Traits[Traits.Count - 1].GetGeometry().ToString();
-            string width = Traits[Traits.Count - 1].DrawingAttributes.Width.ToString();
-            bool stylusTip = true;//Traits[Traits.Count - 1].DrawingAttributes.StylusTip;
-            string color = Traits[Traits.Count - 1].DrawingAttributes.Color.ToString();
             SocketHandler socketHandler = new SocketHandler(userdata,events);
             socketHandler.sendStroke(path, color, width, stylusTip);
+            */
         }
 
         

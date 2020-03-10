@@ -188,7 +188,14 @@ namespace WPFUI.Models
             this._socket.Emit("sent_path", this._traitJSON);
 
         }
-        private void getStrokes(InkCanvas Canvas)
+
+        public static void sendPoint(double x, double y, string couleur, string width, bool stylusTip)
+        {
+            DrawPoint drawPoint = new DrawPoint(x, y, couleur, width);
+            string drawPointJSON = JsonConvert.SerializeObject(drawPoint);
+            // this._socket.Emit("drawTest", drawPointJSON);
+        }
+        /*private void getStrokes(InkCanvas Canvas)
         {
             _socket.On("receive_path", (response) =>
             {
@@ -203,7 +210,7 @@ namespace WPFUI.Models
 
                 Canvas.Children.Add(path);
             });
-        }
+        }*/
 
     }
 
