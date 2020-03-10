@@ -26,7 +26,7 @@ export class ProfileController {
         } else {
             try {
                 const generalRoomId: string = "General";
-                profile.rooms_joined.push(generalRoomId);
+                profile.rooms_joined = [generalRoomId];
                 const publicProfile: PublicProfile = {
                     username: profile.username,
                     avatar: profile.avatar
