@@ -1,4 +1,4 @@
-export interface Color {
+export interface RGB {
     r: number
     g: number
     b: number
@@ -10,7 +10,7 @@ export interface Position {
 }
 
 export default interface DrawPoint {
-    rgb: Color
+    color: RGB
     pos: Position
     width: number
 }
