@@ -13,10 +13,25 @@ namespace WPFUI.Models
         private string _password;
         private string _ipAdress;
         private string _currentMessage;
-        private BindableCollection<MessageModel> _messages;
+        private string _currentRoomId;
+        private BindableCollection<Message> _messages;
+        private BindableCollection<Room> _channels;
+        private BindableCollection<string> _publicRooms;
 
-        public BindableCollection<MessageModel> messages
+        public string currentRoomId
         {
+            get { return _currentRoomId; }
+            set { _currentRoomId = value; }
+        }
+        public BindableCollection<Room> channels
+        {
+            get { return _channels; }
+            set { _channels = value; }
+        }
+
+        public BindableCollection<Message> messages
+        {
+
             get { return _messages; }
             set { _messages = value; }
         }
@@ -55,8 +70,9 @@ namespace WPFUI.Models
             _userName = userName;
             _ipAdress = ipAdress;
             _password = password;
-            _messages = new BindableCollection<MessageModel>();
-            clearData();
+            _messages = new BindableCollection<Message>();
+            _channels = new BindableCollection<Room>();
+            _currentRoomId = "room1";
         }
 
         public void clearData()
@@ -65,10 +81,15 @@ namespace WPFUI.Models
             _userName = "";
             _ipAdress = "";
             _password = "";
-            _messages = new BindableCollection<MessageModel>();
-
+            _messages = new BindableCollection<Message>();
+            _channels = new BindableCollection<Room>();
         }
 
+        public void changeChannel(string roomID)
+        {
+            _currentRoomId = roomID;
+            messages = new BindableCollection<Message>(_channels.Single(i => i.roomName == roomID).messages);
+        }
 
     }
 }

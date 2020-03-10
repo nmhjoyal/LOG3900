@@ -14,7 +14,7 @@ namespace WPFUI.ViewModels
     {
         private IEventAggregator _events;
         private IUserData _userData;
-        private BindableCollection<MessageModel> _messages;
+        private BindableCollection<Models.Message> _messages;
         private string _currentMessage;
         private ISocketHandler _socketHandler;
 
@@ -36,7 +36,7 @@ namespace WPFUI.ViewModels
                 //sendMessage();
             }
         }
-        public BindableCollection<MessageModel> messages
+        public BindableCollection<Models.Message> messages
         {
             get { return _messages; }
             set { _messages = value;

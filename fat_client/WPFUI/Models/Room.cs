@@ -8,9 +8,9 @@ namespace WPFUI.Models
 {
     public class Room
     {
-        string id;
-        Message[] messages;
-        Dictionary<string, string> avatars;
+        public string id;
+        public Message[] messages;
+        public Dictionary<string, string> avatars;
 
         public Room(string id,
         Message[] messages,

@@ -110,6 +110,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Commands\changeChannelCommand.cs" />
+    <Compile Include="Commands\IchangeChannelCommand.cs" />
     <Compile Include="Converters\Converters.cs" />
     <Compile Include="EventModels\AssisteIEvent.cs" />
     <Compile Include="EventModels\connectionEvent.cs" />

@@ -50,38 +50,29 @@ namespace WPFUI.Models
             _events = events;
             // TestPOSTWebRequest(user);
             // TestGETWebRequest("Testing get...");
-            this._socket = IO.Socket("http://192.168.0.152:5000");
+            this._socket = IO.Socket("http://localhost:5000");
             _socket.On("user_signed_in", (signInFeedback) =>
             {
-                Console.WriteLine("hello");
                 dynamic json = JsonConvert.DeserializeObject(signInFeedback.ToString());
                 if ((Boolean)json.feedback.status)
                 {
-                    Console.WriteLine("connect");
                     _events.PublishOnUIThread(new LogInEvent());
-                }
-                else
-                {
-                    Console.WriteLine("cant connect");
                 }
                 //voir doc
             });
 
-            /* _socket.On("new_message", (message) =>
+            /*_socket.On("new_message", (message) =>
              {
                  Message newMessage = JsonConvert.DeserializeObject<Message>(message.ToString());
-                 Console.WriteLine(newMessage.date);
-                 MessageModel newMessageModel = new MessageModel(newMessage.content, newMessage.author.username,
-                                                                 newMessage.date);
-                 _userdata.messages.Add(newMessageModel);
-             });*/
+                 _userdata.messages.Add(newMessage);
+             }); */
 
-            _socket.On("new_client", (socketId) =>
+            /*_socket.On("new_client", (socketId) =>
             {
                 MessageModel newMessageModel = new MessageModel("Nouvelle connection de: " + socketId.ToString(), "Server");
                 _userdata.messages.Add(newMessageModel);
                 ///Console.WriteLine(socketId + " is connected");
-            });
+            });*/
 
             _socket.On("user_signed_out", (feedback) =>
             {
@@ -97,18 +88,12 @@ namespace WPFUI.Models
 
         public void connectionAttempt()
         {
-            
-
             _user = new User(_userdata.userName, _userdata.password);
-
             this._userJSON = JsonConvert.SerializeObject(_user);
-
             Console.WriteLine(this._userJSON);
-
             this._socket.Emit("sign_in", this._userJSON);
-
-           
         }
+
         public void SignOut()
         {
             this._socket.Emit("sign_out");  
@@ -128,12 +113,16 @@ namespace WPFUI.Models
 
         public void createUser(PrivateProfile privateProfile)
         { 
-                TestPOSTWebRequest(privateProfile, "/profile/create/");
+            TestPOSTWebRequest(privateProfile, "/profile/create/");
+        }
 
+        public void getPublicChannels()
+        {
+            _socket.Emit("get_rooms");
         }
         public static void TestPOSTWebRequest(Object obj, string url)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://192.168.0.152:5000" + url);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000" + url);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
@@ -154,7 +143,7 @@ namespace WPFUI.Models
 
         public static void TestGETWebRequest(string request)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://192.168.0.152:5000/user/" + request);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000/user/" + request);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "GET";
 

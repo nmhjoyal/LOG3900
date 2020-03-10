@@ -39,6 +39,7 @@ export default class ChatController {
 
     @OnMessage("get_rooms")
     public async getRooms(@ConnectedSocket() socket: SocketIO.Socket) {
+        console.log("get rooms");
         socket.emit("rooms_retrived", await roomDB.getRooms());
     }
 }

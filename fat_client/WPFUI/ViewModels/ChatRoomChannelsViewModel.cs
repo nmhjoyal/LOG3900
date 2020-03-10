@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WPFUI.Commands;
 using WPFUI.EventModels;
 using WPFUI.Models;
 
@@ -15,6 +16,22 @@ namespace WPFUI.ViewModels
         private ISocketHandler _socketHandler;
         private BindableCollection<Room> _availableRooms;
         private BindableCollection<Room> _joinedRooms;
+        public IchangeChannelCommand _changeChannelCommand { get; set; }
+        private string _selectedChannelId;
+        private string _currentRoomId;
+
+        public string currentRoomMessage
+        {
+            get { return "Current room is " + _currentRoomId; }
+        }
+
+
+        public string selectedChannelId
+        {
+            get { return _selectedChannelId; }
+            set { _selectedChannelId = value; }
+        }
+
 
         public BindableCollection<Room> availableRooms
         {
@@ -35,24 +52,19 @@ namespace WPFUI.ViewModels
                 NotifyOfPropertyChange(() => joinedRooms);
             }
         }
-        public ChatRoomChannelsViewModel(IEventAggregator events, ISocketHandler socketHandler)
+        public ChatRoomChannelsViewModel(IEventAggregator events, ISocketHandler socketHandler, IUserData userdata)
         {
             _events = events;
             _socketHandler = socketHandler;
             _availableRooms = new BindableCollection<Room>();
             _joinedRooms = new BindableCollection<Room>();
-            addFakeRooms();
+            _changeChannelCommand = new changeChannelCommand(userdata);
+            _currentRoomId = userdata.currentRoomId;
         }
 
-        public void addFakeRooms()
+        private void getPublicChannels()
         {
-            availableRooms.Add(new Room("room1", null, null));
-            availableRooms.Add(new Room("room2", null, null));
-            availableRooms.Add(new Room("room5", null, null));
-            availableRooms.Add(new Room("room6", null, null));
-
-            joinedRooms.Add(new Room("room3", null, null));
-            joinedRooms.Add(new Room("room4", null, null));
+            //_socketHandler.
         }
     }
 }
