@@ -7,8 +7,8 @@ using Newtonsoft.Json;
 using Quobject.SocketIoClientDotNet.Client;
 using Socket = Quobject.SocketIoClientDotNet.Client.Socket;
 using WPFUI.EventModels;
-
-
+using System.Windows.Media;
+using System.Windows.Controls;
 
 namespace WPFUI.Models
 {
@@ -17,9 +17,12 @@ namespace WPFUI.Models
         public IUserData _userdata;
         public IEventAggregator _events;
         public User _user;
+        public Trait _trait;
         public string _userJSON;
         Socket _socket;
         public bool _canConnect;
+        private string _traitJSON;
+
 
         public bool canConnect
         {
@@ -40,6 +43,13 @@ namespace WPFUI.Models
         {
             get { return _user; }
             set { _user = value; }
+        }
+
+
+        public string traitJSon
+        {
+            get { return _traitJSON; }
+            set { _traitJSON = value; }
         }
 
         public Socket socket { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -84,6 +94,12 @@ namespace WPFUI.Models
                 //voir doc
             });
 
+            _socket.On("rooms_retrived", (feedback) =>
+            {
+                dynamic json = JsonConvert.DeserializeObject(feedback.ToString());
+                //_events.PublishOnUIThread(new logOutEvent());
+            });
+
         }
 
         public void connectionAttempt()
@@ -96,23 +112,23 @@ namespace WPFUI.Models
 
         public void SignOut()
         {
-            this._socket.Emit("sign_out");  
+            this._socket.Emit("sign_out");
         }
         public void disconnect()
         {
             _socket.Disconnect();
         }
-       /* public void sendMessage()
-        {
-            Message message = new Message(_user, _userdata.currentMessage, 0);
-            if(message.content.Trim() != "")
-            {
-                _socket.Emit("send_message", JsonConvert.SerializeObject(message));
-            }
-        }*/
+        /* public void sendMessage()
+         {
+             Message message = new Message(_user, _userdata.currentMessage, 0);
+             if(message.content.Trim() != "")
+             {
+                 _socket.Emit("send_message", JsonConvert.SerializeObject(message));
+             }
+         }*/
 
         public void createUser(PrivateProfile privateProfile)
-        { 
+        {
             TestPOSTWebRequest(privateProfile, "/profile/create/");
         }
 
@@ -153,6 +169,35 @@ namespace WPFUI.Models
                 var result = streamReader.ReadToEnd();
                 Console.WriteLine(result);
             }
+        }
+
+        public void sendStroke(string path, string couleur, string width, bool stylusTip)
+        {
+
+
+            _trait = new Trait(path, couleur, width, stylusTip);
+            Console.WriteLine(_trait.ToString());
+            this._traitJSON = JsonConvert.SerializeObject(_trait);
+            Console.WriteLine(_traitJSON.ToString());
+
+            this._socket.Emit("sent_path", this._traitJSON);
+
+        }
+        public void getStrokes(InkCanvas Canvas)
+        {
+            _socket.On("receive_path", (response) =>
+            {
+                Trait json = JsonConvert.DeserializeObject<Trait>(response.ToString());
+                System.Windows.Shapes.Path path = new System.Windows.Shapes.Path();
+                path.Data = Geometry.Parse(json.path);
+                path.StrokeThickness = 1;
+                path.Stroke = System.Windows.Media.Brushes.Blue;
+                path.StrokeEndLineCap = PenLineCap.Round;
+                path.StrokeStartLineCap = PenLineCap.Round;
+                path.StrokeLineJoin = PenLineJoin.Round;
+
+                Canvas.Children.Add(path);
+            });
         }
 
     }

@@ -76,6 +76,11 @@ namespace WPFUI.Utilitaires
             _execute((T)parameter);
         }
 
+        public static implicit operator RelayCommand<T>(RelayCommand<object> v)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

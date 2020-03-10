@@ -29,7 +29,7 @@ namespace WPFUI.Views
         public FenetreDessinView()
         {
             InitializeComponent();
-            DataContext = new FenetreDessinViewModel(events, socketHandler);
+            DataContext = new FenetreDessinViewModel(events, socketHandler, surfaceDessin);
         }
 
 
