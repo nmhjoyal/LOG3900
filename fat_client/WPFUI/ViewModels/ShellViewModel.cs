@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Quobject.SocketIoClientDotNet.Client;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,8 +20,9 @@ namespace WPFUI.ViewModels
 		private IEventAggregator _events;
 		private SimpleContainer _container;
 		private IWindowManager _windowManager;
+		private ISocketHandler _socketHandler;
 
-		public ShellViewModel(IWindowManager windowManager, IEventAggregator events, SimpleContainer container)
+		public ShellViewModel(IWindowManager windowManager, IEventAggregator events, SimpleContainer container, ISocketHandler socketHandler)
 		{
 			_windowManager = windowManager;
 			_container = container;
@@ -28,6 +30,7 @@ namespace WPFUI.ViewModels
 			_events.Subscribe(this);
 			Items.Add(_container.GetInstance<LoginViewModel>());
 			Items.Add(_container.GetInstance<EmptyViewModel>());
+			this._socketHandler = socketHandler;
 		}
 
 		public Screen FirstSubViewModel

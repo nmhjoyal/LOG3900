@@ -19,5 +19,7 @@ namespace WPFUI.Models
 
        // void getStrokes(InkCanvas Canvas);
         void SignOut();
+
+        void freeDraw(InkCanvas _canvas);
     }
 }

@@ -52,7 +52,7 @@ namespace WPFUI.Models
             set { _traitJSON = value; }
         }
 
-        public Socket socket { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Socket socket { get => this._socket; set => throw new NotImplementedException(); }
 
         public SocketHandler(IUserData userdata, IEventAggregator events)
         {
@@ -60,7 +60,7 @@ namespace WPFUI.Models
             _events = events;
             // TestPOSTWebRequest(user);
             // TestGETWebRequest("Testing get...");
-            this._socket = IO.Socket("http://10.200.11.8:5000");
+            this._socket = IO.Socket("http://localhost:5000");
             _socket.On("user_signed_in", (signInFeedback) =>
             {
                 Console.WriteLine("hello");
@@ -143,7 +143,7 @@ namespace WPFUI.Models
         }
         public static void TestPOSTWebRequest(Object obj, string url)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://10.200.11.8:5000" + url);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000" + url);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
@@ -164,7 +164,7 @@ namespace WPFUI.Models
 
         public static void TestGETWebRequest(string request)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://10.200.11.8:5000/user/" + request);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000/user/" + request);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "GET";
 
@@ -188,14 +188,8 @@ namespace WPFUI.Models
             this._socket.Emit("sent_path", this._traitJSON);
 
         }
-
-        public static void sendPoint(double x, double y, string couleur, string width, bool stylusTip)
-        {
-            DrawPoint drawPoint = new DrawPoint(x, y, couleur, width);
-            string drawPointJSON = JsonConvert.SerializeObject(drawPoint);
-            // this._socket.Emit("drawTest", drawPointJSON);
-        }
-        /*private void getStrokes(InkCanvas Canvas)
+  
+        /*public void getStrokes(InkCanvas Canvas)
         {
             _socket.On("receive_path", (response) =>
             {
@@ -211,6 +205,14 @@ namespace WPFUI.Models
                 Canvas.Children.Add(path);
             });
         }*/
+
+        public void freeDraw(InkCanvas canvas)
+        {
+            this.socket.On("drawPoint", (point) => {
+                dynamic json = JsonConvert.DeserializeObject(point.ToString());
+                Console.WriteLine(point);
+            });
+        }
 
     }
 
