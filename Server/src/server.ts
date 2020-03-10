@@ -11,7 +11,8 @@ import * as ServerConfig from "./serverConfig.json";
 import { useSocketServer } from "socket-controllers";
 import { ServerController } from "./controller/socket/serverController";
 import * as socketioImport from "socket.io";
-import { ChatController } from "./controller/socket/chatController";
+import ChatController from "./controller/socket/chatController";
+import MatchController from "./controller/socket/matchController";
 
 @injectable()
 export class Server {
@@ -35,7 +36,7 @@ export class Server {
         // Start socket 
         const io: SocketIO.Server = socketioImport(this.server);
         useSocketServer(io, {
-            controllers: [ ServerController, ChatController ]
+            controllers: [ ServerController, ChatController, MatchController ]
         });  
 
         // Start http server

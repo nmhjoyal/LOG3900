@@ -8,6 +8,7 @@ import { profileDB } from "./Database/profileDB";
 import { serverHandler } from "./serverHandler";
 import ChatFilter from "./Filter/chatFilter";
 import PublicProfile from "../models/publicProfile";
+import AvatarUpdate from "../models/avatarUpdate";
 
 
 export default class ChatHandler {
@@ -51,7 +52,7 @@ export default class ChatHandler {
                 log_message = CreateRoomStatus.AlreadyCreated
             }
         } else {
-            log_message = CreateRoomStatus.UserNotConnected;
+            log_message = CreateRoomStatus.InvalidUser;
         }
         
         const feedback: Feedback = {
@@ -140,6 +141,7 @@ export default class ChatHandler {
                         avatar : user.avatar
                     };
                     await roomDB.mapAvatar(publicProfile, room.id);
+                    this.notifyAvatarUpdate(io, publicProfile, room.id);
                     await roomDB.addMessage(this.connectSocketToRoom(io, socket, user, room.id));
                     room_joined = room;
                     status = true;
@@ -309,11 +311,6 @@ export default class ChatHandler {
     }
 
     private connectSocketToRoom(io: SocketIO.Server, socket: SocketIO.Socket, user: PrivateProfile, roomId: string): Message {
-        /*
-        socket.join(roomId, () => {
-            console.log("join private room:", io.sockets.sockets[socket.id].rooms);
-        });
-        */
         socket.join(roomId);
         const message: Message = Admin.createAdminMessage(user.username + " joined the room.", roomId);
         socket.to(roomId).emit("new_message", JSON.stringify(message));
@@ -336,5 +333,13 @@ export default class ChatHandler {
         } catch {}
 
         return socketIds;
+    }
+
+    public notifyAvatarUpdate(io: SocketIO.Server, publicProfile: PublicProfile, roomId: string) : void {
+        const avatarUpdate: AvatarUpdate = {
+            roomId: roomId,
+            updatedProfile: publicProfile 
+        };
+        io.in(roomId).emit("avatar_updated", JSON.stringify(avatarUpdate));
     }
 }

@@ -23,8 +23,8 @@ export class ServerController {
     }
 
     @OnMessage("sign_out")
-    public async sign_out(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
-        socket.emit("user_signed_out", JSON.stringify(await serverHandler.signOut(io, socket)));
+    public sign_out(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
+        socket.emit("user_signed_out", JSON.stringify(serverHandler.signOut(io, socket)));
     }
 
     @OnMessage("update_profile")

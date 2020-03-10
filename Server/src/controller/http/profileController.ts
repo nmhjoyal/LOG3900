@@ -5,6 +5,7 @@ import { Feedback } from "../../models/feedback";
 import Admin from "../../models/admin";
 import { roomDB } from "../../services/Database/roomDB";
 import PublicProfile from "../../models/publicProfile";
+import { serverHandler } from "../../services/serverHandler";
 
 /**
  * ProfileController is used to manage user profiles in the database. 
@@ -43,12 +44,13 @@ export class ProfileController {
     }
 
     @Delete("/:userName")
-    public async deleteUserInfos(@Param("userName") userName: string): Promise<Feedback> {
+    public async deleteUserInfos(@Param("userName") username: string): Promise<Feedback> {
 
-        await profileDB.deleteProfile(userName);
+        await profileDB.deleteProfile(username);
+        serverHandler.users.delete(username);
         let feedback: Feedback = {
             status: true,
-            log_message: "Profile " + userName + " deleted!"
+            log_message: "Profile " + username + " deleted!"
         };
         
         return feedback;
