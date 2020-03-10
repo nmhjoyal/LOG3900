@@ -208,6 +208,7 @@ namespace WPFUI.Models
 
         public void freeDraw(InkCanvas canvas)
         {
+            this.socket.Emit("connect_free_draw");
             this.socket.On("drawPoint", (point) => {
                 dynamic json = JsonConvert.DeserializeObject(point.ToString());
                 Console.WriteLine(point);
