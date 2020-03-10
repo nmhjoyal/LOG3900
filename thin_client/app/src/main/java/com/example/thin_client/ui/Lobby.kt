@@ -30,6 +30,7 @@ import com.example.thin_client.ui.chat.ChatFragment
 import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
 import com.example.thin_client.ui.game_mode.free_draw.FreeDrawActivity
 import com.example.thin_client.ui.game_mode.free_draw.TestOnlineDrawActivity
+import com.example.thin_client.ui.leaderboard.LeaderboardActivity
 import com.example.thin_client.ui.login.LoginActivity
 import com.example.thin_client.ui.profile.ProfileActivity
 import com.github.nkzawa.socketio.client.Socket
@@ -114,6 +115,10 @@ class Lobby : AppCompatActivity() {
             }
             R.id.menu_profile -> {
                 val intent = Intent(applicationContext, ProfileActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.leaderboard -> {
+                val intent = Intent(applicationContext, LeaderboardActivity::class.java)
                 startActivity(intent)
             }
         }
