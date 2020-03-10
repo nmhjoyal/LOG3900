@@ -8,6 +8,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ImageButton
+            android:id="@+id/leave_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/circle_red"
+            android:layout_margin="16dp"
+            android:contentDescription="@string/leave_room_cd"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_delete_24px" />
+
         <TextView
             android:id="@+id/room_name"
             android:layout_width="wrap_content"

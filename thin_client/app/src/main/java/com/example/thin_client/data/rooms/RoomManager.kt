@@ -5,10 +5,12 @@ import com.example.thin_client.data.model.Room
 
 object RoomManager {
     var roomsJoined: MutableMap<String, ArrayList<Message>> = mutableMapOf()
+    var currentRoom: String = ""
+    var roomToDelete: String = ""
 
     fun createRoomList(rooms: MutableList<Room>) {
         for(room in rooms){
-            roomsJoined.put(room.name,room.messages)
+            roomsJoined.put(room.id, room.messages)
         }
 
     }
@@ -21,7 +23,8 @@ object RoomManager {
         roomsJoined.put(roomId, messagesList)
     }
 
-    fun leaveRoom(room: String) {
-        roomsJoined.remove(room)
+    fun leaveRoom() {
+        roomsJoined.remove(roomToDelete)
+        roomToDelete = ""
     }
 }

@@ -1,7 +1,5 @@
 package com.example.thin_client.ui.game_mode.free_draw
 
-import com.divyanshu.draw.widget.MyPath
-
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
@@ -10,14 +8,28 @@ import android.view.View
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
+import androidx.core.graphics.blue
+import androidx.core.graphics.green
+import androidx.core.graphics.red
+import com.divyanshu.draw.widget.MyPath
 import com.example.thin_client.R
 import com.example.thin_client.data.PaintOptions
-import java.util.LinkedHashMap
+import com.example.thin_client.data.drawing.DrawPoint
+import com.example.thin_client.data.drawing.Point
+import com.example.thin_client.data.drawing.RGB
+import com.example.thin_client.server.SocketHandler
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.collections.iterator
+
 
 /* https://github.com/divyanshub024/AndroidDraw */
 
 class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     var mPaths = LinkedHashMap<MyPath, PaintOptions>()
+    var isDrawer: Boolean = true
 
     private var mLastPaths = LinkedHashMap<MyPath, PaintOptions>()
 
@@ -95,6 +107,17 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         canvas.drawPath(mPath, mPaint)
     }
 
+    fun addPath(drawPoint: DrawPoint) {
+        mPath.moveTo(drawPoint.point.x.toFloat(), drawPoint.point.y.toFloat())
+        mPath.lineTo(drawPoint.point.x.toFloat(), drawPoint.point.y.toFloat())
+        mPaint.color =
+            (255 and 0xff) shl 24 or (drawPoint.rgb.r.toInt() and 0xff) shl 16 or
+                    (drawPoint.rgb.g.toInt() and 0xff) shl 8 or
+                    (drawPoint.rgb.b.toInt() and 0xff)
+        mPaint.strokeWidth = drawPoint.width.toFloat()
+        invalidate()
+    }
+
     private fun changePaint(paintOptions: PaintOptions) {
         mPaint.color = paintOptions.color
         mPaint.strokeWidth = paintOptions.strokeWidth
@@ -135,6 +158,8 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
                 mPaths.remove(path)
             }
         } else {
+            SocketHandler.drawPoint(DrawPoint(RGB(mPaintOptions.color.red, mPaintOptions.color.green, mPaintOptions.color.blue),
+                Point(mCurX.toInt(), mCurY.toInt()), mPaintOptions.strokeWidth))
             mPath.quadTo(mCurX, mCurY, (x + mCurX) / 2, (y + mCurY) / 2)
             mCurX = x
             mCurY = y
@@ -165,6 +190,9 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (!isDrawer) {
+            return false
+        }
         val x = event.x
         val y = event.y
 

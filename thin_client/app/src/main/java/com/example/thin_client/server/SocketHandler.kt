@@ -1,7 +1,10 @@
 package com.example.thin_client.server
 
 import com.example.thin_client.data.ClientMessage
+import com.example.thin_client.data.drawing.DrawPoint
+import com.example.thin_client.data.model.PrivateProfile
 import com.example.thin_client.data.model.User
+import com.example.thin_client.data.rooms.CreateRoom
 import com.example.thin_client.data.server.HTTPRequest
 import com.example.thin_client.data.server.SocketEvent
 import com.github.nkzawa.socketio.client.IO
@@ -11,6 +14,7 @@ import com.google.gson.Gson
 object SocketHandler {
     var user: User? = null
     var socket: Socket? = null
+    var isLoggedIn = false
 
 
     fun connect(): Socket {
@@ -24,6 +28,7 @@ object SocketHandler {
             socket!!.disconnect()
             socket = null
         }
+        isLoggedIn = false
     }
 
     fun login(user: User) {
@@ -53,7 +58,32 @@ object SocketHandler {
         socket!!.emit(SocketEvent.LEAVE_ROOM, roomid)
     }
 
-    fun createChatRoom(roomid: String) {
-        socket!!.emit(SocketEvent.CREATE_ROOM, roomid)
+    fun deleteChatRoom(roomid: String) {
+        socket!!.emit(SocketEvent.DELETE_ROOM, roomid)
+    }
+
+    fun createChatRoom(roomid: String, isPrivate: Boolean) {
+        val newRoom = Gson().toJson(CreateRoom(roomid,  isPrivate))
+        socket!!.emit(SocketEvent.CREATE_ROOM, newRoom)
+    }
+
+    fun updateProfile(privateProfile: PrivateProfile) {
+        val gson = Gson()
+        val args = gson.toJson(privateProfile)
+        socket!!.emit(SocketEvent.UPDATE_PROFILE, args)
+    }
+
+    fun connectOnlineDraw() {
+        socket!!.emit(SocketEvent.CONNECT_FREE_DRAW)
+    }
+
+    fun disconnectOnlineDraw() {
+        socket!!.emit(SocketEvent.DISCONNECT_FREE_DRAW)
+    }
+
+    fun drawPoint(drawPoint: DrawPoint) {
+        val gson = Gson()
+        val args = gson.toJson(drawPoint)
+        socket!!.emit(SocketEvent.DRAW_TEST, args)
     }
 }

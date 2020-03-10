@@ -1,5 +1,7 @@
 package com.example.thin_client.data.model
 
+import com.example.thin_client.data.Message
+
 data class PrivateProfile (
     val username: String,
     val firstname : String,

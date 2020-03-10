@@ -4,6 +4,21 @@
     <string name="ok">OK</string>
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
+    <string name="sign_out">Sign out</string>
+    <string name="profile">User profile</string>
+
+    <!-- Profile -->
+    <style name="profile">Profile</style>
+    <string name="edit_profile">Edit profile</string>
+    <string name="change_avatar">Change your avatar</string>
+    <string name="undo_changes">Undo</string>
+    <string name="stats">Stats</string>
+    <string name="game_stats">Game stats</string>
+    <string name="user_stats">User stats</string>
+    <string name="stat_placeholder">PLACEHOLDER</string>
+    <string name="delete_profile">Delete profile</string>
+    <string name="delete">DELETE</string>
+    <string name="delete_profile_warning">Are you sure you want to delete your profile? You will lose all your progress. This action is IRREVERSIBLE.</string>
 
     <!-- Strings related to login -->
     <string name="prompt_password">Password</string>
@@ -14,10 +29,13 @@
     <string name="invalid_password">Invalid Password</string>
     <string name="login_failed">Failed to connect</string>
     <string name="error_logging_in">Error logging in, please sign in again.</string>
+    <string name="error_connect_title">Server error</string>
+    <string name="error_connect">Error connecting to server. Please try again later.</string>
 
     <!-- Strings related to chat -->
     <string name="default_message">Type message here</string>
     <string name="send_button">Send</string>
+    <string name="left_chat">Left chat successfully.</string>
     <string name="user_joined">User %1$s has joined the chat.</string>
     <string name="user_left">User %1$s has left the chat.</string>
 
@@ -27,6 +45,9 @@
     <string name="create_room">Create a room</string>
     <string name="room_name">Enter room name</string>
     <string name="error_roomname">Room name cannot be blank</string>
+    <string name="show_rooms">Show rooms</string>
+    <string name="public_room">Public</string>
+    <string name="private_room">Private</string>
 
     <!-- Strings for create user -->
     <string name="prompt_first_name">First Name</string>
@@ -44,6 +65,7 @@
 
     <!-- Strings for free draw mode -->
     <string name="title_activity_free_draw">Free Draw</string>
+    <string name="title_activity_free_draw_test">Free Draw online test</string>
     <string name="palette_cd">Pick a colour</string>
     <string name="crayon_cd">Crayon</string>
     <string name="eraser_cd">Eraser</string>

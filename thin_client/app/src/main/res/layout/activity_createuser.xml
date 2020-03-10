@@ -245,7 +245,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:layout_margin="32dp"
-        android:background="@drawable/button_primary"
+        android:background="@drawable/button_primary_selector"
         android:enabled="false"
         android:text="@string/action_create"
         android:textColor="@color/color_white"
