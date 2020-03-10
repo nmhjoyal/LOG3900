@@ -9,6 +9,9 @@ using Socket = Quobject.SocketIoClientDotNet.Client.Socket;
 using WPFUI.EventModels;
 using System.Windows.Media;
 using System.Windows.Controls;
+using Newtonsoft.Json.Linq;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace WPFUI.Models
 {
@@ -63,9 +66,10 @@ namespace WPFUI.Models
             this._socket = IO.Socket("http://localhost:5000");
             _socket.On("user_signed_in", (signInFeedback) =>
             {
-                dynamic json = JsonConvert.DeserializeObject(signInFeedback.ToString());
-                if ((Boolean)json.feedback.status)
+                SignInFeedback feedback = JsonConvert.DeserializeObject<SignInFeedback>(signInFeedback.ToString());
+                if (feedback.feedback.status)
                 {
+                    _events.PublishOnUIThread(new joinedRoomReceived(feedback.rooms_joined));
                     _events.PublishOnUIThread(new LogInEvent());
                 }
                 //voir doc
@@ -94,14 +98,42 @@ namespace WPFUI.Models
                 //voir doc
             });
 
-            _socket.On("rooms_retrived", (feedback) =>
+            _socket.On("user_joined_room", (feedback) =>
             {
-                dynamic json = JsonConvert.DeserializeObject(feedback.ToString());
-                //_events.PublishOnUIThread(new logOutEvent());
+                JoinRoomFeedBack fb = JsonConvert.DeserializeObject<JoinRoomFeedBack>(feedback.ToString());
+                if (fb.feedback.status & fb.joinedRoom != null)
+                {
+                    _userdata.addRoom(fb.joinedRoom);
+                }
+                //voir doc
             });
 
+            _socket.On("rooms_retrieved", (feedback) =>
+            {
+                Console.WriteLine("reception des public rooms");
+                dynamic json = JsonConvert.DeserializeObject(feedback.ToString());
+                string[] publicRooms = json.ToObject<string[]>();
+                Console.WriteLine("nb de room publiques:");
+                Console.WriteLine(publicRooms.Length);
+                _events.PublishOnUIThread(new roomsRetrievedEvent(publicRooms));
+            });
+
+            _socket.On("room_created", (feedback) =>
+            {
+                Feedback json = JsonConvert.DeserializeObject<Feedback>(feedback.ToString());
+                if (json.status)
+                {
+                    getPublicChannels();
+                    _events.PublishOnUIThread(new createTheRoomEvent());
+                }
+            });
         }
 
+        public void createRoom(string roomID)
+        {
+            CreateRoom cR = new CreateRoom(roomID, false);
+            _socket.Emit("create_chat_room", JsonConvert.SerializeObject(cR));
+        }
         public void connectionAttempt()
         {
             _user = new User(_userdata.userName, _userdata.password);
@@ -135,6 +167,7 @@ namespace WPFUI.Models
         public void getPublicChannels()
         {
             _socket.Emit("get_rooms");
+            Console.WriteLine("demande des public rooms");
         }
         public static void TestPOSTWebRequest(Object obj, string url)
         {

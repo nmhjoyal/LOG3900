@@ -8,7 +8,7 @@
 			 mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
 			 MinWidth="400">
-    <Grid Background="White">
+    <Grid Background="#FFF1F2F1">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20"/>
             <ColumnDefinition Width="*" />
@@ -27,8 +27,8 @@
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="20"/>
         </Grid.RowDefinitions>
-		<TextBox Grid.Row="1" Grid.Column="1" Text="" BorderBrush="#FF686868"/>
-		<Button Grid.Row="1" Grid.Column="4" Content="create room" Height="auto"/>
+		<TextBox Text="{Binding createdRoomName}" Grid.Row="1" Grid.Column="1" BorderBrush="#FF686868"/>
+		<Button x:Name="createRoom" Grid.Row="1" Grid.Column="4" Content="create room" Height="auto"/>
 		<TextBlock Grid.Row="2" Grid.Column="1"> Available Rooms:</TextBlock>
 		<ScrollViewer Grid.Row="3" Grid.Column="1" VerticalScrollBarVisibility="Visible" FlowDirection="RightToLeft">
 			<ItemsControl x:Name="availableRooms" FlowDirection="LeftToRight">

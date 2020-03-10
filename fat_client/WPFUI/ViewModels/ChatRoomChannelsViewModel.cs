@@ -10,8 +10,9 @@ using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    class ChatRoomChannelsViewModel: Screen
+    class ChatRoomChannelsViewModel: Screen, IHandle<createTheRoomEvent>
     {
+        private IUserData _userdata;
         private IEventAggregator _events;
         private ISocketHandler _socketHandler;
         private BindableCollection<Room> _availableRooms;
@@ -19,6 +20,18 @@ namespace WPFUI.ViewModels
         public IchangeChannelCommand _changeChannelCommand { get; set; }
         private string _selectedChannelId;
         private string _currentRoomId;
+        private string _createdRoomName;
+
+        public string currentRoomId
+        {
+            get { return _currentRoomId; }
+            set { _currentRoomId = value; }
+        }
+        public string createdRoomName
+        {
+            get { return _createdRoomName; }
+            set { _createdRoomName = value; }
+        }
 
         public string currentRoomMessage
         {
@@ -54,17 +67,34 @@ namespace WPFUI.ViewModels
         }
         public ChatRoomChannelsViewModel(IEventAggregator events, ISocketHandler socketHandler, IUserData userdata)
         {
-            _events = events;
+            _userdata = userdata;
             _socketHandler = socketHandler;
-            _availableRooms = new BindableCollection<Room>();
-            _joinedRooms = new BindableCollection<Room>();
+            getPublicChannels();
+            _events = events;
+            _events.Subscribe(this);
+            availableRooms = userdata.publicRooms;
+            joinedRooms = userdata.joinedRooms;
             _changeChannelCommand = new changeChannelCommand(userdata);
-            _currentRoomId = userdata.currentRoomId;
+            currentRoomId = userdata.currentRoomId;
         }
 
-        private void getPublicChannels()
+        public void getPublicChannels()
         {
-            //_socketHandler.
+            _socketHandler.getPublicChannels();
+        }
+
+        public void createRoom()
+        {
+            if (createdRoomName != null & createdRoomName != "")
+            {
+                _socketHandler.createRoom(createdRoomName);
+            }
+        }
+
+        public void Handle(createTheRoomEvent message)
+        {
+            Room newRoom = new Room(createdRoomName, new Models.Message[0], new Dictionary<string, string>());
+            _userdata.addRoom(newRoom);
         }
     }
 }

@@ -79,14 +79,8 @@ namespace WPFUI.ViewModels
         }
         public void disconnect()
         {
-            clearUserData();
             _socketHandler.disconnect();
             _events.PublishOnUIThread(new DisconnectEvent());
-        }
-
-        private void clearUserData()
-        {
-            _userData.clearData();
         }
 
     }
