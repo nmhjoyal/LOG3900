@@ -13,6 +13,7 @@
     <string name="cooperativeGameMode">Cooperative Game Mode</string>
     <string name="oneVsOneGameMode">One vs One</string>
     <string name="reversedGameMode">Reversed Game Mode</string>
+    <string name="freeForAllGameMode">Free For All Game Mode</string>
 
     <!-- Profile -->
     <style name="profile">Profile</style>
