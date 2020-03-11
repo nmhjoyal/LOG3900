@@ -112,7 +112,7 @@ namespace WPFUI.ViewModels
             ChoisirOutil = new RelayCommand<string>(editeur.ChoisirOutil);
             //_socketHandler.getStrokes(Canvas);
 
-            this._socketHandler.freeDraw(this._canvas);
+            this._socketHandler.freeDraw(Traits);
         }
 
         public void sendStrokeAction(double x, double y)

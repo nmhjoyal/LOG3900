@@ -9,6 +9,9 @@ using Socket = Quobject.SocketIoClientDotNet.Client.Socket;
 using WPFUI.EventModels;
 using System.Windows.Media;
 using System.Windows.Controls;
+using System.Windows.Ink;
+using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace WPFUI.Models
 {
@@ -206,15 +209,30 @@ namespace WPFUI.Models
             });
         }*/
 
-        public void freeDraw(InkCanvas canvas)
+        public void freeDraw(StrokeCollection Traits)
         {
             this.socket.Emit("connect_free_draw");
             this.socket.On("drawPoint", (point) => {
+                Console.WriteLine(point.ToString());
                 dynamic json = JsonConvert.DeserializeObject(point.ToString());
+                StylusPoint stylusPoint = new StylusPoint((int)json.pos.x, (int)json.pos.y);
+                StylusPointCollection stylusPointCollection = new StylusPointCollection();
+                stylusPointCollection.Add(stylusPoint);
+                Stroke stroke = new Stroke(stylusPointCollection);
+                // Traits.Add(stroke);
+                /*
+                StylusPoint stylusPoint = new StylusPoint((double)json.x, json.y);
+
+                Stroke stroke = new Stroke()
                 Console.WriteLine(point);
+                */
             });
         }
 
+        public void freeDraw(InkCanvas _canvas)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

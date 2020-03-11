@@ -1,6 +1,7 @@
 ﻿using Quobject.SocketIoClientDotNet.Client;
 using System;
 using System.Windows.Controls;
+using System.Windows.Ink;
 
 namespace WPFUI.Models
 {
@@ -20,6 +21,6 @@ namespace WPFUI.Models
        // void getStrokes(InkCanvas Canvas);
         void SignOut();
 
-        void freeDraw(InkCanvas _canvas);
+        void freeDraw(StrokeCollection Traits);
     }
 }
