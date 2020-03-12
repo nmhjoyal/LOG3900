@@ -49,7 +49,6 @@ namespace WPFUI.Models
             set { _currentMessage = value; }
         }
 
-
         public string userName
         {
             get { return _userName; }
@@ -62,15 +61,11 @@ namespace WPFUI.Models
             set { _ipAdress = value; }
         }
 
-
-
         public string password
         {
             get { return _password; }
             set { _password = value; }
         }
-
-
 
         public UserData(IEventAggregator events)
         {
@@ -84,8 +79,10 @@ namespace WPFUI.Models
 
         public void changeChannel(string roomID)
         {
-            _currentRoomId = roomID;
-            messages = new BindableCollection<Message>(_joinedRooms.Single(i => i.roomName == roomID).messages);
+            Console.WriteLine("changing channel in userdata: " + roomID);
+            this.currentRoomId = roomID;
+            this.messages = new BindableCollection<Message>(this.joinedRooms.Single(i => i.roomName == roomID).messages);
+            _events.PublishOnUIThread(new refreshMessagesEvent(this.messages));
         }
 
         public void Handle(roomsRetrievedEvent message)
@@ -93,8 +90,7 @@ namespace WPFUI.Models
             _publicRooms.Clear();
             foreach (string channelID in message._publicRooms)
             {
-               publicRooms.Add(new Room(channelID, null, null));
-                
+                publicRooms.Add(new Room(channelID, null, null));
             }
         }
 

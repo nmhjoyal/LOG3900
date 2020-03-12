@@ -10,7 +10,7 @@ using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    public class chatBoxViewModel: Screen
+    public class chatBoxViewModel: Screen, IHandle<refreshMessagesEvent>
     {
         private IEventAggregator _events;
         private IUserData _userData;
@@ -65,16 +65,17 @@ namespace WPFUI.ViewModels
         public chatBoxViewModel(IUserData userdata, IEventAggregator events, ISocketHandler socketHandler)
         {
             _events = events;
+            _events.Subscribe(this);
             _socketHandler = socketHandler;
             _userData = userdata;
-            _messages = _userData.messages;
+            messages = userdata.messages;
         }
 
         public string welcomeMessage
         {
             get
             {
-                return $"Welcome to the chatroom {_userData.userName} !" + Environment.NewLine + $"Server IP adress: {_userData.ipAdress} ";
+                return $"Welcome to the chatroom {_userData.userName} !";
             }
         }
         public void disconnect()
@@ -83,6 +84,11 @@ namespace WPFUI.ViewModels
             _events.PublishOnUIThread(new DisconnectEvent());
         }
 
+        public void Handle(refreshMessagesEvent message)
+        {
+            this._messages = message._messages;
+            NotifyOfPropertyChange(() => messages);
+        }
     }
 
 }

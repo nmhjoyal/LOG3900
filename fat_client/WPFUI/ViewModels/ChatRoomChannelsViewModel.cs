@@ -19,14 +19,16 @@ namespace WPFUI.ViewModels
         private BindableCollection<Room> _joinedRooms;
         public IchangeChannelCommand _changeChannelCommand { get; set; }
         private string _selectedChannelId;
-        private string _currentRoomId;
         private string _createdRoomName;
+        private string _currentRoomId;
 
         public string currentRoomId
         {
             get { return _currentRoomId; }
             set { _currentRoomId = value; }
         }
+
+
         public string createdRoomName
         {
             get { return _createdRoomName; }
@@ -35,7 +37,7 @@ namespace WPFUI.ViewModels
 
         public string currentRoomMessage
         {
-            get { return "Current room is " + _currentRoomId; }
+            get { return "Current room is " + currentRoomId; }
         }
 
 
@@ -51,6 +53,7 @@ namespace WPFUI.ViewModels
             get { return _availableRooms; }
             set
             {
+                Console.WriteLine("set available rooms");
                 _availableRooms = value;
                 NotifyOfPropertyChange(() => availableRooms);
             }
@@ -61,6 +64,7 @@ namespace WPFUI.ViewModels
             get { return _joinedRooms; }
             set
             {
+                Console.WriteLine("set available rooms");
                 _joinedRooms = value;
                 NotifyOfPropertyChange(() => joinedRooms);
             }
@@ -74,10 +78,10 @@ namespace WPFUI.ViewModels
             _events.Subscribe(this);
             availableRooms = userdata.publicRooms;
             joinedRooms = userdata.joinedRooms;
-            _changeChannelCommand = new changeChannelCommand(userdata);
             currentRoomId = userdata.currentRoomId;
+            _changeChannelCommand = new changeChannelCommand(userdata);
         }
-
+        
         public void getPublicChannels()
         {
             _socketHandler.getPublicChannels();
@@ -95,6 +99,7 @@ namespace WPFUI.ViewModels
         {
             Room newRoom = new Room(createdRoomName, new Models.Message[0], new Dictionary<string, string>());
             _userdata.addRoom(newRoom);
+            createdRoomName = "";
         }
     }
 }

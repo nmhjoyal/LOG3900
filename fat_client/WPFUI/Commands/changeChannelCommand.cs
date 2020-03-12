@@ -24,6 +24,7 @@ namespace WPFUI.Commands
 
         public void Execute(object parameter)
         {
+            Console.WriteLine("cmd triggered");
             _userdata.changeChannel((string)parameter);
         }
 
