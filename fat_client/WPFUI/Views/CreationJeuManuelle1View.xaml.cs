@@ -26,6 +26,7 @@ namespace WPFUI.Views
     {
         IEventAggregator events;
         ISocketHandler socketHandler;
+        
         public CreationJeuManuelle1View()
         {
             InitializeComponent();
@@ -46,20 +47,26 @@ namespace WPFUI.Views
         /*private void Button_Click(object sender, RoutedEventArgs e)
         {
             PART_Image.Source = RenderVisualService.RenderToPNGImageSource(PART_Canvas);
-        }
+        }*/
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void addClue(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            //saveFileDialog.FileName = txtEditor.Text;
-            if (saveFileDialog.ShowDialog() == true)
-            {
-                RenderVisualService.RenderToPNGFile(PART_Canvas, saveFileDialog.FileName);
-            }
+            int clue = 1;
+            TextBox dynamicTextBox = new TextBox();
+           
+            // Grid.SetRow(dynamicTextBox, 3);
+            // Grid.SetColumn(dynamicTextBox, 7);
+            dynamicTextBox.Name = "clue" + clue;
+            this.canContainer.Children.Add(dynamicTextBox);
+            clue = +1;
+            Console.WriteLine(dynamicTextBox.Name);
+
 
         }
 
-        private void mainMenu_Click(object sender, RoutedEventArgs e)
+      
+
+        /*private void mainMenu_Click(object sender, RoutedEventArgs e)
         {
 
         }*/
