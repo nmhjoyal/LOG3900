@@ -311,7 +311,12 @@
   <ItemGroup>
     <Resource Include="Views\ProfileLogo.PNG" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\add.png" />
+    <Resource Include="Resources\lock.png" />
+    <Resource Include="Resources\login.png" />
+    <Resource Include="Resources\pencil.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\crayon.png" />
   </ItemGroup>

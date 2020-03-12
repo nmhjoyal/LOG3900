@@ -5,27 +5,27 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WPFUI.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" FontSize="20"
+             d:DesignHeight="500" d:DesignWidth="800" FontSize="20"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              TextElement.FontWeight="Regular"
              TextElement.FontSize="20"
              TextOptions.TextFormattingMode="Ideal"
              TextOptions.TextRenderingMode="Auto"
-             FontFamily="{DynamicResource MaterialDesignFont}" Background="#FFF1F2F1">
+             FontFamily="Microsoft JhengHei UI Light"  Background="#FFF1F2F1">
 
     <Grid >
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="150"/>
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="150" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="100"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -37,18 +37,29 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
-        <Image Source="login image.png" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" HorizontalAlignment="Center" MaxHeight="80"/>
-        <TextBlock Text="Password: " Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="5" Foreground="DarkSlateGray"/>
-        <TextBox MinWidth="100" Grid.Column="1" Grid.Row="6" x:Name="_password" Grid.ColumnSpan="5"  Margin="5" Foreground="DarkSlateGray">
+		<StackPanel Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="5" HorizontalAlignment="Center" Orientation="Horizontal">
+			<TextBlock FontSize="40" Foreground="#FF66CC00" Margin="0,0,10,0" >Fais moi un dessin !</TextBlock>
+			<Image Source="/Resources/pencil.png" Height="35"></Image>
+		</StackPanel>
+		<TextBlock Text="Password: " Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="5" Foreground="DarkSlateGray"/>
+		<TextBox MinWidth="100" Grid.Column="1" Grid.Row="6" x:Name="_password" Grid.ColumnSpan="5"  Margin="5" Foreground="#FF66CC00">
         </TextBox>
         <TextBlock Text="Username: " Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="5" Foreground="DarkSlateGray"/>
-        <TextBox MinWidth="100" Grid.Column="1" Grid.Row="4" x:Name="_userName" Grid.ColumnSpan="5"  Margin="5" Foreground="DarkSlateGray" MaxLength="20">
+		<TextBox MinWidth="100" Grid.Column="1" Grid.Row="4" x:Name="_userName" Grid.ColumnSpan="5"  Margin="5" Foreground="#FF66CC00" MaxLength="20">
         </TextBox>
-        <Button x:Name="logIn" Style="{DynamicResource MaterialDesignRaisedAccentButton}" MaxWidth =" 200" Content="Sign In" Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="5" Margin="10" Foreground="White" Background="#FF66CC00" BorderBrush="#FF66CC00">
-        </Button>
-		<Button x:Name="signUp" Style="{DynamicResource MaterialDesignRaisedAccentButton}" MaxWidth =" 200" Content="Sign Up" Grid.Column="1" Grid.Row="10" Grid.ColumnSpan="5" Margin="10" Foreground="White" Background="#FF66CC00">
+		<Button x:Name="logIn" Style="{DynamicResource MaterialDesignRaisedAccentButton}" Width ="180" Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="5" Margin="15" Foreground="White" Background="#FF66CC00" BorderBrush="#FF66CC00" HorizontalAlignment="Center">
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+				<TextBlock Margin="0,0,10,0"> Sign In</TextBlock>
+				<Image Source="/Resources/login.png" Height="15"></Image>
+			</StackPanel>
+		</Button>
+		<Button x:Name="signUp" Style="{DynamicResource MaterialDesignRaisedAccentButton}" Width =" 120" Grid.Column="1" Grid.Row="10" Grid.ColumnSpan="5" Margin="10" Foreground="White" Background="#FF00B0CC" HorizontalAlignment="Center">
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+				<TextBlock Margin="0,0,10,0"> Sign Up</TextBlock>
+				<Image Source="/Resources/add.png" Height="15"></Image>
+			</StackPanel>
 		</Button>
 	</Grid>
 </UserControl>
