@@ -38,7 +38,7 @@ namespace WPFUI.Views
         //private void surfaceDessin_MouseLeave(object sender, MouseEventArgs e) => textBlockPosition.Text = "";
         private void surfaceDessin_MouseMove(object sender, MouseEventArgs e)
         {
-            Point p = e.GetPosition(surfaceDessin);
+            System.Windows.Point p = e.GetPosition(surfaceDessin);
             //textBlockPosition.Text = Math.Round(p.X) + ", " + Math.Round(p.Y) + "px";
         }
 

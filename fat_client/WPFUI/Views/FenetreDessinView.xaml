@@ -86,7 +86,7 @@
 
             <Border BorderThickness="5,5,0,0">
                 <Canvas x:Name="PART_Canvas" Grid.Row="1" Grid.Column="0">
-                    <InkCanvas ClipToBounds="True" Grid.Column="0" Grid.Row="0" Name="surfaceDessin" 
+                    <InkCanvas ClipToBounds="True" Grid.Column="0" Grid.Row="0" Name="surfaceDessin"
                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"                                                                      
                            Strokes="{Binding Path=Traits, Mode=OneTime}" MouseMove="surfaceDessin_MouseMove" PreviewMouseDown="surfaceDessin_PreviewMouseDown" MouseUp="surfaceDessin_MouseUp" StrokeCollected="surfaceDessin_StrokeCollected" StrokesReplaced="surfaceDessin_StrokesReplaced" EditingMode="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurModeEdition}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                            DefaultDrawingAttributes="{Binding Path=AttributsDessin, Mode=OneTime}"/>

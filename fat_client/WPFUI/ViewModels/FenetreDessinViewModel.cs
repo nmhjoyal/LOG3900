@@ -110,11 +110,17 @@ namespace WPFUI.ViewModels
             this._socketHandler.freeDraw(Traits, AttributsDessin);
         }
 
-        public void sendStrokeAction(double x, double y)
+        public void sendPointAction(Models.Point point)
         {
-            DrawPoint drawPoint = new DrawPoint(x, y, this.AttributsDessin.Color.ToString(), this.AttributsDessin.Width.ToString());
-            Console.WriteLine("should emit");
-            this._socketHandler.socket.Emit("drawTest", JsonConvert.SerializeObject(drawPoint));
+            this._socketHandler.socket.Emit("drawTest", JsonConvert.SerializeObject(point));
+        }
+
+        public void sendStrokeAction(Models.Point point)
+        {
+            Trace trace = new Trace(point, this.AttributsDessin.Color.ToString(), (int)this.AttributsDessin.Width);
+            Console.WriteLine("trace");
+            this._socketHandler.socket.Emit("start_trace", JsonConvert.SerializeObject(trace));
+            Console.WriteLine("emit");
             /*
             Console.WriteLine("*" + this.AttributsDessin.Color);
             string width = Traits[Traits.Count - 1].DrawingAttributes.Width.ToString();

@@ -1,5 +1,6 @@
 import { MatchMode } from "../models/matchMode";
-import DrawPoint from "../models/drawPoint";
+import { Trace } from "../models/drawPoint";
+import Point from "../models/drawPoint";
 
 export default class MatchHandler {
     // private currentMatches: Match[];
@@ -43,9 +44,17 @@ export default class MatchHandler {
         socket.leave("freeDrawRoomTest");
     }
 
-    public drawTest(io: SocketIO.Server, socket: SocketIO.Socket, point: DrawPoint) {
-        if (socket.id == this.drawer) {
+    public startTrace(io: SocketIO.Server, socket: SocketIO.Socket, trace: Trace) {
+        // if (socket.id == this.drawer) {
+            console.log("trace : " + JSON.stringify(trace));
+            socket.to("freeDrawRoomTest").emit("new_trace", trace);
+        // }
+    }
+
+    public drawTest(io: SocketIO.Server, socket: SocketIO.Socket, point: Point) {
+        // if (socket.id == this.drawer) {
+            console.log("point : " + point);
             socket.to("freeDrawRoomTest").emit("drawPoint", point);
-        }
+        // }
     }
 }
