@@ -21,6 +21,6 @@ namespace WPFUI.Models
        // void getStrokes(InkCanvas Canvas);
         void SignOut();
 
-        void freeDraw(StrokeCollection Traits);
+        void freeDraw(StrokeCollection Traits, DrawingAttributes AttributsDessin);
     }
 }

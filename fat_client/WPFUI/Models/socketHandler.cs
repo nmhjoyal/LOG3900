@@ -1,21 +1,21 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using System.Threading.Tasks;
 using Caliburn.Micro;
 using Newtonsoft.Json;
 using Quobject.SocketIoClientDotNet.Client;
 using Socket = Quobject.SocketIoClientDotNet.Client.Socket;
 using WPFUI.EventModels;
-using System.Windows.Media;
 using System.Windows.Controls;
 using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Threading;
+using System.Windows;
+using System.Windows.Media;
 
 namespace WPFUI.Models
 {
-    public partial class SocketHandler : ISocketHandler
+    public partial class SocketHandler : Window, ISocketHandler
     {
         public IUserData _userdata;
         public IEventAggregator _events;
@@ -191,7 +191,7 @@ namespace WPFUI.Models
             this._socket.Emit("sent_path", this._traitJSON);
 
         }
-  
+
         /*public void getStrokes(InkCanvas Canvas)
         {
             _socket.On("receive_path", (response) =>
@@ -209,17 +209,24 @@ namespace WPFUI.Models
             });
         }*/
 
-        public void freeDraw(StrokeCollection Traits)
+        public void freeDraw(StrokeCollection Traits, DrawingAttributes AttributsDessin)
         {
             this.socket.Emit("connect_free_draw");
             this.socket.On("drawPoint", (point) => {
-                Console.WriteLine(point.ToString());
                 dynamic json = JsonConvert.DeserializeObject(point.ToString());
                 StylusPoint stylusPoint = new StylusPoint((int)json.pos.x, (int)json.pos.y);
                 StylusPointCollection stylusPointCollection = new StylusPointCollection();
                 stylusPointCollection.Add(stylusPoint);
                 Stroke stroke = new Stroke(stylusPointCollection);
-                // Traits.Add(stroke);
+                stroke.DrawingAttributes.Width = json.width;
+                stroke.DrawingAttributes.Height = json.width;
+                stroke.DrawingAttributes.StylusTip = StylusTip.Ellipse;
+                stroke.DrawingAttributes.Color = (System.Windows.Media.Color)ColorConverter.ConvertFromString(new Color((int)json.color.r, (int)json.color.g, (int)json.color.b).getHex());
+
+                this.Dispatcher.Invoke(() =>
+                    Traits.Add(stroke)
+                );
+
                 /*
                 StylusPoint stylusPoint = new StylusPoint((double)json.x, json.y);
 
@@ -227,11 +234,6 @@ namespace WPFUI.Models
                 Console.WriteLine(point);
                 */
             });
-        }
-
-        public void freeDraw(InkCanvas _canvas)
-        {
-            throw new NotImplementedException();
         }
     }
 

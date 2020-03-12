@@ -10,7 +10,7 @@ export interface Position {
 }
 
 export default interface DrawPoint {
-    rgb: Color
+    color: Color
     pos: Position
     width: number
 }

@@ -83,24 +83,19 @@ namespace WPFUI.ViewModels
         private ISocketHandler _socketHandler;
 
         private InkCanvas _canvas;
-        public InkCanvas Canvas
-        { 
-            get { return _canvas; }
-            set { _canvas = value; ProprieteModifiee(); }
-        }
 
         public FenetreDessinViewModel(IEventAggregator events, ISocketHandler socketHandler, InkCanvas canvas)
         {
-            Canvas = canvas;
+            _canvas = canvas;
             // SendPoint = new RelayCommand<object>(sendStrokeAction);
-            _socketHandler = socketHandler;
+            this._socketHandler = socketHandler;
             _events = events;
             // On écoute pour des changements sur le modèle. Lorsqu'il y en a, EditeurProprieteModifiee est appelée.
             editeur.PropertyChanged += new PropertyChangedEventHandler(EditeurProprieteModifiee);
 
             // On initialise les attributs de dessin avec les valeurs de départ du modèle.
             AttributsDessin = new DrawingAttributes();
-            AttributsDessin.Color = (Color)ColorConverter.ConvertFromString(editeur.CouleurSelectionnee);
+            AttributsDessin.Color = (System.Windows.Media.Color)ColorConverter.ConvertFromString(editeur.CouleurSelectionnee);
             AjusterPointe();
 
             Traits = editeur.traits;
@@ -112,7 +107,7 @@ namespace WPFUI.ViewModels
             ChoisirOutil = new RelayCommand<string>(editeur.ChoisirOutil);
             //_socketHandler.getStrokes(Canvas);
 
-            this._socketHandler.freeDraw(Traits);
+            this._socketHandler.freeDraw(Traits, AttributsDessin);
         }
 
         public void sendStrokeAction(double x, double y)
@@ -138,8 +133,6 @@ namespace WPFUI.ViewModels
             */
         }
 
-        
-
         /// <summary>
         /// Appelee lorsqu'une propriété de VueModele est modifiée.
         /// Un évènement indiquant qu'une propriété a été modifiée est alors émis à partir de VueModèle.
@@ -163,7 +156,7 @@ namespace WPFUI.ViewModels
         {
             if (e.PropertyName == "CouleurSelectionnee")
             {
-                AttributsDessin.Color = (Color)ColorConverter.ConvertFromString(editeur.CouleurSelectionnee);
+                AttributsDessin.Color = (System.Windows.Media.Color)ColorConverter.ConvertFromString(editeur.CouleurSelectionnee);
             }
             else if (e.PropertyName == "OutilSelectionne")
             {
