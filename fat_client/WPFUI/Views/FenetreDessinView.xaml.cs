@@ -27,8 +27,8 @@ namespace WPFUI.Views
         private Boolean isMouseDown = false;
         public FenetreDessinView()
         {
-
             InitializeComponent();
+            // this.surfaceDessin.InkPresenter
             // DataContext = new FenetreDessinViewModel(events, socketHandler, surfaceDessin);
         }
 
@@ -40,8 +40,10 @@ namespace WPFUI.Views
         {
             if(this.isMouseDown)
             {
-                Point p = e.GetPosition(surfaceDessin);
-                (this.DataContext as FenetreDessinViewModel).sendStrokeAction(p.X, p.Y);
+                Console.WriteLine("mouse move");
+                System.Windows.Point p = e.GetPosition(surfaceDessin);
+                Models.Point point = new Models.Point(p.X, p.Y);
+                (this.DataContext as FenetreDessinViewModel).sendPointAction(point);
             }
             //textBlockPosition.Text = Math.Round(p.X) + ", " + Math.Round(p.Y) + "px";
         }
@@ -72,11 +74,6 @@ namespace WPFUI.Views
         {
             Console.WriteLine("collected");
         }
-
-        private void surfaceDessin_StrokesReplaced(object sender, InkCanvasStrokesReplacedEventArgs e)
-        {
-            Console.WriteLine("replaced");
-        }
         private void surfaceDessin_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if(this.isMouseDown) {
@@ -89,7 +86,16 @@ namespace WPFUI.Views
         private void surfaceDessin_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             this.isMouseDown = true;
+            System.Windows.Point p = e.GetPosition(surfaceDessin);
+            Models.Point point = new Models.Point(p.X, p.Y);
+            Console.WriteLine("mouse down");
+            (this.DataContext as FenetreDessinViewModel).sendStrokeAction(point);
             // Console.WriteLine(this.isMouseDown);
+        }
+
+        private void surfaceDessin_StrokesReplaced(object sender, InkCanvasStrokesReplacedEventArgs e)
+        {
+
         }
     }
 }

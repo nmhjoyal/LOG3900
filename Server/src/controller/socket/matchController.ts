@@ -1,6 +1,7 @@
 import { OnMessage, SocketController, MessageBody, ConnectedSocket, SocketIO, OnDisconnect } from "socket-controllers";
 import { serverHandler } from "../../services/serverHandler";
-import DrawPoint from "../../models/drawPoint";
+import { Trace } from "../../models/drawPoint";
+import Point from "../../models/drawPoint";
 
 @SocketController()
 export default class ChatController {
@@ -23,8 +24,14 @@ export default class ChatController {
         serverHandler.matchHandler.leaveFreeDrawTestRoom(io, socket);
     }
 
+    @OnMessage("start_trace")
+    public start_trace(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() trace: Trace) {
+        console.log("start_trace");
+        serverHandler.matchHandler.startTrace(io, socket, trace);
+    }
+
     @OnMessage("drawTest")
-    public drawTest(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() drawPoint: DrawPoint) {
-        serverHandler.matchHandler.drawTest(io, socket, drawPoint);
+    public drawTest(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() point: Point) {
+        serverHandler.matchHandler.drawTest(io, socket, point);
     }
 }

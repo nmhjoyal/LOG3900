@@ -212,9 +212,10 @@ namespace WPFUI.Models
         public void freeDraw(StrokeCollection Traits, DrawingAttributes AttributsDessin)
         {
             this.socket.Emit("connect_free_draw");
-            this.socket.On("drawPoint", (point) => {
-                dynamic json = JsonConvert.DeserializeObject(point.ToString());
-                StylusPoint stylusPoint = new StylusPoint((int)json.pos.x, (int)json.pos.y);
+
+            this.socket.On("new_trace", (trace) => {
+                dynamic json = JsonConvert.DeserializeObject(trace.ToString());
+                StylusPoint stylusPoint = new StylusPoint((int)json.point.x, (int)json.point.y);
                 StylusPointCollection stylusPointCollection = new StylusPointCollection();
                 stylusPointCollection.Add(stylusPoint);
                 Stroke stroke = new Stroke(stylusPointCollection);
@@ -225,6 +226,22 @@ namespace WPFUI.Models
 
                 this.Dispatcher.Invoke(() =>
                     Traits.Add(stroke)
+                );
+
+                /*
+                StylusPoint stylusPoint = new StylusPoint((double)json.x, json.y);
+
+                Stroke stroke = new Stroke()
+                Console.WriteLine(point);
+                */
+            });
+
+            this.socket.On("drawPoint", (point) => {
+                dynamic json = JsonConvert.DeserializeObject(point.ToString());
+                StylusPoint stylusPoint = new StylusPoint((int)json.x, (int)json.y);
+
+                this.Dispatcher.Invoke(() =>
+                    Traits[Traits.Count - 1].StylusPoints.Add(stylusPoint)
                 );
 
                 /*

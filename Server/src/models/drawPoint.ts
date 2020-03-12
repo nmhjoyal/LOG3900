@@ -4,13 +4,13 @@ export interface Color {
     b: number
 }
 
-export interface Position {
+export default interface Point {
     x: number
     y: number
 }
 
-export default interface DrawPoint {
+export interface Trace {
     color: Color
-    pos: Position
+    point: Point
     width: number
 }
