@@ -51,19 +51,20 @@ namespace WPFUI.Views
 
         private void addClue(object sender, RoutedEventArgs e)
         {
-            int clue = 1;
+            
             TextBox dynamicTextBox = new TextBox();
            
             // Grid.SetRow(dynamicTextBox, 3);
             // Grid.SetColumn(dynamicTextBox, 7);
-            dynamicTextBox.Name = "clue" + clue;
+            
             this.canContainer.Children.Add(dynamicTextBox);
-            clue = +1;
+            
             Console.WriteLine(dynamicTextBox.Name);
 
 
         }
 
+       
       
 
         /*private void mainMenu_Click(object sender, RoutedEventArgs e)

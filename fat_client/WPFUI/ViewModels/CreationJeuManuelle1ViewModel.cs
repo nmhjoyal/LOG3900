@@ -155,6 +155,11 @@ namespace WPFUI.ViewModels
             _events.PublishOnUIThread(new goBackMainEvent());
         }
 
+        public void goBack()
+        {
+            _events.PublishOnUIThread(new goBackCreationMenuEvent());
+        }
+
     }
 
 }
