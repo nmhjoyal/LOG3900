@@ -113,6 +113,7 @@
     <Compile Include="Commands\changeChannelCommand.cs" />
     <Compile Include="Commands\IchangeChannelCommand.cs" />
     <Compile Include="Converters\Converters.cs" />
+    <Compile Include="EventModels\addMessageEvent.cs" />
     <Compile Include="EventModels\AssisteIEvent.cs" />
     <Compile Include="EventModels\connectionEvent.cs" />
     <Compile Include="EventModels\createGameEvent.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="EventModels\signUpEvent.cs" />
     <Compile Include="EventModels\userNameTakenEvent.cs" />
     <Compile Include="EventModels\viewProfileEvent.cs" />
+    <Compile Include="Models\ClientMessage.cs" />
     <Compile Include="Models\CreateRoom.cs" />
     <Compile Include="Models\Editeur.cs" />
     <Compile Include="Models\Feedback.cs" />

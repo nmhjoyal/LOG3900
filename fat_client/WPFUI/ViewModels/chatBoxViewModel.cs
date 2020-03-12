@@ -10,7 +10,7 @@ using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    public class chatBoxViewModel: Screen, IHandle<refreshMessagesEvent>
+    public class chatBoxViewModel: Screen, IHandle<refreshMessagesEvent>, IHandle<addMessageEvent>
     {
         private IEventAggregator _events;
         private IUserData _userData;
@@ -43,7 +43,7 @@ namespace WPFUI.ViewModels
                   NotifyOfPropertyChange(() => messages); }
         }
 
-        /*public void sendMessage( string content = null)
+        public void sendMessage( string content = null)
         {
             if (content != null)
             {
@@ -60,7 +60,7 @@ namespace WPFUI.ViewModels
                 _userData.currentMessage = "";
             }
 
-        }*/
+        }
 
         public chatBoxViewModel(IUserData userdata, IEventAggregator events, ISocketHandler socketHandler)
         {
@@ -87,6 +87,13 @@ namespace WPFUI.ViewModels
         public void Handle(refreshMessagesEvent message)
         {
             this._messages = message._messages;
+            NotifyOfPropertyChange(() => messages);
+        }
+
+        public void Handle(addMessageEvent message)
+        {
+            Console.WriteLine("hello");
+            this._messages.Add(message.message);
             NotifyOfPropertyChange(() => messages);
         }
     }

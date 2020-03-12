@@ -75,11 +75,12 @@ namespace WPFUI.Models
                 //voir doc
             });
 
-            /*_socket.On("new_message", (message) =>
+            _socket.On("new_message", (message) =>
              {
                  Message newMessage = JsonConvert.DeserializeObject<Message>(message.ToString());
+                 Console.WriteLine("message received");
                  _userdata.messages.Add(newMessage);
-             }); */
+             });
 
             /*_socket.On("new_client", (socketId) =>
             {
@@ -150,14 +151,15 @@ namespace WPFUI.Models
         {
             _socket.Disconnect();
         }
-        /* public void sendMessage()
-         {
-             Message message = new Message(_user, _userdata.currentMessage, 0);
-             if(message.content.Trim() != "")
-             {
-                 _socket.Emit("send_message", JsonConvert.SerializeObject(message));
-             }
-         }*/
+        public void sendMessage()
+        {
+            ClientMessage message = new ClientMessage(_userdata.currentMessage, _userdata.currentRoomId);
+
+            if (message.content.Trim() != "")
+            {
+                _socket.Emit("send_message", JsonConvert.SerializeObject(message));
+            }
+        }
 
         public void createUser(PrivateProfile privateProfile)
         {

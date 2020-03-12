@@ -108,5 +108,21 @@ namespace WPFUI.Models
         {
             joinedRooms.Add(room);
         }
+
+        public void addMessage(Message message)
+        {
+            Message[] messagesToUpdate = this.joinedRooms.Single(i => i.roomName == message.roomId).messages;
+
+            if (messagesToUpdate != null)
+            {
+                if (message.roomId == currentRoomId)
+                {
+                    _events.PublishOnUIThread(new addMessageEvent(message));
+                }
+                List<Message> list = new List<Message>(messagesToUpdate);
+                list.Add(message);
+                this.joinedRooms.Single(i => i.roomName == message.roomId).messages = list.ToArray();
+            }
+        }
     }
 }

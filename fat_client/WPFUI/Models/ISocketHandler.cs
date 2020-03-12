@@ -16,6 +16,7 @@ namespace WPFUI.Models
         void disconnect();
         void getPublicChannels();
         void getStrokes(InkCanvas Canvas);
+        void sendMessage();
         void sendStroke(string path, string couleur, string width, bool stylusTip);
         void SignOut();
     }

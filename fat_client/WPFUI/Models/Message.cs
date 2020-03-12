@@ -41,6 +41,14 @@ namespace WPFUI.Models
             }
         }
 
+        public string roomId
+        {
+            get
+            {
+                return _roomId;
+            }
+        }
+
         public string formattedTimeStamp
         {
             /*
