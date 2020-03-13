@@ -6,6 +6,7 @@ import Match from "./Match/match_General";
 import { serverHandler } from "./serverHandler";
 import PrivateProfile from "../models/privateProfile";
 import RandomIdGenerator from "./IdGenerator/idGenerator";
+import PublicProfile from "../models/publicProfile";
 
 export default class MatchHandler {
     private currentMatches: Map<string, Match>;
@@ -48,18 +49,27 @@ export default class MatchHandler {
     }
 
     public joinMatch(socket: SocketIO.Socket, matchId: string): Feedback {
+        const user: PrivateProfile | undefined = serverHandler.users.get(socket.id);
         let match: Match | undefined = this.currentMatches.get(matchId);
         let feedback: Feedback = {
-            status: true,
+            status: false,
             log_message: "You joined the match."
         }
 
-        if (match) {
-            feedback = match.joinMatch(socket);
+        if (user) {
+            if (match) {
+                let publicProfile: PublicProfile = {
+                    username: user.username,
+                    avatar: user.avatar
+                }
+                feedback = match.joinMatch(socket, publicProfile);
+            } else {
+                feedback.log_message = "This match does not exist anymore.";
+            }
         } else {
-            feedback.status = false;
-            feedback.log_message = "This match does not exist anymore."
+            feedback.log_message = "You are not connected.";
         }
+            
 
         return feedback;
     }

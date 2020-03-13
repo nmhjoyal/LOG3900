@@ -12,7 +12,7 @@ export default abstract class Match {
 
     protected constructor(socket: SocketIO.Socket, randomId: string, nbRounds: number) {
         this.matchRoom.id = randomId;
-        
+        // this.joinRoom
         this.nbRounds = nbRounds;
         this.isStarted = false;
     }
@@ -24,8 +24,7 @@ export default abstract class Match {
         };
 
         if (!this.isStarted) {
-            socket.join(this.matchRoom.id);
-            this.players.set(socket.id);
+            // this.joinRoom
             feedback.status = true;
             feedback.log_message = "You joined the match.";
         } else {
@@ -56,10 +55,10 @@ export default abstract class Match {
 
     }
     
-    private joinRoom(socket: SocketIO.Socket) {
-        socket.join(this.matchRoom.id);
-        this.matchRoom.avatars.set();
-        this.players = [socket.id];
-    }
+    // private joinRoom(socket: SocketIO.Socket) {
+    //     socket.join(this.matchRoom.id);
+    //     this.matchRoom.avatars.set();
+    //     this.players = [socket.id];
+    // }
 
 }
