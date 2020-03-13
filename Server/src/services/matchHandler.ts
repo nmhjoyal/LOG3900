@@ -54,12 +54,13 @@ export default class MatchHandler {
         }
 
         if (match) {
-
+            feedback = match.joinMatch(socketId);
         } else {
-
+            feedback.status = false;
+            feedback.log_message = "Could not join the match."
         }
-        return feedback;
 
+        return feedback;
     }
 
     /**
