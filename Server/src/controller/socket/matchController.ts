@@ -27,8 +27,8 @@ export default class MatchController {
     }
 
     @OnMessage("join_match")
-    public joinMatch(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() matchId: string) {
-        socket.emit("match_joined", serverHandler.matchHandler.joinMatch(socket.id, matchId));
+    public joinMatch(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() matchId: string) {
+        socket.emit("match_joined", serverHandler.matchHandler.joinMatch(socket, matchId));
     }
 
 }

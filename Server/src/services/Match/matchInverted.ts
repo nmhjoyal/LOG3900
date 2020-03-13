@@ -2,8 +2,8 @@ import Match from "./match_General"
 
 export default class Inverted extends Match{
 
-    public constructor(host: string, nbRounds: number) {
-        super(host, nbRounds);
+    public constructor(socket: SocketIO.Socket, host: string, nbRounds: number) {
+        super(socket, host, nbRounds);
     }
     
     public startMatch(): void {

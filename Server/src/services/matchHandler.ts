@@ -5,7 +5,7 @@ import { Feedback, MatchCreationFeedBack } from "../models/feedback";
 import Match from "./Match/match_General";
 import { serverHandler } from "./serverHandler";
 import PrivateProfile from "../models/privateProfile";
-import RandomIdGenerator from "./IdGenerator/idGen";
+import RandomIdGenerator from "./IdGenerator/idGenerator";
 
 export default class MatchHandler {
     private currentMatches: Map<string, Match>;
@@ -19,8 +19,8 @@ export default class MatchHandler {
         this.observers = [];
     }
     
-    public createMatch(socketId: string, createMatch: CreateMatch): MatchCreationFeedBack {
-        const user: PrivateProfile | undefined = serverHandler.users.get(socketId);
+    public createMatch(socket: SocketIO.Socket, createMatch: CreateMatch): MatchCreationFeedBack {
+        const user: PrivateProfile | undefined = serverHandler.users.get(socket.id);
         let feedback: Feedback = {
             status: true,
             log_message: "Match created successfully."
@@ -33,8 +33,9 @@ export default class MatchHandler {
         };
 
         if (user) {
-            let newMatch: Match = MatchInstance.createMatch(createMatch.matchMode, socketId, createMatch.nbRounds);
-            this.currentMatches.set(RandomIdGenerator.generate(), newMatch);
+            let randomId: string = RandomIdGenerator.generate();
+            let newMatch: Match = MatchInstance.createMatch(socket, randomId, createMatch);
+            this.currentMatches.set(randomId, newMatch);
             creationfeedback.host = user.username;
             creationfeedback.matchMode = createMatch.matchMode;
             creationfeedback.nbRounds = createMatch.nbRounds;
@@ -46,7 +47,7 @@ export default class MatchHandler {
         return creationfeedback;
     }
 
-    public joinMatch(socketId: string, matchId: string): Feedback {
+    public joinMatch(socket: SocketIO.Socket, matchId: string): Feedback {
         let match: Match | undefined = this.currentMatches.get(matchId);
         let feedback: Feedback = {
             status: true,
@@ -54,10 +55,10 @@ export default class MatchHandler {
         }
 
         if (match) {
-            feedback = match.joinMatch(socketId);
+            feedback = match.joinMatch(socket);
         } else {
             feedback.status = false;
-            feedback.log_message = "Could not join the match."
+            feedback.log_message = "This match does not exist anymore."
         }
 
         return feedback;
