@@ -107,15 +107,41 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         canvas.drawPath(mPath, mPaint)
     }
 
-    fun addPath(drawPoint: DrawPoint) {
+    fun startTrace(drawPoint: DrawPoint) {
+        mStartX = drawPoint.point.x.toFloat()
+        mStartY = drawPoint.point.y.toFloat()
+        mCurX = mStartX
+        mCurY = mStartY
+        setColor(((drawPoint.color.r.toInt() and 0xff) shl 16) or
+                ((drawPoint.color.g.toInt() and 0xff) shl 8) or
+                (drawPoint.color.b.toInt() and 0xff))
+        setStrokeWidth(drawPoint.width.toFloat())
+
         mPath.moveTo(drawPoint.point.x.toFloat(), drawPoint.point.y.toFloat())
+    }
+
+    fun stopTrace() {
+        if (mStartX == mCurX && mStartY == mCurY) {
+            mPath.lineTo(mCurX, mCurY + 2)
+            mPath.lineTo(mCurX + 1, mCurY + 2)
+            mPath.lineTo(mCurX + 1, mCurY)
+        }
+        mPaths.put(mPath, mPaintOptions)
+        mPath = MyPath()
+        mPaintOptions = PaintOptions(
+            mPaintOptions.color,
+            mPaintOptions.strokeWidth,
+            mPaintOptions.alpha,
+            mPaintOptions.cap
+        )
+        postInvalidate()
+    }
+
+    fun addPath(drawPoint: DrawPoint) {
+        mCurX = drawPoint.point.x.toFloat()
+        mCurY = drawPoint.point.y.toFloat()
         mPath.lineTo(drawPoint.point.x.toFloat(), drawPoint.point.y.toFloat())
-        mPaint.color =
-            (255 and 0xff) shl 24 or (drawPoint.rgb.r.toInt() and 0xff) shl 16 or
-                    (drawPoint.rgb.g.toInt() and 0xff) shl 8 or
-                    (drawPoint.rgb.b.toInt() and 0xff)
-        mPaint.strokeWidth = drawPoint.width.toFloat()
-        invalidate()
+        postInvalidate()
     }
 
     private fun changePaint(paintOptions: PaintOptions) {
@@ -136,8 +162,11 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
             mPath.reset()
             mPath.moveTo(x, y)
         }
+
         mCurX = x
         mCurY = y
+        SocketHandler.touchDown(DrawPoint(RGB(mPaintOptions.color.red, mPaintOptions.color.green, mPaintOptions.color.blue),
+            Point(mCurX.toInt(), mCurY.toInt()), mPaintOptions.strokeWidth))
     }
 
     private fun actionMove(x: Float, y: Float) {
@@ -158,11 +187,11 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
                 mPaths.remove(path)
             }
         } else {
-            SocketHandler.drawPoint(DrawPoint(RGB(mPaintOptions.color.red, mPaintOptions.color.green, mPaintOptions.color.blue),
-                Point(mCurX.toInt(), mCurY.toInt()), mPaintOptions.strokeWidth))
             mPath.quadTo(mCurX, mCurY, (x + mCurX) / 2, (y + mCurY) / 2)
             mCurX = x
             mCurY = y
+            SocketHandler.drawPoint(DrawPoint(RGB(mPaintOptions.color.red, mPaintOptions.color.green, mPaintOptions.color.blue),
+                Point(mCurX.toInt(), mCurY.toInt()), mPaintOptions.strokeWidth))
         }
     }
 
@@ -179,6 +208,8 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         if (!mIsErasing) {
             mPaths.put(mPath, mPaintOptions)
         }
+
+        SocketHandler.touchUp()
 
         mPath = MyPath()
         mPaintOptions = PaintOptions(

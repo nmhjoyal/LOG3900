@@ -20,6 +20,8 @@ import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.app_preferences.Preferences
 import com.example.thin_client.data.SignInFeedback
 import com.example.thin_client.data.app_preferences.PreferenceHandler
+import com.example.thin_client.data.lifecycle.LoginState
+import com.example.thin_client.data.model.Room
 import com.example.thin_client.data.model.User
 import com.example.thin_client.data.rooms.JoinRoomFeedback
 import com.example.thin_client.data.rooms.RoomArgs
@@ -79,25 +81,29 @@ class Lobby : AppCompatActivity() {
     }
 
     private fun setupSocket() {
-        if (SocketHandler.socket == null) {
+        if (!SocketHandler.isConnected()) {
             SocketHandler.connect()
         }
 
         setupSocketEvents()
 
-        if (!prefs.getBoolean(Preferences.LOGGED_IN_KEY, false)) {
-            val intent = Intent(applicationContext, LoginActivity::class.java)
-            startActivity(intent)
-            SocketHandler.disconnect()
-        } else if (!SocketHandler.isLoggedIn){
-            val user = PreferenceHandler(applicationContext).getUser()
-            SocketHandler.login(User(user.username, user.password))
-            SocketHandler.isLoggedIn = true
-        } else {
-            showChatRoomsFragment()
+        when (SocketHandler.getLoginState(prefs)) {
+            LoginState.FIRST_LOGIN -> {
+                val intent = Intent(applicationContext, LoginActivity::class.java)
+                startActivity(intent)
+                SocketHandler.disconnect()
+            }
+            LoginState.LOGIN_WITH_EXISTING -> {
+                val user = PreferenceHandler(applicationContext).getUser()
+                SocketHandler.login(User(user.username, user.password))
+                SocketHandler.isLoggedIn = true
+            }
+            LoginState.LOGGED_IN -> {
+                showChatRoomsFragment()
+            }
+
         }
     }
-
 
     private fun showChatRoomsFragment() {
         val transaction = manager.beginTransaction()
@@ -130,9 +136,8 @@ class Lobby : AppCompatActivity() {
 
     private fun turnOffSocketEvents() {
         if (SocketHandler.socket != null) {
-            SocketHandler.socket!!.off(SocketEvent.USER_SIGNED_IN)
+            SocketHandler.socket!!
                 .off(SocketEvent.USER_SIGNED_OUT)
-                .off(SocketEvent.USER_JOINED_ROOM)
                 .off(SocketEvent.OBSERVER)
                 .off(SocketEvent.DRAWER)
         }
@@ -184,6 +189,10 @@ class Lobby : AppCompatActivity() {
                         ).show()
                     })
             })).on(SocketEvent.USER_JOINED_ROOM, ({ data ->
+                val feedback = Gson().fromJson(data.first().toString(), JoinRoomFeedback::class.java)
+                if (feedback.feedback.status) {
+                    RoomManager.addRoom(feedback.room_joined!!)
+                }
                 val roomID = if (RoomManager.currentRoom == "") "General" else RoomManager.currentRoom
                 Handler(Looper.getMainLooper()).post(Runnable {
                     val bundle = Bundle()
@@ -202,6 +211,9 @@ class Lobby : AppCompatActivity() {
             })).on(SocketEvent.OBSERVER, ({
                 val intent = Intent(applicationContext, TestOnlineDrawActivity::class.java)
                 startActivity(intent)
+            })).on(Socket.EVENT_DISCONNECT, ({
+                SocketHandler.socket = null
+                SocketHandler.isLoggedIn = false
             }))
 
     }

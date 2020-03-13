@@ -64,17 +64,6 @@ class ChatFragment : Fragment() {
                     }
                 })
             }))
-            ?.on(SocketEvent.USER_LEFT_ROOM, ({ data ->
-                val jsonData = Gson().fromJson(data.first().toString(), Feedback::class.java)
-                Handler(Looper.getMainLooper()).post(Runnable {
-                    Toast.makeText(
-                        context,
-                        jsonData.log_message,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                })
-                goBackToRooms()
-            }))
 
         back_button.setOnClickListener(({
             goBackToRooms()
@@ -102,7 +91,9 @@ class ChatFragment : Fragment() {
         })
 
         leave_button.setOnClickListener(({
+            RoomManager.roomToRemove = roomID!!
             SocketHandler.leaveChatRoom(roomID!!)
+            goBackToRooms()
         }))
 
         editText_chat.afterTextChanged {

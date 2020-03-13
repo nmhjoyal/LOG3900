@@ -1,7 +1,10 @@
 package com.example.thin_client.server
 
+import android.content.SharedPreferences
 import com.example.thin_client.data.ClientMessage
+import com.example.thin_client.data.app_preferences.Preferences
 import com.example.thin_client.data.drawing.DrawPoint
+import com.example.thin_client.data.lifecycle.LoginState
 import com.example.thin_client.data.model.PrivateProfile
 import com.example.thin_client.data.model.User
 import com.example.thin_client.data.rooms.CreateRoom
@@ -18,8 +21,24 @@ object SocketHandler {
 
 
     fun connect(): Socket {
+        val opts = IO.Options()
+        opts.reconnection = false
         socket = IO.socket(HTTPRequest.BASE_URL)
         return socket!!.connect()
+    }
+
+    fun isConnected(): Boolean {
+        return socket !== null
+    }
+
+    fun getLoginState(prefs: SharedPreferences): LoginState {
+        if (!prefs.getBoolean(Preferences.LOGGED_IN_KEY, false)) {
+            return LoginState.FIRST_LOGIN
+        } else if (!isLoggedIn){
+            return LoginState.LOGIN_WITH_EXISTING
+        } else {
+            return LoginState.LOGGED_IN
+        }
     }
 
     fun disconnect() {
@@ -67,6 +86,10 @@ object SocketHandler {
         socket!!.emit(SocketEvent.CREATE_ROOM, newRoom)
     }
 
+    fun searchRooms() {
+        socket!!.emit(SocketEvent.GET_ROOMS)
+    }
+
     fun updateProfile(privateProfile: PrivateProfile) {
         val gson = Gson()
         val args = gson.toJson(privateProfile)
@@ -85,5 +108,15 @@ object SocketHandler {
         val gson = Gson()
         val args = gson.toJson(drawPoint)
         socket!!.emit(SocketEvent.DRAW_TEST, args)
+    }
+
+    fun touchDown(drawPoint: DrawPoint) {
+        val gson = Gson()
+        val args = gson.toJson(drawPoint)
+        socket!!.emit(SocketEvent.TOUCH_DOWN, args)
+    }
+
+    fun touchUp() {
+        socket!!.emit(SocketEvent.TOUCH_UP)
     }
 }
