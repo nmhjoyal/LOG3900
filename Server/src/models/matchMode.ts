@@ -1,4 +1,4 @@
-import Match from "../services/Match/match";
+import Match from "../services/Match/match_General";
 import FreeForAll from "../services/Match/matchFreeForAll";
 import SprintSolo from "../services/Match/matchSprintSolo";
 import SprintCoop from "../services/Match/matchSprintCoop";
@@ -14,7 +14,7 @@ export enum MatchMode {
 }
 
 export class MatchInstance {
-    public static createMatchClassInstance(matchMode: MatchMode, host: string, nbRounds: number): Match {
+    public static createMatch(matchMode: MatchMode, host: string, nbRounds: number): Match {
         switch (matchMode) {
             case MatchMode.freeForAll:
                 return new FreeForAll(host, nbRounds);

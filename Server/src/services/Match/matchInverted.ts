@@ -1,4 +1,4 @@
-import Match from "./match"
+import Match from "./match_General"
 
 export default class Inverted extends Match{
 

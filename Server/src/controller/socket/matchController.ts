@@ -1,6 +1,7 @@
 import { OnMessage, SocketController, MessageBody, ConnectedSocket, SocketIO } from "socket-controllers";
 import { serverHandler } from "../../services/serverHandler";
 import DrawPoint from "../../models/drawPoint";
+import { CreateMatch } from "../../models/match";
 
 @SocketController()
 export default class MatchController {
@@ -18,6 +19,16 @@ export default class MatchController {
     @OnMessage("drawTest")
     public drawTest(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() drawPoint: DrawPoint) {
         serverHandler.matchHandler.drawTest(io, socket, drawPoint);
+    }
+
+    @OnMessage("create_match")
+    public createMatch(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() createMatch: CreateMatch) {
+        io.emit("match_created", serverHandler.matchHandler.createMatch(socket.id, createMatch));
+    }
+
+    @OnMessage("join_match")
+    public joinMatch(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() matchId: string) {
+        socket.emit("match_joined", serverHandler.matchHandler.joinMatch(socket.id, matchId));
     }
 
 }
