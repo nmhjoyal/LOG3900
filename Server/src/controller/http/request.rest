@@ -6,7 +6,7 @@ content-type: application/json
     "firstname" : "hubert",
     "lastname" : "m-d",
     "password" : "banane",
-    "avatar" : "my-avatar",
+    "avatar" : "BANANA",
     "rooms_joined" : []
 }
 
