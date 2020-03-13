@@ -2,8 +2,8 @@ import Match from "./match"
 
 export default class SprintCoop extends Match{
 
-    public constructor() {
-        super();
+    public constructor(host: string, nbRounds: number) {
+        super(host, nbRounds);
     }
     
     public startMatch(): void {
