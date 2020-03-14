@@ -73,7 +73,7 @@
 						<DataTemplate>
 							<StackPanel Orientation="Vertical" HorizontalAlignment="Center">
 								<Button Background="Transparent" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext._selectAvatarCommand}"
-									CommandParameter="{Binding name}" BorderBrush="{x:Null}" Foreground="{x:Null}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+									CommandParameter="{Binding name}" BorderBrush="{x:Null}" Foreground="{x:Null}" Height="50">
 									<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
 										<Image Source="{Binding source}" MaxHeight="50" VerticalAlignment="Center"></Image>
 										<TextBlock Text="{Binding name}" Foreground="{Binding backgroundColor}" Margin="10,0,0,0" VerticalAlignment="Center"/>

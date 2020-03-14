@@ -15,11 +15,17 @@ namespace WPFUI.Models
         private string _ipAdress;
         private string _currentMessage;
         private string _currentRoomId;
+        private string _avatarName;
         private BindableCollection<Message> _messages;
         private BindableCollection<Room> _publicRooms;
         private BindableCollection<Room> _joinedRooms;
         private IEventAggregator _events;
 
+        public string avatarName
+        {
+            get { return _avatarName; }
+            set { _avatarName = value; }
+        }
         public string currentRoomId
         {
             get { return _currentRoomId; }
@@ -74,7 +80,8 @@ namespace WPFUI.Models
             _messages = new BindableCollection<Message>();
             _joinedRooms = new BindableCollection<Room>();
             _publicRooms = new BindableCollection<Room>();
-            _currentRoomId = "null";
+            _currentRoomId = null;
+            _avatarName = null;
         }
 
         public void changeChannel(string roomID)

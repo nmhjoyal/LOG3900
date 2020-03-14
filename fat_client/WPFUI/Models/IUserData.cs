@@ -5,6 +5,7 @@ namespace WPFUI.Models
 {
     public interface IUserData
     {
+        string avatarName { get; set; }
         string currentMessage { get; set; }
         string currentRoomId { get; set; }
         string ipAdress { get; set; }
@@ -14,6 +15,7 @@ namespace WPFUI.Models
         BindableCollection<Room> publicRooms { get; set; }
         string userName { get; set; }
 
+        void addMessage(Message message);
         void addRoom(Room room);
         void changeChannel(string roomID);
         void Handle(joinedRoomReceived message);

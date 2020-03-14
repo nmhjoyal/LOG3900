@@ -67,10 +67,14 @@ namespace WPFUI.Models
             _socket.On("user_signed_in", (signInFeedback) =>
             {
                 SignInFeedback feedback = JsonConvert.DeserializeObject<SignInFeedback>(signInFeedback.ToString());
-                if (feedback.feedback.status)
-                {
-                    _events.PublishOnUIThread(new joinedRoomReceived(feedback.rooms_joined));
-                    _events.PublishOnUIThread(new LogInEvent());
+            if (feedback.feedback.status)
+            {
+                _events.PublishOnUIThread(new joinedRoomReceived(feedback.rooms_joined));
+                _userdata.avatarName = feedback.rooms_joined.Single(i => i.roomName == "General").avatars[_userdata.userName];
+                Console.WriteLine("fruit:");
+                Console.WriteLine(_userdata.avatarName);
+                _events.PublishOnUIThread(new LogInEvent());
+
                 }
                 //voir doc
             });
@@ -208,15 +212,11 @@ namespace WPFUI.Models
 
         public void sendStroke(string path, string couleur, string width, bool stylusTip)
         {
-
-
             _trait = new Trait(path, couleur, width, stylusTip);
             Console.WriteLine(_trait.ToString());
             this._traitJSON = JsonConvert.SerializeObject(_trait);
             Console.WriteLine(_traitJSON.ToString());
-
             this._socket.Emit("sent_path", this._traitJSON);
-
         }
         public void getStrokes(InkCanvas Canvas)
         {
@@ -230,7 +230,6 @@ namespace WPFUI.Models
                 path.StrokeEndLineCap = PenLineCap.Round;
                 path.StrokeStartLineCap = PenLineCap.Round;
                 path.StrokeLineJoin = PenLineJoin.Round;
-
                 Canvas.Children.Add(path);
             });
         }

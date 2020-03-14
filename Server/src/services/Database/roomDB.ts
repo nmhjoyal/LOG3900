@@ -41,7 +41,7 @@ class RoomDB {
             room = {
                 id: roomDB.id,
                 messages: roomDB.messages,
-                avatars: roomDB.users  
+                avatars: roomDB.avatars 
             }
         }
             

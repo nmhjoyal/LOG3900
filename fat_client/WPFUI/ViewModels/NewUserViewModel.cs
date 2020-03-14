@@ -17,6 +17,7 @@ namespace WPFUI.ViewModels
 		private IEventAggregator _events;
 		private ISocketHandler _socketHandler;
 		private BindableCollection<Avatar> _avatars;
+		private string _selectedAvatar;
 		public IselectAvatarCommand _selectAvatarCommand { get; set; }
 		public NewUserViewModel(IUserData userdata, IEventAggregator events, ISocketHandler socketHandler)
 		{
@@ -27,23 +28,24 @@ namespace WPFUI.ViewModels
 			_avatars = new BindableCollection<Avatar>();
 			fillAvatars();
 			_selectAvatarCommand = new selectAvatarCommand(events);
+			_selectedAvatar = null;
 			//_events.PublishOnUIThread(new signUpEvent());
 		}
 
 		public void fillAvatars()
 		{
-			_avatars.Add(new Avatar("/Resources/apple.png", "Apple"));
-			_avatars.Add(new Avatar("/Resources/avocado.png", "Avocado"));
-			_avatars.Add(new Avatar("/Resources/banana.png", "Banana"));
-			_avatars.Add(new Avatar("/Resources/cherry.png", "Cherry"));
-			_avatars.Add(new Avatar("/Resources/grape.png", "Grape"));
-			_avatars.Add(new Avatar("/Resources/kiwi.png", "Kiwi"));
-			_avatars.Add(new Avatar("/Resources/lemon.png", "Lemon"));
-			_avatars.Add(new Avatar("/Resources/orange.png", "Orange"));
-			_avatars.Add(new Avatar("/Resources/pear.png", "Pear"));
-			_avatars.Add(new Avatar("/Resources/pineapple.png", "Pineapple"));
-			_avatars.Add(new Avatar("/Resources/strawberry.png", "Strawberry"));
-			_avatars.Add(new Avatar("/Resources/watermelon.png", "Watermelon"));
+			_avatars.Add(new Avatar("/Resources/apple.png", "APPLE"));
+			_avatars.Add(new Avatar("/Resources/avocado.png", "AVOCADO"));
+			_avatars.Add(new Avatar("/Resources/banana.png", "BANANA"));
+			_avatars.Add(new Avatar("/Resources/cherry.png", "CHERRY"));
+			_avatars.Add(new Avatar("/Resources/grape.png", "GRAPE"));
+			_avatars.Add(new Avatar("/Resources/kiwi.png", "KIWI"));
+			_avatars.Add(new Avatar("/Resources/lemon.png", "LEMON"));
+			_avatars.Add(new Avatar("/Resources/orange.png", "ORANGE"));
+			_avatars.Add(new Avatar("/Resources/pear.png", "PEAR"));
+			_avatars.Add(new Avatar("/Resources/pineapple.png", "PINEAPPLE"));
+			_avatars.Add(new Avatar("/Resources/strawberry.png", "STRAWBERRY"));
+			_avatars.Add(new Avatar("/Resources/watermelon.png", "WATERMELON"));
 		}
 
 		public BindableCollection<Avatar> avatars
@@ -90,29 +92,21 @@ namespace WPFUI.ViewModels
 			set { _confirmedPassword = value; }
 		}
 
-		private string _avatar;
-
-		public string avatar
-		{
-			get { return _avatar; }
-			set { _avatar = value; }
-		}
-
 		public void createUser()
 		{
-			if (isValid() & isSamePassword())
+			if (isValid())
 			{
 				_userData.userName = _userName;
 				_userData.password = _password;
 
-				_socketHandler.createUser(new PrivateProfile(_userName, _firstName, _lastName, _password, _avatar));
+				_socketHandler.createUser(new PrivateProfile(_userName, _firstName, _lastName, _password, ""+_selectedAvatar));
 
 			}
 		}
 
 		public Boolean isValid()
 		{
-			if (fieldsAreNotEmpty())
+			if (fieldsAreNotEmpty() & isSamePassword())
 			{
 				return true;
 			}
@@ -125,7 +119,7 @@ namespace WPFUI.ViewModels
 
 		public Boolean fieldsAreNotEmpty()
 		{
-			return (_userName != "" & _firstName != "" & _lastName != "" & _password != "" & _confirmedPassword != "");
+			return (_userName != "" & _firstName != "" & _lastName != "" & _password != "" & _confirmedPassword != "" & _selectedAvatar != null);
 
 		}
 
@@ -155,8 +149,7 @@ namespace WPFUI.ViewModels
 			}
 			
 			int avatarIndex = avatars.IndexOf(avatars.Single(i => i._name == message.fruitSelected));
-			Console.WriteLine("hello");
-			Console.WriteLine(avatarIndex);
+			_selectedAvatar = message.fruitSelected;
 			avatars[avatarIndex].changeColor("Black");
 			avatars.Refresh();
 			NotifyOfPropertyChange(null);

@@ -26,5 +26,6 @@ namespace WPFUI.Models
             get { return id; }
             set { id = value; }
         }
+
     }
 }
