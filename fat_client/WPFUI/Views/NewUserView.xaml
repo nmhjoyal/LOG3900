@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WPFUI.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="650" d:DesignWidth="800"
+             d:DesignHeight="700" d:DesignWidth="800"
 			 FontFamily="Microsoft JhengHei UI Light"
 			 FontSize="16">
 	<Grid Background="#FFF1F2F1">
@@ -64,10 +64,23 @@
 			<TextBox x:Name="confirmedPassword" MinWidth="200" Grid.ColumnSpan="5" Foreground="#FF66CC2F"/>
 		</StackPanel>
 
-		<StackPanel Grid.Column="1" Grid.Row="7" Orientation="Vertical" Grid.ColumnSpan="6" HorizontalAlignment="Center">
-			<TextBlock Text="Choose your avatar"/>
-			<TextBox MinWidth="200" Grid.ColumnSpan="5" Foreground="#FF66CC2F"/>
-		</StackPanel>
+		<Grid Grid.Column="1" Grid.Row="7" Grid.ColumnSpan="6" HorizontalAlignment="Center" Height="150" Width="200">
+			<TextBlock Text="Choose your avatar:" HorizontalAlignment="Left"/>
+			<ScrollViewer Margin="0,25,0,0">
+				<ItemsControl ItemsSource="{Binding avatars}" Height="auto">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+								<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+									<Image Source="{Binding source}" MaxHeight="50" VerticalAlignment="Center"></Image>
+									<TextBlock Text="{Binding name}" Foreground="{Binding backgroundColor}" Margin="10,0,0,0" VerticalAlignment="Center"/>
+								</StackPanel>
+							</StackPanel>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</ScrollViewer>
+		</Grid>
 
 		<Button x:Name="createUser" Grid.Column="1" Grid.Row="11" Grid.ColumnSpan="6" MaxWidth="200" Margin="0,20,0,0" Background="#FF66CC00">
 			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">

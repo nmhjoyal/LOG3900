@@ -15,12 +15,37 @@ namespace WPFUI.ViewModels
 		private IUserData _userData;
 		private IEventAggregator _events;
 		private ISocketHandler _socketHandler;
+		private BindableCollection<Avatar> _avatars;
 		public NewUserViewModel(IUserData userdata, IEventAggregator events, ISocketHandler socketHandler)
 		{
 			_userData = userdata;
 			_events = events;
 			_socketHandler = socketHandler;
+			_avatars = new BindableCollection<Avatar>();
+			fillAvatars();
 			//_events.PublishOnUIThread(new signUpEvent());
+		}
+
+		public void fillAvatars()
+		{
+			_avatars.Add(new Avatar("/Resources/apple.png", "Apple"));
+			_avatars.Add(new Avatar("/Resources/avocado.png", "Avocado"));
+			_avatars.Add(new Avatar("/Resources/banana.png", "Banana"));
+			_avatars.Add(new Avatar("/Resources/cherry.png", "Cherry"));
+			_avatars.Add(new Avatar("/Resources/grape.png", "Grape"));
+			_avatars.Add(new Avatar("/Resources/kiwi.png", "Kiwi"));
+			_avatars.Add(new Avatar("/Resources/lemon.png", "Lemon"));
+			_avatars.Add(new Avatar("/Resources/orange.png", "Orange"));
+			_avatars.Add(new Avatar("/Resources/pear.png", "Pear"));
+			_avatars.Add(new Avatar("/Resources/pineapple.png", "Pineapple"));
+			_avatars.Add(new Avatar("/Resources/strawberry.png", "Strawberry"));
+			_avatars.Add(new Avatar("/Resources/watermelon.png", "Watermelon"));
+		}
+
+		public BindableCollection<Avatar> avatars
+		{
+			get { return _avatars; }
+			set { _avatars = value; }
 		}
 		public string userName
 		{
