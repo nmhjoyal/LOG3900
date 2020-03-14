@@ -75,13 +75,13 @@ class ChatRoomsFragment : Fragment() {
             val menu = PopupMenu(context, v)
             val groupId = 1
             for (room in roomList) {
-                menu.menu.add(groupId, roomList.indexOf(room), 1, room)
+                if (!RoomManager.roomsJoined.containsKey(room)) {
+                    menu.menu.add(groupId, roomList.indexOf(room), 1, room)
+                }
             }
             menu.setOnMenuItemClickListener(({ item ->
-                if (!RoomManager.roomsJoined.containsKey(item.title)) {
-                    RoomManager.currentRoom = item.title.toString()
-                    SocketHandler.joinChatRoom(item.title.toString())
-                }
+                RoomManager.currentRoom = item.title.toString()
+                SocketHandler.joinChatRoom(item.title.toString())
                 true
             }))
             menu.show()
@@ -92,7 +92,7 @@ class ChatRoomsFragment : Fragment() {
             }
 
             override fun onSuggestionClicked(searchSuggestion: SearchSuggestion?) {
-                if (searchSuggestion !== null && !RoomManager.roomsJoined.containsKey(searchSuggestion.body)) {
+                if (searchSuggestion !== null) {
                     RoomManager.currentRoom = searchSuggestion.body
                     SocketHandler.joinChatRoom(searchSuggestion.body)
                 }
@@ -104,7 +104,8 @@ class ChatRoomsFragment : Fragment() {
                 val filterList: MutableList<SearchSuggestion> = ArrayList()
                 if (newQuery != null && newQuery.isNotEmpty()) {
                     for (i in roomList.indices) {
-                        if (roomList[i].toUpperCase().contains(newQuery.toString().toUpperCase())) {
+                        if (roomList[i].toUpperCase().contains(newQuery.toString().toUpperCase())
+                            && !RoomManager.roomsJoined.containsKey(roomList[i])) {
                             filterList.add(object: SearchSuggestion {
                                 override fun describeContents(): Int {
                                     return 0
@@ -121,26 +122,27 @@ class ChatRoomsFragment : Fragment() {
                     }
                 } else {
                     for (i in roomList.indices) {
-                        filterList.add(object: SearchSuggestion {
-                            override fun describeContents(): Int {
-                                return 0
-                            }
+                        if (!RoomManager.roomsJoined.containsKey(roomList[i])) {
+                            filterList.add(object : SearchSuggestion {
+                                override fun describeContents(): Int {
+                                    return 0
+                                }
 
-                            override fun writeToParcel(dest: Parcel?, flags: Int) {
-                            }
+                                override fun writeToParcel(dest: Parcel?, flags: Int) {
+                                }
 
-                            override fun getBody(): String {
-                                return roomList[i]
-                            }
-                        })
+                                override fun getBody(): String {
+                                    return roomList[i]
+                                }
+                            })
+                        }
                     }
                 }
                 search_room.swapSuggestions(filterList)
             }
         })
 
-        SocketHandler.searchRooms()
-        fetchRooms()
+        recyclerview_chatrooms.adapter = adapter
         recyclerview_chatrooms.addItemDecoration(DividerItemDecoration(recyclerview_chatrooms.context, DividerItemDecoration.VERTICAL))
     }
 
@@ -152,16 +154,15 @@ class ChatRoomsFragment : Fragment() {
         return inflater.inflate(R.layout.chatrooms_fragment, container, false)
     }
 
+    override fun onStart() {
+        super.onStart()
+        SocketHandler.searchRooms()
+        refreshRoomAdapter()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         turnOffSocketEvents()
-    }
-
-    private fun fetchRooms() {
-        for (room in RoomManager.roomsJoined.keys) {
-            adapter.add(ChatRoomItem(room))
-        }
-        recyclerview_chatrooms.adapter = adapter
     }
 
     private fun refreshRoomAdapter() {
@@ -177,6 +178,7 @@ class ChatRoomsFragment : Fragment() {
                 val roomCreateFeedback = Gson().fromJson(data.first().toString(), Feedback::class.java)
                 Handler(Looper.getMainLooper()).post(Runnable {
                     if (roomCreateFeedback.status) {
+                        SocketHandler.searchRooms()
                         if (newRoomName.isNotBlank() && !RoomManager.roomsJoined.containsKey(newRoomName)) {
                             RoomManager.addRoom(Room(newRoomName, arrayListOf(), mapOf()))
                             adapter.add(ChatRoomItem(newRoomName))
@@ -199,6 +201,7 @@ class ChatRoomsFragment : Fragment() {
             }))
             .on(SocketEvent.ROOMS, ({ data ->
                 Handler(Looper.getMainLooper()).post(Runnable {
+                    roomList = arrayListOf()
                     val list = Gson().fromJson(data.first().toString(), ArrayList::class.java)
                     for (room in list) {
                         roomList.add(room.toString())
@@ -210,6 +213,7 @@ class ChatRoomsFragment : Fragment() {
     private fun removeRoom(feedback: Feedback) {
         Handler(Looper.getMainLooper()).post(Runnable {
             if (feedback.status) {
+                SocketHandler.searchRooms()
                 RoomManager.leaveRoom()
                 refreshRoomAdapter()
             } else {
