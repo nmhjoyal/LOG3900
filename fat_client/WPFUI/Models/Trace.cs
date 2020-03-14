@@ -24,17 +24,20 @@ namespace WPFUI.Models
     {
         public double x;
         public double y;
+        public string tool;
         
-        public Point(double x, double y)
+        public Point(double x, double y, string tool)
         {
             this.x = x;
             this.y = y;
+            this.tool = tool;
         }
 
         public Point(Point point)
         {
             this.x = point.x;
             this.y = point.y;
+            this.tool = point.tool;
         }
     }
 
@@ -60,7 +63,7 @@ namespace WPFUI.Models
             this.b = (color & 0xff);
         }
 
-        public String getHex()
+        public string getHex()
         {
             return "#" + this.r.ToString("X2") + this.g.ToString("X2") + this.b.ToString("X2");
         }

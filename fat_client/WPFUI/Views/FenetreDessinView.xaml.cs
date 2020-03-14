@@ -42,8 +42,7 @@ namespace WPFUI.Views
             {
                 Console.WriteLine("mouse move");
                 System.Windows.Point p = e.GetPosition(surfaceDessin);
-                Models.Point point = new Models.Point(p.X, p.Y);
-                (this.DataContext as FenetreDessinViewModel).sendPointAction(point);
+                (this.DataContext as FenetreDessinViewModel).sendPointAction((int)p.X, (int)p.Y);
             }
             //textBlockPosition.Text = Math.Round(p.X) + ", " + Math.Round(p.Y) + "px";
         }
@@ -87,9 +86,8 @@ namespace WPFUI.Views
         {
             this.isMouseDown = true;
             System.Windows.Point p = e.GetPosition(surfaceDessin);
-            Models.Point point = new Models.Point(p.X, p.Y);
             Console.WriteLine("mouse down");
-            (this.DataContext as FenetreDessinViewModel).sendStrokeAction(point);
+            (this.DataContext as FenetreDessinViewModel).sendStrokeAction((int)p.X, (int)p.Y);
             // Console.WriteLine(this.isMouseDown);
         }
 

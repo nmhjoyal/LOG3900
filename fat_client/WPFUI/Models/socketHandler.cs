@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using System.Windows;
 using System.Windows.Media;
+using System.Collections.Generic;
 
 namespace WPFUI.Models
 {
@@ -227,29 +228,44 @@ namespace WPFUI.Models
                 this.Dispatcher.Invoke(() =>
                     Traits.Add(stroke)
                 );
-
-                /*
-                StylusPoint stylusPoint = new StylusPoint((double)json.x, json.y);
-
-                Stroke stroke = new Stroke()
-                Console.WriteLine(point);
-                */
             });
 
             this.socket.On("drawPoint", (point) => {
                 dynamic json = JsonConvert.DeserializeObject(point.ToString());
-                StylusPoint stylusPoint = new StylusPoint((int)json.x, (int)json.y);
+                if(json.tool == "crayon")
+                {
+                    StylusPoint stylusPoint = new StylusPoint((int)json.x, (int)json.y);
 
-                this.Dispatcher.Invoke(() =>
-                    Traits[Traits.Count - 1].StylusPoints.Add(stylusPoint)
-                );
+                    this.Dispatcher.Invoke(() =>
+                        Traits[Traits.Count - 1].StylusPoints.Add(stylusPoint)
+                    );
+                } else if(json.tool == "efface_trait" || json.tool == "efface_segment") 
+                {
+                    StrokeCollection erasedStrokes = new StrokeCollection();
+                    System.Windows.Point p = new System.Windows.Point((double)json.x, (double)json.y);
+                    this.Dispatcher.Invoke(() =>
+                        erasedStrokes = Traits.HitTest(p, 8)
+                    );
+                    for(int i = 0; i < erasedStrokes.Count; i ++)
+                    {
+                        this.Dispatcher.Invoke(() =>
+                            Traits.Remove(erasedStrokes[i])
+                        );
+                    }
 
-                /*
-                StylusPoint stylusPoint = new StylusPoint((double)json.x, json.y);
+                    if (json.tool == "efface_segment")
+                    {
+                        for (int i = 0; i < erasedStrokes.Count; i++)
+                        {
+                            StrokeCollection segments = new StrokeCollection(erasedStrokes[i].GetEraseResult(new List<System.Windows.Point>() { p }, new RectangleStylusShape(8, 8)));
+                            Console.WriteLine(segments.Count);
+                            this.Dispatcher.Invoke(() =>
+                                Traits.Add(segments)
+                            );
+                        }
 
-                Stroke stroke = new Stroke()
-                Console.WriteLine(point);
-                */
+                    }
+                }
             });
         }
     }

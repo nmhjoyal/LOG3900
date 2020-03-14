@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Ink;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using WPFUI.EventModels;
@@ -110,17 +111,21 @@ namespace WPFUI.ViewModels
             this._socketHandler.freeDraw(Traits, AttributsDessin);
         }
 
-        public void sendPointAction(Models.Point point)
+        public void sendPointAction(int x, int y)
         {
+            Models.Point point = new Models.Point(x, y, this.OutilSelectionne);
             this._socketHandler.socket.Emit("drawTest", JsonConvert.SerializeObject(point));
         }
 
-        public void sendStrokeAction(Models.Point point)
+        public void sendStrokeAction(int x, int y)
         {
-            Trace trace = new Trace(point, this.AttributsDessin.Color.ToString(), (int)this.AttributsDessin.Width);
-            Console.WriteLine("trace");
-            this._socketHandler.socket.Emit("start_trace", JsonConvert.SerializeObject(trace));
-            Console.WriteLine("emit");
+            if(this.OutilSelectionne == "crayon")
+            {
+                Models.Point point = new Models.Point(x, y, this.OutilSelectionne);
+                Trace trace = new Trace(point, this.AttributsDessin.Color.ToString(), (int)this.AttributsDessin.Width);
+                this._socketHandler.socket.Emit("start_trace", JsonConvert.SerializeObject(trace));
+            }
+            
             /*
             Console.WriteLine("*" + this.AttributsDessin.Color);
             string width = Traits[Traits.Count - 1].DrawingAttributes.Width.ToString();
