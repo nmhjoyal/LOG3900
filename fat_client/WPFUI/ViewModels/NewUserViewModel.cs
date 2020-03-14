@@ -4,25 +4,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WPFUI.Commands;
 using WPFUI.EventModels;
 using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-	class NewUserViewModel : Screen
+	class NewUserViewModel : Screen, IHandle<refreshUIEvent>
 	{
 		private string _userName;
 		private IUserData _userData;
 		private IEventAggregator _events;
 		private ISocketHandler _socketHandler;
 		private BindableCollection<Avatar> _avatars;
+		public IselectAvatarCommand _selectAvatarCommand { get; set; }
 		public NewUserViewModel(IUserData userdata, IEventAggregator events, ISocketHandler socketHandler)
 		{
 			_userData = userdata;
 			_events = events;
+			_events.Subscribe(this);
 			_socketHandler = socketHandler;
 			_avatars = new BindableCollection<Avatar>();
 			fillAvatars();
+			_selectAvatarCommand = new selectAvatarCommand(events);
 			//_events.PublishOnUIThread(new signUpEvent());
 		}
 
@@ -45,7 +49,8 @@ namespace WPFUI.ViewModels
 		public BindableCollection<Avatar> avatars
 		{
 			get { return _avatars; }
-			set { _avatars = value; }
+			set { _avatars = value;
+				  NotifyOfPropertyChange(() => avatars); }
 		}
 		public string userName
 		{
@@ -142,5 +147,19 @@ namespace WPFUI.ViewModels
 			_events.PublishOnUIThread(new goBackEvent());
 		}
 
+		public void Handle(refreshUIEvent message)
+		{
+			foreach (Avatar a in avatars)
+			{
+				a.resetColor();
+			}
+			
+			int avatarIndex = avatars.IndexOf(avatars.Single(i => i._name == message.fruitSelected));
+			Console.WriteLine("hello");
+			Console.WriteLine(avatarIndex);
+			avatars[avatarIndex].changeColor("Black");
+			avatars.Refresh();
+			NotifyOfPropertyChange(null);
+		}
 	}
 }

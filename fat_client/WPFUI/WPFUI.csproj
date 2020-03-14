@@ -112,6 +112,8 @@
     </Compile>
     <Compile Include="Commands\changeChannelCommand.cs" />
     <Compile Include="Commands\IchangeChannelCommand.cs" />
+    <Compile Include="Commands\IselectAvatarCommand.cs" />
+    <Compile Include="Commands\selectAvatarCommand.cs" />
     <Compile Include="Converters\Converters.cs" />
     <Compile Include="EventModels\addMessageEvent.cs" />
     <Compile Include="EventModels\AssisteIEvent.cs" />
@@ -133,6 +135,7 @@
     <Compile Include="EventModels\ManuelleIIEvent.cs" />
     <Compile Include="EventModels\passwordMismatchEvent.cs" />
     <Compile Include="EventModels\refreshMessagesEvent.cs" />
+    <Compile Include="EventModels\refreshUIEvent.cs" />
     <Compile Include="EventModels\roomsRetrievedEvent.cs" />
     <Compile Include="EventModels\sendMessageEvent.cs" />
     <Compile Include="EventModels\signUpEvent.cs" />

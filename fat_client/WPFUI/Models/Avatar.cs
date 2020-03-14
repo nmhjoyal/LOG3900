@@ -39,5 +39,9 @@ namespace WPFUI.Models
             _backgroundColor = color;
         }
 
+        public void resetColor()
+        {
+            _backgroundColor = "#FF66CC2F";
+        }
     }
 }
