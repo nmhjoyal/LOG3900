@@ -22,6 +22,7 @@
             <ColumnDefinition Width="100" />
             <ColumnDefinition Width="100" />
             <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="100" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="20" />
         </Grid.ColumnDefinitions>
@@ -116,6 +117,8 @@
             <Button Click="addClue" HorizontalAlignment="Left" Content="Ajouter indice" Grid.Column="2" Grid.Row="6" Grid.ColumnSpan="1" Background="LightBlue" BorderBrush="LightBlue" MaxWidth="120" />
             <TextBox  x:Name="clue" Grid.Column="3" Grid.Row="5" MinWidth="200" Grid.ColumnSpan="3" Canvas.Left="157" Canvas.Top="3"/>
         </StackPanel>
-        <Button x:Name="goBack" Content="Go Back" Grid.Column="7" Grid.Row="1" MaxWidth="100" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+        <Button x:Name="goBack" Content="Go Back" Grid.Column="8" Grid.Row="1" MaxWidth="100" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+        <Button Click="createManGame2" Content="Create Game" Grid.Column="8" Grid.Row="5" MaxWidth="100" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+        <Button Click="preview" Content="Preview" Grid.Column="8" Grid.Row="4" MaxWidth="100" HorizontalAlignment="Right" Margin="0,0,10,0"/>
     </Grid>
 </UserControl>

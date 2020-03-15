@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,12 +59,26 @@ namespace WPFUI.Views
             // Grid.SetColumn(dynamicTextBox, 7);
 
             this.canContainer.Children.Add(dynamicTextBox);
-
+            dynamicTextBox.Name = "indice" + this.canContainer.Children.Count;
+            Console.WriteLine(dynamicTextBox.Name);
+         
             Console.WriteLine(this.canContainer.Children.Count);
 
 
         }
 
+        private void createManGame2(object sender, RoutedEventArgs e)
+        {
+            List<string> clues = new List<string>();
+            for(int i=2; i < this.canContainer.Children.Count; i++)
+            {
+                clues.Add((this.canContainer.Children[i] as TextBox).Text);
+               
+            }
+            Console.WriteLine(JsonConvert.SerializeObject(clues));
+
+
+        }
 
 
 

@@ -24,5 +24,10 @@ namespace WPFUI.Views
         {
             InitializeComponent();
         }
+
+        private void createUser_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
