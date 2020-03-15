@@ -6,6 +6,7 @@ import com.example.thin_client.data.model.Room
 object RoomManager {
     var roomsJoined: MutableMap<String, ArrayList<Message>> = mutableMapOf()
     var roomAvatars: MutableMap<String, Map<String, String>> = mutableMapOf()
+    var invites: ArrayList<String> = arrayListOf()
     var currentRoom: String = ""
     var roomToRemove: String = ""
 

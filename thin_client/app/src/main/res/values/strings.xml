@@ -2,6 +2,7 @@
     <!-- Common -->
     <string name="app_name">Draw Something</string>
     <string name="ok">OK</string>
+    <string name="done">Done</string>
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
     <string name="sign_out">Sign out</string>

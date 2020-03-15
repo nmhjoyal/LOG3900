@@ -1,12 +1,11 @@
 package com.example.thin_client.ui.chatrooms
 
+import android.view.View
 import com.example.thin_client.R
-import com.example.thin_client.data.server.SocketEvent
-import com.example.thin_client.server.SocketHandler
+import com.example.thin_client.data.rooms.RoomManager
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.invite_row.view.*
-import kotlinx.android.synthetic.main.user_invite_row.view.*
 
 class InviteInboxRow(val roomId: String): Item<GroupieViewHolder>(){
 
@@ -14,11 +13,17 @@ class InviteInboxRow(val roomId: String): Item<GroupieViewHolder>(){
         viewHolder.itemView.invite_room_name.text = roomId
 
         viewHolder.itemView.accept_join.setOnClickListener(({
-            SocketHandler.joinChatRoom(roomId)
+            RoomManager.invites.remove(roomId)
+            RoomManager.roomsJoined.put(roomId, arrayListOf())
+            viewHolder.itemView.setBackgroundResource(R.drawable.background_joined)
+            viewHolder.itemView.invite_room_name.text = "JOINED"
+            viewHolder.itemView.accept_join.visibility = View.GONE
+            viewHolder.itemView.deny_join.visibility = View.GONE
         }))
 
         viewHolder.itemView.deny_join.setOnClickListener(({
-
+            RoomManager.invites.remove(roomId)
+            viewHolder.itemView.visibility = View.GONE
         }))
 
     }

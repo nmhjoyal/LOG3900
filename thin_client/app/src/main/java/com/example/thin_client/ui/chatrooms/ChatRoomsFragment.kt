@@ -31,23 +31,21 @@ import kotlinx.android.synthetic.main.chatrooms_fragment.*
 class ChatRoomsFragment : Fragment() {
     private val adapter = GroupAdapter<GroupieViewHolder>()
     private var roomList: ArrayList<String> = ArrayList()
-    private var selectedRoom : String = ""
     private var newRoomName : String = ""
     private var inviteList: ArrayList<String> = ArrayList()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter.setOnItemClickListener{ item, v ->
-            selectedRoom = (item as ChatRoomItem).roomname
-            RoomManager.currentRoom = selectedRoom
-            SocketHandler.joinChatRoom(selectedRoom)
+        adapter.setOnItemClickListener { item, v ->
+            RoomManager.currentRoom = (item as ChatRoomItem).roomname
+            SocketHandler.joinChatRoom(RoomManager.currentRoom)
         }
 
         setupSocketEvents()
 
         invites.setOnClickListener(({
-
+            showInboxDialog()
         }))
 
         add_room.setOnClickListener(({
@@ -141,6 +139,11 @@ class ChatRoomsFragment : Fragment() {
         super.onStart()
         SocketHandler.searchRooms()
         refreshRoomAdapter()
+        if (RoomManager.invites.isEmpty()) {
+            invites.setImageResource(R.drawable.ic_inbox_24px)
+        } else {
+            invites.setImageResource(R.drawable.inbox_notification)
+        }
     }
 
     override fun onDestroy() {
@@ -171,8 +174,13 @@ class ChatRoomsFragment : Fragment() {
                             inviteList = arrayListOf()
                         }
                     } else {
-                        Toast.makeText(context, roomCreateFeedback.log_message, Toast.LENGTH_SHORT)
-                            .show()
+                        if (activity !== null) {
+                            Toast.makeText(
+                                context,
+                                roomCreateFeedback.log_message,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 })
             }))
@@ -196,8 +204,33 @@ class ChatRoomsFragment : Fragment() {
                 })
             }))
             .on(SocketEvent.RECEIVE_INVITE, ({ data ->
+                val invite = Gson().fromJson(data.first().toString(), Invitation::class.java)
                 Handler(Looper.getMainLooper()).post(Runnable {
-                    invites.setImageResource(R.drawable.inbox_notification)
+                    if (invites !== null ) {
+                        invites.setImageResource(R.drawable.inbox_notification)
+                    }
+                    if (!RoomManager.invites.contains(invite.id)) {
+                        RoomManager.invites.add(invite.id)
+                    }
+                })
+            }))
+            .on(SocketEvent.LOAD_HISTORY, ({ data ->
+                val room = Gson().fromJson(data.first().toString(), Room::class.java)
+                if (RoomManager.roomsJoined.containsKey(room.id)) {
+                    RoomManager.roomsJoined.put(room.id, room.messages)
+                    RoomManager.roomAvatars.put(room.id, room.avatars)
+                }
+            }))
+            .on(SocketEvent.USER_SENT_INVITE, ({ data ->
+                val feedback = Gson().fromJson(data.first().toString(), Feedback::class.java)
+                Handler(Looper.getMainLooper()).post(Runnable {
+                    if (activity !== null) {
+                        Toast.makeText(
+                            context,
+                            feedback.log_message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 })
             }))
     }
@@ -209,7 +242,13 @@ class ChatRoomsFragment : Fragment() {
                 RoomManager.leaveRoom()
                 refreshRoomAdapter()
             } else {
-                Toast.makeText(context, feedback.log_message, Toast.LENGTH_SHORT).show()
+                if (activity !== null) {
+                    Toast.makeText(
+                        context,
+                        feedback.log_message,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         })
     }
@@ -225,7 +264,26 @@ class ChatRoomsFragment : Fragment() {
     }
 
     private fun showInboxDialog() {
-
+        val alertBuilder = AlertDialog.Builder(context)
+        alertBuilder.setTitle(R.string.invites)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_invite_inbox, null)
+        alertBuilder.setView(dialogView)
+        val inviteRecyclerView = dialogView.findViewById<RecyclerView>(R.id.invite_list)
+        val inviteListAdapter = GroupAdapter<GroupieViewHolder>()
+        for (invitation in RoomManager.invites) {
+            inviteListAdapter.add(InviteInboxRow(invitation))
+        }
+        inviteRecyclerView.adapter = inviteListAdapter
+        alertBuilder
+            .setPositiveButton(R.string.done) { _, _ ->
+                refreshRoomAdapter()
+                if (RoomManager.invites.isEmpty()) {
+                    invites.setImageResource(R.drawable.ic_inbox_24px)
+                }
+            }
+        val dialog = alertBuilder.create()
+        dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.show()
     }
 
     private fun showCreateNewRoomDialog() {
