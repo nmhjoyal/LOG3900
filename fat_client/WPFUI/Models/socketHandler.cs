@@ -212,34 +212,41 @@ namespace WPFUI.Models
 
         public void freeDraw(StrokeCollection Traits, DrawingAttributes AttributsDessin)
         {
+            string drawersTool = "";
+
             this.socket.Emit("connect_free_draw");
 
             this.socket.On("new_trace", (trace) => {
                 dynamic json = JsonConvert.DeserializeObject(trace.ToString());
-                StylusPoint stylusPoint = new StylusPoint((int)json.point.x, (int)json.point.y);
-                StylusPointCollection stylusPointCollection = new StylusPointCollection();
-                stylusPointCollection.Add(stylusPoint);
-                Stroke stroke = new Stroke(stylusPointCollection);
-                stroke.DrawingAttributes.Width = json.width;
-                stroke.DrawingAttributes.Height = json.width;
-                stroke.DrawingAttributes.StylusTip = StylusTip.Ellipse;
-                stroke.DrawingAttributes.Color = (System.Windows.Media.Color)ColorConverter.ConvertFromString(new Color((int)json.color.r, (int)json.color.g, (int)json.color.b).getHex());
+                drawersTool = json.tool;
+                if(drawersTool == "crayon")
+                {
+                    StylusPoint stylusPoint = new StylusPoint((int)json.point.x, (int)json.point.y);
+                    StylusPointCollection stylusPointCollection = new StylusPointCollection();
+                    stylusPointCollection.Add(stylusPoint);
+                    Stroke stroke = new Stroke(stylusPointCollection);
+                    stroke.DrawingAttributes.Width = json.width;
+                    stroke.DrawingAttributes.Height = json.width;
+                    stroke.DrawingAttributes.StylusTip = StylusTip.Ellipse;
+                    stroke.DrawingAttributes.Color = (System.Windows.Media.Color)ColorConverter.ConvertFromString(new Color((int)json.color.r, (int)json.color.g, (int)json.color.b).getHex());
 
-                this.Dispatcher.Invoke(() =>
-                    Traits.Add(stroke)
-                );
+                    this.Dispatcher.Invoke(() =>
+                        Traits.Add(stroke)
+                    );
+                }
             });
 
             this.socket.On("drawPoint", (point) => {
                 dynamic json = JsonConvert.DeserializeObject(point.ToString());
-                if(json.tool == "crayon")
+                if(drawersTool == "crayon")
                 {
+                    Console.WriteLine("here");
                     StylusPoint stylusPoint = new StylusPoint((int)json.x, (int)json.y);
 
                     this.Dispatcher.Invoke(() =>
                         Traits[Traits.Count - 1].StylusPoints.Add(stylusPoint)
                     );
-                } else if(json.tool == "efface_trait" || json.tool == "efface_segment") 
+                } else if(drawersTool == "efface_trait" || drawersTool == "efface_segment") 
                 {
                     StrokeCollection erasedStrokes = new StrokeCollection();
                     System.Windows.Point p = new System.Windows.Point((double)json.x, (double)json.y);
@@ -253,7 +260,7 @@ namespace WPFUI.Models
                         );
                     }
 
-                    if (json.tool == "efface_segment")
+                    if (drawersTool == "efface_segment")
                     {
                         for (int i = 0; i < erasedStrokes.Count; i++)
                         {

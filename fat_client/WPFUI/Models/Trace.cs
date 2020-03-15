@@ -11,33 +11,30 @@ namespace WPFUI.Models
         public Point point;
         public Color color;
         public int width;
-       //public bool stylusTip;
-        public Trace(Point point, string color, int width/*, bool stylusTip*/)
+        public string tool;
+        public Trace(Point point, string color, int width, string tool)
         {
             this.point = new Point(point);
             this.color = new Color(color);
             this.width = width;
-            // this.stylusTip = stylusTip;
+            this.tool = tool;
         }
     }
     class Point
     {
         public double x;
         public double y;
-        public string tool;
         
         public Point(double x, double y, string tool)
         {
             this.x = x;
             this.y = y;
-            this.tool = tool;
         }
 
         public Point(Point point)
         {
             this.x = point.x;
             this.y = point.y;
-            this.tool = point.tool;
         }
     }
 
