@@ -1,7 +1,6 @@
 package com.example.thin_client.ui.chatrooms
 
 import android.app.AlertDialog
-import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -13,11 +12,13 @@ import android.view.WindowManager
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.RecyclerView
 import com.arlib.floatingsearchview.FloatingSearchView
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion
 import com.example.thin_client.R
 import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.model.Room
+import com.example.thin_client.data.rooms.Invitation
 import com.example.thin_client.data.rooms.RoomManager
 import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
@@ -32,6 +33,7 @@ class ChatRoomsFragment : Fragment() {
     private var roomList: ArrayList<String> = ArrayList()
     private var selectedRoom : String = ""
     private var newRoomName : String = ""
+    private var inviteList: ArrayList<String> = ArrayList()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,31 +46,12 @@ class ChatRoomsFragment : Fragment() {
 
         setupSocketEvents()
 
-        add_room.setOnClickListener(({
-            val alertBuilder = AlertDialog.Builder(context)
-            alertBuilder.setTitle(R.string.create_room)
-            val dialogView = layoutInflater.inflate(R.layout.dialog_create_room, null)
-            alertBuilder.setView(dialogView)
-            val radioGroup = dialogView.findViewById<RadioGroup>(R.id.room_visibility)
-            var isPrivate = false
-            radioGroup.check(R.id.is_public_room)
-            radioGroup.setOnCheckedChangeListener(({ _, checkedId ->
-                isPrivate = checkedId == R.id.is_private_room
-            }))
+        invites.setOnClickListener(({
 
-            alertBuilder
-                .setPositiveButton(R.string.ok) { _, _ ->
-                    newRoomName = dialogView.findViewById<EditText>(R.id.room_name).text.toString()
-                    if (newRoomName.isNotBlank()) {
-                        SocketHandler.createChatRoom(newRoomName, isPrivate)
-                    } else {
-                        dialogView.findViewById<EditText>(R.id.room_name).error = Resources.getSystem().getString(R.string.error_roomname)
-                    }
-                }
-                .setNegativeButton(R.string.cancel) { _, _ -> }
-            val dialog = alertBuilder.create()
-            dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-            dialog.show()
+        }))
+
+        add_room.setOnClickListener(({
+            showCreateNewRoomDialog()
         }))
 
         rooms_list.setOnClickListener(({ v ->
@@ -182,6 +165,10 @@ class ChatRoomsFragment : Fragment() {
                         if (newRoomName.isNotBlank() && !RoomManager.roomsJoined.containsKey(newRoomName)) {
                             RoomManager.addRoom(Room(newRoomName, arrayListOf(), mapOf()))
                             adapter.add(ChatRoomItem(newRoomName))
+                            for (invite in inviteList) {
+                                SocketHandler.sendInvite(Invitation(newRoomName, invite))
+                            }
+                            inviteList = arrayListOf()
                         }
                     } else {
                         Toast.makeText(context, roomCreateFeedback.log_message, Toast.LENGTH_SHORT)
@@ -208,6 +195,11 @@ class ChatRoomsFragment : Fragment() {
                     }
                 })
             }))
+            .on(SocketEvent.RECEIVE_INVITE, ({ data ->
+                Handler(Looper.getMainLooper()).post(Runnable {
+                    invites.setImageResource(R.drawable.inbox_notification)
+                })
+            }))
     }
 
     private fun removeRoom(feedback: Feedback) {
@@ -230,5 +222,63 @@ class ChatRoomsFragment : Fragment() {
                 .off(SocketEvent.USER_LEFT_ROOM)
                 .off(SocketEvent.ROOMS)
         }
+    }
+
+    private fun showInboxDialog() {
+
+    }
+
+    private fun showCreateNewRoomDialog() {
+        val alertBuilder = AlertDialog.Builder(context)
+        alertBuilder.setTitle(R.string.create_room)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_create_room, null)
+        alertBuilder.setView(dialogView)
+        val inviteFrame = dialogView.findViewById<RelativeLayout>(R.id.invite_users_frame)
+        val inviteRecyclerView = dialogView.findViewById<RecyclerView>(R.id.invite_list)
+        val addButton = dialogView.findViewById<ImageButton>(R.id.add_user_button)
+        val addUsername = dialogView.findViewById<EditText>(R.id.add_user_username)
+        val inviteListAdapter = GroupAdapter<GroupieViewHolder>()
+        inviteList = arrayListOf()
+        inviteListAdapter.setOnItemClickListener(({ item, view ->
+            inviteListAdapter.remove(item)
+            inviteListAdapter.notifyDataSetChanged()
+            inviteList.remove((item as InviteUserRow).user)
+        }))
+        addButton.setOnClickListener(({
+            if (addUsername.text.isNotBlank()) {
+                inviteListAdapter.add(InviteUserRow(addUsername.text.toString()))
+                inviteListAdapter.notifyDataSetChanged()
+                inviteRecyclerView.scrollToPosition(inviteListAdapter.itemCount - 1)
+                if (!inviteList.contains(addUsername.text.toString())) {
+                    inviteList.add(addUsername.text.toString())
+                }
+                addUsername.text.clear()
+            }
+        }))
+        inviteRecyclerView.adapter = inviteListAdapter
+        inviteFrame.visibility = View.GONE
+        val radioGroup = dialogView.findViewById<RadioGroup>(R.id.room_visibility)
+        var isPrivate = false
+        radioGroup.check(R.id.is_public_room)
+        radioGroup.setOnCheckedChangeListener(({ _, checkedId ->
+            isPrivate = checkedId == R.id.is_private_room
+            val visibility = if (isPrivate) View.VISIBLE else View.GONE
+            inviteFrame.visibility = visibility
+        }))
+
+        alertBuilder
+            .setPositiveButton(R.string.ok) { _, _ ->
+                newRoomName = dialogView.findViewById<EditText>(R.id.room_name).text.toString()
+                if (newRoomName.isNotBlank()) {
+                    SocketHandler.createChatRoom(newRoomName, isPrivate)
+                } else {
+                    Toast.makeText(context, R.string.error_roomname, Toast.LENGTH_SHORT)
+                        .show()                    }
+            }
+            .setNegativeButton(R.string.cancel) { _, _ -> }
+            .setCancelable(false)
+        val dialog = alertBuilder.create()
+        dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.show()
     }
 }

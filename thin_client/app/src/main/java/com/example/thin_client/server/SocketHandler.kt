@@ -8,6 +8,7 @@ import com.example.thin_client.data.lifecycle.LoginState
 import com.example.thin_client.data.model.PrivateProfile
 import com.example.thin_client.data.model.User
 import com.example.thin_client.data.rooms.CreateRoom
+import com.example.thin_client.data.rooms.Invitation
 import com.example.thin_client.data.server.HTTPRequest
 import com.example.thin_client.data.server.SocketEvent
 import com.github.nkzawa.socketio.client.IO
@@ -118,5 +119,10 @@ object SocketHandler {
 
     fun touchUp() {
         socket!!.emit(SocketEvent.TOUCH_UP)
+    }
+
+    fun sendInvite(invite: Invitation) {
+        val args = Gson().toJson(invite)
+        socket!!.emit(SocketEvent.SEND_INVITE, args)
     }
 }

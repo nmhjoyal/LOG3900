@@ -18,6 +18,9 @@ object SocketEvent {
     const val ROOM_CREATED = "room_created"
     const val GET_ROOMS = "get_rooms"
     const val ROOMS = "rooms_retrieved"
+    const val SEND_INVITE = "send_invite"
+    const val USER_SENT_INVITE = "user_sent_invite"
+    const val RECEIVE_INVITE = "receive_invitation"
 
     const val UPDATE_PROFILE = "update_profile"
     const val PROFILE_UPDATED = "profile_updated"

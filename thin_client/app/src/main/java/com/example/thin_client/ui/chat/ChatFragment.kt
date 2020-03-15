@@ -4,10 +4,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.*
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.thin_client.R
-import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.Message
 import com.example.thin_client.data.rooms.RoomArgs
 import com.example.thin_client.data.rooms.RoomManager

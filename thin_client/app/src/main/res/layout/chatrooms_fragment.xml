@@ -15,6 +15,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 app:srcCompat="@drawable/ic_list_24px"
                 android:background="@color/colorPrimaryDark"
                 app:layout_constraintTop_toTopOf="parent"
@@ -40,10 +41,21 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
                 android:background="@color/colorPrimaryDark"
                 app:srcCompat="@drawable/ic_add_24px"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
+            <ImageButton
+                android:id="@+id/invites"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
+                app:srcCompat="@drawable/ic_inbox_24px"
+                android:background="@color/colorPrimaryDark"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/add_room"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView

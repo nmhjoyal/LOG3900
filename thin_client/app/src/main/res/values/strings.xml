@@ -49,6 +49,9 @@
     <string name="public_room">Public</string>
     <string name="private_room">Private</string>
     <string name="search_room">Search rooms</string>
+    <string name="invite_user">Invite users</string>
+    <string name="prompt_enter_username">Enter username</string>
+    <string name="invites">Invites</string>
 
     <!-- Strings for create user -->
     <string name="prompt_first_name">First Name</string>

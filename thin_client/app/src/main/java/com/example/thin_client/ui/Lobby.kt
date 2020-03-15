@@ -21,7 +21,6 @@ import com.example.thin_client.data.app_preferences.Preferences
 import com.example.thin_client.data.SignInFeedback
 import com.example.thin_client.data.app_preferences.PreferenceHandler
 import com.example.thin_client.data.lifecycle.LoginState
-import com.example.thin_client.data.model.Room
 import com.example.thin_client.data.model.User
 import com.example.thin_client.data.rooms.JoinRoomFeedback
 import com.example.thin_client.data.rooms.RoomArgs
@@ -64,7 +63,7 @@ class Lobby : AppCompatActivity() {
                 show_rooms_button.setImageResource(R.drawable.ic_open)
             } else {
                 chatrooms_container.visibility = View.VISIBLE
-                show_rooms_button.setImageResource(R.drawable.ic_close)
+                show_rooms_button.setImageResource(R.drawable.hide)
             }
         }))
     }
