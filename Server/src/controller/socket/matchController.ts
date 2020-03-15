@@ -4,7 +4,7 @@ import { Trace } from "../../models/drawPoint";
 import Point from "../../models/drawPoint";
 
 @SocketController()
-export default class ChatController {
+export default class MatchController {
 
     @OnMessage("connect_free_draw")
     public async connect_free_draw(@ConnectedSocket() socket: SocketIO.Socket) {
