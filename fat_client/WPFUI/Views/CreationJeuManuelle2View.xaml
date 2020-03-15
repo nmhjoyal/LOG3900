@@ -7,7 +7,7 @@
              xmlns:convertisseurs="clr-namespace:WPFUI.Converters"     
             xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit" 
             mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="500" d:DesignWidth="800">
     <UserControl.Resources>
         <convertisseurs:ConvertisseurBordure x:Key="convertisseurBordure" />
         <convertisseurs:ConvertisseurCouleurFond x:Key="convertisseurCouleurFond" />
@@ -34,6 +34,9 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="40"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -107,18 +110,56 @@
             </StackPanel>
 
         </StackPanel>
-        <TextBlock   Text="Niveau de difficulté:" Grid.Column="2" Grid.Row="4"/>
-        <Button x:Name="modeClassique" Content="classique" Grid.Column="3" Grid.Row="4" Grid.ColumnSpan="1"  Height="Auto" />
-        <Button x:Name="modeAleatoire" Content="aléatoire" Grid.Column="4" Grid.Row="4" Grid.ColumnSpan="1" Height="Auto" Background="#fff345" BorderBrush="#fff345" />
-        <Button x:Name="modePanoramique" Content="panoramique" Grid.Column="5" Grid.Row="4" Grid.ColumnSpan="1"  Height="Auto" Background="#E93838" BorderBrush="Red" />
-        <Button x:Name="modeCentre" Content="centré" Grid.Column="6" Grid.Row="4" Grid.ColumnSpan="1"  Height="Auto" Background="Purple" BorderBrush="Purple" />
-        <StackPanel Grid.Column="2" Grid.Row="5" Name="canContainer">
-            <TextBlock   Text="Indice(s):" Grid.Column="2" Grid.Row="5"/>
-            <Button Click="addClue" HorizontalAlignment="Left" Content="Ajouter indice" Grid.Column="2" Grid.Row="6" Grid.ColumnSpan="1" Background="LightBlue" BorderBrush="LightBlue" MaxWidth="120" />
-            <TextBox  x:Name="clue" Grid.Column="3" Grid.Row="5" MinWidth="200" Grid.ColumnSpan="3" Canvas.Left="157" Canvas.Top="3"/>
+        <TextBlock   Text="Difficulté:" Grid.Column="2" Grid.Row="4"/>
+        <ComboBox Grid.Column="3" Grid.Row="4">
+            <ComboBoxItem Name ="facile" IsSelected="True">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock  Foreground="Green">Facile</TextBlock>
+                </StackPanel>
+            </ComboBoxItem>
+            <ComboBoxItem x:Name="moyen">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Foreground="Orange">Moyen</TextBlock>
+                </StackPanel>
+            </ComboBoxItem>
+            <ComboBoxItem x:Name="difficile">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Foreground="Red">Difficile</TextBlock>
+                </StackPanel>
+            </ComboBoxItem>
+        </ComboBox>
+
+        <TextBlock   Text="Mode de Jeu:" Grid.Column="2" Grid.Row="5"/>
+        <ComboBox Grid.Column="3" Grid.Row="5">
+            <ComboBoxItem Name ="classic" IsSelected="True">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>Classique</TextBlock>
+                </StackPanel>
+            </ComboBoxItem>
+            <ComboBoxItem Name="aleatoire">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>Aléatoire</TextBlock>
+                </StackPanel>
+            </ComboBoxItem>
+            <ComboBoxItem Name="panoramique">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>Panoramique</TextBlock>
+                </StackPanel>
+            </ComboBoxItem>
+            <ComboBoxItem Name="centre">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>Centré</TextBlock>
+                </StackPanel>
+            </ComboBoxItem>
+        </ComboBox>
+
+        <StackPanel Grid.Column="2" Grid.Row="7" Name="canContainer">
+            <TextBlock   Text="Indice(s):" Grid.Column="2" Grid.Row="6"/>
+            <Button Click="addClue" HorizontalAlignment="Left" Content="Ajouter indice" Grid.Column="2" Grid.Row="7" Grid.ColumnSpan="1" Background="LightBlue" BorderBrush="LightBlue" MaxWidth="120" />
+            <TextBox  x:Name="clue" Grid.Column="3" Grid.Row="8" MinWidth="200" Grid.ColumnSpan="3" Canvas.Left="157" Canvas.Top="3"/>
         </StackPanel>
         <Button x:Name="goBack" Content="Go Back" Grid.Column="8" Grid.Row="1" MaxWidth="100" HorizontalAlignment="Right" Margin="0,0,10,0"/>
-        <Button Click="createManGame2" Content="Create Game" Grid.Column="8" Grid.Row="5" MaxWidth="100" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+        <Button Click="createManGame2" Content="Create Game" Grid.Column="8" Grid.Row="6" MaxWidth="100" HorizontalAlignment="Right" Margin="0,0,10,0"/>
         <Button Click="preview" Content="Preview" Grid.Column="8" Grid.Row="3" MaxWidth="100" HorizontalAlignment="Right" Margin="0,0,10,0.333" Grid.RowSpan="2" VerticalAlignment="Bottom"/>
     </Grid>
 </UserControl>
