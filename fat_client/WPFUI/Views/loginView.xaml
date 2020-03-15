@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 xmlns:gif="http://wpfanimatedgif.codeplex.com"
              xmlns:local="clr-namespace:WPFUI.Views"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="900" FontSize="20"
@@ -12,7 +13,7 @@
              TextElement.FontSize="20"
              TextOptions.TextFormattingMode="Ideal"
              TextOptions.TextRenderingMode="Auto"
-             FontFamily="Microsoft JhengHei UI Light"  Background="#FFF1F2F1">
+             FontFamily="Microsoft JhengHei UI Light"  Background="WhiteSmoke">
 
     <Grid >
         <Grid.ColumnDefinitions>
@@ -39,9 +40,10 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="130"/>
         </Grid.RowDefinitions>
+		<Image gif:ImageBehavior.AnimatedSource="/Resources/HAND-DRAW.gif" Grid.Column="1" Grid.Row="3" Opacity="0.6" Grid.ColumnSpan="5" Grid.RowSpan="9"/>
 		<StackPanel Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="5" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,0,0,20">
-			<TextBlock FontSize="40" Foreground="#FF66CC00" Margin="0,0,10,0" >Fais moi un dessin !</TextBlock>
-			<Image Source="/Resources/logo.ico" Height="35"></Image>
+			<TextBlock FontSize="40" Foreground="#FF66CC00" Margin="0,0,0,0" Background="WhiteSmoke" >Fais moi un dessin !</TextBlock>
+
 		</StackPanel>
 		<TextBlock Width="390" Text="Password: " Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="5" Foreground="DarkSlateGray"/>
 		<TextBox Width="390" Grid.Column="1" Grid.Row="6" x:Name="_password" Grid.ColumnSpan="5"  Margin="5" Foreground="#FF66CC00">

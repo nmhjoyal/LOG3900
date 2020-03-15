@@ -4,10 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WPFUI.Views"
+			 xmlns:gif="http://wpfanimatedgif.codeplex.com"
              mc:Ignorable="d" 
-             d:DesignHeight="550" d:DesignWidth="800"
+             d:DesignHeight="650" d:DesignWidth="800"
 			 FontFamily="Microsoft JhengHei UI Light">
-    <Grid Background="#FFF1F2F1">
+    <Grid Background="#FFF5F5F6">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100"/>
             <ColumnDefinition Width="auto" />
@@ -17,74 +18,85 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="100" />
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="4*"/>
-            <RowDefinition Height="11*"/>
-            <RowDefinition Height="100"/>
-        </Grid.RowDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="100"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="4*"/>
+			<RowDefinition Height="11*"/>
+			<RowDefinition Height="100"/>
+		</Grid.RowDefinitions>
+		<Image gif:ImageBehavior.AnimatedSource="/Resources/trophy_cropped.gif" Grid.Column="1" Grid.Row="5" Opacity="0.5" Height="80" 
+			   Grid.RowSpan="2" Grid.ColumnSpan="5" HorizontalAlignment="Center"  Margin="250,0,0,0"/>
+		<Image gif:ImageBehavior.AnimatedSource="/Resources/duck_cropped.gif" Grid.Column="1" Grid.Row="4" Opacity="0.5" Height="40" 
+			   Grid.RowSpan="1" Grid.ColumnSpan="5" HorizontalAlignment="Center"  Margin="-290,0,0,0"/>
 		<StackPanel Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="5" HorizontalAlignment="Center" Orientation="Vertical" Margin="0,0,0,20">
 			<StackPanel Orientation="Horizontal">
-				<TextBlock FontSize="40" Foreground="#FF66CC00" Margin="0,0,10,0">Fais moi un dessin !</TextBlock>
-				<Image Source="/Resources/logo.ico" Height="35"></Image>
+				<TextBlock FontSize="40" Foreground="#FF66CC00" Margin="0,0,0,0">Fais moi un dessin !</TextBlock>
 			</StackPanel>
 			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
-				<Image Source="{Binding avatarSource}" Height="40" VerticalAlignment="Center"></Image>
+				<Image Source="{Binding avatarSource}" Height="30" VerticalAlignment="Center"></Image>
 				<TextBlock Text="{Binding username}" Margin="10,0,0,0" Foreground="Black" FontSize="25" VerticalAlignment="Center"></TextBlock>
 			</StackPanel>
 		</StackPanel>
-		
-		<Button x:Name="viewProfile" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="5" MaxWidth="200" Background="#FF66CC00" Margin="0,10,0,0">
+
+		<Border BorderBrush="#FF3B6E08" BorderThickness="1" CornerRadius="8"
+				Grid.Column="1" Grid.Row="1" Width="60" Height="30" Margin="500,-50,0,0" Grid.ColumnSpan="5" Background="#FF66CC00">
+			<StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+				<TextBlock Text="0" FontSize="20" ></TextBlock>
+				<Image Source="/Resources/mail.png" Height="20" Margin="2,1,0,0"></Image>
+			</StackPanel>
+		</Border>
+
+		<Button x:Name="viewProfile" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="5" MaxWidth="200" Background="#FF66CC00" Margin="0,10,0,0" BorderBrush="{x:Null}">
 			<StackPanel Orientation="Horizontal">
-				<TextBlock Margin="0,0,10,0" Foreground="White">Modifier le profil</TextBlock>
+				<TextBlock Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Modifier le profil</TextBlock>
 				<Image Source="/Resources/user.png" Height="22"></Image>
 			</StackPanel>
 		</Button>
-		<Button x:Name="freeDraw" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="5" MaxWidth="200" Background="#FF66CC00" Margin="0,10,0,0">
+		<Button x:Name="freeDraw" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="5" MaxWidth="200" Background="#FF66CC00" Margin="0,20,0,0" BorderBrush="{x:Null}">
 			<StackPanel Orientation="Horizontal">
-				<TextBlock Margin="0,0,10,0" Foreground="White">Dessin Libre</TextBlock>
-				<Image Source="/Resources/pen.png"></Image>
+				<TextBlock Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Dessin Libre</TextBlock>
+				<Image Source="/Resources/pen.png" Height="22"></Image>
 			</StackPanel>
 		</Button>
-		<Button x:Name="joinChatroom" Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="5" MaxWidth="200" Background="#FF66CC00" Margin="0,10,0,0">
+		<Button x:Name="joinChatroom" Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="5" MaxWidth="200" Background="#FF66CC00" Margin="0,20,0,0" BorderBrush="{x:Null}">
 			<StackPanel Orientation="Horizontal">
-				<TextBlock Margin="0,0,10,0" Foreground="White">Chat</TextBlock>
-				<Image Source="/Resources/chat.png"></Image>
+				<TextBlock Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Chat</TextBlock>
+				<Image Source="/Resources/chat.png" Height="23"></Image>
 			</StackPanel>
 		</Button>
-		<Button x:Name="viewLeaderboard" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="5" MaxWidth="200" Background="#FF66CC00" Margin="0,10,0,0">
+		<Button x:Name="viewLeaderboard" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="5" MaxWidth="200" Background="#FF66CC00" Margin="0,20,0,0" BorderBrush="{x:Null}">
 			<StackPanel Orientation="Horizontal">
-				<TextBlock Margin="0,0,10,0" Foreground="White">Classement</TextBlock>
-				<Image Source="/Resources/ranking.png"></Image>
+				<TextBlock Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Classement</TextBlock>
+				<Image Source="/Resources/ranking.png" Height="22"></Image>
 			</StackPanel>
 		</Button>
-		<Button x:Name="joinGame" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="5" MaxWidth="200" Background="#FF66CC00" Margin="0,10,0,0">
+		<Button x:Name="joinGame" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="5" MaxWidth="200" Background="#FF66CC00" Margin="0,20,0,0" BorderBrush="{x:Null}">
 			<StackPanel Orientation="Horizontal">
-				<TextBlock Margin="0,0,10,0" Foreground="White">Joindre une partie</TextBlock>
-				<Image Source="/Resources/joystick.png"></Image>
+				<TextBlock Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Joindre une partie</TextBlock>
+				<Image Source="/Resources/joystick.png" Height="25"></Image>
 			</StackPanel>
 		</Button>
-		<Button x:Name="creationJeu" Grid.Column="1" Grid.Row="7" Grid.ColumnSpan="5" MaxWidth="200" Background="#FF66CC00" Margin="0,10,0,0">
+		<Button x:Name="creationJeu" Grid.Column="1" Grid.Row="7" Grid.ColumnSpan="5" MaxWidth="200" Background="#FF66CC00" Margin="0,20,0,0" BorderBrush="{x:Null}">
 			<StackPanel Orientation="Horizontal">
-				<TextBlock Margin="0,0,10,0" Foreground="White">Créer un jeu</TextBlock>
-				<Image Source="/Resources/add.png" Height="22"></Image>
+				<TextBlock Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Créer un jeu</TextBlock>
+				<Image Source="/Resources/add.png" Height="20"></Image>
 			</StackPanel>
 		</Button>
-		<StackPanel Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="5" MaxWidth="200" HorizontalAlignment="Right" Orientation="Horizontal">
-			<Button x:Name="logOut" Background="#FFBF0B0B" Margin="20,0,0,0" VerticalAlignment="Center">
+		<StackPanel Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="5" MaxWidth="200" HorizontalAlignment="Center" Orientation="Horizontal" Margin="420,20,0,0">
+			<Button x:Name="logOut" Background="#FFBF0B0B" Margin="20,0,0,0" VerticalAlignment="Center" BorderBrush="{x:Null}">
 				<StackPanel Orientation="Horizontal">
 					<TextBlock Foreground="White">Déconnexion</TextBlock>
-					<Image Source="/Resources/logout.png" Height="22"></Image>
+					<Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
 				</StackPanel>
 			</Button>
 		</StackPanel>

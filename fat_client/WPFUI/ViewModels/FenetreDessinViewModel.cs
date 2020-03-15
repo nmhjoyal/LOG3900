@@ -110,7 +110,7 @@ namespace WPFUI.ViewModels
             // Donc, aucune vérification de type Peut"Action" à faire.
             ChoisirPointe = new RelayCommand<string>(editeur.ChoisirPointe);
             ChoisirOutil = new RelayCommand<string>(editeur.ChoisirOutil);
-            _socketHandler.getStrokes(Canvas);
+            //_socketHandler.getStrokes(Canvas);
         }
 
         private void sendStrokeAction(Object o)
