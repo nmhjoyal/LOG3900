@@ -119,12 +119,9 @@ namespace WPFUI.ViewModels
 
         public void sendStrokeAction(int x, int y)
         {
-            if(this.OutilSelectionne == "crayon")
-            {
-                Models.Point point = new Models.Point(x, y, this.OutilSelectionne);
-                Trace trace = new Trace(point, this.AttributsDessin.Color.ToString(), (int)this.AttributsDessin.Width);
-                this._socketHandler.socket.Emit("start_trace", JsonConvert.SerializeObject(trace));
-            }
+            Models.Point point = new Models.Point(x, y, this.OutilSelectionne);
+            Trace trace = new Trace(point, this.AttributsDessin.Color.ToString(), (int)this.AttributsDessin.Width, this.OutilSelectionne);
+            this._socketHandler.socket.Emit("start_trace", JsonConvert.SerializeObject(trace));
             
             /*
             Console.WriteLine("*" + this.AttributsDessin.Color);
@@ -142,6 +139,11 @@ namespace WPFUI.ViewModels
             SocketHandler socketHandler = new SocketHandler(userdata,events);
             socketHandler.sendStroke(path, color, width, stylusTip);
             */
+        }
+
+        public void sendDrawing()
+        {
+            this._socketHandler.socket.Emit("create_game", JsonConvert.SerializeObject(this.Traits));
         }
 
         /// <summary>

@@ -1,6 +1,6 @@
 import { OnMessage, SocketController, MessageBody, ConnectedSocket, SocketIO, OnDisconnect } from "socket-controllers";
 import { serverHandler } from "../../services/serverHandler";
-import { Trace } from "../../models/drawPoint";
+import { Trace, Line } from "../../models/drawPoint";
 import Point from "../../models/drawPoint";
 
 @SocketController()
@@ -33,5 +33,10 @@ export default class MatchController {
     @OnMessage("drawTest")
     public drawTest(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() point: Point) {
         serverHandler.matchHandler.drawTest(io, socket, point);
+    }
+
+    @OnMessage("create_game")
+    public async create_game(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() drawing: Line[]) {
+        await serverHandler.matchHandler.sendDrawing(socket, drawing);
     }
 }

@@ -17,7 +17,9 @@ var createroom = {
     isPrivate: true
 }
 
-socket1.on("connect", function (data) {socket1.emit("sign_in", { username : "hub2", password: "banane" });});
+socket1.on("connect", function (data) {
+    socket1.emit("potrace");
+});
 
 socket1.on("sent_path", function(data) {console.log("ICI !!!!! : " + data)});
 
