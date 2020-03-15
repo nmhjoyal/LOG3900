@@ -366,6 +366,7 @@
     <Resource Include="Resources\HAND-DRAW.gif" />
     <Resource Include="Resources\heart.gif" />
     <Resource Include="Resources\heart_crooped.gif" />
+    <Resource Include="Resources\invite.png" />
     <Content Include="Resources\kiwi.svg" />
     <Resource Include="Resources\lemon.png" />
     <Content Include="Resources\lemon.svg" />
