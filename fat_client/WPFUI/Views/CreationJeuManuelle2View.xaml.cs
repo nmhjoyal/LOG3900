@@ -82,10 +82,10 @@ namespace WPFUI.Views
 
 
 
-        /*private void mainMenu_Click(object sender, RoutedEventArgs e)
+        private void preview(object sender, RoutedEventArgs e)
         {
 
-        }*/
+        }
     }
 }
 

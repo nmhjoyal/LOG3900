@@ -133,6 +133,7 @@
     <Compile Include="EventModels\signUpEvent.cs" />
     <Compile Include="EventModels\userNameTakenEvent.cs" />
     <Compile Include="EventModels\viewProfileEvent.cs" />
+    <Compile Include="Models\CreateGame.cs" />
     <Compile Include="Models\ManualGame1.cs" />
     <Compile Include="Models\Trace.cs" />
     <Compile Include="Models\Editeur.cs" />

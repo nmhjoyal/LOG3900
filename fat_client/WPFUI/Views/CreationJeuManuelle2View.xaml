@@ -119,6 +119,6 @@
         </StackPanel>
         <Button x:Name="goBack" Content="Go Back" Grid.Column="8" Grid.Row="1" MaxWidth="100" HorizontalAlignment="Right" Margin="0,0,10,0"/>
         <Button Click="createManGame2" Content="Create Game" Grid.Column="8" Grid.Row="5" MaxWidth="100" HorizontalAlignment="Right" Margin="0,0,10,0"/>
-        <Button Click="preview" Content="Preview" Grid.Column="8" Grid.Row="4" MaxWidth="100" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+        <Button Click="preview" Content="Preview" Grid.Column="8" Grid.Row="3" MaxWidth="100" HorizontalAlignment="Right" Margin="0,0,10,0.333" Grid.RowSpan="2" VerticalAlignment="Bottom"/>
     </Grid>
 </UserControl>
