@@ -1,5 +1,6 @@
 package com.example.thin_client.ui.game_mode.free_draw
 
+import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Paint
@@ -16,6 +17,10 @@ import androidx.core.content.ContextCompat
 import com.example.thin_client.R
 import com.example.thin_client.data.PermissionHandler
 import com.example.thin_client.data.RequestCodes
+import com.example.thin_client.data.app_preferences.PreferenceHandler
+import com.example.thin_client.data.app_preferences.Preferences
+import com.example.thin_client.data.lifecycle.LoginState
+import com.example.thin_client.data.model.User
 import com.example.thin_client.server.SocketHandler
 import kotlinx.android.synthetic.main.activity_free_draw.*
 import java.util.*
@@ -155,6 +160,31 @@ class FreeDrawActivity : AppCompatActivity() {
                 draw_view.setStrokeWidth(seekBar.progress.div(PERCENT) * SIZING_FACTOR)
             }
         })
+    }
+
+    override fun onStart() {
+        super.onStart()
+        setupSocket()
+    }
+
+    private fun setupSocket() {
+        if (!SocketHandler.isConnected()) {
+            SocketHandler.connect()
+        }
+
+        val prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
+        when (SocketHandler.getLoginState(prefs)) {
+            LoginState.FIRST_LOGIN -> {}
+            LoginState.LOGIN_WITH_EXISTING -> {
+                val user = PreferenceHandler(applicationContext).getUser()
+                SocketHandler.login(User(user.username, user.password))
+                SocketHandler.isLoggedIn = true
+            }
+            LoginState.LOGGED_IN -> {
+                System.out.println("got here")
+            }
+
+        }
     }
 
     private fun setColour(sizingDrawable: Int, colourRes: Int) {

@@ -1,7 +1,9 @@
 package com.example.thin_client.ui.profile
 
 import OkHttpRequest
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -18,7 +20,10 @@ import com.example.thin_client.R
 import com.example.thin_client.data.AvatarID
 import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.app_preferences.PreferenceHandler
+import com.example.thin_client.data.app_preferences.Preferences
+import com.example.thin_client.data.lifecycle.LoginState
 import com.example.thin_client.data.model.PrivateProfile
+import com.example.thin_client.data.model.User
 import com.example.thin_client.data.rooms.RoomManager
 import com.example.thin_client.data.server.HTTPRequest
 import com.example.thin_client.data.server.SocketEvent
@@ -27,6 +32,7 @@ import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.Lobby
 import com.example.thin_client.ui.createUser.CreateUserModel
 import com.example.thin_client.ui.createUser.CreateUserModelFactory
+import com.example.thin_client.ui.login.LoginActivity
 import com.example.thin_client.ui.login.afterTextChanged
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_profile.*
@@ -38,18 +44,19 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var privateProfile: PrivateProfile
     private lateinit var createUserModel: CreateUserModel
     private lateinit var selectedAvatar: AvatarID
+    private lateinit var prefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
         privateProfile = PreferenceHandler(this).getPrivateProfile()
+        prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
 
         username.text = privateProfile.username
         selectedAvatar = AvatarID.valueOf(privateProfile.avatar.capitalize())
 
         resetProfile()
-        setupSocketEvents()
         loading.visibility = View.GONE
 
         createUserModel = ViewModelProviders.of(this, CreateUserModelFactory())
@@ -163,8 +170,13 @@ class ProfileActivity : AppCompatActivity() {
         }))
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStart() {
+        super.onStart()
+        setupSocket()
+    }
+
+    override fun onStop() {
+        super.onStop()
         turnOffSocketEvents()
     }
 
@@ -307,6 +319,25 @@ class ProfileActivity : AppCompatActivity() {
 
         val avatarID = AvatarID.valueOf(privateProfile.avatar)
         setAvatar(avocado_avatar, avatarID)
+    }
+
+    private fun setupSocket() {
+        if (!SocketHandler.isConnected()) {
+            SocketHandler.connect()
+        }
+
+        setupSocketEvents()
+
+        when (SocketHandler.getLoginState(prefs)) {
+            LoginState.FIRST_LOGIN -> {}
+            LoginState.LOGIN_WITH_EXISTING -> {
+                val user = PreferenceHandler(applicationContext).getUser()
+                SocketHandler.login(User(user.username, user.password))
+                SocketHandler.isLoggedIn = true
+            }
+            LoginState.LOGGED_IN -> {}
+
+        }
     }
 
     private fun setupSocketEvents() {

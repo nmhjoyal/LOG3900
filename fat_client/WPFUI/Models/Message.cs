@@ -9,35 +9,19 @@ namespace WPFUI.Models
     public class Message
     {
 
-        private User _author;
-
-        public User author
+        string username;
+        string content;
+        int date;
+        string roomId;
+        public Message(string username,
+        string content,
+        int date,
+        string roomId)
         {
-            get { return _author; }
-            set { _author = value; }
-        }
-
-        private string _content;
-
-        public string content
-        {
-            get { return _content; }
-            set { _content = value; }
-        }
-
-        private double _date;
-
-        public double date
-        {
-            get { return _date; }
-            set { _date = value; }
-        }
-
-        public Message(User author, string content, double timestamp)
-        {
-            _content = content;
-            _author = author;
-            _date = timestamp;
+            this.username = username;
+            this.content = content;
+            this.date = date;
+            this.roomId = roomId;
         }
 
     }

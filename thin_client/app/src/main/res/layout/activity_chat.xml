@@ -18,6 +18,7 @@
             android:id="@+id/back_button"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:scaleType="fitXY"
             android:background="@color/colorPrimaryDark"
             app:srcCompat="@drawable/ic_arrow_back_24px"
             app:layout_constraintTop_toTopOf="parent"
@@ -33,16 +34,28 @@
             android:text=""
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <ImageButton
             android:id="@+id/leave_button"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:scaleType="fitXY"
             android:background="@color/colorPrimaryDark"
             app:srcCompat="@drawable/ic_meeting_room_24px"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
+
+        <ImageButton
+            android:id="@+id/invite_user_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="16dp"
+            android:background="@color/colorPrimaryDark"
+            app:srcCompat="@drawable/ic_add_24px"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/leave_button"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

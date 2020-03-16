@@ -1,83 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimaryDark">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/chatrooms_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:background="@color/colorPrimaryDark">
+            <ImageButton
+                android:id="@+id/rooms_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                app:srcCompat="@drawable/ic_list_24px"
+                android:background="@color/colorPrimaryDark"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+            <TextView
+                android:id="@+id/menu_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color_white"
+                android:textSize="18sp"
+                android:textAllCaps="true"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:text="@string/rooms_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <TextView
-            android:id="@+id/menu_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/color_white"
-            android:textSize="18sp"
-            android:textAllCaps="true"
-            android:layout_marginTop="8dp"
-            android:fontFamily="sans-serif"
-            android:gravity="center"
-            android:text="@string/rooms_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <ImageButton
-            android:id="@+id/add_room"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@color/colorPrimaryDark"
-            app:srcCompat="@drawable/ic_add_24px"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:contentDescription="TODO" />
-
-
+            <ImageButton
+                android:id="@+id/add_room"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/colorPrimaryDark"
+                app:srcCompat="@drawable/ic_add_24px"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+            <ImageButton
+                android:id="@+id/invites"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
+                app:srcCompat="@drawable/ic_inbox_24px"
+                android:background="@color/colorPrimaryDark"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/add_room"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.appcompat.widget.Toolbar
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview_chatrooms"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
-        android:layout_gravity="center">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
-            <SearchView
-                android:id="@+id/search_room"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:textColor="@color/colorPrimaryDark"
-                android:background="@drawable/button_white"/>
-        </LinearLayout>
-    </androidx.appcompat.widget.Toolbar>
+        android:layout_below="@id/chatrooms_menu"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:layout_marginTop="80dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/rooms_scroll"
+    <com.arlib.floatingsearchview.FloatingSearchView
+        android:id="@+id/search_room"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chatrooms_menu"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="0" >
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerview_chatrooms"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-    </androidx.core.widget.NestedScrollView>
-
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:textColor="@color/colorPrimaryDark"
+        android:background="@drawable/button_white"
+        android:layout_below="@id/chatrooms_menu"
+        app:floatingSearch_searchBarMarginLeft="16dp"
+        app:floatingSearch_searchBarMarginTop="16dp"
+        app:floatingSearch_searchBarMarginRight="16dp"
+        app:floatingSearch_backgroundColor="@color/color_white"
+        app:floatingSearch_searchHint="@string/search_room"
+        app:floatingSearch_suggestionsListAnimDuration="250"
+        app:floatingSearch_dividerColor="@color/colorPrimaryDark"
+        app:floatingSearch_dismissFocusOnItemSelection="true"
+        app:floatingSearch_dimBackground="true"
+        app:floatingSearch_showSearchKey="false"
+        app:floatingSearch_leftActionMode="noLeftAction"
+        app:floatingSearch_close_search_on_keyboard_dismiss="true"/>
+</RelativeLayout>

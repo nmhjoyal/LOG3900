@@ -12,7 +12,7 @@ class ChatRoomItem(val roomname: String): Item<GroupieViewHolder>(){
         viewHolder.itemView.room_name.text = roomname
 
         viewHolder.itemView.leave_button.setOnClickListener(({
-            RoomManager.roomToDelete = roomname
+            RoomManager.roomToRemove = roomname
             SocketHandler.deleteChatRoom(roomname)
         }))
     }

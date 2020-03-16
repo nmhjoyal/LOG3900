@@ -2,6 +2,7 @@
     <!-- Common -->
     <string name="app_name">Draw Something</string>
     <string name="ok">OK</string>
+    <string name="done">Done</string>
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
     <string name="sign_out">Sign out</string>
@@ -59,6 +60,10 @@
     <string name="show_rooms">Show rooms</string>
     <string name="public_room">Public</string>
     <string name="private_room">Private</string>
+    <string name="search_room">Search rooms</string>
+    <string name="invite_user">Invite users</string>
+    <string name="prompt_enter_username">Enter username</string>
+    <string name="invites">Invites</string>
 
     <!-- Strings for create user -->
     <string name="prompt_first_name">First Name</string>
@@ -111,6 +116,6 @@
     <string name="lemon_cd">Lemon avatar</string>
     <string name="cherry_cd">Cherry avatar</string>
     <string name="pear_cd">Pear avatar</string>
-    <string name="title_activity_leaderboard">LeaderboardActivity</string>
+    <string name="title_activity_leaderboard">Leaderboard </string>
 
 </resources>

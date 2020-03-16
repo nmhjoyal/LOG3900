@@ -1,16 +1,39 @@
+import RandomIdGenerator from "../IdGenerator/idGen"
+import { Room } from "../../models/room";
 
+export default class Match {
+    protected matchId: string;
+    protected players: string[];
+    protected nbRounds: number;
+    protected letterReveal: boolean;
+    // Chat associated to the game.
+    protected matchChat: Room;
 
-export default abstract class Match {
-    // private matchId: number;
-    // private players: string[];
+    // 
+    protected constructor(host: string, nbRounds: number) {
+        this.matchId = RandomIdGenerator.generate();
+        this.players = [host];
+        this.nbRounds = nbRounds;
+    }
 
-    public constructor() { }
+    public startMatch(): void {
 
-    // Eventuellement les methodes ne seront pas void, ils devront retourner le paquet a envoyer.
-    public abstract startMatch(): void;
-    public abstract endMatch(): void;
-    public abstract startRound(): void;
-    public abstract endRound(): void;
-    public abstract draw(): void;
+    }
+
+    public endMatch(): void {
+
+    }
+
+    public startRound(): void {
+
+    }
+
+    public endRound(): void {
+
+    }
+
+    public draw(): void { 
+
+    }
 
 }

@@ -1,4 +1,3 @@
-// Il faut aussi envoyer la room lorsque le client recoit le message
 export interface Message {
     username : string
     content : string

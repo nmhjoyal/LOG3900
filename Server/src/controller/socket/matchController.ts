@@ -1,23 +1,42 @@
-import { OnMessage, SocketController, MessageBody, ConnectedSocket, SocketIO } from "socket-controllers";
+import { OnMessage, SocketController, MessageBody, ConnectedSocket, SocketIO, OnDisconnect } from "socket-controllers";
 import { serverHandler } from "../../services/serverHandler";
-import DrawPoint from "../../models/drawPoint";
+import { Trace, Line } from "../../models/drawPoint";
+import Point from "../../models/drawPoint";
 
 @SocketController()
-export default class ChatController {
+export default class MatchController {
 
     @OnMessage("connect_free_draw")
     public async connect_free_draw(@ConnectedSocket() socket: SocketIO.Socket) {
+        console.log("connected to free draw");
         serverHandler.matchHandler.enterFreeDrawTestRoom(socket);
+    }
+
+    @OnDisconnect()
+    public disconnect(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
+        console.log("disconnected to free draw");
+        serverHandler.matchHandler.leaveFreeDrawTestRoom(io, socket);
     }
 
     @OnMessage("disconnect_free_draw")
     public async disconnect_free_draw(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
+        console.log("disconnected to free draw");
         serverHandler.matchHandler.leaveFreeDrawTestRoom(io, socket);
     }
 
-    @OnMessage("drawTest")
-    public async drawTest(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() drawPoint: DrawPoint) {
-        serverHandler.matchHandler.drawTest(io, socket, drawPoint);
+    @OnMessage("start_trace")
+    public start_trace(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() trace: Trace) {
+        console.log("start_trace");
+        serverHandler.matchHandler.startTrace(io, socket, trace);
     }
 
+    @OnMessage("drawTest")
+    public drawTest(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() point: Point) {
+        serverHandler.matchHandler.drawTest(io, socket, point);
+    }
+
+    @OnMessage("create_game")
+    public async create_game(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() drawing: Line[]) {
+        await serverHandler.matchHandler.sendDrawing(socket, drawing);
+    }
 }
