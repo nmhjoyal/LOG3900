@@ -7,7 +7,16 @@
         mc:Ignorable="d"
         Icon="chat-icon.ico"
         Title="PolyChat" Height="450" Width="800" WindowStartupLocation="CenterScreen">
-    <Grid >
-        <ContentControl x:Name="ActiveItem" />
-    </Grid>
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="auto"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+
+		<ContentControl x:Name="FirstSubViewModel" Grid.Column="0" Grid.Row="0"/>
+		<ContentControl x:Name="SecondSubViewModel" Grid.Column="1" Grid.Row="0"/>
+	</Grid>
 </Window>

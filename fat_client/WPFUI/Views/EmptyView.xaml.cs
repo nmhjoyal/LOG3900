@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace WPFUI.Views
 {
     /// <summary>
-    /// Logique d'interaction pour loginView.xaml
+    /// Interaction logic for EmptyView.xaml
     /// </summary>
-    public partial class LoginView : UserControl
+    public partial class EmptyView : UserControl
     {
-        public LoginView()
+        public EmptyView()
         {
             InitializeComponent();
         }

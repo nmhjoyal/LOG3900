@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace WPFUI.Views
 {
     /// <summary>
-    /// Logique d'interaction pour loginView.xaml
+    /// Interaction logic for gameView.xaml
     /// </summary>
-    public partial class LoginView : UserControl
+    public partial class gameView : UserControl
     {
-        public LoginView()
+        public gameView()
         {
             InitializeComponent();
         }

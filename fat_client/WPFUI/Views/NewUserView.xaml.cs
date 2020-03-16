@@ -16,13 +16,18 @@ using System.Windows.Shapes;
 namespace WPFUI.Views
 {
     /// <summary>
-    /// Logique d'interaction pour loginView.xaml
+    /// Interaction logic for NewUserView.xaml
     /// </summary>
-    public partial class LoginView : UserControl
+    public partial class NewUserView : UserControl
     {
-        public LoginView()
+        public NewUserView()
         {
             InitializeComponent();
+        }
+
+        private void createUser_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

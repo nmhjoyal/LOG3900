@@ -16,13 +16,18 @@ using System.Windows.Shapes;
 namespace WPFUI.Views
 {
     /// <summary>
-    /// Logique d'interaction pour loginView.xaml
+    /// Logique d'interaction pour profileView.xaml
     /// </summary>
-    public partial class LoginView : UserControl
+    public partial class profileView : UserControl
     {
-        public LoginView()
+        public profileView()
         {
             InitializeComponent();
+        }
+
+        private void saveProfileChanges_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

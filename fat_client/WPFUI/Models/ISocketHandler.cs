@@ -1,4 +1,7 @@
 ﻿using Quobject.SocketIoClientDotNet.Client;
+using System;
+using System.Windows.Controls;
+using System.Windows.Ink;
 
 namespace WPFUI.Models
 {

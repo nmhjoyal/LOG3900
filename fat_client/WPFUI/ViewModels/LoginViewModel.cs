@@ -16,6 +16,13 @@ namespace WPFUI.ViewModels
         private string _userName;
         private string _ipAdress;
         private ISocketHandler _socketHandler;
+        private string _password;
+
+        public string password
+        {
+            get { return _password; }
+            set { _password = value; }
+        }
 
 
         public LoginViewModel(IUserData userdata, IEventAggregator events, ISocketHandler socketHandler)
@@ -43,6 +50,7 @@ namespace WPFUI.ViewModels
         public void setUserName()
         {
             _userdata.userName = userName;
+            _userdata.password = password;
         }
 
         public void setIpAdress()
@@ -56,14 +64,21 @@ namespace WPFUI.ViewModels
         }
         public void logIn()
         {   
-            if (loginOk())
-            {
+           
                 setUserName();
-                setIpAdress();
+                
                 
                 _socketHandler.connectionAttempt();
-            }
+              
+            
+            //ajouter dans la condition
+            
 
+        }
+
+        public void signUp()
+        {
+            _events.PublishOnUIThread(new signUpEvent());
         }
 
     }

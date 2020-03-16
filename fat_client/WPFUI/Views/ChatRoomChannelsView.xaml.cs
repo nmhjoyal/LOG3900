@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace WPFUI.Views
 {
     /// <summary>
-    /// Logique d'interaction pour loginView.xaml
+    /// Logique d'interaction pour ChatRoomChannelsView.xaml
     /// </summary>
-    public partial class LoginView : UserControl
+    public partial class ChatRoomChannelsView : UserControl
     {
-        public LoginView()
+        public ChatRoomChannelsView()
         {
             InitializeComponent();
         }
