@@ -1,7 +1,6 @@
 import { MatchMode } from "../models/matchMode";
-import { Trace, Line, Color, StylusPoint } from "../models/drawPoint";
+import { Trace, Line, Color } from "../models/drawPoint";
 import Point from "../models/drawPoint";
-import { VirtualPlayer } from "./Drawing/virtualPlayer";
 
 export default class MatchHandler {
     // private currentMatches: Match[];
