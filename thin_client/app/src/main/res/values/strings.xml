@@ -106,4 +106,7 @@
     <string name="cherry_cd">Cherry avatar</string>
     <string name="pear_cd">Pear avatar</string>
 
+    <!-- Game strings -->
+    <string name="title_game_general">GAME MODE</string>
+
 </resources>

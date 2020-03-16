@@ -12,6 +12,7 @@ import com.example.thin_client.R
 import com.example.thin_client.data.AvatarID
 import com.example.thin_client.data.Message
 import com.example.thin_client.data.app_preferences.PreferenceHandler
+import com.example.thin_client.data.game.GameArgs
 import com.example.thin_client.data.getAvatar
 import com.example.thin_client.data.rooms.Invitation
 import com.example.thin_client.data.rooms.RoomArgs
@@ -43,6 +44,12 @@ class ChatFragment : Fragment() {
 
         roomID = arguments!!.getString(RoomArgs.ROOM_ID)
         room_id.text = roomID
+
+        if (arguments!!.getBoolean(GameArgs.IS_GAME_CHAT)) {
+            back_button.visibility = View.GONE
+            leave_button.visibility = View.GONE
+            invite_user_button.visibility = View.GONE
+        }
 
         val roomsJoined = RoomManager.roomsJoined
         val messages = roomsJoined[roomID]

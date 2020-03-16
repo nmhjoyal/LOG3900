@@ -1,47 +1,41 @@
 package com.example.thin_client.ui.game_mode.free_draw
 
 import android.content.Context
-import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.graphics.Paint
 import android.os.Bundle
-import android.provider.MediaStore
-import android.view.MenuItem
-import android.view.WindowManager
-import android.widget.EditText
+import android.view.*
 import android.widget.SeekBar
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.example.thin_client.R
-import com.example.thin_client.data.PermissionHandler
-import com.example.thin_client.data.RequestCodes
 import com.example.thin_client.data.app_preferences.PreferenceHandler
 import com.example.thin_client.data.app_preferences.Preferences
 import com.example.thin_client.data.lifecycle.LoginState
 import com.example.thin_client.data.model.User
 import com.example.thin_client.server.SocketHandler
 import kotlinx.android.synthetic.main.free_draw_fragment.*
-import java.util.*
 
 private const val PERCENT = 100f
 private const val SCALE_FACTOR = 8f
 private const val SIZING_FACTOR = 80f
 
-class FreeDrawActivity : AppCompatActivity() {
+class DrawerFragment : Fragment() {
 
     var lastColour = R.color.color_black
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.free_draw_fragment)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        trash.setOnClickListener(({
+            draw_view.clearCanvas()
+        }))
+        save_button.visibility = View.GONE
 
         crayon.setOnClickListener(({
             draw_view.toggleEraser(false)
             resetDrawingOptions()
             crayon.setBackgroundResource(R.drawable.circle_primary_dark)
-            draw_view.setColor(ContextCompat.getColor(this, lastColour))
+            draw_view.setColor(ContextCompat.getColor(context!!, lastColour))
         }))
 
         circle_cap.setOnClickListener(({
@@ -72,19 +66,7 @@ class FreeDrawActivity : AppCompatActivity() {
             draw_view.toggleEraser(false)
             resetDrawingOptions()
             pencil_eraser.setBackgroundResource(R.drawable.circle_primary_dark)
-            draw_view.setColor(ContextCompat.getColor(this, R.color.default_background))
-        }))
-
-        trash.setOnClickListener(({
-            showClearDialog()
-        }))
-
-        save_button.setOnClickListener(({
-            if (!PermissionHandler.hasStoragePermission(applicationContext)) {
-                PermissionHandler.requestStoragePermission(this)
-            } else {
-                showSaveDialog(draw_view.getBitmap())
-            }
+            draw_view.setColor(ContextCompat.getColor(context!!, R.color.default_background))
         }))
 
         red.setOnClickListener(({
@@ -162,28 +144,12 @@ class FreeDrawActivity : AppCompatActivity() {
         })
     }
 
-    override fun onStart() {
-        super.onStart()
-        setupSocket()
-    }
-
-    private fun setupSocket() {
-        if (!SocketHandler.isConnected()) {
-            SocketHandler.connect()
-        }
-
-        val prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
-        when (SocketHandler.getLoginState(prefs)) {
-            LoginState.FIRST_LOGIN -> {}
-            LoginState.LOGIN_WITH_EXISTING -> {
-                val user = PreferenceHandler(applicationContext).getUser()
-                SocketHandler.login(User(user.username, user.password))
-                SocketHandler.isLoggedIn = true
-            }
-            LoginState.LOGGED_IN -> {
-            }
-
-        }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return inflater.inflate(R.layout.free_draw_fragment, container, false)
     }
 
     private fun setColour(sizingDrawable: Int, colourRes: Int) {
@@ -192,7 +158,7 @@ class FreeDrawActivity : AppCompatActivity() {
         resetDrawingOptions()
         crayon.setBackgroundResource(R.drawable.circle_primary_dark)
         sizing.setBackgroundResource(sizingDrawable)
-        draw_view.setColor(ContextCompat.getColor(this, colourRes))
+        draw_view.setColor(ContextCompat.getColor(context!!, colourRes))
         lastColour = colourRes
     }
 
@@ -214,64 +180,5 @@ class FreeDrawActivity : AppCompatActivity() {
         grey.setBackgroundResource(R.color.colorPrimary)
         brown.setBackgroundResource(R.color.colorPrimary)
         black.setBackgroundResource(R.color.colorPrimary)
-    }
-
-    override fun onBackPressed() {
-        // Disable native back
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        when(requestCode){
-            RequestCodes.WRITE_EXTERNAL_STORAGE.ordinal -> {
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)){
-                    showSaveDialog(draw_view.getBitmap())
-                } else {
-                    Toast.makeText(applicationContext, R.string.error_image_saved, Toast.LENGTH_SHORT).show()
-                }
-                return
-            }
-            else -> {}
-        }
-    }
-
-    private fun showSaveDialog(bitmap: Bitmap) {
-        val alertDialog = AlertDialog.Builder(this)
-        val dialogView = layoutInflater.inflate(R.layout.dialog_save, null)
-        alertDialog.setView(dialogView)
-        val fileNameEditText: EditText = dialogView.findViewById(R.id.editText_file_name)
-        val imgDescription: EditText = dialogView.findViewById(R.id.editText_img_description)
-        val filename = UUID.randomUUID().toString()
-        fileNameEditText.setSelectAllOnFocus(true)
-        fileNameEditText.setText(filename)
-        alertDialog.setTitle(R.string.save_drawing)
-            .setPositiveButton(R.string.save) { _, _ -> saveImage(bitmap,
-                fileNameEditText.text.toString(), imgDescription.text.toString()) }
-            .setNegativeButton(R.string.cancel) { _, _ -> }
-
-        val dialog = alertDialog.create()
-        dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        dialog.show()
-    }
-
-    private fun showClearDialog() {
-        val alertDialog = AlertDialog.Builder(this)
-        alertDialog.setTitle(R.string.trash_cd)
-            .setMessage(R.string.trash_dialog)
-            .setPositiveButton(R.string.yes) { _, _ -> draw_view.clearCanvas() }
-            .setCancelable(true)
-            .setNegativeButton(R.string.cancel) { _, _ -> }
-
-        val dialog = alertDialog.create()
-        dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        dialog.show()
-    }
-
-    private fun saveImage(bitmap: Bitmap, fileName: String, imgDescription: String) {
-        val result = MediaStore.Images.Media.insertImage(contentResolver, bitmap, fileName, imgDescription)
-        if (result != null) {
-            Toast.makeText(applicationContext, R.string.image_saved, Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(applicationContext, R.string.error_image_saved, Toast.LENGTH_SHORT).show()
-        }
     }
 }

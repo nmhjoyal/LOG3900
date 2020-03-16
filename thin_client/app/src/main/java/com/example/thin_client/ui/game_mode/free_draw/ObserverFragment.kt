@@ -2,8 +2,11 @@ package com.example.thin_client.ui.game_mode.free_draw
 
 import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.example.thin_client.R
 import com.example.thin_client.data.app_preferences.PreferenceHandler
 import com.example.thin_client.data.app_preferences.Preferences
@@ -13,16 +16,23 @@ import com.example.thin_client.data.model.User
 import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
 import com.google.gson.Gson
-import kotlinx.android.synthetic.main.activity_observer.*
+import kotlinx.android.synthetic.main.observer_fragment.*
 
 
-class TestOnlineDrawActivity : AppCompatActivity() {
+class ObserverFragment : Fragment() {
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_observer)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         draw_view.isDrawer = false
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return inflater.inflate(R.layout.observer_fragment, container, false)
     }
 
     override fun onStart() {
@@ -43,11 +53,11 @@ class TestOnlineDrawActivity : AppCompatActivity() {
 
         setupSocketEvents()
 
-        val prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
+        val prefs = context!!.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
         when (SocketHandler.getLoginState(prefs)) {
             LoginState.FIRST_LOGIN -> {}
             LoginState.LOGIN_WITH_EXISTING -> {
-                val user = PreferenceHandler(applicationContext).getUser()
+                val user = PreferenceHandler(context!!).getUser()
                 SocketHandler.login(User(user.username, user.password))
                 SocketHandler.isLoggedIn = true
             }
@@ -76,20 +86,5 @@ class TestOnlineDrawActivity : AppCompatActivity() {
             .off(SocketEvent.DRAW_POINT)
             .off(SocketEvent.START_TRACE)
             .off(SocketEvent.STOP_TRACE)
-    }
-
-    override fun onBackPressed() {
-        // Disable native back
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                SocketHandler.disconnectOnlineDraw()
-                finish()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 }
