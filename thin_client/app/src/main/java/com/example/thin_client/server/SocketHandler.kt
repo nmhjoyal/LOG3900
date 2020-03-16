@@ -79,6 +79,7 @@ object SocketHandler {
     }
 
     fun deleteChatRoom(roomid: String) {
+        // comment
         socket!!.emit(SocketEvent.DELETE_ROOM, roomid)
     }
 
