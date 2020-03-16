@@ -8,8 +8,19 @@
     <string name="sign_out">Sign out</string>
     <string name="profile">User profile</string>
 
+    <!--- Leaderboard -->
+    <string name="leaderboard">Leaderboard</string>
+    <string name="soloGameMode">Solo Game</string>
+    <string name="cooperativeGameMode">Cooperative Game</string>
+    <string name="oneVsOneGameMode">One vs One</string>
+    <string name="reversedGameMode">Reversed Game</string>
+    <string name="freeForAllGameMode">Free For All Game</string>
+    <string name="score">Score</string>
+
+
     <!-- Profile -->
     <style name="profile">Profile</style>
+
     <string name="edit_profile">Edit profile</string>
     <string name="change_avatar">Change your avatar</string>
     <string name="undo_changes">Undo</string>
@@ -105,6 +116,8 @@
     <string name="lemon_cd">Lemon avatar</string>
     <string name="cherry_cd">Cherry avatar</string>
     <string name="pear_cd">Pear avatar</string>
+    <string name="title_activity_leaderboard">Leaderboard </string>
+    <string name="title_activity_waiting_room">Waiting Room</string>
 
     <!-- Game strings -->
     <string name="title_game_general">GAME MODE</string>

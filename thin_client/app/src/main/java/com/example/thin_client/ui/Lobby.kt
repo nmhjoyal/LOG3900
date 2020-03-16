@@ -32,6 +32,7 @@ import com.example.thin_client.ui.chat.ChatFragment
 import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
 import com.example.thin_client.ui.game_mode.GameActivity
 import com.example.thin_client.ui.game_mode.free_draw.FreeDrawActivity
+import com.example.thin_client.ui.leaderboard.LeaderboardActivity
 import com.example.thin_client.ui.login.LoginActivity
 import com.example.thin_client.ui.profile.ProfileActivity
 import com.github.nkzawa.socketio.client.Socket
@@ -67,6 +68,11 @@ class Lobby : AppCompatActivity() {
                 chatrooms_container.visibility = View.VISIBLE
                 show_rooms_button.setImageResource(R.drawable.hide)
             }
+        }))
+
+        join_match.setOnClickListener(({
+            val intent = Intent(applicationContext, WaitingRoom::class.java)
+            startActivity(intent)
         }))
     }
 
@@ -121,6 +127,10 @@ class Lobby : AppCompatActivity() {
             }
             R.id.menu_profile -> {
                 val intent = Intent(applicationContext, ProfileActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.leaderboard -> {
+                val intent = Intent(applicationContext, LeaderboardActivity::class.java)
                 startActivity(intent)
             }
         }

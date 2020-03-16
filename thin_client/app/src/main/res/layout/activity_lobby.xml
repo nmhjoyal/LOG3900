@@ -75,4 +75,52 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.6" />
 
+    <TextView
+        android:id="@+id/play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="136dp"
+        android:text="PLAY"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/empty_textview"
+        app:layout_constraintStart_toStartOf="@+id/empty_textview"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/empty_textview"
+        android:layout_width="201dp"
+        android:layout_height="84dp"
+        android:background="@drawable/layout_border"
+        app:layout_constraintBottom_toTopOf="@+id/test_online_draw"
+        app:layout_constraintEnd_toEndOf="@+id/show_rooms_button"
+        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.865" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/empty_textview"
+        app:layout_constraintEnd_toStartOf="@+id/chat_guideline"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/play"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/ic_play_arrow_24px" />
+
+    <Button
+        android:id="@+id/join_match"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="join match"
+        app:layout_constraintBottom_toBottomOf="@+id/empty_textview"
+        app:layout_constraintEnd_toEndOf="@+id/empty_textview"
+        app:layout_constraintStart_toStartOf="@+id/empty_textview"
+        app:layout_constraintTop_toTopOf="@+id/empty_textview"
+        app:layout_constraintVertical_bias="0.444" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
