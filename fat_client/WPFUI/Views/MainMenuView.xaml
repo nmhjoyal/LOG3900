@@ -57,7 +57,7 @@
 		</Border>
 
 		<Border BorderThickness="1" CornerRadius="9"
-				Grid.Column="1" Grid.Row="1" Width="60" Height="30" Margin="500,20,0,0" Grid.ColumnSpan="5" Background="#FF00CCCC">
+				Grid.Column="1" Grid.Row="1" Width="60" Height="30" Margin="500,25,0,0" Grid.ColumnSpan="5" Background="#FF00CCCC">
 			<StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
 				<TextBlock Text="0" FontSize="20" Foreground="White" ></TextBlock>
 				<Image Source="/Resources/invite.png" Height="20" Margin="4,1,0,0"></Image>
