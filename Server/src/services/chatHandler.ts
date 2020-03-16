@@ -27,7 +27,7 @@ export default class ChatHandler {
         
         if (user) {
             const roomIds: string[] = await roomDB.getRooms();
-            if (!(roomIds.includes(roomId) || this.privateRooms.find(room => room.id == roomId))) {
+            if (!(roomIds.includes(roomId) || this.findPrivateRoom(roomId))) {
                 if (room.isPrivate) { // private 
                     const message: Message = this.connectSocketToRoom(io, socket, user, roomId);
                     const newRoom: Room = this.createRoomObject(roomId, user.username, user.avatar, message);
@@ -66,7 +66,7 @@ export default class ChatHandler {
     public async deleteChatRoom(io: SocketIO.Server, socket: SocketIO.Socket, roomId: string): Promise<Feedback> {
         const user: PrivateProfile | undefined = serverHandler.users.get(socket.id);
         const room: Room | null = await roomDB.getRoom(roomId);
-        const privateRoom: Room | undefined = this.privateRooms.find(room => room.id == roomId);
+        const privateRoom: Room | undefined = this.findPrivateRoom(roomId);
         let status: boolean = false;
         let log_message: DeleteRoomStatus;
 
@@ -123,7 +123,7 @@ export default class ChatHandler {
     public async joinChatRoom(io: SocketIO.Server, socket: SocketIO.Socket, roomId: string): Promise<JoinRoomFeedback> {
         const user: PrivateProfile | undefined = serverHandler.users.get(socket.id);
         const room: Room | null = await roomDB.getRoom(roomId);
-        let privateRoom: Room | undefined = this.privateRooms.find(room => room.id == roomId);
+        let privateRoom: Room | undefined = this.findPrivateRoom(roomId);
         let room_joined: Room | null = null;
         let status: boolean = false;
         let log_message: JoinRoomStatus;
@@ -177,7 +177,7 @@ export default class ChatHandler {
     public async leaveChatRoom(io: SocketIO.Server, socket: SocketIO.Socket, roomId: string): Promise<Feedback> {
         const user: PrivateProfile | undefined = serverHandler.users.get(socket.id);
         const room: Room | null = await roomDB.getRoom(roomId);
-        let privateRoom: Room | undefined = this.privateRooms.find(room => room.id == roomId);
+        let privateRoom: Room | undefined = this.findPrivateRoom(roomId);
         let status: boolean = false;
         let log_message: LeaveRoomStatus;
         
@@ -223,7 +223,7 @@ export default class ChatHandler {
     public async sendMessage(io: SocketIO.Server, socket: SocketIO.Socket, clientMessage: ClientMessage): Promise<void> {
         const user: PrivateProfile | undefined = serverHandler.users.get(socket.id);
         const room: Room | null = await roomDB.getRoom(clientMessage.roomId);
-        let privateRoom: Room | undefined = this.privateRooms.find(room => room.id == clientMessage.roomId);
+        let privateRoom: Room | undefined = this.findPrivateRoom(clientMessage.roomId);
         
         if (user) {
             const message: Message = {
@@ -256,20 +256,20 @@ export default class ChatHandler {
         let receiver: PrivateProfile | undefined;
         let receiverSocketId: string | undefined;
         serverHandler.users.forEach((user: PrivateProfile, socketId: string) => {
-            if(user.username == invitation.username) {
+            if (user.username == invitation.username) {
                 receiver = user;
                 receiverSocketId = socketId;
             }
         });
         const room: Room | null = await roomDB.getRoom(invitation.id);
-        let privateRoom: Room | undefined = this.privateRooms.find(room => room.id == invitation.id);
+        let privateRoom: Room | undefined = this.findPrivateRoom(invitation.id);
         let status: boolean = false;
         let log_message: InviteStatus;
-        if(sender) {
+        if (sender) {
             if (receiver && receiverSocketId) {
                 if(room || privateRoom) {
                     if (this.getSocketIds(io, invitation.id).includes(socket.id)) {
-                        if(!this.getSocketIds(io, invitation.id).includes(receiverSocketId)) {
+                        if (!this.getSocketIds(io, invitation.id).includes(receiverSocketId)) {
                             console.log(invitation);
                             invitation.username = sender.username;
                             io.to(receiverSocketId).emit("receive_invite", JSON.stringify(invitation));
@@ -341,5 +341,9 @@ export default class ChatHandler {
             updatedProfile: publicProfile 
         };
         io.in(roomId).emit("avatar_updated", JSON.stringify(avatarUpdate));
+    }
+
+    private findPrivateRoom(roomId: string): Room | undefined {
+        return this.privateRooms.find(room => room.id == roomId);
     }
 }
