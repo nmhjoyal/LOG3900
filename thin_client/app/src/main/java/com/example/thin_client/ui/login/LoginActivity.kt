@@ -1,6 +1,7 @@
 package com.example.thin_client.ui.login
 
-import android.app.Activity
+import OkHttpRequest
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -12,119 +13,126 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.example.thin_client.R
+import com.example.thin_client.data.Feedback
+import com.example.thin_client.data.app_preferences.Preferences
+import com.example.thin_client.data.SignInFeedback
+import com.example.thin_client.data.app_preferences.PreferenceHandler
+import com.example.thin_client.data.model.PrivateProfile
+import com.example.thin_client.data.rooms.RoomManager
+
 import com.example.thin_client.data.model.User
+import com.example.thin_client.data.server.HTTPRequest
+import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
-import com.example.thin_client.ui.chat.ChatActivity
+import com.example.thin_client.ui.Lobby
+
+import com.example.thin_client.ui.createUser.CreateUserActivity
 import com.github.nkzawa.socketio.client.Socket
+import com.google.gson.Gson
+import kotlinx.android.synthetic.main.activity_createuser.*
+import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
+import okhttp3.Call
+import java.io.IOException
 
 
 class LoginActivity : AppCompatActivity() {
 
-    private lateinit var loginViewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
+        UIUtil.hideKeyboard(this)
         val username = findViewById<EditText>(R.id.username)
-        val ipAddress = findViewById<EditText>(R.id.ipAddress)
+        val password = findViewById<EditText>(R.id.password)
         val login = findViewById<Button>(R.id.login)
+        val signup = findViewById<Button>(R.id.signup)
         val loading = findViewById<ProgressBar>(R.id.loading)
 
         loading.visibility = View.INVISIBLE
-        loginViewModel = ViewModelProviders.of(this, LoginViewModelFactory())
-            .get(LoginViewModel::class.java)
-
-        loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
-            val loginState = it ?: return@Observer
-
-            // disable login button unless both username / password is valid
-            login.isEnabled = loginState.isDataValid
-
-            if (loginState.usernameError != null) {
-                username.error = getString(loginState.usernameError)
-            }
-            if (loginState.ipAddressError != null) {
-               ipAddress.error = getString(loginState.ipAddressError)
-            }
-        })
-
-        loginViewModel.loginResult.observe(this@LoginActivity, Observer {
-            val loginResult = it ?: return@Observer
-
-            if (loginResult.error != null) {
-                showLoginFailed(loginResult.error)
-            }
-            if (loginResult.success != null) {
-                updateUiWithUser(loginResult.success)
-            }
-            setResult(Activity.RESULT_OK)
-        })
-
-        username.afterTextChanged {
-            loginViewModel.loginDataChanged(
-                ipAddress.text.toString(),
-                username.text.toString()
-            )
-        }
-
-        ipAddress.afterTextChanged {
-            loginViewModel.loginDataChanged(
-                ipAddress.text.toString(),
-                username.text.toString()
-            )
-        }
 
         login.setOnClickListener {
             loading.visibility = ProgressBar.VISIBLE
             login.isEnabled = false
-            val socket = SocketHandler.connect(ipAddress.text.toString())
-            socket.on(Socket.EVENT_CONNECT, ({
-                    SocketHandler.login(User(username.text.toString(), "testpass"))
+            val socket = SocketHandler.connect()
+            val user = User(username.text.toString(), password.text.toString())
+            socket
+                .on(Socket.EVENT_CONNECT, ({
+                    SocketHandler.login(user)
                 }))
                 .on(Socket.EVENT_CONNECT_ERROR, ({
                     Handler(Looper.getMainLooper()).post(Runnable {
-                        Toast.makeText(applicationContext, "Unable to connect", Toast.LENGTH_SHORT).show()
+                        showLoginFailed()
                         loading.visibility = ProgressBar.GONE
                         login.isEnabled = true
                     })
                     SocketHandler.disconnect()
                 }))
-                .on("user_signed_in", ({ data ->
-                    if (data.last().toString().toBoolean()) {
-                        val intent = Intent(applicationContext, ChatActivity::class.java)
-                        startActivity(intent)
-                        finish()
+                .on(SocketEvent.USER_SIGNED_IN, ({ data ->
+                    val gson = Gson()
+                    val signInFeedback = gson.fromJson(data.first().toString(), SignInFeedback::class.java)
+                    if (signInFeedback.feedback.status) {
+                        RoomManager.createRoomList(signInFeedback.rooms_joined)
+                        val httpClient = OkHttpRequest(okhttp3.OkHttpClient())
+                        httpClient.GET(HTTPRequest.BASE_URL + HTTPRequest.URL_PRIVATE + user.username,
+                            object: okhttp3.Callback {
+                                //N'entre pas dans le on failure
+                                override fun onFailure(call: Call, e: IOException) {
+                                }
+                                override fun onResponse(call: Call, response: okhttp3.Response) {
+                                    val responseData = response.body?.charStream()
+                                    val profileInfo = Gson().fromJson(responseData, PrivateProfile::class.java)
+                                    runOnUiThread(({
+                                        PreferenceHandler(applicationContext).setUser(profileInfo)
+                                        val intent = Intent(applicationContext, Lobby::class.java)
+                                        startActivity(intent)
+                                        SocketHandler.isLoggedIn = true
+                                        SocketHandler.socket!!.off(SocketEvent.USER_SIGNED_IN)
+                                        finish()
+                                    }))
+                                }
+                            }
+                        )
                     } else {
                         Handler(Looper.getMainLooper()).post(Runnable {
-                            Toast.makeText(applicationContext, "Username already taken", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                applicationContext,
+                                signInFeedback.feedback.log_message,
+                                Toast.LENGTH_SHORT
+                            ).show()
                             loading.visibility = ProgressBar.GONE
                             login.isEnabled = true
+                            SocketHandler.disconnect()
                         })
-                        SocketHandler.disconnect()
                     }
                 }))
         }
+
+        signup.setOnClickListener {
+            val intent = Intent(this, CreateUserActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
-    private fun updateUiWithUser(model: LoggedInUserView) {
-        val welcome = getString(R.string.welcome)
-        val displayName = model.displayName
-        // TODO : initiate successful logged in experience
-        Toast.makeText(
-            applicationContext,
-            "$welcome $displayName",
-            Toast.LENGTH_LONG
-        ).show()
+    override fun onDestroy() {
+        super.onDestroy()
+        turnOffSocketEvents()
     }
 
-    private fun showLoginFailed(@StringRes errorString: Int) {
-        Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
+    private fun showLoginFailed() {
+        Toast.makeText(applicationContext, R.string.login_failed, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onBackPressed() {
+        // Disable native back
+    }
+
+    private fun turnOffSocketEvents() {
+        SocketHandler.socket!!.off(SocketEvent.USER_SIGNED_IN)
+            .off(Socket.EVENT_CONNECT)
+            .off(Socket.EVENT_CONNECT_ERROR)
     }
 }
 
