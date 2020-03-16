@@ -10,11 +10,11 @@
 
     <!--- Leaderboard -->
     <string name="leaderboard">Leaderboard</string>
-    <string name="soloGameMode">Solo Game Mode</string>
-    <string name="cooperativeGameMode">Cooperative Game Mode</string>
+    <string name="soloGameMode">Solo Game</string>
+    <string name="cooperativeGameMode">Cooperative Game</string>
     <string name="oneVsOneGameMode">One vs One</string>
-    <string name="reversedGameMode">Reversed Game Mode</string>
-    <string name="freeForAllGameMode">Free For All Game Mode</string>
+    <string name="reversedGameMode">Reversed Game</string>
+    <string name="freeForAllGameMode">Free For All Game</string>
     <string name="score">Score</string>
 
 
@@ -117,5 +117,6 @@
     <string name="cherry_cd">Cherry avatar</string>
     <string name="pear_cd">Pear avatar</string>
     <string name="title_activity_leaderboard">Leaderboard </string>
+    <string name="title_activity_waiting_room">Waiting Room</string>
 
 </resources>

@@ -67,6 +67,11 @@ class Lobby : AppCompatActivity() {
                 show_rooms_button.setImageResource(R.drawable.hide)
             }
         }))
+
+        join_match.setOnClickListener(({
+            val intent = Intent(applicationContext, WaitingRoom::class.java)
+            startActivity(intent)
+        }))
     }
 
     override fun onStart() {

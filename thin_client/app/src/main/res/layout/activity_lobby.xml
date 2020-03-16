@@ -81,14 +81,15 @@
 
     <TextView
         android:id="@+id/empty_textview"
-        android:layout_width="224dp"
-        android:layout_height="93dp"
+        android:layout_width="201dp"
+        android:layout_height="84dp"
         android:background="@drawable/layout_border"
         app:layout_constraintBottom_toTopOf="@+id/test_online_draw"
         app:layout_constraintEnd_toEndOf="@+id/show_rooms_button"
+        app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.879" />
+        app:layout_constraintVertical_bias="0.865" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -103,24 +104,14 @@
         app:srcCompat="@drawable/ic_play_arrow_24px" />
 
     <Button
-        android:id="@+id/create_a_game_button"
+        android:id="@+id/join_match"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create match"
-        app:layout_constraintBottom_toBottomOf="@+id/empty_textview"
-        app:layout_constraintStart_toStartOf="@+id/empty_textview"
-        app:layout_constraintTop_toTopOf="@+id/empty_textview"
-        app:layout_constraintVertical_bias="0.489" />
-
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="3dp"
         android:text="join match"
         app:layout_constraintBottom_toBottomOf="@+id/empty_textview"
         app:layout_constraintEnd_toEndOf="@+id/empty_textview"
-        app:layout_constraintStart_toEndOf="@+id/create_a_game_button"
-        app:layout_constraintTop_toTopOf="@+id/empty_textview" />
+        app:layout_constraintStart_toStartOf="@+id/empty_textview"
+        app:layout_constraintTop_toTopOf="@+id/empty_textview"
+        app:layout_constraintVertical_bias="0.444" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

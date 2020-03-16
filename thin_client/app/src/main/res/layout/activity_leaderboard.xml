@@ -11,8 +11,8 @@
         android:id="@+id/oneVsOne"
         android:layout_width="198dp"
         android:layout_height="108dp"
+        android:background="@drawable/layout_border"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -30,32 +30,16 @@
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@id/textview_coopGameMode" />
 
-    <TextView
-        android:id="@+id/title_leaderboard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20sp"
-        android:layout_marginTop="24dp"
-        android:fontFamily="sans-serif"
-        android:text="@string/leaderboard"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="26sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline3"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/soloGameMode"
-        android:layout_width="212dp"
-        android:layout_height="94dp"
-        android:layout_marginBottom="36dp"
+        android:layout_width="195dp"
+        android:layout_height="103dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/layout_border"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/hmidpoint"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.111"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/user_position_soloMode"
         app:layout_constraintVertical_bias="0.0" />
@@ -67,6 +51,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
+        android:background="@drawable/layout_border"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/user_position_coop"
@@ -76,23 +61,24 @@
         android:id="@+id/textview_soloGameMode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
+        android:layout_marginBottom="24dp"
         android:text="@string/soloGameMode"
         android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@id/user_position_soloMode"
+        app:layout_constraintBottom_toTopOf="@+id/soloGameMode"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.81" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/user_position_soloMode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="20dp"
         android:text="Your position:"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.022"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@id/textview_soloGameMode" />
 
@@ -105,10 +91,10 @@
         android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/cooperativeGameMode"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
-        app:layout_constraintHorizontal_bias="0.389"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/hmidpoint"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.08" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/hmidpoint"
@@ -160,24 +146,26 @@
         android:id="@+id/textview_oneVsOne"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginBottom="32dp"
         android:text="@string/oneVsOneGameMode"
         android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@+id/oneVsOne"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/title_leaderboard" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline" />
 
     <TextView
         android:id="@+id/textview_reversedGameMode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:text="@string/reversedGameMode"
         android:textSize="26sp"
+        app:layout_constraintBottom_toTopOf="@+id/reversedGameMode"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
-        app:layout_constraintHorizontal_bias="0.555"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/user_position_reversedGameMode"
@@ -194,6 +182,7 @@
         android:id="@+id/reversedGameMode"
         android:layout_width="209dp"
         android:layout_height="98dp"
+        android:background="@drawable/layout_border"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/hmidpoint"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
@@ -208,10 +197,12 @@
         android:layout_height="wrap_content"
         android:text="@string/freeForAllGameMode"
         android:textSize="26sp"
+        app:layout_constraintBottom_toTopOf="@+id/freeforallMode"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
-        app:layout_constraintHorizontal_bias="0.553"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/guideline3"
-        app:layout_constraintTop_toTopOf="@+id/hmidpoint" />
+        app:layout_constraintTop_toTopOf="@+id/hmidpoint"
+        app:layout_constraintVertical_bias="0.055" />
 
     <TextView
         android:id="@+id/user_position_freeforall"
@@ -228,7 +219,8 @@
         android:id="@+id/freeforallMode"
         android:layout_width="207dp"
         android:layout_height="97dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="44dp"
+        android:background="@drawable/layout_border"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
@@ -236,4 +228,5 @@
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toBottomOf="@+id/user_position_freeforall"
         app:layout_constraintVertical_bias="0.0" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
