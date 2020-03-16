@@ -2,7 +2,6 @@ import { MatchMode } from "../models/matchMode";
 import { Trace, Point, Game, GamePreview } from "../models/drawPoint";
 import { VirtualPlayer } from "./Drawing/virtualPlayer";
 import { gameDB } from "./Database/gameDB";
-import RandomIdGenerator from "./IdGenerator/idGen";
 // import { VirtualPlayer } from "./Drawing/virtualPlayer";
 
 export default class MatchHandler {
