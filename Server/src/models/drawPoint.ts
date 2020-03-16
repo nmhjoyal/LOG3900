@@ -4,7 +4,7 @@ export interface Color {
     b: number
 }
 
-export default interface Point {
+export interface Point {
     x: number
     y: number
 }
@@ -29,4 +29,30 @@ export interface DrawingAttributes {
 export interface StylusPoint {
     X: number,
     Y: number
+}
+
+export interface Game {
+    word: string,
+    drawing: Line[],
+    clues: string[],
+    level: Level,
+    mode: Mode
+}
+
+export interface GamePreview {
+    drawing: Line[],
+    mode: Mode
+}
+
+export enum Level {
+    Easy,
+    Medium,
+    Hard
+}
+
+export enum Mode {
+    Classic,
+    Random,
+    Panoramic,
+    Centered
 }

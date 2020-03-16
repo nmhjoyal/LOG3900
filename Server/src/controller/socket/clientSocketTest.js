@@ -18,7 +18,7 @@ var createroom = {
 }
 
 socket1.on("connect", function (data) {
-    socket1.emit("potrace");
+    socket1.emit("test_get");
 });
 
 socket1.on("sent_path", function(data) {console.log("ICI !!!!! : " + data)});
