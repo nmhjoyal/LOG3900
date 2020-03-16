@@ -47,10 +47,9 @@ export class GameController {
                 await gameDB.createGame(game);
             } catch {
                 feedback.status = false;
-                feedback.log_message = "Could not create game.";
+                feedback.log_message = "This drawing already exists";
             }
         }
-        console.log(feedback);
         return feedback;
     }
 }

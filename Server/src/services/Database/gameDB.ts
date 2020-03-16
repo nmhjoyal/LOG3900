@@ -13,6 +13,7 @@ class GameDB {
         mongoClient.connect((err, db) => {
             if (err) throw err;
             this.mongoDB = db;
+            this.mongoDB.db("Games").collection("games").createIndex({ word: 1 }, { unique: true });
         });
     }
 
