@@ -12,6 +12,7 @@ import com.example.thin_client.R
 import com.example.thin_client.data.AvatarID
 import com.example.thin_client.data.Message
 import com.example.thin_client.data.app_preferences.PreferenceHandler
+import com.example.thin_client.data.getAvatar
 import com.example.thin_client.data.rooms.Invitation
 import com.example.thin_client.data.rooms.RoomArgs
 import com.example.thin_client.data.rooms.RoomManager
@@ -51,11 +52,9 @@ class ChatFragment : Fragment() {
                     admin -> showAdminMessage(messages[i].content)
                     SocketHandler.user!!.username -> showToMessage(messages[i].content, messages[i].date)
                     else -> {
-                        var userAvatar: AvatarID = AvatarID.BANANA
-                        if (RoomManager.roomAvatars[roomID] !== null &&
-                            RoomManager.roomAvatars[roomID]!![messages[i].username] !== null) {
-                            userAvatar =
-                                AvatarID.valueOf(RoomManager.roomAvatars[roomID]!![messages[i].username]!!)
+                        var userAvatar: AvatarID = AvatarID.AVOCADO
+                        if (RoomManager.roomAvatars[roomID] !== null) {
+                            userAvatar = getAvatar(RoomManager.roomAvatars[roomID]!![messages[i].username])
                         }
                         showFromMessage(
                             messages[i].content,
@@ -78,11 +77,9 @@ class ChatFragment : Fragment() {
                         admin -> showAdminMessage(jsonData.content)
                         SocketHandler.user!!.username -> showToMessage(jsonData.content, timestamp)
                         else -> {
-                            var userAvatar: AvatarID = AvatarID.BANANA
-                            if (RoomManager.roomAvatars[roomID] !== null &&
-                                RoomManager.roomAvatars[roomID]!![username] !== null) {
-                                userAvatar =
-                                    AvatarID.valueOf(RoomManager.roomAvatars[roomID]!![username]!!)
+                            var userAvatar: AvatarID = AvatarID.AVOCADO
+                            if (RoomManager.roomAvatars[roomID] !== null) {
+                                userAvatar = getAvatar(RoomManager.roomAvatars[roomID]!![username])
                             }
                             showFromMessage(
                                 jsonData.content,

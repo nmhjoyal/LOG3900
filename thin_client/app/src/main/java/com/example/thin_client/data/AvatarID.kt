@@ -1,6 +1,7 @@
 package com.example.thin_client.data
 import android.widget.ImageView
 import com.example.thin_client.R
+import java.lang.IllegalArgumentException
 
 enum class AvatarID {
     AVOCADO,
@@ -32,4 +33,15 @@ fun setAvatar(imgResource: ImageView, avatarID: AvatarID) {
         AvatarID.BANANA -> imgResource.setImageResource(R.drawable.ic_banana)
         AvatarID.AVOCADO -> imgResource.setImageResource(R.drawable.ic_avocado)
     }
+}
+
+fun getAvatar(avatar: String?): AvatarID {
+    if (avatar !== null) {
+        try {
+            return AvatarID.valueOf(avatar)
+        } catch (e: IllegalArgumentException) {
+            return AvatarID.AVOCADO
+        }
+    }
+    return AvatarID.AVOCADO
 }
