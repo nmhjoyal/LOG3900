@@ -63,10 +63,10 @@
         <TextBox x:Name ="currentMessage" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="4" Foreground="DarkSlateGray" Background="White" KeyDown="currentMessage_KeyDown">
 
         </TextBox>
-        <Button x:Name ="disconnect" Style="{DynamicResource MaterialDesignRaisedAccentButton}" Grid.Column="6" Grid.Row="1" Foreground="White" Background="#FF66CC00">
+        <Button x:Name ="disconnect" Style="{DynamicResource MaterialDesignRaisedAccentButton}" Grid.Column="6" Grid.Row="1" Foreground="White" Background="#FF00867A">
             Disconnect
         </Button>
-        <Button x:Name ="sendMessage" Style="{DynamicResource MaterialDesignRaisedLightButton}" Grid.Column="6" Grid.Row="6" Background="#FF66CC00" Foreground="White" Click="refocus">
+        <Button x:Name ="sendMessage" Style="{DynamicResource MaterialDesignRaisedLightButton}" Grid.Column="6" Grid.Row="6" Background="#FF008679" Foreground="White" Click="refocus">
             Send
         </Button>
     </Grid>

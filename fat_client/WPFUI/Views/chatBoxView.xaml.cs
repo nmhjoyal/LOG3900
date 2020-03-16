@@ -43,7 +43,7 @@ namespace WPFUI.Views
         {
             if (e.Key == Key.Enter)
             {
-             //  _viewModel.sendMessage(currentMessage.Text);
+               _viewModel.sendMessage(currentMessage.Text);
             }
             
         }

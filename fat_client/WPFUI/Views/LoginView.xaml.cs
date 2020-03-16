@@ -24,5 +24,11 @@ namespace WPFUI.Views
         {
             InitializeComponent();
         }
+
+        public void loadChatBox()
+        {
+
+
+        }
     }
 }

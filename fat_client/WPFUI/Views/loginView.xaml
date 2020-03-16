@@ -39,16 +39,14 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
-        <Image Source="login image.png" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" HorizontalAlignment="Center" MaxHeight="80"/>
-        <TextBlock Text="Password: " Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="5" Foreground="DarkSlateGray"/>
-        <TextBox MinWidth="100" Grid.Column="1" Grid.Row="6" x:Name="_password" Grid.ColumnSpan="5"  Margin="5" Foreground="DarkSlateGray">
+        <Image Source="login image.png" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" HorizontalAlignment="Center" MaxHeight="100"/>
+        <TextBlock Text="Enter your server IP adress: " Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="5" Foreground="DarkSlateGray"/>
+        <TextBox MinWidth="100" Grid.Column="1" Grid.Row="4" x:Name="_ipAdress" Grid.ColumnSpan="5"  Margin="5" Foreground="DarkSlateGray">
         </TextBox>
-        <TextBlock Text="Username: " Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="5" Foreground="DarkSlateGray"/>
-        <TextBox MinWidth="100" Grid.Column="1" Grid.Row="4" x:Name="_userName" Grid.ColumnSpan="5"  Margin="5" Foreground="DarkSlateGray" MaxLength="20">
+        <TextBlock Text="Enter you desired username: " Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="5" Foreground="DarkSlateGray"/>
+        <TextBox MinWidth="100" Grid.Column="1" Grid.Row="6" x:Name="_userName" Grid.ColumnSpan="5"  Margin="5" Foreground="DarkSlateGray" MaxLength="20">
         </TextBox>
-        <Button x:Name="logIn" Style="{DynamicResource MaterialDesignRaisedAccentButton}" MaxWidth =" 200" Content="Sign In" Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="5" Margin="10" Foreground="White" Background="#FF66CC00" BorderBrush="#FF66CC00">
+        <Button x:Name="logIn" Style="{DynamicResource MaterialDesignRaisedAccentButton}" MaxWidth =" 200" Content="Enter the chatroom" Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="5" Margin="10" Foreground="White" Background="#FFCFD1D0">
         </Button>
-		<Button x:Name="signUp" Style="{DynamicResource MaterialDesignRaisedAccentButton}" MaxWidth =" 200" Content="Sign Up" Grid.Column="1" Grid.Row="10" Grid.ColumnSpan="5" Margin="10" Foreground="White" Background="#FF66CC00">
-		</Button>
-	</Grid>
+    </Grid>
 </UserControl>

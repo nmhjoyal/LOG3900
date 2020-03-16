@@ -1,7 +1,4 @@
 ﻿using Quobject.SocketIoClientDotNet.Client;
-using System;
-using System.Windows.Controls;
-using System.Windows.Ink;
 
 namespace WPFUI.Models
 {
@@ -12,15 +9,8 @@ namespace WPFUI.Models
         User user { get; set; }
 
         void connectionAttempt();
-        void createUser(PrivateProfile privateProfile);
+        void createUser(User user);
         void disconnect();
-        // void On(object eVENT_DISCONNECT, Action p);
-        // void On(object eVENT_DISCONNECT);
-        //void sendMessage();
-
-       // void getStrokes(InkCanvas Canvas);
-        void SignOut();
-
-        void freeDraw(StrokeCollection Traits, DrawingAttributes AttributsDessin);
+        void sendMessage();
     }
 }
