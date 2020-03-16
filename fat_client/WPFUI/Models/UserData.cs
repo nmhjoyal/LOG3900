@@ -10,6 +10,7 @@ namespace WPFUI.Models
     public class UserData : IUserData
     {
         private string _userName;
+        private string _password;
         private string _ipAdress;
         private string _currentMessage;
         private BindableCollection<MessageModel> _messages;
@@ -40,10 +41,20 @@ namespace WPFUI.Models
         }
 
 
-        public UserData(string userName, string ipAdress)
+
+        public string password
+        {
+            get { return _password; }
+            set { _password = value; }
+        }
+
+
+
+        public UserData(string userName, string ipAdress, string password)
         {
             _userName = userName;
             _ipAdress = ipAdress;
+            _password = password;
             _messages = new BindableCollection<MessageModel>();
             clearData();
         }
@@ -53,6 +64,7 @@ namespace WPFUI.Models
             _currentMessage = "";
             _userName = "";
             _ipAdress = "";
+            _password = "";
             _messages = new BindableCollection<MessageModel>();
 
         }

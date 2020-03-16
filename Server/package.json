@@ -1,5 +1,4 @@
 {
-  "name": "Server",
   "version": "1.0.0",
   "description": "",
   "scripts": {
@@ -13,19 +12,23 @@
   "devDependencies": {
     "@types/body-parser": "^1.17.1",
     "@types/express": "^4.17.2",
-    "@types/multer": "^1.4.0",
     "@types/morgan": "^1.7.37",
-    "@types/socket.io": "^2.1.4",
+    "@types/multer": "^1.4.0",
     "@types/node": "^13.5.0",
+    "@types/socket.io": "^2.1.4",
     "nodemon": "^2.0.2",
-    "typescript": "^3.7.5"
+    "typescript": "^3.8.3"
   },
   "dependencies": {
+    "@types/mongodb": "^3.3.16",
     "body-parser": "^1.19.0",
     "class-validator": "^0.11.0",
     "express": "^4.17.1",
+    "french-badwords-list": "^1.0.5",
     "inversify": "^5.0.1",
     "json": "^9.0.6",
+    "leo-profanity": "^1.2.6",
+    "mongodb": "^3.5.3",
     "morgan": "^1.9.1",
     "multer": "^1.4.2",
     "reflect-metadata": "^0.1.13",
