@@ -134,7 +134,7 @@
     <Compile Include="EventModels\userNameTakenEvent.cs" />
     <Compile Include="EventModels\viewProfileEvent.cs" />
     <Compile Include="Models\CreateGame.cs" />
-    <Compile Include="Models\ManualGame1.cs" />
+    <Compile Include="Models\Game.cs" />
     <Compile Include="Models\Trace.cs" />
     <Compile Include="Models\Editeur.cs" />
     <Compile Include="Models\Feedback.cs" />
@@ -146,7 +146,6 @@
     <Compile Include="Models\RenderVisualService.cs" />
     <Compile Include="Models\Room.cs" />
     <Compile Include="Models\SignInFeedback.cs" />
-    <Compile Include="Models\Trait.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\socketHandler.cs" />
     <Compile Include="Models\UserData.cs" />

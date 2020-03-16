@@ -22,5 +22,11 @@ namespace WPFUI.Models
         void SignOut();
 
         void freeDraw(StrokeCollection Traits, DrawingAttributes AttributsDessin);
+
+        void preview(StrokeCollection Traits, GamePreview gamePreview);
+
+        void TestPOSTWebRequest(Object obj, string url);
+
+        void TestGETWebRequest(string url);
     }
 }

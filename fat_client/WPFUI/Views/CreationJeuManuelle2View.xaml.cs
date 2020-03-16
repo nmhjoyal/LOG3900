@@ -51,40 +51,26 @@ namespace WPFUI.Views
 
         private void addClue(object sender, RoutedEventArgs e)
         {
-
-            TextBox dynamicTextBox = new TextBox();
-            Console.WriteLine("allo");
-
-            // Grid.SetRow(dynamicTextBox, 3);
-            // Grid.SetColumn(dynamicTextBox, 7);
-
-            this.canContainer.Children.Add(dynamicTextBox);
-            dynamicTextBox.Name = "indice" + this.canContainer.Children.Count;
-            Console.WriteLine(dynamicTextBox.Name);
-         
-            Console.WriteLine(this.canContainer.Children.Count);
-
-
+            this.canContainer.Children.Add(new TextBox());;
         }
 
-        private void createManGame2(object sender, RoutedEventArgs e)
+        private void createGame(object sender, RoutedEventArgs e)
         {
             List<string> clues = new List<string>();
-            for(int i=2; i < this.canContainer.Children.Count; i++)
+            for(int i = 2; i < this.canContainer.Children.Count; i++)
             {
                 clues.Add((this.canContainer.Children[i] as TextBox).Text);
-               
             }
+            (this.DataContext as CreationJeuManuelle2ViewModel).createGame(this.Word.Text, clues, this.Level.SelectedIndex, this.Mode.SelectedIndex);
+            
             Console.WriteLine(JsonConvert.SerializeObject(clues));
 
 
         }
 
-
-
         private void preview(object sender, RoutedEventArgs e)
         {
-
+            (this.DataContext as CreationJeuManuelle2ViewModel).preview(this.Mode.SelectedIndex);
         }
     }
 }

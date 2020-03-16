@@ -154,6 +154,17 @@ namespace WPFUI.ViewModels
             _events.PublishOnUIThread(new goBackCreationMenuEvent());
         }
        
+        public void createGame(string word, List<string> clues, int level, int mode)
+        {
+            Game game = new Game(word, this.Traits, clues, (Level)level, (Mode)mode);
+            this._socketHandler.TestPOSTWebRequest(game, "/game/create");
+        }
+
+        public void preview(int mode)
+        {
+            GamePreview gamePreview = new GamePreview(this.Traits, (Mode)mode);
+            this._socketHandler.preview(this.Traits, gamePreview);
+        }
     }
 
 }

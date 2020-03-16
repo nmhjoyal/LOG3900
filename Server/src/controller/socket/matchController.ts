@@ -1,7 +1,6 @@
 import { OnMessage, SocketController, MessageBody, ConnectedSocket, SocketIO, OnDisconnect } from "socket-controllers";
 import { serverHandler } from "../../services/serverHandler";
-import { Trace, Line } from "../../models/drawPoint";
-import Point from "../../models/drawPoint";
+import { Trace, Point, GamePreview } from "../../models/drawPoint";
 
 @SocketController()
 export default class MatchController {
@@ -24,19 +23,24 @@ export default class MatchController {
         serverHandler.matchHandler.leaveFreeDrawTestRoom(io, socket);
     }
 
-    @OnMessage("start_trace")
+    @OnMessage("trace")
     public start_trace(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() trace: Trace) {
         console.log("start_trace");
         serverHandler.matchHandler.startTrace(io, socket, trace);
     }
 
-    @OnMessage("drawTest")
+    @OnMessage("point")
     public drawTest(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() point: Point) {
         serverHandler.matchHandler.drawTest(io, socket, point);
     }
 
-    @OnMessage("create_game")
-    public async create_game(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() drawing: Line[]) {
-        await serverHandler.matchHandler.sendDrawing(socket, drawing);
+    @OnMessage("get_drawing")
+    public async get_drawing(@SocketIO() io: SocketIO.Server) {
+        await serverHandler.matchHandler.getDrawing(io);
+    }
+
+    @OnMessage("preview")
+    public async preview(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() gamePreview: GamePreview) {
+        await serverHandler.matchHandler.preview(socket, gamePreview);
     }
 }

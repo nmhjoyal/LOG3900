@@ -114,14 +114,14 @@ namespace WPFUI.ViewModels
         public void sendPointAction(int x, int y)
         {
             Models.Point point = new Models.Point(x, y, this.OutilSelectionne);
-            this._socketHandler.socket.Emit("drawTest", JsonConvert.SerializeObject(point));
+            this._socketHandler.socket.Emit("point", JsonConvert.SerializeObject(point));
         }
 
         public void sendStrokeAction(int x, int y)
         {
             Models.Point point = new Models.Point(x, y, this.OutilSelectionne);
             Trace trace = new Trace(point, this.AttributsDessin.Color.ToString(), (int)this.AttributsDessin.Width, this.OutilSelectionne);
-            this._socketHandler.socket.Emit("start_trace", JsonConvert.SerializeObject(trace));
+            this._socketHandler.socket.Emit("trace", JsonConvert.SerializeObject(trace));
             
             /*
             Console.WriteLine("*" + this.AttributsDessin.Color);
@@ -141,9 +141,9 @@ namespace WPFUI.ViewModels
             */
         }
 
-        public void sendDrawing()
+        public void getDrawing()
         {
-            this._socketHandler.socket.Emit("create_game", JsonConvert.SerializeObject(this.Traits));
+            this._socketHandler.socket.Emit("get_drawing");
         }
 
         /// <summary>
