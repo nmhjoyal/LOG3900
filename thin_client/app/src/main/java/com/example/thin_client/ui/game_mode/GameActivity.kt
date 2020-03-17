@@ -22,20 +22,31 @@ import com.example.thin_client.ui.chat.ChatFragment
 import com.example.thin_client.ui.game_mode.free_draw.DrawerFragment
 import com.example.thin_client.ui.game_mode.free_draw.ObserverFragment
 import com.github.nkzawa.socketio.client.Socket
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.activity_game.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class GameActivity : AppCompatActivity() {
     private lateinit var manager: FragmentManager
     private lateinit var prefs: SharedPreferences
     private val SECOND_INTERVAL: Long = 1000
-    private val TIME_DIVIDER: Long = 60
+    private var currentWordIndex = 0
+    private var words = ArrayList<String>()
+    private val lettersAdapter = GroupAdapter<GroupieViewHolder>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
         prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
+
+        words.add("Dog")
+        words.add("Champion")
+        words.add("Professor")
+        words.add("Medal")
+        words.add("Lawn mower")
 
         when (GameManager.currentGameMode) {
             GameMode.SOLO -> {}
@@ -51,7 +62,7 @@ class GameActivity : AppCompatActivity() {
         super.onStart()
         manager = supportFragmentManager
         setupSocket()
-//        startCountdown(90000)
+        startGame()
     }
 
     override fun onStop() {
@@ -62,6 +73,14 @@ class GameActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         SocketHandler.disconnectOnlineDraw()
+    }
+
+    private fun startGame() {
+        for (letter in words[currentWordIndex]) {
+            lettersAdapter.add(LetterHolder(letter.toString()))
+        }
+        word_letters.adapter = lettersAdapter
+        startCountdown(10000)
     }
 
     private fun setupSocket() {
@@ -110,6 +129,11 @@ class GameActivity : AppCompatActivity() {
 
             override fun onFinish() {
                 time_text.text = simpleDateFormat.format(Date(0))
+                currentWordIndex++
+                if (currentWordIndex < words.size) {
+                    lettersAdapter.clear()
+                    startGame()
+                }
             }
         }
         timer.start()
