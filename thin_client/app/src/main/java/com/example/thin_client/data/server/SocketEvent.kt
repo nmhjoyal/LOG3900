@@ -28,6 +28,7 @@ object SocketEvent {
 
     const val DRAWER = "drawer"
     const val OBSERVER = "observer"
+    const val GAME_STARTED = ""
     const val DRAW_POINT = "drawPoint"
     const val DRAW_TEST = "drawTest"
     const val TOUCH_DOWN = "touchDown"

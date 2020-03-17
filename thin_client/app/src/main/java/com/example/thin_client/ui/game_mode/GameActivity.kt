@@ -1,7 +1,6 @@
 package com.example.thin_client.ui.game_mode
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,6 +10,8 @@ import androidx.fragment.app.FragmentManager
 import com.example.thin_client.R
 import com.example.thin_client.data.app_preferences.Preferences
 import com.example.thin_client.data.game.GameArgs
+import com.example.thin_client.data.game.GameManager
+import com.example.thin_client.data.game.GameMode
 import com.example.thin_client.data.lifecycle.LoginState
 import com.example.thin_client.data.rooms.RoomArgs
 import com.example.thin_client.data.rooms.RoomManager
@@ -29,6 +30,15 @@ class GameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
         prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
+
+        when (GameManager.currentGameMode) {
+            GameMode.SOLO -> {}
+            GameMode.COLLAB -> {}
+            GameMode.GENERAL -> {}
+            GameMode.ONE_V_ONE -> {}
+            GameMode.REVERSE -> {}
+            GameMode.NONE -> {}
+        }
     }
 
     override fun onStart() {
@@ -105,7 +115,8 @@ class GameActivity : AppCompatActivity() {
                     transaction.addToBackStack(null)
                     transaction.commitAllowingStateLoss()
                 })
-            })).on(SocketEvent.OBSERVER, ({
+            }))
+            .on(SocketEvent.OBSERVER, ({
                 Handler(Looper.getMainLooper()).post(Runnable {
                     val transaction = manager.beginTransaction()
                     val observerFragment = ObserverFragment()

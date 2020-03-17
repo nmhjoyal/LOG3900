@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.WaitingRoom"
+            android:name=".ui.game_mode.WaitingRoom"
             android:label="@string/title_activity_waiting_room"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme">

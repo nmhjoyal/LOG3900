@@ -1,4 +1,4 @@
-package com.example.thin_client.ui
+package com.example.thin_client.ui.game_mode
 
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar

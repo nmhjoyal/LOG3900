@@ -11,6 +11,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
@@ -20,6 +21,8 @@ import com.example.thin_client.data.app_preferences.Preferences
 import com.example.thin_client.data.SignInFeedback
 import com.example.thin_client.data.app_preferences.PreferenceHandler
 import com.example.thin_client.data.game.GameArgs
+import com.example.thin_client.data.game.GameManager
+import com.example.thin_client.data.game.GameMode
 import com.example.thin_client.data.lifecycle.LoginState
 import com.example.thin_client.data.model.User
 import com.example.thin_client.data.rooms.JoinRoomFeedback
@@ -29,6 +32,8 @@ import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.chat.ChatFragment
 import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
+import com.example.thin_client.ui.game_mode.GameActivity
+import com.example.thin_client.ui.game_mode.WaitingRoom
 import com.example.thin_client.ui.game_mode.free_draw.FreeDrawActivity
 import com.example.thin_client.ui.leaderboard.LeaderboardActivity
 import com.example.thin_client.ui.login.LoginActivity
@@ -212,8 +217,30 @@ class Lobby : AppCompatActivity() {
         alertBuilder.setTitle(R.string.create_match)
         val dialogView = layoutInflater.inflate(R.layout.dialog_create_match, null)
         alertBuilder.setView(dialogView)
+        val gameRadioGroup = dialogView.findViewById<RadioGroup>(R.id.game_mode_selection)
+        gameRadioGroup.check(R.id.is_solo_mode)
+
         alertBuilder
             .setPositiveButton(R.string.start) { _, _ ->
+                when(gameRadioGroup.checkedRadioButtonId) {
+                    R.id.is_solo_mode -> {
+                        GameManager.currentGameMode = GameMode.SOLO
+                    }
+                    R.id.is_collab_mode -> {
+                        GameManager.currentGameMode = GameMode.COLLAB
+                    }
+                    R.id.is_general_mode -> {
+                        GameManager.currentGameMode = GameMode.GENERAL
+                    }
+                    R.id.is_one_on_one_mode -> {
+                        GameManager.currentGameMode = GameMode.ONE_V_ONE
+                    }
+                    R.id.is_inverse_mode -> {
+                        GameManager.currentGameMode = GameMode.REVERSE
+                    }
+                }
+                val intent = Intent(applicationContext, GameActivity::class.java)
+                startActivity(intent)
             }
             .setNegativeButton(R.string.cancel) { _, _ -> }
         val dialog = alertBuilder.create()

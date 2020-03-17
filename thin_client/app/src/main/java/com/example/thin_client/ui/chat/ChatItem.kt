@@ -23,7 +23,7 @@ class ChatToItem(val text: String, val avatarID: AvatarID, val date: Long): Item
         viewHolder.itemView.text_view_to_message.text = text
         setAvatar(viewHolder.itemView.image_to_view, avatarID)
         viewHolder.itemView.text_view_username_to.text =  SocketHandler.user!!.username
-        viewHolder.itemView.timestamp_to.text =  simpleDateFormat.format(Date(date * 1000))
+        viewHolder.itemView.timestamp_to.text =  simpleDateFormat.format(Date(date))
     }
 
     override fun getLayout(): Int {
@@ -36,7 +36,7 @@ class ChatFromItem(val text: String, val avatarID: AvatarID, val author: String,
         viewHolder.itemView.text_view_from_message.text = text
         setAvatar(viewHolder.itemView.image_from_message, avatarID)
         viewHolder.itemView.text_view_username_from.text = author
-        viewHolder.itemView.timestamp_from.text =  simpleDateFormat.format(Date(date * 1000))
+        viewHolder.itemView.timestamp_from.text =  simpleDateFormat.format(Date(date))
     }
 
     override fun getLayout(): Int {
