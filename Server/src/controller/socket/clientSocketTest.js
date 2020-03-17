@@ -20,7 +20,7 @@ var createroom = {
 socket1.on("connect", function (data) {socket1.emit("sign_in", { username : "hub2", password: "banane" });});
 
 socket1.on("user_signed_in", function (data) {
-    console.log("signed in : " + data);
+    console.log("signed in : " + JSON.parse(data)["feedback"]);
     
     socket1.emit("connect_free_draw");
     // socket1.emit("create_chat_room", createroom);
