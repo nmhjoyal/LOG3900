@@ -19,7 +19,7 @@ class ServerHandler {
     public constructor () {
         this.users = new Map<string, PrivateProfile>();
         this.chatHandler = new ChatHandler();
-        this.matchHandler = new MatchHandler(this.chatHandler);
+        this.matchHandler = new MatchHandler();
     }
 
     public async signIn(socket: SocketIO.Socket, signIn: SignIn): Promise<SignInFeedback> {
