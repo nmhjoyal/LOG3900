@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
 import androidx.fragment.app.FragmentManager
@@ -21,10 +22,15 @@ import com.example.thin_client.ui.chat.ChatFragment
 import com.example.thin_client.ui.game_mode.free_draw.DrawerFragment
 import com.example.thin_client.ui.game_mode.free_draw.ObserverFragment
 import com.github.nkzawa.socketio.client.Socket
+import kotlinx.android.synthetic.main.activity_game.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class GameActivity : AppCompatActivity() {
     private lateinit var manager: FragmentManager
     private lateinit var prefs: SharedPreferences
+    private val SECOND_INTERVAL: Long = 1000
+    private val TIME_DIVIDER: Long = 60
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +51,7 @@ class GameActivity : AppCompatActivity() {
         super.onStart()
         manager = supportFragmentManager
         setupSocket()
+//        startCountdown(90000)
     }
 
     override fun onStop() {
@@ -92,8 +99,25 @@ class GameActivity : AppCompatActivity() {
         transaction.commitAllowingStateLoss()
     }
 
+    private fun startCountdown(totalTime: Long) {
+        val timePattern = "mm:ss"
+        val simpleDateFormat = SimpleDateFormat(timePattern, Locale.US)
+        time_text.text = simpleDateFormat.format(Date(totalTime))
+        val timer = object : CountDownTimer(totalTime, SECOND_INTERVAL) {
+            override fun onTick(millisUntilFinished: Long) {
+                time_text.text = simpleDateFormat.format(Date(millisUntilFinished))
+            }
+
+            override fun onFinish() {
+                time_text.text = simpleDateFormat.format(Date(0))
+            }
+        }
+        timer.start()
+    }
+
 
     override fun onBackPressed() {
+        finish()
     }
 
     private fun turnOffSocketEvents() {

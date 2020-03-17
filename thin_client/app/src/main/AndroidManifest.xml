@@ -95,12 +95,12 @@
         </activity>
         <activity android:name=".ui.game_mode.GameActivity"
             android:label="@string/app_name"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.Lobby" />
         </activity>
-        <receiver android:name=".server.ServerCrashReceiver"/>
     </application>
 
 </manifest>

@@ -130,5 +130,7 @@
     <string name="one_v_one_mode">One-on-one</string>
     <string name="inverse_mode">Inverse</string>
     <string name="start">Start</string>
-
+    <string name="time_separator"> : </string>
+    <string name="timer_cd">Timer</string>
+    <string name="time_placeholder">00</string>
 </resources>
