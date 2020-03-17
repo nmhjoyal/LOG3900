@@ -47,7 +47,7 @@
         <Border Background="#FF66CC00" BorderThickness="5" Grid.Column="1" Grid.Row="3" CornerRadius="10">
             <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Mot recherché:" Grid.Column="1" Grid.Row="3"/>
         </Border>
-        <TextBox x:Name="word" Grid.Column="3" Grid.Row="3" MinWidth="200" Grid.ColumnSpan="3"/>
+        <TextBox x:Name="word" Grid.Column="3" Grid.Row="3" MinWidth="200" Grid.ColumnSpan="4"/>
         <Border Background="#FF66CC00" BorderThickness="5" Grid.Column="1" Grid.Row="5" CornerRadius="10">
             <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Dessine ici:" Grid.Column="1" Grid.Row="3"/>
         </Border>
@@ -155,18 +155,19 @@
             </ComboBoxItem>
         </ComboBox>
 
-        <StackPanel Name="canContainer"  Grid.Column="1" Grid.Row="13">
-            <Button MaxWidth="140" Click="addClue" Background="#FF66CC00" Grid.Column="1" Grid.Row="13" BorderBrush="{x:Null}">
+        <Button MaxWidth="140" Click="addClue" Background="#FF66CC00" Grid.Column="1" Grid.Row="13" BorderBrush="{x:Null}" Margin="0.333,0,0.333,118">
 
-                <StackPanel  Orientation="Horizontal">
-                    <TextBlock FontSize="12" Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Indice(s):</TextBlock>
-                    <Image Source="/Resources/add.png" Height="20"></Image>
-                </StackPanel>
-            </Button>
+            <StackPanel  Orientation="Horizontal">
+                <TextBlock FontSize="12" Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Indice(s):</TextBlock>
+                <Image Source="/Resources/add.png" Height="20"></Image>
+            </StackPanel>
+        </Button>
+        <StackPanel Name="canContainer"  Grid.Column="3" Grid.Row="13">
+
             <TextBox  x:Name="clue" Grid.Column="3" Grid.Row="13"  />
         </StackPanel>
-        
-       
+
+
 
 
 

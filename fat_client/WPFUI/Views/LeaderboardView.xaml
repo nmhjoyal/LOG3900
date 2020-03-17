@@ -149,5 +149,11 @@
             </StackPanel>
         </Border>
         <Image gif:ImageBehavior.AnimatedSource="/Resources/fireworks.gif" Grid.Column="4" Grid.Row="10" Opacity="0.6" Grid.ColumnSpan="2" Grid.RowSpan="4"/>
+        <Button  x:Name="goBack"  Grid.Column="8" Grid.Row="0" MaxWidth="100" HorizontalAlignment="Right"  Background="#FFBF0B0B" BorderBrush="#FFBF0B0B">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Foreground="White">Retour</TextBlock>
+                <Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
+            </StackPanel>
+        </Button>
     </Grid>
 </UserControl>

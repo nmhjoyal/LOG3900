@@ -47,7 +47,7 @@
         <Border Background="#FF66CC00" BorderThickness="5" Grid.Column="1" Grid.Row="3" CornerRadius="10">
             <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Lien du fichier:" Grid.Column="1" Grid.Row="3"/>
         </Border>
-        <TextBox x:Name="word" Grid.Column="3" Grid.Row="3" MinWidth="200" Grid.ColumnSpan="3"/>
+        <TextBox x:Name="word" Grid.Column="3" Grid.Row="3" MinWidth="200" Grid.ColumnSpan="4"/>
         <Border Background="#FF66CC00" BorderThickness="5" Grid.Column="1" Grid.Row="5" CornerRadius="10">
             <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Visualise ton jeu" Grid.Column="1" Grid.Row="3"/>
         </Border>
@@ -56,13 +56,12 @@
             <Button FontSize="12" Foreground="White" Background="#FCBA03" BorderBrush="#FCBA03" Click="preview" Content="Preview" MaxWidth="100"/>
 
         </StackPanel>
-        
-        <Canvas x:Name="PART_Canvas" Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="4" >
-            <InkCanvas ClipToBounds="True" Grid.Column="3" Grid.Row="7" Grid.ColumnSpan="4" Grid.RowSpan="1" Name="surfaceDessin" 
-                           HorizontalAlignment="Stretch" VerticalAlignment="Stretch"                                                                      
-                           Strokes="{Binding Path=Traits, Mode=OneTime}" EditingMode="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurModeEdition}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                           DefaultDrawingAttributes="{Binding Path=AttributsDessin, Mode=OneTime}"  Height="200" Width="600"/>
-        </Canvas>
+        <Border Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="4" Grid.RowSpan="3" BorderBrush="Black" BorderThickness="3" CornerRadius="10">
+            <Image Name="imageTransformee" Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="4" Grid.RowSpan="3">
+
+            </Image>
+        </Border>
+       
 
         <Border Background="#FF66CC00" BorderThickness="5" Grid.Column="1" Grid.Row="9" CornerRadius="10">
             <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center"  Text="Difficulté:" Grid.Column="1" Grid.Row="9"/>
@@ -110,17 +109,17 @@
             </ComboBoxItem>
         </ComboBox>
 
-        <StackPanel Name="canContainer"  Grid.Column="1" Grid.Row="13">
-            <Button MaxWidth="140" Click="addClue" Background="#FF66CC00" Grid.Column="1" Grid.Row="13" BorderBrush="{x:Null}">
+        <Button MaxWidth="140" Click="addClue" Background="#FF66CC00" Grid.Column="1" Grid.Row="13" BorderBrush="{x:Null}" Margin="0.333,0,0.333,118">
 
-                <StackPanel  Orientation="Horizontal">
-                    <TextBlock FontSize="12" Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Indice(s):</TextBlock>
-                    <Image Source="/Resources/add.png" Height="20"></Image>
-                </StackPanel>
-            </Button>
+            <StackPanel  Orientation="Horizontal">
+                <TextBlock FontSize="12" Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Indice(s):</TextBlock>
+                <Image Source="/Resources/add.png" Height="20"></Image>
+            </StackPanel>
+        </Button>
+        <StackPanel Name="canContainer"  Grid.Column="3" Grid.Row="13">
+
             <TextBox  x:Name="clue" Grid.Column="3" Grid.Row="13"  />
         </StackPanel>
-
 
 
 
