@@ -1,6 +1,6 @@
 import { JsonController, Post, Body } from "routing-controllers";
 import { Feedback } from "../../models/feedback";
-import { Game, Line } from "../../models/drawPoint";
+import { Game, Stroke, StylusPoint } from "../../models/drawPoint";
 import { gameDB } from "../../services/Database/gameDB";
 
 /**
@@ -11,7 +11,6 @@ export class GameController {
    
     @Post("/create")
     public async createGame(@Body() game: Game): Promise<Feedback> {
-        // console.log(JSON.stringify(game));
         let feedback: Feedback = {
             status: true,
             log_message: "Game created!"
@@ -31,17 +30,20 @@ export class GameController {
             feedback.status = false;
             feedback.log_message = "You must provide a least one clue";
         } else {
-            game.drawing.forEach((line: Line) => {
-                line.DrawingAttributes = {
-                    Color: line.DrawingAttributes.Color,
-                    Width: line.DrawingAttributes.Width
-                }
-                for(let i = 0; i < line.StylusPoints.length; i++) {
-                    line.StylusPoints[i] = {
-                        X: line.StylusPoints[i].X,
-                        Y: line.StylusPoints[i].Y
+            let top: number = 0;
+            game.drawing.forEach((stroke: Stroke) => {
+                stroke.DrawingAttributes = {
+                    Color: stroke.DrawingAttributes.Color,
+                    Width: stroke.DrawingAttributes.Width,
+                    Height: stroke.DrawingAttributes.Height,
+                    Top: top++
+                };
+                stroke.StylusPoints.forEach((stylusPoint: StylusPoint, i: number) => {
+                    stroke.StylusPoints[i] = {
+                        X: stylusPoint.X,
+                        Y: stylusPoint.Y
                     }
-                }
+                });
             });
             try {
                 await gameDB.createGame(game);

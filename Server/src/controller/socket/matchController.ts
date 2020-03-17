@@ -1,6 +1,6 @@
 import { OnMessage, SocketController, MessageBody, ConnectedSocket, SocketIO, OnDisconnect } from "socket-controllers";
 import { serverHandler } from "../../services/serverHandler";
-import { Trace, Point, GamePreview } from "../../models/drawPoint";
+import { Trace, Point, GamePreview, Stroke, StylusPoint } from "../../models/drawPoint";
 
 @SocketController()
 export default class MatchController {
@@ -23,10 +23,9 @@ export default class MatchController {
         serverHandler.matchHandler.leaveFreeDrawTestRoom(io, socket);
     }
 
-    @OnMessage("trace")
-    public start_trace(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() trace: Trace) {
-        console.log("start_trace");
-        serverHandler.matchHandler.startTrace(io, socket, trace);
+    @OnMessage("stroke")
+    public start_trace(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() stroke: Stroke) {
+        serverHandler.matchHandler.stroke(io, socket, stroke);
     }
 
     @OnMessage("erase_stroke")
@@ -40,8 +39,8 @@ export default class MatchController {
     }
 
     @OnMessage("point")
-    public drawTest(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() point: Point) {
-        serverHandler.matchHandler.drawTest(io, socket, point);
+    public drawTest(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() point: StylusPoint) {
+        serverHandler.matchHandler.point(io, socket, point);
     }
 
     @OnMessage("get_drawing")

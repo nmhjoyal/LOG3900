@@ -113,18 +113,21 @@ namespace WPFUI.ViewModels
 
         public void sendPointAction(int x, int y)
         {
-            Models.Point point = new Models.Point(x, y, this.OutilSelectionne);
-            this._socketHandler.socket.Emit("point", JsonConvert.SerializeObject(point));
+            StylusPoint stylusPoint = new StylusPoint(x, y);
+            this._socketHandler.socket.Emit("point", JsonConvert.SerializeObject(stylusPoint));
         }
 
         public void sendStrokeAction(int x, int y)
         {
-            Models.Point point = new Models.Point(x, y, this.OutilSelectionne);
-            Trace trace = new Trace(point, this.AttributsDessin.Color.ToString(), (int)this.AttributsDessin.Width, this.OutilSelectionne);
-            Console.WriteLine(this.OutilSelectionne);
             if(this.OutilSelectionne == "crayon")
             {
-                this._socketHandler.socket.Emit("trace", JsonConvert.SerializeObject(trace));
+                StylusPointCollection stylusPoint = new StylusPointCollection();
+                stylusPoint.Add(new StylusPoint(x, y));
+                Stroke stroke = new Stroke(stylusPoint);
+                stroke.DrawingAttributes.Width = this.AttributsDessin.Width;
+                stroke.DrawingAttributes.Height = this.AttributsDessin.Height;
+                stroke.DrawingAttributes.Color = this.AttributsDessin.Color;
+                this._socketHandler.socket.Emit("stroke", JsonConvert.SerializeObject(stroke));
             } else if(this.OutilSelectionne == "efface_trait")
             {
                 this._socketHandler.socket.Emit("erase_stroke");
