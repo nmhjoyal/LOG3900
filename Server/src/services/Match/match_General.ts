@@ -1,4 +1,3 @@
-import { Room } from "../../models/room";
 import { Feedback } from "../../models/feedback";
 import PublicProfile from "../../models/publicProfile";
 import { MatchInfos } from "../../models/match";

@@ -24,7 +24,7 @@ export class ServerController {
         // setTimeout(function() {
         //     console.log("emptyarray:", socket.rooms); // empty array
         //     console.log("rooms : ", clonedRooms);
-        // }, 100);
+        // }, 100); https://github.com/socketio/socket.io/pull/2332
         serverHandler.signOut(io, socket);
     }
 

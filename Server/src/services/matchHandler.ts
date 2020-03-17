@@ -31,6 +31,7 @@ export default class MatchHandler {
             let randomId: string = RandomMatchIdGenerator.generate();
             let newMatch: Match = MatchInstance.createMatch(socket, randomId, createMatch);
             this.currentMatches.set(randomId, newMatch);
+            socket.emit("update_matches", this.getAllAvailbaleMatches());
         } else {
             feedback.status = false;
             feedback.log_message = "You are not connected.";
@@ -63,6 +64,16 @@ export default class MatchHandler {
             
 
         return feedback;
+    }
+
+    private getAllAvailbaleMatches(): MatchInfos[] {
+        let availableMatches: MatchInfos[] = [];
+        this.currentMatches.forEach((match: Match) => {
+            if (!match.isStarted) {
+                availableMatches.push(match.getMatchInfos());
+            }
+        });
+        return availableMatches;
     }
 
     /**
