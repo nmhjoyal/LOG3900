@@ -34,7 +34,7 @@ export default class ChatController {
     
     @OnMessage("send_message")
     public async send_message(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() message: ClientMessage) {
-        await serverHandler.chatHandler.sendMessage(io, socket, message);
+        await serverHandler.sendMessage(io, socket, message);
     }
 
     @OnMessage("get_rooms")

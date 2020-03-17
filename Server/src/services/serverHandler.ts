@@ -5,10 +5,11 @@ import { Feedback, SignInFeedback, SignInStatus, SignOutStatus, UpdateProfileSta
 import { profileDB } from "../services/Database/profileDB";
 import { roomDB } from "../services/Database/roomDB";
 import Admin from "../models/admin";
-import { Message } from "../models/message";
+import { Message, ClientMessage } from "../models/message";
 import PublicProfile from "../models/publicProfile";
 import ChatHandler from "./chatHandler";
 import MatchHandler from "./matchHandler";
+import RandomMatchIdGenerator from "./IdGenerator/idGenerator";
 
 class ServerHandler {
     public users: Map<string, PrivateProfile>;
@@ -18,7 +19,7 @@ class ServerHandler {
     public constructor () {
         this.users = new Map<string, PrivateProfile>();
         this.chatHandler = new ChatHandler();
-        this.matchHandler = new MatchHandler();
+        this.matchHandler = new MatchHandler(this.chatHandler);
     }
 
     public async signIn(socket: SocketIO.Socket, signIn: SignIn): Promise<SignInFeedback> {
@@ -73,6 +74,16 @@ class ServerHandler {
         }
 
         return feedback;
+    }
+
+    public sendMessage(io: SocketIO.Server, socket: SocketIO.Socket, message: ClientMessage) { 
+        // Send the message
+        this.chatHandler.sendMessage(io, socket, message);
+
+        // Check if it is 
+        if (message.roomId.startsWith(RandomMatchIdGenerator.prefix)) {
+            // this.matchHandler.checkGuess(io, socket, message) 
+        }
     }
 
     public getUser(socketId: string): PrivateProfile | undefined {

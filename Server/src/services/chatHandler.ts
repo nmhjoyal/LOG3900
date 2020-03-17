@@ -236,7 +236,7 @@ export default class ChatHandler {
                 date : Date.now(),
                 roomId : clientMessage.roomId
             };
-            if (privateRoom) {                
+            if (privateRoom) {
                 privateRoom.messages.push(message);
                 io.in(message.roomId).emit("new_message", JSON.stringify(message));
             } else {
@@ -268,6 +268,7 @@ export default class ChatHandler {
                 receiverSocketId = socketId;
             }
         });
+        
         let privateRoom: Room | undefined = this.findPrivateRoom(invitation.id);
         let status: boolean = false;
         let log_message: InviteStatus;
