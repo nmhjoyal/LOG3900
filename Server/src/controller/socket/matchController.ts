@@ -1,6 +1,6 @@
 import { OnMessage, SocketController, MessageBody, ConnectedSocket, SocketIO, OnDisconnect } from "socket-controllers";
 import { serverHandler } from "../../services/serverHandler";
-import { Trace, Point, GamePreview } from "../../models/drawPoint";
+import { Trace, Point, GamePreview, ScreenResolution } from "../../models/drawPoint";
 
 @SocketController()
 export default class MatchController {
@@ -32,6 +32,12 @@ export default class MatchController {
     @OnMessage("point")
     public drawTest(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() point: Point) {
         serverHandler.matchHandler.drawTest(io, socket, point);
+    }
+
+    @OnMessage("screen_resolution")
+    public send_scale(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() screen: ScreenResolution) {
+        console.log("scale_views")
+        serverHandler.matchHandler.scaleViews(io, socket, screen);
     }
 
     @OnMessage("get_drawing")

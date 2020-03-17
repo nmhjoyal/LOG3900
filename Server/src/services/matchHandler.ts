@@ -1,5 +1,5 @@
 import { MatchMode } from "../models/matchMode";
-import { Trace, Point, Game, GamePreview } from "../models/drawPoint";
+import { Trace, Point, Game, GamePreview, ScreenResolution } from "../models/drawPoint";
 import { VirtualPlayer } from "./Drawing/virtualPlayer";
 import { gameDB } from "./Database/gameDB";
 // import { VirtualPlayer } from "./Drawing/virtualPlayer";
@@ -55,6 +55,13 @@ export default class MatchHandler {
     public drawTest(io: SocketIO.Server, socket: SocketIO.Socket, point: Point): void {
         // if (socket.id == this.drawer) {
             socket.to("freeDrawRoomTest").emit("new_point", JSON.stringify(point));
+        // }
+    }
+
+    public scaleViews(io: SocketIO.Server, socket: SocketIO.Socket, screen: ScreenResolution): void {
+        // if (socket.id == this.drawer) {
+            socket.to("freeDrawRoomTest").emit("scale_view", JSON.stringify(screen));
+            console.log("views_scaled")
         // }
     }
 

@@ -3,14 +3,16 @@ package com.example.thin_client.ui.game_mode.free_draw
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.thin_client.R
 import com.example.thin_client.data.app_preferences.PreferenceHandler
 import com.example.thin_client.data.app_preferences.Preferences
-import com.example.thin_client.data.drawing.DrawPoint
+import com.example.thin_client.data.drawing.Point
+import com.example.thin_client.data.drawing.ScreenResolution
+import com.example.thin_client.data.drawing.Trace
+import com.example.thin_client.data.game.GameManager
 import com.example.thin_client.data.lifecycle.LoginState
 import com.example.thin_client.data.model.User
 import com.example.thin_client.data.server.SocketEvent
@@ -25,6 +27,7 @@ class ObserverFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         draw_view.isDrawer = false
+        draw_view.screenResolution = GameManager.observerScreenResolution
     }
 
     override fun onCreateView(
@@ -68,23 +71,20 @@ class ObserverFragment : Fragment() {
 
     private fun setupSocketEvents() {
         SocketHandler.socket!!
-            .on(SocketEvent.DRAW_POINT, ({ data ->
-                val drawPoint = Gson().fromJson(data.first().toString(), DrawPoint::class.java)
+            .on(SocketEvent.NEW_POINT, ({ data ->
+                val drawPoint = Gson().fromJson(data.first().toString(), Point::class.java)
                 draw_view.addPath(drawPoint)
             }))
-            .on(SocketEvent.START_TRACE, ({ data ->
-                val drawPoint = Gson().fromJson(data.first().toString(), DrawPoint::class.java)
-                draw_view.startTrace(drawPoint)
-            }))
-            .on(SocketEvent.STOP_TRACE, ({
+            .on(SocketEvent.NEW_TRACE, ({ data ->
                 draw_view.stopTrace()
+                val drawPoint = Gson().fromJson(data.first().toString(), Trace::class.java)
+                draw_view.startTrace(drawPoint)
             }))
     }
 
     private fun turnOffSocketEvents() {
         SocketHandler.socket!!
-            .off(SocketEvent.DRAW_POINT)
-            .off(SocketEvent.START_TRACE)
-            .off(SocketEvent.STOP_TRACE)
+            .off(SocketEvent.NEW_POINT)
+            .off(SocketEvent.NEW_TRACE)
     }
 }

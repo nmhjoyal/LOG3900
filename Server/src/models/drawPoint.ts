@@ -16,6 +16,11 @@ export interface Trace {
     tool: string
 }
 
+export interface ScreenResolution {
+    height: number,
+    width: number
+}
+
 export interface Line {
     DrawingAttributes: DrawingAttributes
     StylusPoints: StylusPoint[]

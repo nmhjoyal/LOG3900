@@ -14,15 +14,17 @@ import androidx.core.graphics.red
 import com.divyanshu.draw.widget.MyPath
 import com.example.thin_client.R
 import com.example.thin_client.data.PaintOptions
-import com.example.thin_client.data.drawing.DrawPoint
+import com.example.thin_client.data.drawing.Trace
 import com.example.thin_client.data.drawing.Point
-import com.example.thin_client.data.drawing.RGB
+import com.example.thin_client.data.drawing.Color
+import com.example.thin_client.data.drawing.ScreenResolution
 import com.example.thin_client.server.SocketHandler
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.collections.iterator
+import kotlin.math.floor
 
 
 /* https://github.com/divyanshub024/AndroidDraw */
@@ -30,6 +32,7 @@ import kotlin.collections.iterator
 class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     var mPaths = LinkedHashMap<MyPath, PaintOptions>()
     var isDrawer: Boolean = true
+    var screenResolution = ScreenResolution(0, 0)
 
     private var mLastPaths = LinkedHashMap<MyPath, PaintOptions>()
 
@@ -88,7 +91,7 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     fun getBitmap(): Bitmap {
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
-        canvas.drawColor(Color.WHITE)
+        canvas.drawColor(android.graphics.Color.WHITE)
         mIsSaving = true
         draw(canvas)
         mIsSaving = false
@@ -107,9 +110,10 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         canvas.drawPath(mPath, mPaint)
     }
 
-    fun startTrace(drawPoint: DrawPoint) {
-        mStartX = drawPoint.point.x.toFloat()
-        mStartY = drawPoint.point.y.toFloat()
+    fun startTrace(drawPoint: Trace) {
+        val point = getRelativePoint(drawPoint.point)
+        mStartX = point.x.toFloat()
+        mStartY = point.y.toFloat()
         mCurX = mStartX
         mCurY = mStartY
         setColor(((drawPoint.color.r.toInt() and 0xff) shl 16) or
@@ -117,11 +121,11 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
                 (drawPoint.color.b.toInt() and 0xff))
         setStrokeWidth(drawPoint.width.toFloat())
 
-        mPath.moveTo(drawPoint.point.x.toFloat(), drawPoint.point.y.toFloat())
+        mPath.moveTo(point.x.toFloat(), point.y.toFloat())
     }
 
     fun stopTrace() {
-        if (mStartX == mCurX && mStartY == mCurY) {
+        if (mStartX == mCurX && mStartY == mCurY && mCurX != 0f && mCurY != 0f) {
             mPath.lineTo(mCurX, mCurY + 2)
             mPath.lineTo(mCurX + 1, mCurY + 2)
             mPath.lineTo(mCurX + 1, mCurY)
@@ -137,11 +141,20 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         postInvalidate()
     }
 
-    fun addPath(drawPoint: DrawPoint) {
-        mCurX = drawPoint.point.x.toFloat()
-        mCurY = drawPoint.point.y.toFloat()
-        mPath.lineTo(drawPoint.point.x.toFloat(), drawPoint.point.y.toFloat())
+    fun addPath(drawPoint: Point) {
+        val point = getRelativePoint(drawPoint)
+        mCurX = point.x.toFloat()
+        mCurY = point.y.toFloat()
+        mPath.lineTo(point.x.toFloat(), point.y.toFloat())
         postInvalidate()
+    }
+
+    private fun getRelativePoint(unscaledPoint: Point): Point {
+        if (screenResolution.height != 0 && screenResolution.width != 0) {
+            return Point(floor(unscaledPoint.x.toDouble() / screenResolution.width.toDouble()) * this.width,
+                floor(unscaledPoint.y.toDouble() / screenResolution.height.toDouble()) * this.height)
+        }
+        return Point(unscaledPoint.x, unscaledPoint.y)
     }
 
     private fun changePaint(paintOptions: PaintOptions) {
@@ -165,8 +178,9 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
         mCurX = x
         mCurY = y
-        SocketHandler.touchDown(DrawPoint(RGB(mPaintOptions.color.red, mPaintOptions.color.green, mPaintOptions.color.blue),
-            Point(mCurX.toInt(), mCurY.toInt()), mPaintOptions.strokeWidth))
+        SocketHandler.startTrace(Trace(
+            Color(mPaintOptions.color.red, mPaintOptions.color.green, mPaintOptions.color.blue),
+            Point(mCurX.toInt(), mCurY.toInt()), mPaintOptions.strokeWidth, ""))
     }
 
     private fun actionMove(x: Float, y: Float) {
@@ -190,8 +204,7 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
             mPath.quadTo(mCurX, mCurY, (x + mCurX) / 2, (y + mCurY) / 2)
             mCurX = x
             mCurY = y
-            SocketHandler.drawPoint(DrawPoint(RGB(mPaintOptions.color.red, mPaintOptions.color.green, mPaintOptions.color.blue),
-                Point(mCurX.toInt(), mCurY.toInt()), mPaintOptions.strokeWidth))
+            SocketHandler.point(Point(mCurX.toInt(), mCurY.toInt()))
         }
     }
 
@@ -208,8 +221,6 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         if (!mIsErasing) {
             mPaths.put(mPath, mPaintOptions)
         }
-
-        SocketHandler.touchUp()
 
         mPath = MyPath()
         mPaintOptions = PaintOptions(

@@ -28,12 +28,12 @@ object SocketEvent {
 
     const val DRAWER = "drawer"
     const val OBSERVER = "observer"
-    const val DRAW_POINT = "drawPoint"
-    const val DRAW_TEST = "drawTest"
-    const val TOUCH_DOWN = "touchDown"
-    const val TOUCH_UP = "touchUp"
-    const val START_TRACE = "start_trace"
-    const val STOP_TRACE = "stop_trace"
+    const val NEW_POINT = "new_point"
+    const val NEW_TRACE = "new_trace"
+    const val TRACE = "trace"
+    const val POINT = "point"
+    const val SEND_SCREEN_RESOLUTION = "screen_resolution"
+    const val SCALE_VIEW = "scale_view"
     const val CONNECT_FREE_DRAW = "connect_free_draw"
     const val DISCONNECT_FREE_DRAW = "disconnect_free_draw"
 }

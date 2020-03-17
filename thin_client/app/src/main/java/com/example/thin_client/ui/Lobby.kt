@@ -20,7 +20,9 @@ import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.app_preferences.Preferences
 import com.example.thin_client.data.SignInFeedback
 import com.example.thin_client.data.app_preferences.PreferenceHandler
+import com.example.thin_client.data.drawing.ScreenResolution
 import com.example.thin_client.data.game.GameArgs
+import com.example.thin_client.data.game.GameManager
 import com.example.thin_client.data.lifecycle.LoginState
 import com.example.thin_client.data.model.User
 import com.example.thin_client.data.rooms.JoinRoomFeedback
@@ -38,15 +40,19 @@ import com.example.thin_client.ui.profile.ProfileActivity
 import com.github.nkzawa.socketio.client.Socket
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_lobby.*
+import kotlinx.android.synthetic.main.observer_fragment.*
 
 class Lobby : AppCompatActivity() {
     private lateinit var manager: FragmentManager
     private lateinit var prefs: SharedPreferences
+    private lateinit var observerScreenResolution: ScreenResolution
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lobby)
         manager = supportFragmentManager
+
+        observerScreenResolution = ScreenResolution(0, 0)
 
         prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
 
@@ -218,6 +224,9 @@ class Lobby : AppCompatActivity() {
             })).on(Socket.EVENT_DISCONNECT, ({
                 SocketHandler.socket = null
                 SocketHandler.isLoggedIn = false
+            })).on(SocketEvent.SCALE_VIEW, ({ data ->
+                val resolution = Gson().fromJson(data.first().toString(), ScreenResolution::class.java)
+                GameManager.observerScreenResolution = ScreenResolution(resolution.height, resolution.width)
             }))
 
     }

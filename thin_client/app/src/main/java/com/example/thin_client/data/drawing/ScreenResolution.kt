@@ -1,7 +1,6 @@
 package com.example.thin_client.data.drawing
 
-data class DrawPoint(
-    val color: RGB,
-    val point: Point,
+data class ScreenResolution(
+    val height: Number,
     val width: Number
 )

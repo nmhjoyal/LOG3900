@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.game_mode.free_draw.FreeDrawActivity">
+    tools:context=".ui.game_mode.free_draw.FreeDrawActivity"
+    android:background="@color/default_background">
 
     <com.example.thin_client.ui.game_mode.free_draw.DrawView
         android:id="@+id/draw_view"
@@ -12,6 +13,7 @@
         android:layout_height="wrap_content"
         app:layout_constrainedWidth="true"
         app:layout_constrainedHeight="true"
+        android:background="@color/default_background"
         app:layout_constraintBottom_toTopOf="@+id/colour_options"
         app:layout_constraintEnd_toStartOf="@+id/drawing_options"
         app:layout_constraintStart_toStartOf="parent"
