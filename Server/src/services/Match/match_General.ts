@@ -1,20 +1,20 @@
 import { Room } from "../../models/room";
 import { Feedback } from "../../models/feedback";
 import PublicProfile from "../../models/publicProfile";
+import { MatchInfos } from "../../models/match";
+import { serverHandler } from "../serverHandler";
+import PrivateProfile from "../../models/privateProfile";
 
 export default abstract class Match {
-    protected players: Map<string, number>; /* username, score */
+    protected mode: number;
+    protected players: Map<string, number>; /* socketid, score */
     protected nbRounds: number;
     protected letterReveal: boolean;
-    // Chat associated to the game.
-    protected matchRoom: Room;
-    protected isStarted: boolean;
+    public isStarted: boolean;
 
     protected constructor(socket: SocketIO.Socket, randomId: string, nbRounds: number) {
-        this.matchRoom.id = randomId;
-        // this.joinRoom
-        this.nbRounds = nbRounds;
         this.isStarted = false;
+        this.nbRounds = nbRounds;
     }
 
     public joinMatch(socket: SocketIO.Socket, user: PublicProfile): Feedback {
@@ -25,6 +25,7 @@ export default abstract class Match {
 
         if (!this.isStarted) {
             // this.joinRoom
+            this.players.set(socket.id, 0);
             feedback.status = true;
             feedback.log_message = "You joined the match.";
         } else {
@@ -54,11 +55,22 @@ export default abstract class Match {
     public draw(): void { 
 
     }
-    
-    // private joinRoom(socket: SocketIO.Socket) {
-    //     socket.join(this.matchRoom.id);
-    //     this.matchRoom.avatars.set();
-    //     this.players = [socket.id];
-    // }
+
+    public getMatchInfos(): MatchInfos {
+
+        let users: Map<string, string> = new Map<string, string>(); 
+        this.players.forEach((score: number, socketid: string) => {
+            let userInfo: PrivateProfile | undefined = serverHandler.getUser(socketid);
+            if (userInfo) users.set(userInfo.username, userInfo.avatar);
+        });
+
+        let matchInfos: MatchInfos = {
+            matchMode: this.mode,
+            nbRounds: this.nbRounds,
+            players: users
+        };
+
+        return matchInfos;
+    }
 
 }
