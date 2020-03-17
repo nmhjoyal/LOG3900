@@ -122,23 +122,6 @@ namespace WPFUI.ViewModels
             Models.Point point = new Models.Point(x, y, this.OutilSelectionne);
             Trace trace = new Trace(point, this.AttributsDessin.Color.ToString(), (int)this.AttributsDessin.Width, this.OutilSelectionne);
             this._socketHandler.socket.Emit("trace", JsonConvert.SerializeObject(trace));
-            
-            /*
-            Console.WriteLine("*" + this.AttributsDessin.Color);
-            string width = Traits[Traits.Count - 1].DrawingAttributes.Width.ToString();
-            bool stylusTip = true;//Traits[Traits.Count - 1].DrawingAttributes.StylusTip;
-            string color = Traits[Traits.Count - 1].DrawingAttributes.Color.ToString();
-            for (int j = 0; j < Traits[Traits.Count - 1].StylusPoints.Count; j++)
-            {
-                double x = Traits[Traits.Count - 1].StylusPoints[j].X;
-                double y = Traits[Traits.Count - 1].StylusPoints[j].Y;
-                SocketHandler.sendPoint(x, y, color, width, stylusTip);
-            }
-           /*
-            string path = Traits[Traits.Count - 1].GetGeometry().ToString();
-            SocketHandler socketHandler = new SocketHandler(userdata,events);
-            socketHandler.sendStroke(path, color, width, stylusTip);
-            */
         }
 
         public void getDrawing()

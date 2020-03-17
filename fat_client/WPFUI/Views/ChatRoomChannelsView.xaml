@@ -6,8 +6,9 @@
              xmlns:local="clr-namespace:WPFUI.Views"
 			 xmlns:extToolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
 			 mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="White">
+             d:DesignHeight="450" d:DesignWidth="800"
+			 MinWidth="400">
+    <Grid Background="#FFF1F2F1">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20"/>
             <ColumnDefinition Width="*" />
@@ -18,39 +19,43 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="30"/>
+			<RowDefinition Height="20"/>
+            <RowDefinition Height="2*"/>
+			<RowDefinition Height="20"/>
+            <RowDefinition Height="6*"/>
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="20"/>
         </Grid.RowDefinitions>
-		<TextBox Grid.Row="1" Grid.Column="1" Text=""/>
-		<Button Grid.Row="1" Grid.Column="4" Content="create room"/>
-		<ScrollViewer Grid.Row="2" Grid.Column="1" VerticalScrollBarVisibility="Visible" MaxHeight="35">
-			<ItemsControl x:Name="availableRooms">
+		<TextBox Text="{Binding createdRoomName}" Grid.Row="1" Grid.Column="1" BorderBrush="#FF686868"/>
+		<Button x:Name="createRoom" Grid.Row="1" Grid.Column="4" Content="create room" Height="auto"/>
+		<TextBlock Grid.Row="2" Grid.Column="1"> Available Rooms:</TextBlock>
+		<ScrollViewer Grid.Row="3" Grid.Column="1" VerticalScrollBarVisibility="Visible" FlowDirection="RightToLeft">
+			<ItemsControl ItemsSource="{Binding availableRooms}" FlowDirection="LeftToRight">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
 						<StackPanel Orientation="Vertical">
-							<TextBlock Text="{Binding roomName}" Foreground="DarkSlateGray"/>
+							<TextBlock Text="{Binding roomName}" Foreground="DarkSlateGray" Margin="5,0,0,0" FontSize="20"/>
 						</StackPanel>
 					</DataTemplate>
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>
 		</ScrollViewer>
-		<Button Grid.Row="2" Grid.Column="4" Content="join room"/>
-
-		<ScrollViewer Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="4" Grid.RowSpan="2">
-			<ItemsControl x:Name="joinedRooms">
+		<Button Grid.Row="3" Grid.Column="4" Content="join room" Height="auto" Background="#FFA2DC3D"/>
+		<TextBlock Grid.Row="4" Grid.Column="1"> Joined Rooms:</TextBlock>
+		<ScrollViewer Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="4" Grid.RowSpan="1" FlowDirection="RightToLeft">
+			<ItemsControl FlowDirection="LeftToRight" ItemsSource="{Binding joinedRooms}">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
 						<StackPanel Orientation="Vertical">
 							<StackPanel Orientation="Horizontal">
-								<TextBlock Text="{Binding roomName}" Foreground="DarkSlateGray" FontSize="20"/>
-								<Button Content="leave room" Margin="20,0,0,0">
-
+								<TextBlock Text="{Binding roomName}" Foreground="DarkSlateGray" FontSize="20" Margin="5,0,0,0"/>
+								<Button Content="+" Margin="5,0,0,0">
 								</Button>
-								<Button Content="add player" Margin="20,0,0,0">
-
+								<Button Content="view" Margin="5,0,0,0" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext._changeChannelCommand}"
+									CommandParameter="{Binding roomName}">
+								</Button>
+								<Button Content="leave" Margin="5,0,0,0">
 								</Button>
 							</StackPanel>
 						</StackPanel>
@@ -58,6 +63,6 @@
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>
 		</ScrollViewer>
-
+		<TextBlock Grid.Column="1" Grid.Row="6" Text="{Binding currentRoomId}"></TextBlock>
 	</Grid>
 </UserControl>

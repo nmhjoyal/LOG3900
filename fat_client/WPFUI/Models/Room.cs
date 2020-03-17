@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +9,9 @@ namespace WPFUI.Models
 {
     public class Room
     {
-        string id;
-        Message[] messages;
-        Dictionary<string, string> avatars;
+        public string id;
+        public Message[] messages;
+        public Dictionary<string, string> avatars;
 
         public Room(string id,
         Message[] messages,
@@ -20,11 +21,11 @@ namespace WPFUI.Models
             this.messages = messages;
             this.avatars = avatars;
         }
-
         public string roomName
         {
             get { return id; }
             set { id = value; }
         }
+
     }
 }

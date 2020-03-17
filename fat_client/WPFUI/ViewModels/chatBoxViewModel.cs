@@ -10,11 +10,11 @@ using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    public class chatBoxViewModel: Screen
+    public class chatBoxViewModel: Screen, IHandle<refreshMessagesEvent>, IHandle<addMessageEvent>
     {
         private IEventAggregator _events;
         private IUserData _userData;
-        private BindableCollection<MessageModel> _messages;
+        private BindableCollection<Models.Message> _messages;
         private string _currentMessage;
         private ISocketHandler _socketHandler;
 
@@ -36,14 +36,14 @@ namespace WPFUI.ViewModels
                 //sendMessage();
             }
         }
-        public BindableCollection<MessageModel> messages
+        public BindableCollection<Models.Message> messages
         {
             get { return _messages; }
             set { _messages = value;
                   NotifyOfPropertyChange(() => messages); }
         }
 
-        /*public void sendMessage( string content = null)
+        public void sendMessage( string content = null)
         {
             if (content != null)
             {
@@ -60,35 +60,42 @@ namespace WPFUI.ViewModels
                 _userData.currentMessage = "";
             }
 
-        }*/
+        }
 
         public chatBoxViewModel(IUserData userdata, IEventAggregator events, ISocketHandler socketHandler)
         {
             _events = events;
+            _events.Subscribe(this);
             _socketHandler = socketHandler;
             _userData = userdata;
-            _messages = _userData.messages;
+            messages = userdata.messages;
         }
 
         public string welcomeMessage
         {
             get
             {
-                return $"Welcome to the chatroom {_userData.userName} !" + Environment.NewLine + $"Server IP adress: {_userData.ipAdress} ";
+                return $"Welcome to the chatroom {_userData.userName} !";
             }
         }
         public void disconnect()
         {
-            clearUserData();
             _socketHandler.disconnect();
             _events.PublishOnUIThread(new DisconnectEvent());
         }
 
-        private void clearUserData()
+        public void Handle(refreshMessagesEvent message)
         {
-            _userData.clearData();
+            this._messages = message._messages;
+            NotifyOfPropertyChange(() => messages);
         }
 
+        public void Handle(addMessageEvent message)
+        {
+            Console.WriteLine("hello");
+            this._messages.Add(message.message);
+            NotifyOfPropertyChange(() => messages);
+        }
     }
 
 }
