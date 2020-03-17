@@ -15,7 +15,7 @@ namespace WPFUI.ViewModels
     class ShellViewModel: Conductor<Screen>.Collection.AllActive, IHandle<LogInEvent>, IHandle<logOutEvent>, IHandle<joinChatEvent>,
 						  IHandle<DisconnectEvent>, IHandle<userNameTakenEvent>,IHandle<signUpEvent>, IHandle<goBackEvent>,
 						  IHandle<passwordMismatchEvent>, IHandle<viewProfileEvent>, IHandle<goBackMainEvent>,
-						  IHandle<joinGameEvent>, IHandle<ManuelIEvent>, IHandle<ManuelleIIEvent>, IHandle<createGameEvent>,IHandle<freeDrawEvent>, IHandle<joinChatroomEvent>, IHandle<goBackCreationMenuEvent>
+						  IHandle<joinGameEvent>, IHandle<ManuelIEvent>, IHandle<AssisteIEvent>,IHandle<ManuelleIIEvent>, IHandle<createGameEvent>,IHandle<freeDrawEvent>, IHandle<joinChatroomEvent>, IHandle<goBackCreationMenuEvent>
 	{
 		private IEventAggregator _events;
 		private SimpleContainer _container;
@@ -65,6 +65,15 @@ namespace WPFUI.ViewModels
 		{
 			Items.Clear();
 			Items.Add(_container.GetInstance<CreationJeuManuelle1ViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
+		}
+
+		public void Handle(AssisteIEvent message)
+		{
+			Items.Clear();
+			Items.Add(_container.GetInstance<CreationJeuAssiste1ViewModel>());
 			Items.Add(_container.GetInstance<EmptyViewModel>());
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);

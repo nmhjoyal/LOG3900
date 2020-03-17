@@ -35,7 +35,7 @@
 
         <Button x:Name="manuel1" Content="Manuel I" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="5" MaxWidth="200"/>
         <Button x:Name="manuel2" Content="Manuel II" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="5" MaxWidth="200"/>
-        <Button x:Name="assiste1" Content="Assiste" Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="5" MaxWidth="200"/>
+        <Button x:Name="assiste1" Content="Assiste" Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="5" MaxWidth="200" />
         <Button x:Name="goBack" Content="Go Back" Grid.Column="1" Grid.Row="7" Grid.ColumnSpan="5" MaxWidth="200" HorizontalAlignment="Right"/>
     </Grid>
 </UserControl>

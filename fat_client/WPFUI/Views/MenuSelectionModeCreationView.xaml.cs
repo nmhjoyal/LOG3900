@@ -24,5 +24,7 @@ namespace WPFUI.Views
         {
             InitializeComponent();
         }
+
+       
     }
 }

@@ -156,6 +156,7 @@
     <Compile Include="Utilitaires\RelayCommand.cs" />
     <Compile Include="ViewModels\chatBoxViewModel.cs" />
     <Compile Include="ViewModels\ChatRoomChannelsViewModel.cs" />
+    <Compile Include="ViewModels\CreationJeuAssiste1ViewModel.cs" />
     <Compile Include="ViewModels\CreationJeuManuelle1ViewModel.cs" />
     <Compile Include="ViewModels\CreationJeuManuelle2ViewModel.cs" />
     <Compile Include="ViewModels\EmptyViewModel.cs" />
@@ -173,6 +174,9 @@
     </Compile>
     <Compile Include="Views\ChatRoomChannelsView.xaml.cs">
       <DependentUpon>ChatRoomChannelsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CreationJeuAssiste1View.xaml.cs">
+      <DependentUpon>CreationJeuAssiste1View.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CreationJeuManuelle1View.xaml.cs">
       <DependentUpon>CreationJeuManuelle1View.xaml</DependentUpon>
@@ -242,6 +246,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ChatRoomChannelsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CreationJeuAssiste1View.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
