@@ -1,5 +1,6 @@
 ﻿using Quobject.SocketIoClientDotNet.Client;
 using System.Windows.Controls;
+using System.Windows.Ink;
 
 namespace WPFUI.Models
 {
@@ -10,6 +11,16 @@ namespace WPFUI.Models
         string traitJSon { get; set; }
         User user { get; set; }
 
+       // void getStrokes(InkCanvas Canvas);
+
+        void freeDraw(StrokeCollection Traits, DrawingAttributes AttributsDessin);
+
+        void preview(StrokeCollection Traits, GamePreview gamePreview);
+
+        void TestPOSTWebRequest(Object obj, string url);
+
+        void TestGETWebRequest(string url);
+        
         void connectionAttempt();
         void createRoom(string roomID);
         void createUser(PrivateProfile privateProfile);

@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Ink;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using WPFUI.EventModels;
@@ -63,13 +65,12 @@ namespace WPFUI.ViewModels
             get { return _traits;  }
             set { _traits = value; ProprieteModifiee(); }
         }
-
         // Commandes sur lesquels la vue pourra se connecter.
 
         public RelayCommand<string> ChoisirPointe { get; set; }
         public RelayCommand<string> ChoisirOutil { get; set; }
-        public RelayCommand<object> SendStroke { get; set; }
 
+        public RelayCommand<object> SendPoint { get; set; }
 
 
         /// <summary>
@@ -83,24 +84,19 @@ namespace WPFUI.ViewModels
         private ISocketHandler _socketHandler;
 
         private InkCanvas _canvas;
-        public InkCanvas Canvas
-        { 
-            get { return _canvas; }
-            set { _canvas = value; ProprieteModifiee(); }
-        }
 
         public FenetreDessinViewModel(IEventAggregator events, ISocketHandler socketHandler, InkCanvas canvas)
         {
-            Canvas = canvas;
-            SendStroke = new RelayCommand<object>(sendStrokeAction);
-            _socketHandler = socketHandler;
+            _canvas = canvas;
+            // SendPoint = new RelayCommand<object>(sendStrokeAction);
+            this._socketHandler = socketHandler;
             _events = events;
             // On écoute pour des changements sur le modèle. Lorsqu'il y en a, EditeurProprieteModifiee est appelée.
             editeur.PropertyChanged += new PropertyChangedEventHandler(EditeurProprieteModifiee);
 
             // On initialise les attributs de dessin avec les valeurs de départ du modèle.
             AttributsDessin = new DrawingAttributes();
-            AttributsDessin.Color = (Color)ColorConverter.ConvertFromString(editeur.CouleurSelectionnee);
+            AttributsDessin.Color = (System.Windows.Media.Color)ColorConverter.ConvertFromString(editeur.CouleurSelectionnee);
             AjusterPointe();
 
             Traits = editeur.traits;
@@ -111,19 +107,27 @@ namespace WPFUI.ViewModels
             ChoisirPointe = new RelayCommand<string>(editeur.ChoisirPointe);
             ChoisirOutil = new RelayCommand<string>(editeur.ChoisirOutil);
             //_socketHandler.getStrokes(Canvas);
+
+            this._socketHandler.freeDraw(Traits, AttributsDessin);
         }
 
-        private void sendStrokeAction(Object o)
+        public void sendPointAction(int x, int y)
         {
-            string path = Traits[Traits.Count - 1].GetGeometry().ToString();
-            string width = Traits[Traits.Count - 1].DrawingAttributes.Width.ToString();
-            bool stylusTip = true;//Traits[Traits.Count - 1].DrawingAttributes.StylusTip;
-            string color = Traits[Traits.Count - 1].DrawingAttributes.Color.ToString();
-            SocketHandler socketHandler = new SocketHandler(userdata,events);
-            socketHandler.sendStroke(path, color, width, stylusTip);
+            Models.Point point = new Models.Point(x, y, this.OutilSelectionne);
+            this._socketHandler.socket.Emit("point", JsonConvert.SerializeObject(point));
         }
 
-        
+        public void sendStrokeAction(int x, int y)
+        {
+            Models.Point point = new Models.Point(x, y, this.OutilSelectionne);
+            Trace trace = new Trace(point, this.AttributsDessin.Color.ToString(), (int)this.AttributsDessin.Width, this.OutilSelectionne);
+            this._socketHandler.socket.Emit("trace", JsonConvert.SerializeObject(trace));
+        }
+
+        public void getDrawing()
+        {
+            this._socketHandler.socket.Emit("get_drawing");
+        }
 
         /// <summary>
         /// Appelee lorsqu'une propriété de VueModele est modifiée.
@@ -148,7 +152,7 @@ namespace WPFUI.ViewModels
         {
             if (e.PropertyName == "CouleurSelectionnee")
             {
-                AttributsDessin.Color = (Color)ColorConverter.ConvertFromString(editeur.CouleurSelectionnee);
+                AttributsDessin.Color = (System.Windows.Media.Color)ColorConverter.ConvertFromString(editeur.CouleurSelectionnee);
             }
             else if (e.PropertyName == "OutilSelectionne")
             {

@@ -26,6 +26,7 @@ namespace WPFUI.Views
     {
         IEventAggregator events;
         ISocketHandler socketHandler;
+        
         public CreationJeuManuelle1View()
         {
             InitializeComponent();
@@ -38,7 +39,7 @@ namespace WPFUI.Views
         //private void surfaceDessin_MouseLeave(object sender, MouseEventArgs e) => textBlockPosition.Text = "";
         private void surfaceDessin_MouseMove(object sender, MouseEventArgs e)
         {
-            Point p = e.GetPosition(surfaceDessin);
+            System.Windows.Point p = e.GetPosition(surfaceDessin);
             //textBlockPosition.Text = Math.Round(p.X) + ", " + Math.Round(p.Y) + "px";
         }
 
@@ -46,20 +47,27 @@ namespace WPFUI.Views
         /*private void Button_Click(object sender, RoutedEventArgs e)
         {
             PART_Image.Source = RenderVisualService.RenderToPNGImageSource(PART_Canvas);
-        }
+        }*/
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void addClue(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            //saveFileDialog.FileName = txtEditor.Text;
-            if (saveFileDialog.ShowDialog() == true)
-            {
-                RenderVisualService.RenderToPNGFile(PART_Canvas, saveFileDialog.FileName);
-            }
+            
+            TextBox dynamicTextBox = new TextBox();
+           
+            // Grid.SetRow(dynamicTextBox, 3);
+            // Grid.SetColumn(dynamicTextBox, 7);
+            
+            this.canContainer.Children.Add(dynamicTextBox);
+            
+            Console.WriteLine(dynamicTextBox.Name);
+
 
         }
 
-        private void mainMenu_Click(object sender, RoutedEventArgs e)
+       
+      
+
+        /*private void mainMenu_Click(object sender, RoutedEventArgs e)
         {
 
         }*/

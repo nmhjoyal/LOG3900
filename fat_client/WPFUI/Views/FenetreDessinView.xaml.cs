@@ -24,12 +24,12 @@ namespace WPFUI.Views
     /// </summary>
     public partial class FenetreDessinView : UserControl
     {
-        IEventAggregator events;
-        ISocketHandler socketHandler;
+        private Boolean isMouseDown = false;
         public FenetreDessinView()
         {
             InitializeComponent();
-            DataContext = new FenetreDessinViewModel(events, socketHandler, surfaceDessin);
+            // this.surfaceDessin.InkPresenter
+            // DataContext = new FenetreDessinViewModel(events, socketHandler, surfaceDessin);
         }
 
 
@@ -38,7 +38,12 @@ namespace WPFUI.Views
         //private void surfaceDessin_MouseLeave(object sender, MouseEventArgs e) => textBlockPosition.Text = "";
         private void surfaceDessin_MouseMove(object sender, MouseEventArgs e)
         {
-            Point p = e.GetPosition(surfaceDessin);
+            if(this.isMouseDown)
+            {
+                Console.WriteLine("mouse move");
+                System.Windows.Point p = e.GetPosition(surfaceDessin);
+                (this.DataContext as FenetreDessinViewModel).sendPointAction((int)p.X, (int)p.Y);
+            }
             //textBlockPosition.Text = Math.Round(p.X) + ", " + Math.Round(p.Y) + "px";
         }
 
@@ -59,7 +64,39 @@ namespace WPFUI.Views
 
         }
 
+        private void Get_Drawing(object sender, RoutedEventArgs e)
+        {
+            (this.DataContext as FenetreDessinViewModel).getDrawing();
+        }
+
         private void mainMenu_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void surfaceDessin_StrokeCollected(object sender, InkCanvasStrokeCollectedEventArgs e)
+        {
+            Console.WriteLine("collected");
+        }
+        private void surfaceDessin_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if(this.isMouseDown) {
+                // (this.DataContext as FenetreDessinViewModel).sendStrokeAction();
+            }
+            this.isMouseDown = false;
+            // Console.WriteLine(this.isMouseDown);
+        }
+
+        private void surfaceDessin_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            this.isMouseDown = true;
+            System.Windows.Point p = e.GetPosition(surfaceDessin);
+            Console.WriteLine("mouse down");
+            (this.DataContext as FenetreDessinViewModel).sendStrokeAction((int)p.X, (int)p.Y);
+            // Console.WriteLine(this.isMouseDown);
+        }
+
+        private void surfaceDessin_StrokesReplaced(object sender, InkCanvasStrokesReplacedEventArgs e)
         {
 
         }

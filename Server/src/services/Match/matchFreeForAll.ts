@@ -1,9 +1,9 @@
-import Match from "./match"
+import Match from "./match";
 
 export default class FreeForAll extends Match{
 
-    public constructor() {
-        super();
+    public constructor(host: string, nbRounds: number) {
+        super(host, nbRounds);
     }
 
     public startMatch(): void {

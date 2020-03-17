@@ -80,7 +80,7 @@ namespace WPFUI.ViewModels
 
             // On initialise les attributs de dessin avec les valeurs de départ du modèle.
             AttributsDessin = new DrawingAttributes();
-            AttributsDessin.Color = (Color)ColorConverter.ConvertFromString(editeur.CouleurSelectionnee);
+            AttributsDessin.Color = (System.Windows.Media.Color)ColorConverter.ConvertFromString(editeur.CouleurSelectionnee);
             AjusterPointe();
 
             Traits = editeur.traits;
@@ -116,7 +116,7 @@ namespace WPFUI.ViewModels
         {
             if (e.PropertyName == "CouleurSelectionnee")
             {
-                AttributsDessin.Color = (Color)ColorConverter.ConvertFromString(editeur.CouleurSelectionnee);
+                AttributsDessin.Color = (System.Windows.Media.Color)ColorConverter.ConvertFromString(editeur.CouleurSelectionnee);
             }
             else if (e.PropertyName == "OutilSelectionne")
             {
@@ -153,6 +153,11 @@ namespace WPFUI.ViewModels
         public void mainMenu()
         {
             _events.PublishOnUIThread(new goBackMainEvent());
+        }
+
+        public void goBack()
+        {
+            _events.PublishOnUIThread(new goBackCreationMenuEvent());
         }
 
     }

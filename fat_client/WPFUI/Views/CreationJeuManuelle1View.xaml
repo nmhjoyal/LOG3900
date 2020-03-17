@@ -13,7 +13,7 @@
         <convertisseurs:ConvertisseurCouleurFond x:Key="convertisseurCouleurFond" />
         <convertisseurs:ConvertisseurModeEdition x:Key="convertisseurModeEdition" />
     </UserControl.Resources>
-    <Grid Background="LightGray">
+    <Grid Background="LightGray" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20"/>
             <ColumnDefinition Width="auto" />
@@ -110,9 +110,11 @@
         <Button x:Name="easy" Content="facile" Grid.Column="3" Grid.Row="4" Grid.ColumnSpan="1"  Height="Auto" />
         <Button x:Name="medium" Content="moyen" Grid.Column="4" Grid.Row="4" Grid.ColumnSpan="1" Height="Auto" Background="#fff345" BorderBrush="#fff345" />
         <Button x:Name="hard" Content="difficile" Grid.Column="5" Grid.Row="4" Grid.ColumnSpan="1"  Height="Auto" Background="#E93838" BorderBrush="Red" />
-        <TextBlock   Text="Indice(s):" Grid.Column="2" Grid.Row="5"/>
-        <Button x:Name="addClue" HorizontalAlignment="Left" Content="Ajouter indice" Grid.Column="2" Grid.Row="6" Grid.ColumnSpan="1" Background="LightBlue" BorderBrush="LightBlue" MaxWidth="120" />
+        <StackPanel Grid.Column="2" Grid.Row="5" Name="canContainer">
+            <TextBlock   Text="Indice(s):" Grid.Column="2" Grid.Row="5"/>
+            <Button Click="addClue" HorizontalAlignment="Left" Content="Ajouter indice" Grid.Column="2" Grid.Row="6" Grid.ColumnSpan="1" Background="LightBlue" BorderBrush="LightBlue" MaxWidth="120" />
+            <TextBox  x:Name="clue" Grid.Column="3" Grid.Row="5" MinWidth="200" Grid.ColumnSpan="3" Canvas.Left="157" Canvas.Top="3"/>
+        </StackPanel>
         <Button x:Name="goBack" Content="Go Back" Grid.Column="7" Grid.Row="1" MaxWidth="100" HorizontalAlignment="Right" Margin="0,0,10,0"/>
-        <TextBox BorderThickness="3" x:Name="clue" Grid.Column="3" Grid.Row="5" MinWidth="200" Grid.ColumnSpan="3"/>
     </Grid>
 </UserControl>

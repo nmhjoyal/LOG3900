@@ -76,7 +76,7 @@ namespace WPFUI.Models
             using (var drawingContext = drawingVisual.RenderOpen())
             {
                 var visualBrush = new VisualBrush(targetControl);
-                drawingContext.DrawRectangle(visualBrush, null, new Rect(new Point(), bounds.Size));
+                drawingContext.DrawRectangle(visualBrush, null, new Rect(new System.Windows.Point(), bounds.Size));
             }
 
             renderTargetBitmap.Render(drawingVisual);

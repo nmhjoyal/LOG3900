@@ -14,18 +14,18 @@ export enum MatchMode {
 }
 
 export class MatchInstance {
-    public static getMatchClassInstance(matchMode: MatchMode): Match {
+    public static createMatchClassInstance(matchMode: MatchMode, host: string, nbRounds: number): Match {
         switch (matchMode) {
             case MatchMode.freeForAll:
-                return new FreeForAll();
+                return new FreeForAll(host, nbRounds);
             case MatchMode.sprintSolo:
-                return new SprintSolo();
+                return new SprintSolo(host, nbRounds);
             case MatchMode.sprintCoop:
-                return new SprintCoop();
+                return new SprintCoop(host, nbRounds);
             case MatchMode.oneVsOne:
-                return new OneVsOne();
+                return new OneVsOne(host, nbRounds);
             case MatchMode.inverted:
-                return new Inverted();
+                return new Inverted(host, nbRounds);
         }
     }
 }

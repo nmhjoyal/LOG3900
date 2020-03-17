@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Quobject.SocketIoClientDotNet.Client;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,13 +15,14 @@ namespace WPFUI.ViewModels
     class ShellViewModel: Conductor<Screen>.Collection.AllActive, IHandle<LogInEvent>, IHandle<logOutEvent>, IHandle<joinChatEvent>,
 						  IHandle<DisconnectEvent>, IHandle<userNameTakenEvent>,IHandle<signUpEvent>, IHandle<goBackEvent>,
 						  IHandle<passwordMismatchEvent>, IHandle<viewProfileEvent>, IHandle<goBackMainEvent>,
-						  IHandle<joinGameEvent>, IHandle<ManuelIEvent>, IHandle<createGameEvent>,IHandle<freeDrawEvent>, IHandle<joinChatroomEvent>
+						  IHandle<joinGameEvent>, IHandle<ManuelIEvent>, IHandle<ManuelleIIEvent>, IHandle<createGameEvent>,IHandle<freeDrawEvent>, IHandle<joinChatroomEvent>, IHandle<goBackCreationMenuEvent>
 	{
 		private IEventAggregator _events;
 		private SimpleContainer _container;
 		private IWindowManager _windowManager;
+		private ISocketHandler _socketHandler;
 
-		public ShellViewModel(IWindowManager windowManager, IEventAggregator events, SimpleContainer container)
+		public ShellViewModel(IWindowManager windowManager, IEventAggregator events, SimpleContainer container, ISocketHandler socketHandler)
 		{
 			_windowManager = windowManager;
 			_container = container;
@@ -28,6 +30,7 @@ namespace WPFUI.ViewModels
 			_events.Subscribe(this);
 			Items.Add(_container.GetInstance<LoginViewModel>());
 			Items.Add(_container.GetInstance<EmptyViewModel>());
+			this._socketHandler = socketHandler;
 		}
 
 		public Screen FirstSubViewModel
@@ -62,6 +65,24 @@ namespace WPFUI.ViewModels
 		{
 			Items.Clear();
 			Items.Add(_container.GetInstance<CreationJeuManuelle1ViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
+		}
+
+		public void Handle(ManuelleIIEvent message)
+		{
+			Items.Clear();
+			Items.Add(_container.GetInstance<CreationJeuManuelle2ViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
+		}
+
+		public void Handle(goBackCreationMenuEvent message)
+		{
+			Items.Clear();
+			Items.Add(_container.GetInstance<MenuSelectionModeCreationViewModel>());
 			Items.Add(_container.GetInstance<EmptyViewModel>());
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);

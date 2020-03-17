@@ -67,6 +67,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Caliburn.Micro.3.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -126,6 +127,7 @@
     <Compile Include="EventModels\DisconnectEvent.cs" />
     <Compile Include="EventModels\freeDrawEvent.cs" />
     <Compile Include="EventModels\fullScreenChatEvent.cs" />
+    <Compile Include="EventModels\goBackCreationMenuEvent.cs" />
     <Compile Include="EventModels\goBackEvent.cs" />
     <Compile Include="EventModels\goBackMainEvent.cs" />
     <Compile Include="EventModels\joinChatEvent.cs" />
@@ -144,6 +146,9 @@
     <Compile Include="EventModels\signUpEvent.cs" />
     <Compile Include="EventModels\userNameTakenEvent.cs" />
     <Compile Include="EventModels\viewProfileEvent.cs" />
+    <Compile Include="Models\CreateGame.cs" />
+    <Compile Include="Models\Game.cs" />
+    <Compile Include="Models\Trace.cs" />
     <Compile Include="Models\Avatar.cs" />
     <Compile Include="Models\ClientMessage.cs" />
     <Compile Include="Models\CreateRoom.cs" />
@@ -158,7 +163,6 @@
     <Compile Include="Models\RenderVisualService.cs" />
     <Compile Include="Models\Room.cs" />
     <Compile Include="Models\SignInFeedback.cs" />
-    <Compile Include="Models\Trait.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\socketHandler.cs" />
     <Compile Include="Models\UserData.cs" />
@@ -166,6 +170,7 @@
     <Compile Include="ViewModels\chatBoxViewModel.cs" />
     <Compile Include="ViewModels\ChatRoomChannelsViewModel.cs" />
     <Compile Include="ViewModels\CreationJeuManuelle1ViewModel.cs" />
+    <Compile Include="ViewModels\CreationJeuManuelle2ViewModel.cs" />
     <Compile Include="ViewModels\EmptyViewModel.cs" />
     <Compile Include="ViewModels\FenetreDessinViewModel.cs" />
     <Compile Include="ViewModels\gameViewModel.cs" />
@@ -184,6 +189,9 @@
     </Compile>
     <Compile Include="Views\CreationJeuManuelle1View.xaml.cs">
       <DependentUpon>CreationJeuManuelle1View.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CreationJeuManuelle2View.xaml.cs">
+      <DependentUpon>CreationJeuManuelle2View.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FenetreDessinView.xaml.cs">
       <DependentUpon>FenetreDessinView.xaml</DependentUpon>
@@ -251,6 +259,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CreationJeuManuelle1View.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CreationJeuManuelle2View.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
