@@ -1,9 +1,10 @@
-import Match from "./match_General"
+import Match from "./match_General";
 
-export default class OneVsOne extends Match{
+export default class OneVsOne extends Match {
 
     public constructor(socket: SocketIO.Socket, host: string, nbRounds: number) {
         super(socket, host, nbRounds);
+        this.mode = 4;
     }
 
     public startMatch(): void {

@@ -1,9 +1,10 @@
 import Match from "./match_General";
 
-export default class FreeForAll extends Match{
+export default class FreeForAll extends Match {
 
     public constructor(socket: SocketIO.Socket, host: string, nbRounds: number) {
         super(socket, host, nbRounds);
+        this.mode = 1;
     }
 
     public startMatch(): void {
