@@ -1,5 +1,4 @@
 import { Room } from "./room";
-import { MatchMode } from "./matchMode";
 
 export interface Feedback {
     status: boolean
@@ -17,13 +16,6 @@ export interface JoinRoomFeedback {
     // Contains history
     room_joined: Room | null
     isPrivate: boolean | null
-}
-
-export interface MatchCreationFeedBack {
-    feedback: Feedback
-    host: string | null/* Username */
-    matchMode: MatchMode | null
-    nbRounds: number | null
 }
 
 export enum SignInStatus {

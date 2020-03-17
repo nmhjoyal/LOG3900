@@ -1,12 +1,12 @@
 import { MatchInstance } from "../models/matchMode";
 import DrawPoint from "../models/drawPoint";
-import { CreateMatch } from "../models/match";
-import { Feedback, MatchCreationFeedBack } from "../models/feedback";
+import { CreateMatch, MatchInfos } from "../models/match";
+import { Feedback} from "../models/feedback";
 import Match from "./Match/match_General";
 import { serverHandler } from "./serverHandler";
 import PrivateProfile from "../models/privateProfile";
-import RandomIdGenerator from "./IdGenerator/idGenerator";
 import PublicProfile from "../models/publicProfile";
+import RandomMatchIdGenerator from "./IdGenerator/idGenerator";
 
 export default class MatchHandler {
     private currentMatches: Map<string, Match>;
@@ -20,32 +20,23 @@ export default class MatchHandler {
         this.observers = [];
     }
     
-    public createMatch(socket: SocketIO.Socket, createMatch: CreateMatch): MatchCreationFeedBack {
+    public createMatch(socket: SocketIO.Socket, createMatch: CreateMatch): Feedback {
         const user: PrivateProfile | undefined = serverHandler.users.get(socket.id);
         let feedback: Feedback = {
             status: true,
             log_message: "Match created successfully."
         };
-        let creationfeedback: MatchCreationFeedBack = {
-            feedback: feedback,
-            host: null,
-            matchMode: null,
-            nbRounds: null
-        };
 
         if (user) {
-            let randomId: string = RandomIdGenerator.generate();
+            let randomId: string = RandomMatchIdGenerator.generate();
             let newMatch: Match = MatchInstance.createMatch(socket, randomId, createMatch);
             this.currentMatches.set(randomId, newMatch);
-            creationfeedback.host = user.username;
-            creationfeedback.matchMode = createMatch.matchMode;
-            creationfeedback.nbRounds = createMatch.nbRounds;
         } else {
-            creationfeedback.feedback.status = false;
-            creationfeedback.feedback.log_message = "You are not connected.";
+            feedback.status = false;
+            feedback.log_message = "You are not connected.";
         }
 
-        return creationfeedback;
+        return feedback;
     }
 
     public joinMatch(socket: SocketIO.Socket, matchId: string): Feedback {
@@ -61,7 +52,7 @@ export default class MatchHandler {
                 let publicProfile: PublicProfile = {
                     username: user.username,
                     avatar: user.avatar
-                }
+                };
                 feedback = match.joinMatch(socket, publicProfile);
             } else {
                 feedback.log_message = "This match does not exist anymore.";
