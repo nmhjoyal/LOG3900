@@ -52,6 +52,16 @@ export default class MatchHandler {
         // }
     }
 
+    public eraseStroke(io: SocketIO.Server, socket: SocketIO.Socket): void {
+        console.log("erase stroke");
+        socket.to("freeDrawRoomTest").emit("new_erase_stroke");
+    }
+
+    public erasePoint(io: SocketIO.Server, socket: SocketIO.Socket): void {
+        console.log("erase point");
+        socket.to("freeDrawRoomTest").emit("new_erase_point");
+    }
+
     public drawTest(io: SocketIO.Server, socket: SocketIO.Socket, point: Point): void {
         // if (socket.id == this.drawer) {
             socket.to("freeDrawRoomTest").emit("new_point", JSON.stringify(point));

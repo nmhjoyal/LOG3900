@@ -121,7 +121,18 @@ namespace WPFUI.ViewModels
         {
             Models.Point point = new Models.Point(x, y, this.OutilSelectionne);
             Trace trace = new Trace(point, this.AttributsDessin.Color.ToString(), (int)this.AttributsDessin.Width, this.OutilSelectionne);
-            this._socketHandler.socket.Emit("trace", JsonConvert.SerializeObject(trace));
+            Console.WriteLine(this.OutilSelectionne);
+            if(this.OutilSelectionne == "crayon")
+            {
+                this._socketHandler.socket.Emit("trace", JsonConvert.SerializeObject(trace));
+            } else if(this.OutilSelectionne == "efface_trait")
+            {
+                this._socketHandler.socket.Emit("erase_stroke");
+            } else if(this.OutilSelectionne == "efface_segment")
+            {
+                Console.WriteLine("should emit");
+                this._socketHandler.socket.Emit("erase_point");
+            }
         }
 
         public void getDrawing()
