@@ -38,7 +38,7 @@ namespace WPFUI.ViewModels
 
         public void viewLeaderboard()
         {
-            //_events.PublishOnUIThread(new joinChatroomEvent());
+            _events.PublishOnUIThread(new leaderboardEvent());
         }
 
         public void freeDraw()
