@@ -1,6 +1,7 @@
 package com.example.thin_client.ui.game_mode
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -18,6 +19,7 @@ import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.chat.ChatFragment
 import com.example.thin_client.ui.game_mode.free_draw.DrawerFragment
 import com.example.thin_client.ui.game_mode.free_draw.ObserverFragment
+import com.github.nkzawa.socketio.client.Socket
 
 class GameActivity : AppCompatActivity() {
     private lateinit var manager: FragmentManager
@@ -89,6 +91,7 @@ class GameActivity : AppCompatActivity() {
             SocketHandler.socket!!
                 .off(SocketEvent.OBSERVER)
                 .off(SocketEvent.DRAWER)
+                .off(Socket.EVENT_ERROR)
         }
     }
 
@@ -111,6 +114,5 @@ class GameActivity : AppCompatActivity() {
                     transaction.commitAllowingStateLoss()
                 })
             }))
-
     }
 }

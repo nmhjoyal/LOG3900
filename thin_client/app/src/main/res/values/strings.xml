@@ -7,6 +7,7 @@
     <string name="cancel">Cancel</string>
     <string name="sign_out">Sign out</string>
     <string name="profile">User profile</string>
+    <string name="server_stopped_error">Server stopped unexpectedly. Please try again later.</string>
 
     <!--- Leaderboard -->
     <string name="leaderboard">Leaderboard</string>
@@ -20,7 +21,6 @@
 
     <!-- Profile -->
     <style name="profile">Profile</style>
-
     <string name="edit_profile">Edit profile</string>
     <string name="change_avatar">Change your avatar</string>
     <string name="undo_changes">Undo</string>
@@ -120,6 +120,15 @@
     <string name="title_activity_waiting_room">Waiting Room</string>
 
     <!-- Game strings -->
-    <string name="title_game_general">GAME MODE</string>
+    <string name="play">Play</string>
+    <string name="title_game_mode">Game mode</string>
+    <string name="join_game">Join existing</string>
+    <string name="create_match">Start new game</string>
+    <string name="solo_mode">Solo</string>
+    <string name="collab_mode">Collaborative</string>
+    <string name="general_mode">General</string>
+    <string name="one_v_one_mode">One-on-one</string>
+    <string name="inverse_mode">Inverse</string>
+    <string name="start">Start</string>
 
 </resources>

@@ -1,7 +1,6 @@
 package com.example.thin_client.ui.login
 
 import OkHttpRequest
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -15,8 +14,6 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.thin_client.R
-import com.example.thin_client.data.Feedback
-import com.example.thin_client.data.app_preferences.Preferences
 import com.example.thin_client.data.SignInFeedback
 import com.example.thin_client.data.app_preferences.PreferenceHandler
 import com.example.thin_client.data.model.PrivateProfile
@@ -31,7 +28,6 @@ import com.example.thin_client.ui.Lobby
 import com.example.thin_client.ui.createUser.CreateUserActivity
 import com.github.nkzawa.socketio.client.Socket
 import com.google.gson.Gson
-import kotlinx.android.synthetic.main.activity_createuser.*
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import okhttp3.Call
 import java.io.IOException

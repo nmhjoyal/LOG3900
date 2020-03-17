@@ -6,30 +6,76 @@
     android:layout_height="match_parent"
     tools:context=".ui.Lobby">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/main_frame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <Button
-        android:id="@+id/test_online_draw"
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_primary_selector"
-        android:padding="12dp"
-        android:layout_margin="16dp"
-        android:text="@string/title_activity_free_draw_test"
-        android:textColor="#ffffff"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/free_draw"
-        app:layout_constraintEnd_toStartOf="@+id/chatrooms_container"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:background="@drawable/play_border"
+        app:layout_constraintBottom_toTopOf="@+id/free_draw"
+        app:layout_constraintEnd_toStartOf="@+id/chat_guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/play_title"
+        app:layout_constraintVertical_bias="0">
 
+        <Button
+            android:id="@+id/join_match"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_margin="16dp"
+            android:layout_toEndOf="@id/create_match"
+            android:background="@drawable/button_primary_selector"
+            android:padding="12dp"
+            android:text="@string/join_game"
+            android:textColor="@color/color_white"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/create_match"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_margin="16dp"
+            android:background="@drawable/button_primary_selector"
+            android:padding="12dp"
+            android:text="@string/create_match"
+            android:textColor="@color/color_white"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/play_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/default_background"
+        app:layout_constraintBottom_toTopOf="@+id/free_draw"
+        app:layout_constraintEnd_toStartOf="@+id/chat_guideline"
+        app:layout_constraintStart_toStartOf="@+id/relativeLayout"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintVertical_bias="0.4">
+
+        <TextView
+            android:id="@+id/play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:text="@string/play"
+            android:textAllCaps="true"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/ic_play_arrow_24px" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/free_draw"
@@ -74,53 +120,5 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.6" />
-
-    <TextView
-        android:id="@+id/play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="136dp"
-        android:text="PLAY"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/empty_textview"
-        app:layout_constraintStart_toStartOf="@+id/empty_textview"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <TextView
-        android:id="@+id/empty_textview"
-        android:layout_width="201dp"
-        android:layout_height="84dp"
-        android:background="@drawable/layout_border"
-        app:layout_constraintBottom_toTopOf="@+id/test_online_draw"
-        app:layout_constraintEnd_toEndOf="@+id/show_rooms_button"
-        app:layout_constraintHorizontal_bias="0.507"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.865" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/empty_textview"
-        app:layout_constraintEnd_toStartOf="@+id/chat_guideline"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/play"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/ic_play_arrow_24px" />
-
-    <Button
-        android:id="@+id/join_match"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="join match"
-        app:layout_constraintBottom_toBottomOf="@+id/empty_textview"
-        app:layout_constraintEnd_toEndOf="@+id/empty_textview"
-        app:layout_constraintStart_toStartOf="@+id/empty_textview"
-        app:layout_constraintTop_toTopOf="@+id/empty_textview"
-        app:layout_constraintVertical_bias="0.444" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
