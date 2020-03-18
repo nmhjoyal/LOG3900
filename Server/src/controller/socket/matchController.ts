@@ -1,6 +1,6 @@
 import { OnMessage, SocketController, MessageBody, ConnectedSocket, SocketIO, OnDisconnect } from "socket-controllers";
 import { serverHandler } from "../../services/serverHandler";
-import { Trace, Point, GamePreview, Stroke, StylusPoint } from "../../models/drawPoint";
+import { GamePreview, Stroke, StylusPoint } from "../../models/drawPoint";
 
 @SocketController()
 export default class MatchController {
