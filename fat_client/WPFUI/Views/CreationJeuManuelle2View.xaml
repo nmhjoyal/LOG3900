@@ -129,6 +129,33 @@
                 </StackPanel>
             </ComboBoxItem>
         </ComboBox>
+
+        <Border Background="#FF66CC00" BorderThickness="5" Grid.Column="4" Grid.Row="9" CornerRadius="10">
+            <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center"  Text="Options:" Grid.Column="4" Grid.Row="9"/>
+        </Border>
+        <ComboBox Grid.Column="5" Grid.Row="9">
+            <ComboBoxItem Name ="hautEnBas" IsSelected="True">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock  Foreground="Black">De haut en bas</TextBlock>
+                </StackPanel>
+            </ComboBoxItem>
+            <ComboBoxItem x:Name="basEnHaut">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Foreground="Black">De bas en haut</TextBlock>
+                </StackPanel>
+            </ComboBoxItem>
+            <ComboBoxItem x:Name="gaucheADroite">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Foreground="Black">De gauche à droite</TextBlock>
+                </StackPanel>
+            </ComboBoxItem>
+            <ComboBoxItem x:Name="droiteAGauche">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Foreground="Black">De droite à gauche</TextBlock>
+                </StackPanel>
+            </ComboBoxItem>
+        </ComboBox>
+
         <Border Background="#FF66CC00" BorderThickness="5" Grid.Column="1" Grid.Row="11" CornerRadius="10">
             <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center"  Text="Mode:" Grid.Column="1" Grid.Row="11"/>
         </Border>
