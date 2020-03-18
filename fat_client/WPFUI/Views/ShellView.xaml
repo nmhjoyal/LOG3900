@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFUI.Views"
         mc:Ignorable="d"
-        Icon="chat-icon.ico"
-        Title="PolyChat" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+        Icon="/Resources/logo.ico"
+        Title="Fais-moi un dessin!" Height="450" Width="800" WindowStartupLocation="CenterScreen"
+		MinWidth="1200" MinHeight="800">
 	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*" />

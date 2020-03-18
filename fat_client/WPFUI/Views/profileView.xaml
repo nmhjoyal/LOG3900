@@ -5,19 +5,20 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WPFUI.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="White">
+             d:DesignHeight="550" d:DesignWidth="800"
+			 FontFamily="Microsoft JhengHei UI Light" Background="#FFF1F2F1" FontSize="16">
+    <Grid >
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="100"/>
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="100" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="100"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -30,24 +31,46 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="4*"/>
-            <RowDefinition Height="11*"/>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
-        <Image Source="ProfileLogo.PNG" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="5" HorizontalAlignment="Center" MaxHeight="60" Margin="198,0,178,0"/>
-        <TextBlock Text="Change your username:" Grid.Column="1" Grid.Row="2"/>
-        <TextBox x:Name="userName" Grid.Column="2" Grid.Row="2" MinWidth="200" Grid.ColumnSpan="4"/>
-        <TextBlock Text="Change your first name:" Grid.Column="1" Grid.Row="3"/>
-		<TextBox  x:Name="firstName" Grid.Column="2" Grid.Row="3"  MinWidth="200" Grid.ColumnSpan="4"/>
-        <TextBlock Text="Change your last name:" Grid.Column="1" Grid.Row="4"/>
-		<TextBox x:Name="lastName" Grid.Column="2" Grid.Row="4"  MinWidth="200" Grid.ColumnSpan="4"/>
-        <TextBlock Text="Change your password:" Grid.Column="1" Grid.Row="5"/>
-		<TextBox x:Name="password" Grid.Column="2" Grid.Row="5"  MinWidth="200" Grid.ColumnSpan="4"/>
-        <TextBlock Text="Confirm your changed password:" Grid.Column="1" Grid.Row="6"/>
-		<TextBox x:Name="confirmedPassword" Grid.Column="2" Grid.Row="6"  MinWidth="200" Grid.ColumnSpan="4"/>
-        <TextBlock Text="Change your avatar" Grid.Column="1" Grid.Row="7"/>
-        <TextBox Grid.Column="2" Grid.Row="7" MinWidth="200" />
-        <Button x:Name="saveProfileChanges" Content="Save Changes" Grid.Row="13" Grid.ColumnSpan="7" MaxWidth="200" Click="saveProfileChanges_Click" Height="Auto" Background="#FF66CC00"/>
-        <Button x:Name="goBack" Content="Go Back" Grid.Column="5" Grid.Row="1" MaxWidth="100" HorizontalAlignment="Right" Margin="0,0,10,0" Background="#FF66CC00"/>
+		<StackPanel Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="5" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,0,0,20">
+			<TextBlock FontSize="40" Foreground="#FF66CC00" Margin="0,0,10,0" >Fais moi un dessin !</TextBlock>
+			<Image Source="/Resources/logo.ico" Height="35"></Image>
+		</StackPanel>
+		<StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
+			<TextBlock Text="New username:"/>
+			<TextBox x:Name="userName" Width="200" Foreground="#FF66CC00" Margin="2,0,0,0"/>
+		</StackPanel>
+
+		<StackPanel Grid.Column="1" Grid.Row="3" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
+			<TextBlock Text="New first name:"/>
+			<TextBox  x:Name="firstName" Width="200" Foreground="#FF66CC00" Margin="2,0,0,0"/>
+		</StackPanel>
+
+		<StackPanel Grid.Column="1" Grid.Row="4" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
+			<TextBlock Text="New last name:"/>
+			<TextBox x:Name="lastName" Width="200" Foreground="#FF66CC00" Margin="2,0,0,0"/>
+		</StackPanel>
+
+		<StackPanel Grid.Column="1" Grid.Row="5" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
+			<TextBlock Text="New password:"/>
+			<TextBox x:Name="password" Width="200" Foreground="#FF66CC00" Margin="2,0,0,0"/>
+		</StackPanel>
+
+		<StackPanel Grid.Column="1" Grid.Row="6" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
+			<TextBlock Text="Confirm new password:"/>
+			<TextBox x:Name="confirmedPassword" Width="130" Foreground="#FF66CC00" Margin="2,0,0,0"/>
+		</StackPanel>
+
+		<StackPanel Grid.Column="1" Grid.Row="7" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
+			<TextBlock Text="New avatar:"/>
+		</StackPanel>
+
+        <Button x:Name="saveProfileChanges" Content="Save Changes" Grid.Row="13" Grid.ColumnSpan="7" 
+				MaxWidth="200" Click="saveProfileChanges_Click" Height="Auto" Background="#FF66CC00" Foreground="White" Margin="0,10,0,0"/>
+        <Button x:Name="goBack" Content="Go Back" Grid.Column="1" Grid.Row="14" MaxWidth="100"  
+				Background="#FF66CC00" Grid.ColumnSpan="5" Foreground="White" Margin="0,10,0,0"/>
     </Grid>
 </UserControl>

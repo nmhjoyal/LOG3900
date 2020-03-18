@@ -21,7 +21,7 @@ export interface ScreenResolution {
     width: number
 }
 
-export interface Line {
+export interface Stroke {
     DrawingAttributes: DrawingAttributes
     StylusPoints: StylusPoint[]
 }
@@ -29,6 +29,8 @@ export interface Line {
 export interface DrawingAttributes {
     Color: string,
     Width: number
+    Height: number
+    Top: number
 }
 
 export interface StylusPoint {
@@ -38,14 +40,14 @@ export interface StylusPoint {
 
 export interface Game {
     word: string,
-    drawing: Line[],
+    drawing: Stroke[],
     clues: string[],
     level: Level,
     mode: Mode
 }
 
 export interface GamePreview {
-    drawing: Line[],
+    drawing: Stroke[],
     mode: Mode
 }
 
