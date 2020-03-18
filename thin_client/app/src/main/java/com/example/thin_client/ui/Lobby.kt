@@ -20,9 +20,7 @@ import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.app_preferences.Preferences
 import com.example.thin_client.data.SignInFeedback
 import com.example.thin_client.data.app_preferences.PreferenceHandler
-import com.example.thin_client.data.drawing.ScreenResolution
 import com.example.thin_client.data.game.GameArgs
-import com.example.thin_client.data.game.GameManager
 import com.example.thin_client.data.lifecycle.LoginState
 import com.example.thin_client.data.model.User
 import com.example.thin_client.data.rooms.JoinRoomFeedback
@@ -40,19 +38,15 @@ import com.example.thin_client.ui.profile.ProfileActivity
 import com.github.nkzawa.socketio.client.Socket
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_lobby.*
-import kotlinx.android.synthetic.main.observer_fragment.*
 
 class Lobby : AppCompatActivity() {
     private lateinit var manager: FragmentManager
     private lateinit var prefs: SharedPreferences
-    private lateinit var observerScreenResolution: ScreenResolution
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lobby)
         manager = supportFragmentManager
-
-        observerScreenResolution = ScreenResolution(0, 0)
 
         prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
 
@@ -177,7 +171,7 @@ class Lobby : AppCompatActivity() {
                 }
             }))
             .on(Socket.EVENT_CONNECT_ERROR, ({
-                runOnUiThread(({
+                Handler(Looper.getMainLooper()).post(Runnable {
                     val alertDialog = AlertDialog.Builder(this)
                     alertDialog.setTitle(R.string.error_connect_title)
                         .setCancelable(false)
@@ -187,7 +181,7 @@ class Lobby : AppCompatActivity() {
                     val dialog = alertDialog.create()
                     dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
                     dialog.show()
-                }))
+                })
                 SocketHandler.disconnect()
             }))
             .on(SocketEvent.USER_SIGNED_OUT, ({ data ->
@@ -224,9 +218,6 @@ class Lobby : AppCompatActivity() {
             })).on(Socket.EVENT_DISCONNECT, ({
                 SocketHandler.socket = null
                 SocketHandler.isLoggedIn = false
-            })).on(SocketEvent.SCALE_VIEW, ({ data ->
-                val resolution = Gson().fromJson(data.first().toString(), ScreenResolution::class.java)
-                GameManager.observerScreenResolution = ScreenResolution(resolution.height, resolution.width)
             }))
 
     }

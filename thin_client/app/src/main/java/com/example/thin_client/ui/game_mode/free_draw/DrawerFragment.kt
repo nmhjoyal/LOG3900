@@ -7,7 +7,6 @@ import android.widget.SeekBar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.thin_client.R
-import com.example.thin_client.data.drawing.ScreenResolution
 import com.example.thin_client.server.SocketHandler
 import kotlinx.android.synthetic.main.free_draw_fragment.*
 
@@ -21,8 +20,6 @@ class DrawerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        SocketHandler.sendScreenResolution(ScreenResolution(draw_view.height, draw_view.width))
 
         trash.setOnClickListener(({
             draw_view.clearCanvas()

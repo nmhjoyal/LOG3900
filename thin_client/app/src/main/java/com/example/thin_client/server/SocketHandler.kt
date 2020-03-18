@@ -3,9 +3,8 @@ package com.example.thin_client.server
 import android.content.SharedPreferences
 import com.example.thin_client.data.ClientMessage
 import com.example.thin_client.data.app_preferences.Preferences
-import com.example.thin_client.data.drawing.Point
-import com.example.thin_client.data.drawing.ScreenResolution
-import com.example.thin_client.data.drawing.Trace
+import com.example.thin_client.data.drawing.Stroke
+import com.example.thin_client.data.drawing.StylusPoint
 import com.example.thin_client.data.lifecycle.LoginState
 import com.example.thin_client.data.model.PrivateProfile
 import com.example.thin_client.data.model.User
@@ -57,6 +56,9 @@ object SocketHandler {
         this.user = user
         val gson = Gson()
         val jsonUser = gson.toJson(user)
+        if(socket == null) {
+            connect()
+        }
         socket!!.emit(SocketEvent.SIGN_IN, jsonUser)
     }
 
@@ -81,7 +83,6 @@ object SocketHandler {
     }
 
     fun deleteChatRoom(roomid: String) {
-        // comment
         socket!!.emit(SocketEvent.DELETE_ROOM, roomid)
     }
 
@@ -108,12 +109,12 @@ object SocketHandler {
         socket!!.emit(SocketEvent.DISCONNECT_FREE_DRAW)
     }
 
-    fun startTrace(drawPoint: Trace) {
+    fun startStroke(drawPoint: Stroke) {
         val args = Gson().toJson(drawPoint)
-        socket!!.emit(SocketEvent.TRACE, args)
+        socket!!.emit(SocketEvent.STROKE, args)
     }
 
-    fun point(drawPoint: Point) {
+    fun point(drawPoint: StylusPoint) {
         val args = Gson().toJson(drawPoint)
         socket!!.emit(SocketEvent.POINT, args)
     }
