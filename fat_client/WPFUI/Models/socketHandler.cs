@@ -221,7 +221,6 @@ namespace WPFUI.Models
             this.socket.Emit("connect_free_draw");
 
             this.socket.On("new_stroke", (new_stroke) => {
-                Console.WriteLine("new stroke");
                 dynamic json = JsonConvert.DeserializeObject(new_stroke.ToString());
                 drawersTool = "crayon";
                 StylusPoint stylusPoint = new StylusPoint((int)json.StylusPoints[0].X, (int)json.StylusPoints[0].Y);

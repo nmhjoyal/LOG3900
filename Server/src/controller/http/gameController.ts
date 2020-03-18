@@ -52,6 +52,7 @@ export class GameController {
                 feedback.log_message = "This drawing already exists";
             }
         }
+        console.log(feedback);
         return feedback;
     }
 }
