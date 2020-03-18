@@ -63,15 +63,12 @@ export default class ChatHandler {
     public async deleteChatRoom(io: SocketIO.Server, socket: SocketIO.Socket, roomId: string, user: PrivateProfile | undefined): Promise<Feedback> {
         const privateRoom: Room | undefined = this.findPrivateRoom(roomId);
         let status: boolean = false;
-        let log_message: DeleteRoomStatus; 
-        console.log("roomID : ", roomId);
-        console.log("privateRoom : ", privateRoom);
+        let log_message: DeleteRoomStatus;
 
         if (roomId != "General") {
             if (user) {
                 let socketIds: string[] = this.getSocketIds(io, roomId);
                 if (privateRoom) {
-                    console.log("socketids in delete : ", socketIds)
                     if (socketIds.length == 0) {
                         log_message = DeleteRoomStatus.Error;
                         console.log("nonono");
@@ -269,7 +266,6 @@ export default class ChatHandler {
                 if(privateRoom || await roomDB.getRoom(invitation.id)) {
                     if (this.getSocketIds(io, invitation.id).includes(socket.id)) {
                         if (!this.getSocketIds(io, invitation.id).includes(receiverSocketId)) {
-                            console.log(invitation);
                             invitation.username = sender.username;
                             io.to(receiverSocketId).emit("receive_invite", JSON.stringify(invitation));
                             status = true;
@@ -314,7 +310,6 @@ export default class ChatHandler {
     private connectSocketToRoom(io: SocketIO.Server, socket: SocketIO.Socket, username: string, roomId: string): Message {
         const message: Message = Admin.createAdminMessage(username + " joined the room.", roomId);
         socket.join(roomId, () => {
-            console.log("connect", socket.rooms);
             socket.to(roomId).emit("new_message", JSON.stringify(message));
         });
         return message;
