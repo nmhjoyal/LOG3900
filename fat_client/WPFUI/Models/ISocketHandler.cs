@@ -1,5 +1,6 @@
 ﻿using Quobject.SocketIoClientDotNet.Client;
 using System;
+using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Ink;
 
@@ -12,10 +13,9 @@ namespace WPFUI.Models
         string traitJSon { get; set; }
         User user { get; set; }
 
-        void freeDraw(StrokeCollection Traits, DrawingAttributes AttributsDessin);
+        void onDrawing(StrokeCollection Traits, Dictionary<Stroke, int> strokes);
 
-        void preview(StrokeCollection Traits, GamePreview gamePreview);
-
+        void offDrawing();
         void TestPOSTWebRequest(Object obj, string url);
 
         void TestGETWebRequest(string url);

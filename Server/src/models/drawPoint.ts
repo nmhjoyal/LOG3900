@@ -1,35 +1,17 @@
-export interface Color {
-    r: number
-    g: number
-    b: number
-}
-
-export interface Point {
-    x: number
-    y: number
-}
-
-export interface Trace {
-    color: Color
-    point: Point
-    width: number
-    tool: string
-}
-
 export interface Stroke {
     DrawingAttributes: DrawingAttributes
     StylusPoints: StylusPoint[]
 }
 
 export interface DrawingAttributes {
-    Color: string,
+    Color: string
     Width: number
-    Height: number
+    StylusTip: Shape
     Top: number
 }
 
 export interface StylusPoint {
-    X: number,
+    X: number
     Y: number
 }
 
@@ -57,4 +39,9 @@ export enum Mode {
     Random,
     Panoramic,
     Centered
+}
+
+export enum Shape {
+    Rectangle,
+    Ellipse
 }

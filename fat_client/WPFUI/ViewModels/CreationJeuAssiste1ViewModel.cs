@@ -137,7 +137,11 @@ namespace WPFUI.ViewModels
             AttributsDessin.Width = (editeur.PointeSelectionnee == "verticale") ? 1 : editeur.TailleTrait;
             AttributsDessin.Height = (editeur.PointeSelectionnee == "horizontale") ? 1 : editeur.TailleTrait;
         }
-
+         
+        public void preview(string filePath)
+        {
+            Potrace.Potrace.potrace(filePath);
+        }
         public void fullScreenChat()
         {
             _events.PublishOnUIThread(new fullScreenChatEvent());

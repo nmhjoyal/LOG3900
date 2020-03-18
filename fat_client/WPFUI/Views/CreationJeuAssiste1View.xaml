@@ -47,7 +47,7 @@
         <Border Background="#FF66CC00" BorderThickness="5" Grid.Column="1" Grid.Row="3" CornerRadius="10">
             <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Lien du fichier:" Grid.Column="1" Grid.Row="3"/>
         </Border>
-        <TextBox x:Name="word" Grid.Column="3" Grid.Row="3" MinWidth="200" Grid.ColumnSpan="4"/>
+        <TextBox x:Name="filePath" Grid.Column="3" Grid.Row="3" MinWidth="200" Grid.ColumnSpan="4"/>
         <Border Background="#FF66CC00" BorderThickness="5" Grid.Column="1" Grid.Row="5" CornerRadius="10">
             <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Visualise ton jeu" Grid.Column="1" Grid.Row="3"/>
         </Border>
