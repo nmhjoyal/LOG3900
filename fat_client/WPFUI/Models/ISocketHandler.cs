@@ -9,18 +9,23 @@ namespace WPFUI.Models
     {
         bool canConnect { get; set; }
         Socket socket { get; set; }
+        string traitJSon { get; set; }
         User user { get; set; }
 
+        void freeDraw(StrokeCollection Traits, DrawingAttributes AttributsDessin);
+
+        void preview(StrokeCollection Traits, GamePreview gamePreview);
+
+        void TestPOSTWebRequest(Object obj, string url);
+
+        void TestGETWebRequest(string url);
+        
         void connectionAttempt();
+        void createRoom(string roomID);
         void createUser(PrivateProfile privateProfile);
         void disconnect();
-        // void On(object eVENT_DISCONNECT, Action p);
-        // void On(object eVENT_DISCONNECT);
-        //void sendMessage();
-
-       // void getStrokes(InkCanvas Canvas);
+        void getPublicChannels();
+        void sendMessage();
         void SignOut();
-
-        void freeDraw(StrokeCollection Traits, DrawingAttributes AttributsDessin);
     }
 }

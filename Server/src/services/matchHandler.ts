@@ -1,7 +1,8 @@
 import { MatchMode } from "../models/matchMode";
-import { Trace, Line, Color, StylusPoint } from "../models/drawPoint";
-import Point from "../models/drawPoint";
+import { Trace, Point, Game, GamePreview, Stroke, StylusPoint } from "../models/drawPoint";
 import { VirtualPlayer } from "./Drawing/virtualPlayer";
+import { gameDB } from "./Database/gameDB";
+// import { VirtualPlayer } from "./Drawing/virtualPlayer";
 
 export default class MatchHandler {
     // private currentMatches: Match[];
@@ -9,10 +10,12 @@ export default class MatchHandler {
     // TEMPORARY
     private drawer: string;         // Socket id
     private observers: string[];    // Socket ids
+    private top: number;
 
     public constructor() {
         // this.currentMatches = new Array<Match>();
         this.observers = [];
+        this.top = 0;
     }
 
     public startMatch(matchMode: MatchMode) {
@@ -45,49 +48,42 @@ export default class MatchHandler {
         socket.leave("freeDrawRoomTest");
     }
 
-    public startTrace(io: SocketIO.Server, socket: SocketIO.Socket, trace: Trace) {
+    public stroke(io: SocketIO.Server, socket: SocketIO.Socket, stroke: Stroke): void {
         // if (socket.id == this.drawer) {
-            socket.to("freeDrawRoomTest").emit("new_trace", JSON.stringify(trace));
+            stroke.DrawingAttributes.Top = this.top++;
+            console.log(stroke.DrawingAttributes);
+            socket.to("freeDrawRoomTest").emit("new_stroke", JSON.stringify(stroke));
         // }
     }
 
-    public drawTest(io: SocketIO.Server, socket: SocketIO.Socket, point: Point) {
+    public eraseStroke(io: SocketIO.Server, socket: SocketIO.Socket): void {
+        console.log("erase stroke");
+        socket.to("freeDrawRoomTest").emit("new_erase_stroke");
+    }
+
+    public erasePoint(io: SocketIO.Server, socket: SocketIO.Socket): void {
+        console.log("erase point");
+        socket.to("freeDrawRoomTest").emit("new_erase_point");
+    }
+
+    public point(io: SocketIO.Server, socket: SocketIO.Socket, point: StylusPoint): void {
         // if (socket.id == this.drawer) {
-            socket.to("freeDrawRoomTest").emit("drawPoint", JSON.stringify(point));
+        socket.to("freeDrawRoomTest").emit("new_point", JSON.stringify(point));
         // }
     }
 
-    public async sendDrawing(socket: SocketIO.Socket, drawing: Line[]): Promise<void> {
-        for(let line of drawing) {
-            const color: Color = {
-                r: parseInt(line.DrawingAttributes.Color.substring(3, 5), 16),
-                g: parseInt(line.DrawingAttributes.Color.substring(5, 7), 16),
-                b: parseInt(line.DrawingAttributes.Color.substring(7, 9), 16)
-            }
-            const startPoint: Point = {
-                x: line.StylusPoints[0].X,
-                y: line.StylusPoints[0].Y
-            }
-            const trace: Trace = {
-                color: color,
-                point: startPoint,
-                width: line.DrawingAttributes.Width,
-                tool: "crayon"
-            }
-            await this.delay(50);
-            socket.to("freeDrawRoomTest").emit("new_trace", JSON.stringify(trace));
-            for(let stylusPoint of line.StylusPoints) {
-                const point: Point = {
-                    x: stylusPoint.X,
-                    y: stylusPoint.Y
-                }
-                await this.delay(50);
-                socket.to("freeDrawRoomTest").emit("drawPoint", JSON.stringify(point));
-            }
-        }
+    public async getDrawing(io: SocketIO.Server): Promise<void> {
+        const game: Game = await gameDB.getRandomGame();
+        console.log(JSON.stringify(game));
+        const virtualPlayer: VirtualPlayer = new VirtualPlayer("bot", "freeDrawRoomTest", io);
+        virtualPlayer.setTimePerRound(10);
+        virtualPlayer.draw(game);
     }
 
-    private async delay(ms: number): Promise<void> {
-        return new Promise(resolve => setTimeout(resolve, ms));
+    // previewHandler.ts
+    public async preview(socket: SocketIO.Socket, gamePreview: GamePreview): Promise<void> {
+        const virtualPlayer: VirtualPlayer = new VirtualPlayer("bot", null, socket);
+        virtualPlayer.setTimePerRound(5);
+        virtualPlayer.preview(gamePreview);
     }
 }

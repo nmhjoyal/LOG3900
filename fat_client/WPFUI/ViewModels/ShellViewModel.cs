@@ -161,8 +161,8 @@ namespace WPFUI.ViewModels
 		public void Handle(joinChatroomEvent message)
 		{
 			Items.Clear();
+			Items.Add(_container.GetInstance<chatBoxViewModel>());
 			Items.Add(_container.GetInstance<ChatRoomChannelsViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}

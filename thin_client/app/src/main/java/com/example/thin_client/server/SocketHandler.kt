@@ -1,7 +1,16 @@
 package com.example.thin_client.server
 
-import com.example.thin_client.data.Message
+import android.content.SharedPreferences
+import com.example.thin_client.data.ClientMessage
+import com.example.thin_client.data.app_preferences.Preferences
+import com.example.thin_client.data.drawing.DrawPoint
+import com.example.thin_client.data.lifecycle.LoginState
+import com.example.thin_client.data.model.PrivateProfile
 import com.example.thin_client.data.model.User
+import com.example.thin_client.data.rooms.CreateRoom
+import com.example.thin_client.data.rooms.Invitation
+import com.example.thin_client.data.server.HTTPRequest
+import com.example.thin_client.data.server.SocketEvent
 import com.github.nkzawa.socketio.client.IO
 import com.github.nkzawa.socketio.client.Socket
 import com.google.gson.Gson
@@ -9,11 +18,28 @@ import com.google.gson.Gson
 object SocketHandler {
     var user: User? = null
     var socket: Socket? = null
+    var isLoggedIn = false
 
 
-    fun connect(ipAddress: String): Socket {
-        socket = IO.socket("http://" + ipAddress + ":5000")
+    fun connect(): Socket {
+        val opts = IO.Options()
+        opts.reconnection = false
+        socket = IO.socket(HTTPRequest.BASE_URL)
         return socket!!.connect()
+    }
+
+    fun isConnected(): Boolean {
+        return socket !== null
+    }
+
+    fun getLoginState(prefs: SharedPreferences): LoginState {
+        if (!prefs.getBoolean(Preferences.LOGGED_IN_KEY, false)) {
+            return LoginState.FIRST_LOGIN
+        } else if (!isLoggedIn){
+            return LoginState.LOGIN_WITH_EXISTING
+        } else {
+            return LoginState.LOGGED_IN
+        }
     }
 
     fun disconnect() {
@@ -22,28 +48,82 @@ object SocketHandler {
             socket!!.disconnect()
             socket = null
         }
+        isLoggedIn = false
     }
 
     fun login(user: User) {
         this.user = user
         val gson = Gson()
         val jsonUser = gson.toJson(user)
-        socket!!.emit("sign_in", jsonUser)
+        socket!!.emit(SocketEvent.SIGN_IN, jsonUser)
     }
 
     fun logout() {
-        socket!!.emit("sign_out")
-        disconnect()
+        if (socket != null) {
+            socket!!.emit(SocketEvent.SIGN_OUT)
+        }
     }
 
-    fun sendMessage(text: String) {
+    fun sendMessage(text: String, roomid: String) {
         val gson = Gson()
-        val message = gson.toJson(Message(text, user!!, 0))
-        socket!!.emit("send_message", message)
+        val message = gson.toJson(ClientMessage( text,  roomid))
+        socket!!.emit(SocketEvent.SEND_MESSAGE, message)
     }
 
-    fun joinRoom() {
-        socket!!.emit("join_chat_room")
+    fun joinChatRoom(roomid: String) {
+        socket!!.emit(SocketEvent.JOIN_ROOM, roomid)
     }
 
+    fun leaveChatRoom(roomid: String) {
+        socket!!.emit(SocketEvent.LEAVE_ROOM, roomid)
+    }
+
+    fun deleteChatRoom(roomid: String) {
+        // comment
+        socket!!.emit(SocketEvent.DELETE_ROOM, roomid)
+    }
+
+    fun createChatRoom(roomid: String, isPrivate: Boolean) {
+        val newRoom = Gson().toJson(CreateRoom(roomid,  isPrivate))
+        socket!!.emit(SocketEvent.CREATE_ROOM, newRoom)
+    }
+
+    fun searchRooms() {
+        socket!!.emit(SocketEvent.GET_ROOMS)
+    }
+
+    fun updateProfile(privateProfile: PrivateProfile) {
+        val gson = Gson()
+        val args = gson.toJson(privateProfile)
+        socket!!.emit(SocketEvent.UPDATE_PROFILE, args)
+    }
+
+    fun connectOnlineDraw() {
+        socket!!.emit(SocketEvent.CONNECT_FREE_DRAW)
+    }
+
+    fun disconnectOnlineDraw() {
+        socket!!.emit(SocketEvent.DISCONNECT_FREE_DRAW)
+    }
+
+    fun drawPoint(drawPoint: DrawPoint) {
+        val gson = Gson()
+        val args = gson.toJson(drawPoint)
+        socket!!.emit(SocketEvent.DRAW_TEST, args)
+    }
+
+    fun touchDown(drawPoint: DrawPoint) {
+        val gson = Gson()
+        val args = gson.toJson(drawPoint)
+        socket!!.emit(SocketEvent.TOUCH_DOWN, args)
+    }
+
+    fun touchUp() {
+        socket!!.emit(SocketEvent.TOUCH_UP)
+    }
+
+    fun sendInvite(invite: Invitation) {
+        val args = Gson().toJson(invite)
+        socket!!.emit(SocketEvent.SEND_INVITE, args)
+    }
 }

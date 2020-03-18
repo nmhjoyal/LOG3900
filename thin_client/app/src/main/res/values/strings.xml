@@ -1,25 +1,125 @@
 <resources>
+    <!-- Common -->
     <string name="app_name">Draw Something</string>
+    <string name="ok">OK</string>
+    <string name="done">Done</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
+    <string name="sign_out">Sign out</string>
+    <string name="profile">User profile</string>
+
+    <!--- Leaderboard -->
+    <string name="leaderboard">Leaderboard</string>
+    <string name="soloGameMode">Solo Game</string>
+    <string name="cooperativeGameMode">Cooperative Game</string>
+    <string name="oneVsOneGameMode">One vs One</string>
+    <string name="reversedGameMode">Reversed Game</string>
+    <string name="freeForAllGameMode">Free For All Game</string>
+    <string name="score">Score</string>
+
+
+    <!-- Profile -->
+    <style name="profile">Profile</style>
+
+    <string name="edit_profile">Edit profile</string>
+    <string name="change_avatar">Change your avatar</string>
+    <string name="undo_changes">Undo</string>
+    <string name="stats">Stats</string>
+    <string name="game_stats">Game stats</string>
+    <string name="user_stats">User stats</string>
+    <string name="stat_placeholder">PLACEHOLDER</string>
+    <string name="delete_profile">Delete profile</string>
+    <string name="delete">DELETE</string>
+    <string name="delete_profile_warning">Are you sure you want to delete your profile? You will lose all your progress. This action is IRREVERSIBLE.</string>
+
     <!-- Strings related to login -->
     <string name="prompt_password">Password</string>
-    <string name="action_register">Create an account</string>
-    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_register">Sign up</string>
+    <string name="action_sign_in_short">Login</string>
     <string name="welcome">"Welcome !"</string>
-    <string name="invalid_username">Username cannot be blank and cannot exceed 10 characters.</string>
+    <string name="invalid_username">Username cannot be blank and cannot exceed 20 characters.</string>
     <string name="invalid_password">Invalid Password</string>
-    <string name="login_failed">"Failed Connection"</string>
+    <string name="login_failed">Failed to connect</string>
+    <string name="error_logging_in">Error logging in, please sign in again.</string>
+    <string name="error_connect_title">Server error</string>
+    <string name="error_connect">Error connecting to server. Please try again later.</string>
+
     <!-- Strings related to chat -->
     <string name="default_message">Type message here</string>
-    <string name="prompt_ip">IP Address</string>
-    <string name="prompt_port">Port</string>
-    <string name="invalid_ip">IP address invalid. Must be in the form 127.0.0.1</string>
-    <string name="invalid_port">Port not a valid number.</string>
+    <string name="send_button">Send</string>
+    <string name="left_chat">Left chat successfully.</string>
+    <string name="user_joined">User %1$s has joined the chat.</string>
+    <string name="user_left">User %1$s has left the chat.</string>
+
+    <!-- Strings related to rooms -->
+    <string name="rooms_title">Rooms</string>
+    <string name="leave_room_cd">Leave room</string>
+    <string name="create_room">Create a room</string>
+    <string name="room_name">Enter room name</string>
+    <string name="error_roomname">Room name cannot be blank</string>
+    <string name="show_rooms">Show rooms</string>
+    <string name="public_room">Public</string>
+    <string name="private_room">Private</string>
+    <string name="search_room">Search rooms</string>
+    <string name="invite_user">Invite users</string>
+    <string name="prompt_enter_username">Enter username</string>
+    <string name="invites">Invites</string>
 
     <!-- Strings for create user -->
     <string name="prompt_first_name">First Name</string>
     <string name="prompt_last_name">Last Name</string>
     <string name="prompt_username">Username</string>
     <string name="prompt_confirm_password">Confirm password</string>
+    <string name="prompt_avatar">Select an avatar</string>
     <string name="action_create">Create</string>
     <string name="invalid_password_confirm">Passwords do not match</string>
+    <string name="invalid_name">Name cannot be blank</string>
+
+    <!-- Strings for manifest page names -->
+    <string name="chat_rooms">Chat Rooms</string>
+    <string name="sign_up">Create a Profile</string>
+
+    <!-- Strings for free draw mode -->
+    <string name="title_activity_free_draw">Free Draw</string>
+    <string name="title_activity_free_draw_test">Free Draw online test</string>
+    <string name="palette_cd">Pick a colour</string>
+    <string name="crayon_cd">Crayon</string>
+    <string name="eraser_cd">Eraser</string>
+    <string name="trash_cd">Clear canvas</string>
+    <string name="trash_dialog">"Are you sure you want to clear the canvas? All changes with be lost."</string>
+    <string name="eraser_draw_erase">Draw erase</string>
+    <string name="eraser_touch_erase">Touch erase</string>
+    <string name="round_cap">Round cap</string>
+    <string name="square_cap">Square cap</string>
+    <string name="image_saved">Image successfully saved.</string>
+    <string name="error_image_saved">Unable to save image.</string>
+
+    <!-- Save drawing -->
+    <string name="save_drawing">Save Drawing</string>
+    <string name="save">Save</string>
+    <string name="filename">File name</string>
+    <string name="desc">Description</string>
+
+    <!-- Avatar content descriptions -->
+    <string name="fruit_icon_author">
+        Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+    </string>
+    <string name="avocado_cd">Avocado avatar</string>
+    <string name="banana_cd">Banana avatar</string>
+    <string name="strawberry_cd">Strawberry avatar</string>
+    <string name="watermelon_cd">Watermelon avatar</string>
+    <string name="grape_cd">Grape avatar</string>
+    <string name="kiwi_cd">Kiwi avatar</string>
+    <string name="orange_cd">Orange avatar</string>
+    <string name="pineapple_cd">Pineapple avatar</string>
+    <string name="apple_cd">Apple avatar</string>
+    <string name="lemon_cd">Lemon avatar</string>
+    <string name="cherry_cd">Cherry avatar</string>
+    <string name="pear_cd">Pear avatar</string>
+    <string name="title_activity_leaderboard">Leaderboard </string>
+    <string name="title_activity_waiting_room">Waiting Room</string>
+
+    <!-- Game strings -->
+    <string name="title_game_general">GAME MODE</string>
+
 </resources>

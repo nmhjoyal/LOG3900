@@ -114,10 +114,16 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Commands\changeChannelCommand.cs" />
+    <Compile Include="Commands\IchangeChannelCommand.cs" />
+    <Compile Include="Commands\IselectAvatarCommand.cs" />
+    <Compile Include="Commands\selectAvatarCommand.cs" />
     <Compile Include="Converters\Converters.cs" />
+    <Compile Include="EventModels\addMessageEvent.cs" />
     <Compile Include="EventModels\AssisteIEvent.cs" />
     <Compile Include="EventModels\connectionEvent.cs" />
     <Compile Include="EventModels\createGameEvent.cs" />
+    <Compile Include="EventModels\createTheRoomEvent.cs" />
     <Compile Include="EventModels\DisconnectEvent.cs" />
     <Compile Include="EventModels\freeDrawEvent.cs" />
     <Compile Include="EventModels\fullScreenChatEvent.cs" />
@@ -126,6 +132,7 @@
     <Compile Include="EventModels\goBackMainEvent.cs" />
     <Compile Include="EventModels\joinChatEvent.cs" />
     <Compile Include="EventModels\joinChatroomEvent.cs" />
+    <Compile Include="EventModels\joinedRoomReceived.cs" />
     <Compile Include="EventModels\joinGameEvent.cs" />
     <Compile Include="EventModels\leaderboardEvent.cs" />
     <Compile Include="EventModels\LogInEvent.cs" />
@@ -133,24 +140,30 @@
     <Compile Include="EventModels\ManuelIEvent.cs" />
     <Compile Include="EventModels\ManuelleIIEvent.cs" />
     <Compile Include="EventModels\passwordMismatchEvent.cs" />
+    <Compile Include="EventModels\refreshMessagesEvent.cs" />
+    <Compile Include="EventModels\refreshUIEvent.cs" />
+    <Compile Include="EventModels\roomsRetrievedEvent.cs" />
     <Compile Include="EventModels\sendMessageEvent.cs" />
     <Compile Include="EventModels\signUpEvent.cs" />
     <Compile Include="EventModels\userNameTakenEvent.cs" />
     <Compile Include="EventModels\viewProfileEvent.cs" />
     <Compile Include="Models\CreateGame.cs" />
-    <Compile Include="Models\ManualGame1.cs" />
+    <Compile Include="Models\Game.cs" />
     <Compile Include="Models\Trace.cs" />
+    <Compile Include="Models\Avatar.cs" />
+    <Compile Include="Models\ClientMessage.cs" />
+    <Compile Include="Models\CreateRoom.cs" />
     <Compile Include="Models\Editeur.cs" />
     <Compile Include="Models\Feedback.cs" />
     <Compile Include="Models\ISocketHandler.cs" />
     <Compile Include="Models\IUserData.cs" />
     <Compile Include="Models\JavaScriptSerializer.cs" />
+    <Compile Include="Models\JoinRoomFeedBack.cs" />
     <Compile Include="Models\MessageModel.cs" />
     <Compile Include="Models\PrivateProfile.cs" />
     <Compile Include="Models\RenderVisualService.cs" />
     <Compile Include="Models\Room.cs" />
     <Compile Include="Models\SignInFeedback.cs" />
-    <Compile Include="Models\Trait.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\socketHandler.cs" />
     <Compile Include="Models\UserData.cs" />
@@ -338,6 +351,9 @@
     <Resource Include="Resources\add.png" />
     <Resource Include="Resources\HAND-DRAW.gif" />
     <Resource Include="Resources\logout.png" />
+    <Resource Include="Resources\lock.png" />
+    <Resource Include="Resources\login.png" />
+    <Resource Include="Resources\pencil.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\crayon.png" />
@@ -349,6 +365,56 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\fireworks.gif" />
+    <Resource Include="Resources\logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\logout.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\chat.png" />
+    <Resource Include="Resources\joystick.png" />
+    <Resource Include="Resources\pen.png" />
+    <Resource Include="Resources\ranking.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\apple.png" />
+    <Content Include="Resources\apple.svg" />
+    <Resource Include="Resources\avocado.png" />
+    <Content Include="Resources\avocado.svg" />
+    <Resource Include="Resources\banana.png" />
+    <Content Include="Resources\banana.svg" />
+    <Resource Include="Resources\cherry.png" />
+    <Content Include="Resources\cherry.svg" />
+    <Resource Include="Resources\grape.png" />
+    <Resource Include="Resources\duck.gif" />
+    <Resource Include="Resources\duck_cropped.gif" />
+    <Resource Include="Resources\F.gif" />
+    <Resource Include="Resources\F_cropped.gif" />
+    <Content Include="Resources\grape.svg" />
+    <Resource Include="Resources\kiwi.png" />
+    <Resource Include="Resources\HAND-DRAW.gif" />
+    <Resource Include="Resources\heart.gif" />
+    <Resource Include="Resources\heart_crooped.gif" />
+    <Resource Include="Resources\invite.png" />
+    <Content Include="Resources\kiwi.svg" />
+    <Resource Include="Resources\lemon.png" />
+    <Content Include="Resources\lemon.svg" />
+    <Resource Include="Resources\orange.png" />
+    <Resource Include="Resources\mail.png" />
+    <Content Include="Resources\orange.svg" />
+    <Resource Include="Resources\pear.png" />
+    <Content Include="Resources\pear.svg" />
+    <Resource Include="Resources\pineapple.png" />
+    <Content Include="Resources\pineapple.svg" />
+    <Resource Include="Resources\strawberry.png" />
+    <Content Include="Resources\strawberry.svg" />
+    <Resource Include="Resources\watermelon.png" />
+    <Resource Include="Resources\trophy.gif" />
+    <Resource Include="Resources\trophy_cropped.gif" />
+    <Content Include="Resources\watermelon.svg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.3.0.1\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.0.1\build\MaterialDesignThemes.targets')" />

@@ -64,10 +64,9 @@ namespace WPFUI.Views
 
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        private void Get_Drawing(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("should work");
-            (this.DataContext as FenetreDessinViewModel).sendDrawing();
+            (this.DataContext as FenetreDessinViewModel).getDrawing();
         }
 
         private void mainMenu_Click(object sender, RoutedEventArgs e)
