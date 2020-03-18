@@ -101,7 +101,13 @@ export class VirtualPlayer {
     }
 
     private async panoramic(drawing: Stroke[], level: number): Promise<void> {
+        // Gauche a droite pour le moment
+        drawing.sort((a: Stroke, b: Stroke) => {
+            let bMin: number = b.StylusPoints.reduce((min, stylusPoint) => stylusPoint.X < min ? stylusPoint.X : min, b.StylusPoints[0].X);
+            return aMin - bMin;
+        });
 
+        await this.classic(drawing, level);
     }
 
     private async centered(drawing: Stroke[], level: number): Promise<void> {
