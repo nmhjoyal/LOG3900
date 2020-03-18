@@ -23,12 +23,12 @@ export default class MatchController {
 
     @OnMessage("create_match")
     public createMatch(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() createMatch: CreateMatch) {
-        io.emit("match_created", serverHandler.matchHandler.createMatch(socket, createMatch));
+        io.emit("match_created", serverHandler.createMatch(socket, createMatch));
     }
 
     @OnMessage("join_match")
     public joinMatch(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() matchId: string) {
-        socket.emit("match_joined", serverHandler.matchHandler.joinMatch(socket, matchId));
+        socket.emit("match_joined", serverHandler.joinMatch(socket, matchId));
     }
 
 }

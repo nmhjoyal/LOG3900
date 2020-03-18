@@ -1,7 +1,7 @@
 import SignIn from "../models/signIn";
 import PrivateProfile from "../models/privateProfile";
-import { Room } from "../models/room";
-import { Feedback, SignInFeedback, SignInStatus, SignOutStatus, UpdateProfileStatus } from "../models/feedback";
+import { Room, CreateRoom, Invitation } from "../models/room";
+import { Feedback, SignInFeedback, SignInStatus, SignOutStatus, UpdateProfileStatus, JoinRoomFeedback } from "../models/feedback";
 import { profileDB } from "../services/Database/profileDB";
 import { roomDB } from "../services/Database/roomDB";
 import Admin from "../models/admin";
@@ -10,6 +10,7 @@ import PublicProfile from "../models/publicProfile";
 import ChatHandler from "./chatHandler";
 import MatchHandler from "./matchHandler";
 import RandomMatchIdGenerator from "./IdGenerator/idGenerator";
+import { CreateMatch } from "../models/match";
 
 class ServerHandler {
     public users: Map<string, PrivateProfile>;
@@ -76,15 +77,11 @@ class ServerHandler {
         return feedback;
     }
 
-    public sendMessage(io: SocketIO.Server, socket: SocketIO.Socket, message: ClientMessage) { 
-        // Send the message
-        this.chatHandler.sendMessage(io, socket, message);
-
-        // Check if it is 
-        if (message.roomId.startsWith(RandomMatchIdGenerator.prefix)) {
-            // this.matchHandler.checkGuess(io, socket, message) 
-        }
-    }
+    /**
+     * 
+     * Other functions.
+     * 
+     */   
 
     public getUser(socketId: string): PrivateProfile | undefined {
         return this.users.get(socketId);
@@ -129,7 +126,7 @@ class ServerHandler {
         for (let roomId in socket.rooms) {
             let socketIds: string[] = this.chatHandler.getSocketIds(io, roomId);
             if (socketIds.length == 1 && socketIds[0] == socket.id) {
-                this.chatHandler.deleteChatRoom(io, socket, roomId);
+                this.chatHandler.deleteChatRoom(io, socket, roomId, this.getUser(socket.id));
             } else {
                 const message: Message = Admin.createAdminMessage(user.username + " is disconnected.", roomId);
                 this.chatHandler.privateRooms.find(room => room.id == roomId)?.messages.push(message);
@@ -196,6 +193,54 @@ class ServerHandler {
                 this.chatHandler.notifyAvatarUpdate(io, updatedPublicProfile, room.id);
             }
         }
+    }
+    
+    /**
+     * 
+     * ChatHandler and MatchHandler function calls while passing the private profile of the user.
+     * 
+     */
+
+    public async createChatRoom(io: SocketIO.Server, socket: SocketIO.Socket, room: CreateRoom): Promise<Feedback> {
+        return await this.chatHandler.createChatRoom(io, socket, room, this.getUser(socket.id));
+    }
+
+    public async deleteChatRoom(io: SocketIO.Server, socket: SocketIO.Socket, roomId: string): Promise<Feedback> {
+        return await this.chatHandler.deleteChatRoom(io, socket, roomId, this.getUser(socket.id));
+    }
+
+    public async invite(io: SocketIO.Server, socket: SocketIO.Socket, invitation: Invitation): Promise<Feedback> {
+        return await this.chatHandler.invite(io, socket, invitation, this.users);
+    }
+
+    public async joinChatRoom(io: SocketIO.Server, socket: SocketIO.Socket, roomId: string): Promise<JoinRoomFeedback> {
+        return await this.chatHandler.joinChatRoom(io, socket, roomId, this.getUser(socket.id));
+    }
+
+    public async leaveChatRoom(io: SocketIO.Server, socket: SocketIO.Socket, roomId: string): Promise<Feedback> {
+        return await this.chatHandler.leaveChatRoom(io, socket, roomId, this.getUser(socket.id));
+    }
+
+    public sendMessage(io: SocketIO.Server, socket: SocketIO.Socket, message: ClientMessage) { 
+        const user: PrivateProfile | undefined = this.getUser(socket.id);
+        if (user) {
+            if (message.roomId.startsWith(RandomMatchIdGenerator.prefix)) {
+                this.matchHandler.sendMessage(io, socket, message, user);
+            } else {
+                // Send the message
+                this.chatHandler.sendMessage(io, socket, message, user);
+            }
+        } else {
+            console.log("User not connected");
+        }
+    }
+
+    public createMatch(socket: SocketIO.Socket, createMatch: CreateMatch): Feedback {
+        return this.matchHandler.createMatch(socket, createMatch, this.getUser(socket.id));
+    }
+
+    public joinMatch(socket: SocketIO.Socket, matchId: string): Feedback {
+        return this.matchHandler.joinMatch(socket, matchId, this.getUser(socket.id));
     }
 }
 

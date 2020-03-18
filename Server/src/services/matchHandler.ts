@@ -3,10 +3,10 @@ import DrawPoint from "../models/drawPoint";
 import { CreateMatch, MatchInfos } from "../models/match";
 import { Feedback} from "../models/feedback";
 import Match from "./Match/match_General";
-import { serverHandler } from "./serverHandler";
 import PrivateProfile from "../models/privateProfile";
 import PublicProfile from "../models/publicProfile";
 import RandomMatchIdGenerator from "./IdGenerator/idGenerator";
+import { ClientMessage } from "../models/message";
 
 export default class MatchHandler {
     private currentMatches: Map<string, Match>;
@@ -20,8 +20,7 @@ export default class MatchHandler {
         this.observers = [];
     }
     
-    public createMatch(socket: SocketIO.Socket, createMatch: CreateMatch): Feedback {
-        const user: PrivateProfile | undefined = serverHandler.users.get(socket.id);
+    public createMatch(socket: SocketIO.Socket, createMatch: CreateMatch, user: PrivateProfile | undefined): Feedback {
         let feedback: Feedback = {
             status: true,
             log_message: "Match created successfully."
@@ -40,8 +39,7 @@ export default class MatchHandler {
         return feedback;
     }
 
-    public joinMatch(socket: SocketIO.Socket, matchId: string): Feedback {
-        const user: PrivateProfile | undefined = serverHandler.users.get(socket.id);
+    public joinMatch(socket: SocketIO.Socket, matchId: string, user: PrivateProfile | undefined): Feedback {
         let match: Match | undefined = this.currentMatches.get(matchId);
         let feedback: Feedback = {
             status: false,
@@ -50,11 +48,15 @@ export default class MatchHandler {
 
         if (user) {
             if (match) {
-                let publicProfile: PublicProfile = {
-                    username: user.username,
-                    avatar: user.avatar
-                };
-                feedback = match.joinMatch(socket, publicProfile);
+                if (!match.isStarted) {
+                    let publicProfile: PublicProfile = {
+                        username: user.username,
+                        avatar: user.avatar
+                    };
+                    feedback = match.joinMatch(socket, publicProfile);
+                } else {
+                    feedback.log_message = "This match is already started.";
+                }
             } else {
                 feedback.log_message = "This match does not exist anymore.";
             }
@@ -64,6 +66,10 @@ export default class MatchHandler {
             
 
         return feedback;
+    }
+
+    public sendMessage(io: SocketIO.Server, socket: SocketIO.Socket, message: ClientMessage, user: PrivateProfile | undefined) {
+        // TODO : check if it is a correct guess, or asking for a hint ("!hint"), and update the other players
     }
 
     private getAllAvailbaleMatches(): MatchInfos[] {
@@ -80,7 +86,7 @@ export default class MatchHandler {
      * 
      * From here this code is used for free draw testing.
      *  
-     * */ 
+     */ 
     public enterFreeDrawTestRoom(socket: SocketIO.Socket): void {
         if (this.drawer) {
             this.observers.push(socket.id);
