@@ -24,7 +24,7 @@ export default class ChatHandler {
         const roomId: string = room.id;
         
         if (user) {
-            if (!(this.findPrivateRoom(roomId)|| (await roomDB.getRooms()).includes(roomId))) { // verifiy unicity 
+            if (!(this.findPrivateRoom(roomId) || (await roomDB.getRooms()).includes(roomId))) { // verifiy unicity 
                 if (room.isPrivate) { // private 
                     const message: Message = this.connectSocketToRoom(io, socket, user.username, roomId);
                     const newRoom: Room = this.createRoomObject(roomId, user.username, user.avatar, message);

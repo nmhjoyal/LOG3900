@@ -3,12 +3,16 @@ import PublicProfile from "../../models/publicProfile";
 import { MatchInfos } from "../../models/match";
 import { serverHandler } from "../serverHandler";
 import PrivateProfile from "../../models/privateProfile";
+import Player from "../../models/player";
+import { Room } from "../../models/room";
 
 export default abstract class Match {
     protected mode: number;
-    protected players: Map<string, number>; /* socketid, score */
+    protected players: Map<string, Player>; /* socketid, score */
     protected nbRounds: number;
     protected letterReveal: boolean;
+    protected currentWord: string;
+    protected matchChat: Room;
     public isStarted: boolean;
 
     protected constructor(socket: SocketIO.Socket, randomId: string, nbRounds: number) {
@@ -23,8 +27,12 @@ export default abstract class Match {
         };
 
         if (!this.isStarted) {
-            // this.joinRoom
-            this.players.set(socket.id, 0);
+            let player: Player = {
+                isVirtual: false,
+                isCurrent: false,
+                score: 0
+            };
+            this.players.set(socket.id, player);
             feedback.status = true;
             feedback.log_message = "You joined the match.";
         } else {
@@ -58,7 +66,7 @@ export default abstract class Match {
     public getMatchInfos(): MatchInfos {
 
         let users: Map<string, string> = new Map<string, string>(); 
-        this.players.forEach((score: number, socketid: string) => {
+        this.players.forEach((score: Player, socketid: string) => {
             let userInfo: PrivateProfile | undefined = serverHandler.getUser(socketid);
             if (userInfo) users.set(userInfo.username, userInfo.avatar);
         });
