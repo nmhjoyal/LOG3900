@@ -22,13 +22,18 @@ export default class MatchController {
     }
 
     @OnMessage("create_match")
-    public createMatch(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() createMatch: CreateMatch) {
-        io.emit("match_created", serverHandler.createMatch(socket, createMatch));
+    public async createMatch(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() createMatch: CreateMatch) {
+        socket.emit("match_created", await serverHandler.createMatch(io, socket, createMatch));
     }
 
     @OnMessage("join_match")
-    public joinMatch(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() matchId: string) {
-        socket.emit("match_joined", serverHandler.joinMatch(socket, matchId));
+    public async joinMatch(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() matchId: string) {
+        socket.emit("match_joined", await serverHandler.joinMatch(io, socket, matchId));
+    }
+
+    @OnMessage("leave_match")
+    public async leaveMatch(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() matchId: string) {
+        socket.emit("match_left", await serverHandler.leaveMatch(io, socket, matchId));
     }
 
 }

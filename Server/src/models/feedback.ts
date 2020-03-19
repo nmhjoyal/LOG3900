@@ -18,6 +18,11 @@ export interface JoinRoomFeedback {
     isPrivate: boolean | null
 }
 
+export interface CreateMatchFeedback {
+    feedback: Feedback
+    matchId: string
+}
+
 export enum SignInStatus {
     SignIn = "You are signed in.",
     InvalidUsername = "This username does not exist.",

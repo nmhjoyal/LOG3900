@@ -1,7 +1,7 @@
 import SignIn from "../models/signIn";
 import PrivateProfile from "../models/privateProfile";
 import { Room, CreateRoom, Invitation } from "../models/room";
-import { Feedback, SignInFeedback, SignInStatus, SignOutStatus, UpdateProfileStatus, JoinRoomFeedback } from "../models/feedback";
+import { Feedback, SignInFeedback, SignInStatus, SignOutStatus, UpdateProfileStatus, JoinRoomFeedback, CreateMatchFeedback } from "../models/feedback";
 import { profileDB } from "../services/Database/profileDB";
 import { roomDB } from "../services/Database/roomDB";
 import Admin from "../models/admin";
@@ -228,19 +228,23 @@ class ServerHandler {
                 this.matchHandler.sendMessage(io, socket, message, user);
             } else {
                 // Send the message
-                this.chatHandler.sendMessage(io, socket, message, user);
+                this.chatHandler.sendMessage(io, message, user);
             }
         } else {
             console.log("User not connected");
         }
     }
 
-    public createMatch(socket: SocketIO.Socket, createMatch: CreateMatch): Feedback {
-        return this.matchHandler.createMatch(socket, createMatch, this.getUser(socket.id));
+    public async createMatch(io: SocketIO.Server, socket: SocketIO.Socket, createMatch: CreateMatch): Promise<CreateMatchFeedback> {
+        return await this.matchHandler.createMatch(io, socket, createMatch, this.users, this.chatHandler);
     }
 
-    public joinMatch(socket: SocketIO.Socket, matchId: string): Feedback {
-        return this.matchHandler.joinMatch(socket, matchId, this.getUser(socket.id));
+    public async joinMatch(io: SocketIO.Server, socket: SocketIO.Socket, matchId: string): Promise<Feedback> {
+        return await this.matchHandler.joinMatch(io, socket, matchId, this.users, this.chatHandler);
+    }
+
+    public async leaveMatch(io: SocketIO.Server, socket: SocketIO.Socket, matchId: string): Promise<Feedback> {
+        return await this.matchHandler.leaveMatch(io, socket, matchId, this.users, this.chatHandler);
     }
 }
 

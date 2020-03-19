@@ -15,18 +15,18 @@ export enum MatchMode {
 }
 
 export class MatchInstance {
-    public static createMatch(socket: SocketIO.Socket, randomId: string, createMatch: CreateMatch): Match {
+    public static createMatch(host: string, createMatch: CreateMatch): Match {
         switch (createMatch.matchMode) {
             case MatchMode.freeForAll:
-                return new FreeForAll(socket, randomId, createMatch.nbRounds);
+                return new FreeForAll(host, createMatch.nbRounds);
             case MatchMode.sprintSolo:
-                return new SprintSolo(socket, randomId, createMatch.nbRounds);
+                return new SprintSolo(host, createMatch.nbRounds);
             case MatchMode.sprintCoop:
-                return new SprintCoop(socket, randomId, createMatch.nbRounds);
+                return new SprintCoop(host, createMatch.nbRounds);
             case MatchMode.oneVsOne:
-                return new OneVsOne(socket, randomId, createMatch.nbRounds);
+                return new OneVsOne(host, createMatch.nbRounds);
             case MatchMode.inverted:
-                return new Inverted(socket, randomId, createMatch.nbRounds);
+                return new Inverted(host, createMatch.nbRounds);
         }
     }
 }

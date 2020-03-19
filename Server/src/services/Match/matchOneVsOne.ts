@@ -1,13 +1,14 @@
 import Match from "./match_General";
+import { Feedback } from "../../models/feedback";
 
 export default class OneVsOne extends Match {
 
-    public constructor(socket: SocketIO.Socket, host: string, nbRounds: number) {
-        super(socket, host, nbRounds);
+    public constructor(host: string, nbRounds: number) {
+        super(host, nbRounds);
         this.mode = 4;
     }
 
-    public startMatch(): void {
+    public startMatch(): Feedback {
         throw new Error("Method not implemented.");
     }
     public endMatch(): void {
