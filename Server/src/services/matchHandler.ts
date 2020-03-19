@@ -2,7 +2,7 @@ import { MatchInstance } from "../models/matchMode";
 import DrawPoint from "../models/drawPoint";
 import { CreateMatch, MatchInfos } from "../models/match";
 import { Feedback, CreateMatchFeedback } from "../models/feedback";
-import Match from "./Match/match_General";
+import Match from "./Match/matchAbstract";
 import PrivateProfile from "../models/privateProfile";
 import RandomMatchIdGenerator from "./IdGenerator/idGenerator";
 import { ClientMessage } from "../models/message";

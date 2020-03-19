@@ -1,4 +1,4 @@
-import Match from "../services/Match/match_General";
+import Match from "../services/Match/matchAbstract";
 import FreeForAll from "../services/Match/matchFreeForAll";
 import SprintSolo from "../services/Match/matchSprintSolo";
 import SprintCoop from "../services/Match/matchSprintCoop";

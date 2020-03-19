@@ -1,4 +1,4 @@
-import Match from "./match_General";
+import Match from "./matchAbstract";
 import { Feedback } from "../../models/feedback";
 
 export default class FreeForAll extends Match {
