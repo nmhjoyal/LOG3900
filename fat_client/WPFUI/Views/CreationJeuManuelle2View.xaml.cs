@@ -45,7 +45,7 @@ namespace WPFUI.Views
 
         private void addClue(object sender, RoutedEventArgs e)
         {
-            this.canContainer.Children.Add(new TextBox());;
+            this.canContainer.Children.Add(new TextBox());
         }
 
         private void createGame(object sender, RoutedEventArgs e)
@@ -65,6 +65,35 @@ namespace WPFUI.Views
         private void preview(object sender, RoutedEventArgs e)
         {
             (this.DataContext as CreationJeuManuelle2ViewModel).preview(this.Mode.SelectedIndex);
+        }
+        private void elementSelectionne(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine(this.Mode.SelectedIndex);
+            ComboBox comboBox = new ComboBox();
+            TextBlock text = new TextBlock();
+            text.Text = "Options:";
+            text.TextAlignment = TextAlignment.Center;
+
+            this.Options.Children.Clear();
+            this.optionBlock.Children.Clear();
+            if (this.Mode.SelectedIndex==2)
+            {
+                this.optionBlock.Children.Add(text);
+                comboBox.Items.Add("De haut en bas");
+                comboBox.Items.Add("De bas en haut");
+                comboBox.Items.Add("De gauche à droite");
+                comboBox.Items.Add("De droite à gauche");
+                this.Options.Children.Add(comboBox);
+            }
+
+            else if (this.Mode.SelectedIndex == 3)
+            {
+                this.optionBlock.Children.Add(text);
+                comboBox.Items.Add("De l'intérieur vers l'extérieur");
+                comboBox.Items.Add("Del'extérieur vers l'intérieur");
+                this.Options.Children.Add(comboBox);
+            }
+
         }
     }
 }

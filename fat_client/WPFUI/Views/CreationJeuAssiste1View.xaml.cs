@@ -68,5 +68,35 @@ namespace WPFUI.Views
         {
             (this.DataContext as CreationJeuAssiste1ViewModel).preview(this.filePath.Text, this.Mode.SelectedIndex, (int)this.imageTransformee.ActualWidth, (int)this.imageTransformee.ActualHeight);
         }
+
+        private void elementSelectionne(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine(this.Mode.SelectedIndex);
+            ComboBox comboBox = new ComboBox();
+            TextBlock text = new TextBlock();
+            text.Text = "Options:";
+            text.TextAlignment = TextAlignment.Center;
+
+            this.Options.Children.Clear();
+            this.optionBlock.Children.Clear();
+            if (this.Mode.SelectedIndex == 2)
+            {
+                this.optionBlock.Children.Add(text);
+                comboBox.Items.Add("De haut en bas");
+                comboBox.Items.Add("De bas en haut");
+                comboBox.Items.Add("De gauche à droite");
+                comboBox.Items.Add("De droite à gauche");
+                this.Options.Children.Add(comboBox);
+            }
+
+            else if (this.Mode.SelectedIndex == 3)
+            {
+                this.optionBlock.Children.Add(text);
+                comboBox.Items.Add("De l'intérieur vers l'extérieur");
+                comboBox.Items.Add("Del'extérieur vers l'intérieur");
+                this.Options.Children.Add(comboBox);
+            }
+
+        }
     }
 }
