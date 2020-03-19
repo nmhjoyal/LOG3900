@@ -336,9 +336,6 @@
     <Resource Include="Views\account_circle_grey_72x72.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Views\SignUpLogo.PNG" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\MainMenu.PNG" />
   </ItemGroup>
   <ItemGroup>
