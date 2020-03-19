@@ -218,15 +218,15 @@ export default class ChatHandler {
         return leaveRoomFeedback;
     }
 
-    public async sendMessage(io: SocketIO.Server, socket: SocketIO.Socket, clientMessage: ClientMessage, user: PrivateProfile): Promise<void> {
+    public async sendMessage(io: SocketIO.Server, clientMessage: ClientMessage, user: PrivateProfile): Promise<void> {
         let privateRoom: Room | undefined = this.findPrivateRoom(clientMessage.roomId);
-
         const message: Message = {
             username : user.username,
             content : ChatFilter.filter(clientMessage.content),
             date : Date.now(),
             roomId : clientMessage.roomId
         };
+        
         if (privateRoom) {
             privateRoom.messages.push(message);
             io.in(message.roomId).emit("new_message", JSON.stringify(message));
