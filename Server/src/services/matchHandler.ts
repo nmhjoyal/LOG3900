@@ -1,5 +1,5 @@
 import { MatchMode } from "../models/matchMode";
-import { Trace, Point, Game, GamePreview, Stroke, StylusPoint } from "../models/drawPoint";
+import { Game, GamePreview, Stroke, StylusPoint } from "../models/drawPoint";
 import { VirtualPlayer } from "./Drawing/virtualPlayer";
 import { gameDB } from "./Database/gameDB";
 // import { VirtualPlayer } from "./Drawing/virtualPlayer";
@@ -51,18 +51,15 @@ export default class MatchHandler {
     public stroke(io: SocketIO.Server, socket: SocketIO.Socket, stroke: Stroke): void {
         // if (socket.id == this.drawer) {
             stroke.DrawingAttributes.Top = this.top++;
-            console.log(stroke.DrawingAttributes);
             socket.to("freeDrawRoomTest").emit("new_stroke", JSON.stringify(stroke));
         // }
     }
 
     public eraseStroke(io: SocketIO.Server, socket: SocketIO.Socket): void {
-        console.log("erase stroke");
         socket.to("freeDrawRoomTest").emit("new_erase_stroke");
     }
 
     public erasePoint(io: SocketIO.Server, socket: SocketIO.Socket): void {
-        console.log("erase point");
         socket.to("freeDrawRoomTest").emit("new_erase_point");
     }
 
@@ -83,7 +80,6 @@ export default class MatchHandler {
     // previewHandler.ts
     public async preview(socket: SocketIO.Socket, gamePreview: GamePreview): Promise<void> {
         const virtualPlayer: VirtualPlayer = new VirtualPlayer("bot", null, socket);
-        virtualPlayer.setTimePerRound(5);
         virtualPlayer.preview(gamePreview);
     }
 }

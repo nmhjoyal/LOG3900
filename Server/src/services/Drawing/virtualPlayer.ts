@@ -1,9 +1,9 @@
-import { Game, Stroke, Mode, Color, Trace, Point, GamePreview, Level, StylusPoint } from "../../models/drawPoint";
+import { Game, Stroke, Mode, GamePreview, Level, StylusPoint } from "../../models/drawPoint";
 
 export class VirtualPlayer {
 
     public username: string;
-    private readonly previewTime = 10;
+    private readonly previewTime = 2;
     private roomId: string | null;
     private io: SocketIO.Server | SocketIO.Socket;
     private timePerRound: number;
@@ -21,6 +21,11 @@ export class VirtualPlayer {
     }
 
     public async draw(game: Game): Promise<void> {
+        if(this.roomId) {
+            this.io.in(this.roomId).emit("clear");
+        } else {
+            this.io.emit("clear");
+        }
         switch(game.mode) {
             case Mode.Classic :
                 await this.classic(game.drawing, game.level);
@@ -44,6 +49,11 @@ export class VirtualPlayer {
         gamePreview.drawing.forEach((stroke: Stroke) => {
             stroke.DrawingAttributes.Top = top++;
         });
+        if(this.roomId) {
+            this.io.in(this.roomId).emit("clear");
+        } else {
+            this.io.emit("clear");
+        }
         switch(gamePreview.mode) {
             case Mode.Classic :
                 await this.classic(gamePreview.drawing, Level.Hard);
@@ -80,9 +90,6 @@ export class VirtualPlayer {
                 await VirtualPlayer.delay(this.timePerRound * 1000 / totalPoints);
                 if(this.roomId) {
                     this.io.in(this.roomId).emit("new_point", JSON.stringify(stylusPoint));
-                    console.log(stylusPoint);
-                    console.log(this.getDistance(stylusPoint, {X: 180, Y: 120}));
-                    console.log("***");
                 } else  {
                     this.io.emit("new_point", JSON.stringify(stylusPoint));
                 }
@@ -101,7 +108,6 @@ export class VirtualPlayer {
     }
 
     private async panoramic(drawing: Stroke[], level: number): Promise<void> {
-        // Gauche a droite pour le moment
         drawing.sort((a: Stroke, b: Stroke) => {
             let aMin: number = a.StylusPoints.reduce((min, stylusPoint) => stylusPoint.X < min ? stylusPoint.X : min, a.StylusPoints[0].X);
             let bMin: number = b.StylusPoints.reduce((min, stylusPoint) => stylusPoint.X < min ? stylusPoint.X : min, b.StylusPoints[0].X);
@@ -126,7 +132,6 @@ export class VirtualPlayer {
 
                 }
             }
-            // console.log(aMin);
             let bMin: number = this.getDistance(b.StylusPoints[0], center);
             for(let i: number = 1; i < b.StylusPoints.length; i++) {
                 if(this.getDistance(b.StylusPoints[i], center) < bMin) {
@@ -134,7 +139,6 @@ export class VirtualPlayer {
 
                 }
             }
-            // console.log(bMin);
             return aMin - bMin;
         });
 
