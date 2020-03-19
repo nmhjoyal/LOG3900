@@ -114,15 +114,23 @@ object SocketHandler {
         socket!!.emit(SocketEvent.STROKE, args)
     }
 
+    fun startEraseStroke() {
+        socket!!.emit(SocketEvent.ERASE_STROKE)
+    }
+
+    fun startErasePoint() {
+        socket!!.emit(SocketEvent.ERASE_POINT)
+    }
+
     fun point(drawPoint: StylusPoint) {
         val args = Gson().toJson(drawPoint)
         socket!!.emit(SocketEvent.POINT, args)
     }
 
-    fun sendScreenResolution(screen: ScreenResolution) {
-        val args = Gson().toJson(screen)
-        socket!!.emit(SocketEvent.SEND_SCREEN_RESOLUTION, args)
-    }
+//    fun sendScreenResolution(screen: ScreenResolution) {
+//        val args = Gson().toJson(screen)
+//        socket!!.emit(SocketEvent.SEND_SCREEN_RESOLUTION, args)
+//    }
 
     fun sendInvite(invite: Invitation) {
         val args = Gson().toJson(invite)

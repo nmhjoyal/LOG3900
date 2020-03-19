@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.thin_client.R
 import com.example.thin_client.data.app_preferences.PreferenceHandler
@@ -73,9 +74,17 @@ class ObserverFragment : Fragment() {
                 draw_view.addPath(drawPoint)
             }))
             .on(SocketEvent.NEW_STROKE, ({ data ->
+                draw_view.toggleEraser(false)
                 draw_view.stopTrace()
                 val drawPoint = Gson().fromJson(data.first().toString(), Stroke::class.java)
                 draw_view.startTrace(drawPoint)
+            }))
+            .on(SocketEvent.NEW_ERASE_STROKE, ({
+                draw_view.toggleEraser(true)
+            }))
+            .on(SocketEvent.NEW_ERASE_POINT, ({
+                draw_view.toggleEraser(false)
+                draw_view.setColor(ContextCompat.getColor(context!!, R.color.default_background))
             }))
     }
 
