@@ -167,7 +167,7 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\socketHandler.cs" />
     <Compile Include="Models\UserData.cs" />
-    <Compile Include="Potrace\Potrace.cs" />
+    <Compile Include="Potrace\Converter.cs" />
     <Compile Include="Potrace\SvgLibrary\Basic Shapes\SvgCircle.cs" />
     <Compile Include="Potrace\SvgLibrary\Basic Shapes\SvgEllipse.cs" />
     <Compile Include="Potrace\SvgLibrary\Basic Shapes\SvgLine.cs" />

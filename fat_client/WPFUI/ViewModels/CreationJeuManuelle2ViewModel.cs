@@ -167,8 +167,7 @@ namespace WPFUI.ViewModels
 
         public void preview(int mode)
         {            
-            GamePreview gamePreview = new GamePreview(Potrace.Potrace.potrace("bobleponge.bmp", 600, 600), (Mode)mode);
-            // this._socketHandler.socket.Emit("preview", JsonConvert.SerializeObject(gamePreview));
+            GamePreview gamePreview = new GamePreview(this.Traits, (Mode)mode);
             this._socketHandler.socket.Emit("preview", JsonConvert.SerializeObject(gamePreview));
         }
     }

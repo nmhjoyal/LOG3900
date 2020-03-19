@@ -11,7 +11,7 @@ using System.Drawing;
 
 namespace WPFUI.Potrace
 {
-    class Potrace
+    class Converter
     {
         private const string TRANSFORM_KEY = "transform=\"";
         private const string PATH_KEY = "d=\"";
@@ -20,7 +20,7 @@ namespace WPFUI.Potrace
         private const string BMP = ".bmp";
         private const string SVG = ".svg";
         private static Boolean isPotraceDirectory = false;
-        public static StrokeCollection potrace(string fileName, int width, int height)
+        public static StrokeCollection exec(string fileName, int width, int height)
         {
             if(!isPotraceDirectory)
             {
@@ -37,12 +37,11 @@ namespace WPFUI.Potrace
             // Console.WriteLine("potrace.exe --svg -a 0 --flat -P " + width + "ptx" + height + "pt Images/" + fileName);
             process.StandardInput.WriteLine("mkbitmap.exe -o Images/mkbitmap-o/" + fileName.Substring(0, fileName.Length - 4) + BMP + " Images/" + fileName);
             process.StandardInput.Flush();
-            process.StandardInput.WriteLine("potrace.exe --svg -o Images/potrace-o/" + fileName.Substring(0, fileName.Length - 4) + SVG + " -a 0 --flat -W " + width + "pt -H " + height + "pt Images/mkbitmap-o/" + fileName.Substring(0, fileName.Length - 4) + BMP);
+            process.StandardInput.WriteLine("potrace.exe --" + SVG + " -o Images/potrace-o/" + fileName.Substring(0, fileName.Length - 4) + SVG + " -a 0 --flat -W " + width + "pt -H " + height + "pt Images/mkbitmap-o/" + fileName.Substring(0, fileName.Length - 4) + BMP);
             process.StandardInput.Flush();
             process.StandardInput.Close();
             process.WaitForExit();
             string file = File.ReadAllText("Images/potrace-o/" + fileName.Substring(0, fileName.Length - 4) + SVG);
-
             SvgTransformCollection transforms = (SvgTransformCollection)new SvgTransformConverter().ConvertFrom(file.Substring(file.IndexOf(TRANSFORM_KEY) + TRANSFORM_KEY.Length));
             SvgPathSegmentList pathSegments = (SvgPathSegmentList)new SvgPathBuilder().ConvertFrom(file.Substring(file.IndexOf(PATH_KEY) + PATH_KEY.Length));
 

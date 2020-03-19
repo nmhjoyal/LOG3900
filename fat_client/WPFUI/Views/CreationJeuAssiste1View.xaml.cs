@@ -53,7 +53,7 @@ namespace WPFUI.Views
 
         }
 
-        private void createManGame2(object sender, RoutedEventArgs e)
+        private void createGame(object sender, RoutedEventArgs e)
         {
             List<string> clues = new List<string>();
             for (int i = 2; i < this.canContainer.Children.Count; i++)
@@ -62,13 +62,11 @@ namespace WPFUI.Views
 
             }
             Console.WriteLine(JsonConvert.SerializeObject(clues));
-
-
         }
 
         private void preview(object sender, RoutedEventArgs e)
         {
-            (this.DataContext as CreationJeuAssiste1ViewModel).preview(this.filePath.Text);
+            (this.DataContext as CreationJeuAssiste1ViewModel).preview(this.filePath.Text, this.Mode.SelectedIndex, (int)this.imageTransformee.ActualWidth, (int)this.imageTransformee.ActualHeight);
         }
     }
 }

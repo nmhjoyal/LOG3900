@@ -86,7 +86,7 @@ namespace WPFUI.ViewModels
             ChoisirPointe = new RelayCommand<string>(editeur.ChoisirPointe);
             ChoisirOutil = new RelayCommand<string>(editeur.ChoisirOutil);
 
-            // this._socketHandler.onDrawing(this.Traits, this.strokes);
+            this._socketHandler.onDrawing(this.Traits, this.strokes);
 
         }
 
@@ -164,9 +164,17 @@ namespace WPFUI.ViewModels
             this._socketHandler.TestPOSTWebRequest(game, "/game/create");
         }
 
-        public void preview(string filePath)
+        public void preview(string fileName, int mode, int width, int height)
         {
-            // Potrace.Potrace.potrace(filePath);
+            GamePreview gamePreview = new GamePreview(Potrace.Converter.exec(fileName, width, height), (Mode)mode);
+            // this._socketHandler.socket.Emit("preview", JsonConvert.SerializeObject(gamePreview));
+            try
+            {
+                this._socketHandler.socket.Emit("preview", JsonConvert.SerializeObject(gamePreview));
+            } catch(Exception)
+            {
+                Console.WriteLine("You must provide a file (bmp, png, jpg)");
+            }
         }
     }
 
