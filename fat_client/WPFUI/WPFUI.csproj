@@ -66,6 +66,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -167,6 +168,87 @@
     <Compile Include="Models\socketHandler.cs" />
     <Compile Include="Models\UserData.cs" />
     <Compile Include="Potrace\Potrace.cs" />
+    <Compile Include="Potrace\SvgLibrary\Basic Shapes\SvgCircle.cs" />
+    <Compile Include="Potrace\SvgLibrary\Basic Shapes\SvgEllipse.cs" />
+    <Compile Include="Potrace\SvgLibrary\Basic Shapes\SvgLine.cs" />
+    <Compile Include="Potrace\SvgLibrary\Basic Shapes\SvgPolygon.cs" />
+    <Compile Include="Potrace\SvgLibrary\Basic Shapes\SvgPolyline.cs" />
+    <Compile Include="Potrace\SvgLibrary\Basic Shapes\SvgRectangle.cs" />
+    <Compile Include="Potrace\SvgLibrary\Basic Shapes\SvgVisualElement.cs" />
+    <Compile Include="Potrace\SvgLibrary\Basic Shapes\SvgVisualElementStyle.cs" />
+    <Compile Include="Potrace\SvgLibrary\Clipping and Masking\ISvgClipable.cs" />
+    <Compile Include="Potrace\SvgLibrary\Clipping and Masking\SvgClipPath.cs" />
+    <Compile Include="Potrace\SvgLibrary\Clipping and Masking\SvgClipRule.cs" />
+    <Compile Include="Potrace\SvgLibrary\Clipping and Masking\SvgMask.cs" />
+    <Compile Include="Potrace\SvgLibrary\DataTypes\ISvgViewPort.cs" />
+    <Compile Include="Potrace\SvgLibrary\DataTypes\SvgCoordinateUnits.cs" />
+    <Compile Include="Potrace\SvgLibrary\DataTypes\SvgElementStyle.cs" />
+    <Compile Include="Potrace\SvgLibrary\DataTypes\SvgPoint.cs" />
+    <Compile Include="Potrace\SvgLibrary\DataTypes\SvgUnit.cs" />
+    <Compile Include="Potrace\SvgLibrary\DataTypes\SvgUnitCollection.cs" />
+    <Compile Include="Potrace\SvgLibrary\DataTypes\SvgUnitConverter.cs" />
+    <Compile Include="Potrace\SvgLibrary\DataTypes\SvgViewBox.cs" />
+    <Compile Include="Potrace\SvgLibrary\Document Structure\SvgDefinitionList.cs" />
+    <Compile Include="Potrace\SvgLibrary\Document Structure\SvgDescription.cs" />
+    <Compile Include="Potrace\SvgLibrary\Document Structure\SvgFragment.cs" />
+    <Compile Include="Potrace\SvgLibrary\Document Structure\SvgGroup.cs" />
+    <Compile Include="Potrace\SvgLibrary\Document Structure\SvgUse.cs" />
+    <Compile Include="Potrace\SvgLibrary\Exceptions\SvgException.cs" />
+    <Compile Include="Potrace\SvgLibrary\Filter Effects\feGaussianBlur\RawBitmap.cs" />
+    <Compile Include="Potrace\SvgLibrary\Filter Effects\feGaussianBlur\SvgGaussianBlur.cs" />
+    <Compile Include="Potrace\SvgLibrary\Filter Effects\feMerge\SvgMerge.cs" />
+    <Compile Include="Potrace\SvgLibrary\Filter Effects\ISvgFilterable.cs" />
+    <Compile Include="Potrace\SvgLibrary\Filter Effects\SvgFilter.cs" />
+    <Compile Include="Potrace\SvgLibrary\Filter Effects\SvgFilterPrimitive.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\ISvgStylable.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgColourConverter.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgColourServer.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgFillRule.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgGradientServer.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgGradientSpreadMethod.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgGradientStop.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgLinearGradientServer.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgPaintServer.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgPaintServerFactory.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgPatternServer.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgRadialGradientServer.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgStrokeLineCap.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgStrokeLineJoin.cs" />
+    <Compile Include="Potrace\SvgLibrary\Paths\SvgArcSegment.cs" />
+    <Compile Include="Potrace\SvgLibrary\Paths\SvgClosePathSegment.cs" />
+    <Compile Include="Potrace\SvgLibrary\Paths\SvgCubicCurveSegment.cs" />
+    <Compile Include="Potrace\SvgLibrary\Paths\SvgLineSegment.cs" />
+    <Compile Include="Potrace\SvgLibrary\Paths\SvgMoveToSegment.cs" />
+    <Compile Include="Potrace\SvgLibrary\Paths\SvgPath.cs" />
+    <Compile Include="Potrace\SvgLibrary\Paths\SvgPathBuilder.cs" />
+    <Compile Include="Potrace\SvgLibrary\Paths\SvgPathSegment.cs" />
+    <Compile Include="Potrace\SvgLibrary\Paths\SvgPathSegmentList.cs" />
+    <Compile Include="Potrace\SvgLibrary\Paths\SvgQuadraticCurveSegment.cs" />
+    <Compile Include="Potrace\SvgLibrary\SvgAttributeAttribute.cs" />
+    <Compile Include="Potrace\SvgLibrary\SvgAttributeCollection.cs" />
+    <Compile Include="Potrace\SvgLibrary\SvgDocument.cs" />
+    <Compile Include="Potrace\SvgLibrary\SvgDtdResolver.cs" />
+    <Compile Include="Potrace\SvgLibrary\SvgElement.cs" />
+    <Compile Include="Potrace\SvgLibrary\SvgElementAttribute.cs" />
+    <Compile Include="Potrace\SvgLibrary\SvgElementCollection.cs" />
+    <Compile Include="Potrace\SvgLibrary\SvgElementFactory.cs" />
+    <Compile Include="Potrace\SvgLibrary\SvgElementIdManager.cs" />
+    <Compile Include="Potrace\SvgLibrary\SvgRenderer.cs" />
+    <Compile Include="Potrace\SvgLibrary\SvgTextReader.cs" />
+    <Compile Include="Potrace\SvgLibrary\Text\SvgText.cs" />
+    <Compile Include="Potrace\SvgLibrary\Text\SvgTextAnchor.cs" />
+    <Compile Include="Potrace\SvgLibrary\Text\SvgTextSpan.cs" />
+    <Compile Include="Potrace\SvgLibrary\Transforms\ISvgTransformable.cs" />
+    <Compile Include="Potrace\SvgLibrary\Transforms\SvgMatrix.cs" />
+    <Compile Include="Potrace\SvgLibrary\Transforms\SvgRotate.cs" />
+    <Compile Include="Potrace\SvgLibrary\Transforms\SvgScale.cs" />
+    <Compile Include="Potrace\SvgLibrary\Transforms\SvgShear.cs" />
+    <Compile Include="Potrace\SvgLibrary\Transforms\SvgSkew.cs" />
+    <Compile Include="Potrace\SvgLibrary\Transforms\SvgTransform.cs" />
+    <Compile Include="Potrace\SvgLibrary\Transforms\SvgTransformCollection.cs" />
+    <Compile Include="Potrace\SvgLibrary\Transforms\SvgTransformConverter.cs" />
+    <Compile Include="Potrace\SvgLibrary\Transforms\SvgTranslate.cs" />
+    <Compile Include="Potrace\SvgLibrary\Web\SvgHandler.cs" />
     <Compile Include="Utilitaires\RelayCommand.cs" />
     <Compile Include="ViewModels\chatBoxViewModel.cs" />
     <Compile Include="ViewModels\ChatRoomChannelsViewModel.cs" />
@@ -250,6 +332,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
+    <None Include="Potrace\SvgLibrary\Resources\svg11.dtd" />
+    <None Include="Potrace\SvgLibrary\Svg.csproj" />
+    <None Include="Potrace\SvgLibrary\Svg.csproj.vspscc" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -415,7 +500,10 @@
     <Resource Include="Resources\trophy_cropped.gif" />
     <Content Include="Resources\watermelon.svg" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Potrace\SvgLibrary\Properties\" />
+    <Folder Include="Potrace\SvgLibrary\Web\Resources\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.3.0.1\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.0.1\build\MaterialDesignThemes.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
