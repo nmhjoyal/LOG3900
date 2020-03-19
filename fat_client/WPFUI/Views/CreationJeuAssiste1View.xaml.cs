@@ -74,7 +74,7 @@ namespace WPFUI.Views
 
         private void preview(object sender, RoutedEventArgs e)
         {
-
+            (this.DataContext as CreationJeuAssiste1ViewModel).preview(this.filePath.Text);
         }
     }
 }

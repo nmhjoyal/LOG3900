@@ -35,7 +35,7 @@ export class GameController {
                 stroke.DrawingAttributes = {
                     Color: stroke.DrawingAttributes.Color,
                     Width: stroke.DrawingAttributes.Width,
-                    Height: stroke.DrawingAttributes.Height,
+                    StylusTip: stroke.DrawingAttributes.StylusTip,
                     Top: top++
                 };
                 stroke.StylusPoints.forEach((stylusPoint: StylusPoint, i: number) => {
