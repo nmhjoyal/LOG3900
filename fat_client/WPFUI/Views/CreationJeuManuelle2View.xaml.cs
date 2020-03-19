@@ -24,16 +24,10 @@ namespace WPFUI.Views
     /// </summary>
     public partial class CreationJeuManuelle2View : UserControl
     {
-        IEventAggregator events;
-        ISocketHandler socketHandler;
-
         public CreationJeuManuelle2View()
         {
             InitializeComponent();
-            DataContext = new CreationJeuManuelle1ViewModel(events, socketHandler);
         }
-
-
 
         // Pour la gestion de l'affichage de position du pointeur.
         //private void surfaceDessin_MouseLeave(object sender, MouseEventArgs e) => textBlockPosition.Text = "";
