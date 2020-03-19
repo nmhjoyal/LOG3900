@@ -135,37 +135,14 @@
                 </StackPanel>
             </ComboBoxItem>
         </ComboBox>
-
-        <Border Background="#FF66CC00" BorderThickness="5" Grid.Column="4" Grid.Row="12" CornerRadius="10">
-            <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center"  Text="Options:" Grid.Column="4" Grid.Row="12"/>
-        </Border>
-        <ComboBox Grid.Column="5" Grid.Row="12">
-            <ComboBoxItem Name ="hautEnBas" IsSelected="True">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock  Foreground="Black">De haut en bas</TextBlock>
-                </StackPanel>
-            </ComboBoxItem>
-            <ComboBoxItem x:Name="basEnHaut">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Foreground="Black">De bas en haut</TextBlock>
-                </StackPanel>
-            </ComboBoxItem>
-            <ComboBoxItem x:Name="gaucheADroite">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Foreground="Black">De gauche à droite</TextBlock>
-                </StackPanel>
-            </ComboBoxItem>
-            <ComboBoxItem x:Name="droiteAGauche">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Foreground="Black">De droite à gauche</TextBlock>
-                </StackPanel>
-            </ComboBoxItem>
-        </ComboBox>
-
-        <Border Background="#FF66CC00" BorderThickness="5" Grid.Column="1" Grid.Row="14" CornerRadius="10">
+            <StackPanel Name="optionBlock" Grid.Column="4" Grid.Row="14">
+                
+            </StackPanel>
+            <StackPanel  Name="Options" Grid.Column="5" Grid.Row="14"> </StackPanel>
+            <Border Background="#FF66CC00" BorderThickness="5" Grid.Column="1" Grid.Row="14" CornerRadius="10">
             <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center"  Text="Mode:" Grid.Column="1" Grid.Row="14"/>
         </Border>
-        <ComboBox Name="Mode" Grid.Column="3" Grid.Row="14">
+            <ComboBox SelectionChanged="elementSelectionne" Name="Mode" Grid.Column="3" Grid.Row="14">
             <ComboBoxItem IsSelected="True">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock>Classique</TextBlock>
@@ -176,9 +153,9 @@
                     <TextBlock>Aléatoire</TextBlock>
                 </StackPanel>
             </ComboBoxItem>
-            <ComboBoxItem>
+            <ComboBoxItem >
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock>Panoramique</TextBlock>
+                    <TextBlock >Panoramique</TextBlock>
                 </StackPanel>
             </ComboBoxItem>
             <ComboBoxItem>
