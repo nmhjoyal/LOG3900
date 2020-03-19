@@ -24,13 +24,9 @@ namespace WPFUI.Views
     /// </summary>
     public partial class CreationJeuAssiste1View : UserControl
     {
-        IEventAggregator events;
-        ISocketHandler socketHandler;
-
         public CreationJeuAssiste1View()
         {
             InitializeComponent();
-            DataContext = new CreationJeuAssiste1ViewModel(events, socketHandler);
         }
 
 
@@ -69,8 +65,6 @@ namespace WPFUI.Views
 
 
         }
-
-
 
         private void preview(object sender, RoutedEventArgs e)
         {

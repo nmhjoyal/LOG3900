@@ -64,7 +64,6 @@ namespace WPFUI.ViewModels
         /// sur lesquelles la vue se connectera.
         /// </summary>
         private IEventAggregator _events;
-        private IUserData _userdata;
 
         private ISocketHandler _socketHandler;
         public CreationJeuManuelle2ViewModel(IEventAggregator events, ISocketHandler socketHandler)
@@ -173,5 +172,4 @@ namespace WPFUI.ViewModels
             this._socketHandler.socket.Emit("preview", JsonConvert.SerializeObject(gamePreview));
         }
     }
-
 }

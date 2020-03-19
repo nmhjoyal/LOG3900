@@ -69,8 +69,6 @@ namespace WPFUI.ViewModels
         /// sur lesquelles la vue se connectera.
         /// </summary>
         private IEventAggregator _events;
-        private IUserData _userdata;
-
         private ISocketHandler _socketHandler;
         public CreationJeuManuelle1ViewModel(IEventAggregator events, ISocketHandler socketHandler)
         {
@@ -162,7 +160,6 @@ namespace WPFUI.ViewModels
         {
             _events.PublishOnUIThread(new goBackCreationMenuEvent());
         }
-
     }
 
 }
