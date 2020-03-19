@@ -32,8 +32,8 @@ import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.Lobby
 import com.example.thin_client.ui.createUser.CreateUserModel
 import com.example.thin_client.ui.createUser.CreateUserModelFactory
-import com.example.thin_client.ui.login.LoginActivity
 import com.example.thin_client.ui.login.afterTextChanged
+import com.github.nkzawa.socketio.client.Socket
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_profile.*
 import okhttp3.Call

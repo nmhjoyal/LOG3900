@@ -237,18 +237,15 @@ class ChatRoomsFragment : Fragment() {
 
     private fun removeRoom(feedback: Feedback) {
         Handler(Looper.getMainLooper()).post(Runnable {
-            if (feedback.status) {
-                SocketHandler.searchRooms()
-                RoomManager.leaveRoom()
-                refreshRoomAdapter()
-            } else {
-                if (activity !== null) {
-                    Toast.makeText(
-                        context,
-                        feedback.log_message,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+            SocketHandler.searchRooms()
+            RoomManager.leaveRoom()
+            refreshRoomAdapter()
+            if (activity !== null) {
+                Toast.makeText(
+                    context,
+                    feedback.log_message,
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         })
     }

@@ -181,7 +181,7 @@ class ChatFragment : Fragment() {
 
     private fun showInviteDialog() {
         val alertBuilder = AlertDialog.Builder(context)
-        alertBuilder.setTitle(R.string.create_room)
+        alertBuilder.setTitle(R.string.invite_user)
         val dialogView = layoutInflater.inflate(R.layout.dialog_invite_users, null)
         alertBuilder.setView(dialogView)
         val inviteRecyclerView = dialogView.findViewById<RecyclerView>(R.id.invite_list)

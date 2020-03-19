@@ -11,8 +11,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
+import android.widget.RadioGroup
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import com.example.thin_client.R
@@ -21,6 +21,8 @@ import com.example.thin_client.data.app_preferences.Preferences
 import com.example.thin_client.data.SignInFeedback
 import com.example.thin_client.data.app_preferences.PreferenceHandler
 import com.example.thin_client.data.game.GameArgs
+import com.example.thin_client.data.game.GameManager
+import com.example.thin_client.data.game.GameMode
 import com.example.thin_client.data.lifecycle.LoginState
 import com.example.thin_client.data.model.User
 import com.example.thin_client.data.rooms.JoinRoomFeedback
@@ -31,6 +33,7 @@ import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.chat.ChatFragment
 import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
 import com.example.thin_client.ui.game_mode.GameActivity
+import com.example.thin_client.ui.game_mode.WaitingRoom
 import com.example.thin_client.ui.game_mode.free_draw.FreeDrawActivity
 import com.example.thin_client.ui.leaderboard.LeaderboardActivity
 import com.example.thin_client.ui.login.LoginActivity
@@ -55,11 +58,6 @@ class Lobby : AppCompatActivity() {
             startActivity(intent)
         }))
 
-        test_online_draw.setOnClickListener(({
-            val intent = Intent(applicationContext, GameActivity::class.java)
-            startActivity(intent)
-        }))
-
         show_rooms_button.setOnClickListener(({
             if (chatrooms_container.isVisible) {
                 chatrooms_container.visibility = View.GONE
@@ -73,6 +71,10 @@ class Lobby : AppCompatActivity() {
         join_match.setOnClickListener(({
             val intent = Intent(applicationContext, WaitingRoom::class.java)
             startActivity(intent)
+        }))
+
+        create_match.setOnClickListener(({
+            showCreateMatchDialog()
         }))
     }
 
@@ -149,6 +151,7 @@ class Lobby : AppCompatActivity() {
         if (SocketHandler.socket != null) {
             SocketHandler.socket!!
                 .off(SocketEvent.USER_SIGNED_OUT)
+                .off(Socket.EVENT_ERROR)
         }
     }
 
@@ -170,20 +173,6 @@ class Lobby : AppCompatActivity() {
                     SocketHandler.disconnect()
                 }
             }))
-            .on(Socket.EVENT_CONNECT_ERROR, ({
-                runOnUiThread(({
-                    val alertDialog = AlertDialog.Builder(this)
-                    alertDialog.setTitle(R.string.error_connect_title)
-                        .setCancelable(false)
-                        .setMessage(R.string.error_connect)
-                        .setPositiveButton(R.string.ok) { _, _ -> finishAffinity() }
-
-                    val dialog = alertDialog.create()
-                    dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-                    dialog.show()
-                }))
-                SocketHandler.disconnect()
-            }))
             .on(SocketEvent.USER_SIGNED_OUT, ({ data ->
                 val feedback = Gson().fromJson(data.first().toString(),Feedback::class.java)
                     PreferenceHandler(this).resetUserPrefs()
@@ -197,7 +186,8 @@ class Lobby : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                     })
-            })).on(SocketEvent.USER_JOINED_ROOM, ({ data ->
+            }))
+            .on(SocketEvent.USER_JOINED_ROOM, ({ data ->
                 val feedback = Gson().fromJson(data.first().toString(), JoinRoomFeedback::class.java)
                 if (feedback.feedback.status) {
                     RoomManager.addRoom(feedback.room_joined!!)
@@ -215,10 +205,46 @@ class Lobby : AppCompatActivity() {
                     transaction.commitAllowingStateLoss()
                 })
 
-            })).on(Socket.EVENT_DISCONNECT, ({
+            }))
+            .on(Socket.EVENT_DISCONNECT, ({
                 SocketHandler.socket = null
                 SocketHandler.isLoggedIn = false
             }))
+    }
 
+    private fun showCreateMatchDialog() {
+        val alertBuilder = android.app.AlertDialog.Builder(this)
+        alertBuilder.setTitle(R.string.create_match)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_create_match, null)
+        alertBuilder.setView(dialogView)
+        val gameRadioGroup = dialogView.findViewById<RadioGroup>(R.id.game_mode_selection)
+        gameRadioGroup.check(R.id.is_solo_mode)
+
+        alertBuilder
+            .setPositiveButton(R.string.start) { _, _ ->
+                when(gameRadioGroup.checkedRadioButtonId) {
+                    R.id.is_solo_mode -> {
+                        GameManager.currentGameMode = GameMode.SOLO
+                    }
+                    R.id.is_collab_mode -> {
+                        GameManager.currentGameMode = GameMode.COLLAB
+                    }
+                    R.id.is_general_mode -> {
+                        GameManager.currentGameMode = GameMode.GENERAL
+                    }
+                    R.id.is_one_on_one_mode -> {
+                        GameManager.currentGameMode = GameMode.ONE_V_ONE
+                    }
+                    R.id.is_inverse_mode -> {
+                        GameManager.currentGameMode = GameMode.REVERSE
+                    }
+                }
+                val intent = Intent(applicationContext, GameActivity::class.java)
+                startActivity(intent)
+            }
+            .setNegativeButton(R.string.cancel) { _, _ -> }
+        val dialog = alertBuilder.create()
+        dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.show()
     }
 }
