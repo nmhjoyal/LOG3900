@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import com.example.thin_client.R
 import com.example.thin_client.data.app_preferences.PreferenceHandler
 import com.example.thin_client.data.app_preferences.Preferences
+import com.example.thin_client.data.drawing.DrawingAttributes
 import com.example.thin_client.data.drawing.Stroke
 import com.example.thin_client.data.drawing.StylusPoint
 import com.example.thin_client.data.lifecycle.LoginState
@@ -25,7 +26,7 @@ class ObserverFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        draw_view.isDrawer = false
+        observer_draw_view.isDrawer = false
     }
 
     override fun onCreateView(
@@ -71,20 +72,25 @@ class ObserverFragment : Fragment() {
         SocketHandler.socket!!
             .on(SocketEvent.NEW_POINT, ({ data ->
                 val drawPoint = Gson().fromJson(data.first().toString(), StylusPoint::class.java)
-                draw_view.addPath(drawPoint)
+                observer_draw_view.addPath(drawPoint)
             }))
             .on(SocketEvent.NEW_STROKE, ({ data ->
-                draw_view.toggleEraser(false)
-                draw_view.stopTrace()
+                observer_draw_view.toggleEraser(false)
+                observer_draw_view.stopTrace()
                 val drawPoint = Gson().fromJson(data.first().toString(), Stroke::class.java)
-                draw_view.startTrace(drawPoint)
+                observer_draw_view.startTrace(drawPoint)
             }))
             .on(SocketEvent.NEW_ERASE_STROKE, ({
-                draw_view.toggleEraser(true)
+                observer_draw_view.toggleEraser(true)
+                observer_draw_view.stopTrace()
             }))
             .on(SocketEvent.NEW_ERASE_POINT, ({
-                draw_view.toggleEraser(false)
-                draw_view.setColor(ContextCompat.getColor(context!!, R.color.default_background))
+                observer_draw_view.toggleEraser(false)
+                observer_draw_view.stopTrace()
+                observer_draw_view.setColor(ContextCompat.getColor(context!!, R.color.default_background))
+            }))
+            .on(SocketEvent.CLEAR, ({
+                observer_draw_view.clearCanvas()
             }))
     }
 
@@ -92,5 +98,7 @@ class ObserverFragment : Fragment() {
         SocketHandler.socket!!
             .off(SocketEvent.NEW_POINT)
             .off(SocketEvent.NEW_STROKE)
+            .off(SocketEvent.NEW_ERASE_STROKE)
+            .off(SocketEvent.NEW_ERASE_POINT)
     }
 }

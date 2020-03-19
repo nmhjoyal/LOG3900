@@ -18,7 +18,6 @@ import kotlin.collections.ArrayList
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.collections.iterator
-import kotlin.math.floor
 
 
 /* https://github.com/divyanshub024/AndroidDraw */
@@ -26,7 +25,7 @@ import kotlin.math.floor
 class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     var mPaths = LinkedHashMap<MyPath, PaintOptions>()
     var isDrawer: Boolean = true
-    private var topCounter = -1
+    private var mIsFirstMove = false
 
     private var mLastPaths = LinkedHashMap<MyPath, PaintOptions>()
 
@@ -78,6 +77,14 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         return true
     }
 
+    private fun getStrokeCapShape(): Shape {
+        return if (mPaintOptions.cap == Paint.Cap.ROUND) Shape.ELLIPSE else Shape.RECTANGLE
+    }
+
+    private fun getStrokeCap(shape: Shape): Paint.Cap {
+        return if (shape == Shape.ELLIPSE) Paint.Cap.ROUND else Paint.Cap.SQUARE
+    }
+
     fun toggleEraser(isToggled: Boolean) {
         mIsErasing = isToggled
     }
@@ -111,8 +118,9 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         mCurY = mStartY
         setColor(Color.parseColor(drawPoint.DrawingAttributes.Color))
         setStrokeWidth(drawPoint.DrawingAttributes.Width.toFloat())
-
+        setStrokeCap(getStrokeCap(drawPoint.DrawingAttributes.StylusTip))
         mPath.moveTo(mStartX, mStartY)
+        mIsFirstMove = false
     }
 
     fun stopTrace() {
@@ -129,6 +137,7 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
             mPaintOptions.alpha,
             mPaintOptions.cap
         )
+        mIsFirstMove = true
         postInvalidate()
     }
 
@@ -136,9 +145,23 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         if (!mIsErasing) {
             val x = drawPoint.X.toFloat()
             val y = drawPoint.Y.toFloat()
-            mPath.quadTo(mCurX, mCurY, (x + mCurX) / 2, (y + mCurY) / 2)
-            mCurX = x
-            mCurY = y
+            if (mIsFirstMove) {
+                startTrace(
+                    Stroke(
+                    DrawingAttributes(
+                        String.format("#%8X", (0xFFFFFFFF and mPaintOptions.color.toLong())),
+                        mPaintOptions.strokeWidth,
+                        getStrokeCapShape(),
+                        0
+                    ),
+                        arrayOf(StylusPoint(x, y))
+                    )
+                )
+            } else {
+                mPath.quadTo(mCurX, mCurY, (x + mCurX) / 2, (y + mCurY) / 2)
+                mCurX = x
+                mCurY = y
+            }
         } else {
             eraseStrokes(drawPoint.X.toFloat(), drawPoint.Y.toFloat())
         }
@@ -163,7 +186,6 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         mLastPaths = mPaths.clone() as LinkedHashMap<MyPath, PaintOptions>
         mPath.reset()
         mPaths.clear()
-        topCounter = -1
         invalidate()
     }
 
@@ -184,8 +206,8 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
                         DrawingAttributes(
                             String.format("#%8X", (0xFFFFFFFF and mPaintOptions.color.toLong())),
                             mPaintOptions.strokeWidth,
-                            mPaintOptions.strokeWidth,
-                            topCounter++
+                            getStrokeCapShape(),
+                            0
                         ),
                         arrayOf(StylusPoint(mCurX.toInt(), mCurY.toInt()))
                     )

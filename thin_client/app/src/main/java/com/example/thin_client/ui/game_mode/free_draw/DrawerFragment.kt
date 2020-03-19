@@ -7,7 +7,6 @@ import android.widget.SeekBar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.thin_client.R
-import com.example.thin_client.server.SocketHandler
 import kotlinx.android.synthetic.main.free_draw_fragment.*
 
 private const val PERCENT = 100f

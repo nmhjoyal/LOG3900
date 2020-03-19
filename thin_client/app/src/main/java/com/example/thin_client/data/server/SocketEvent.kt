@@ -36,6 +36,7 @@ object SocketEvent {
     const val NEW_ERASE_POINT = "new_erase_point"
     const val ERASE_STROKE = "erase_stroke"
     const val ERASE_POINT = "erase_point"
+    const val CLEAR = "clear"
     const val SEND_SCREEN_RESOLUTION = "screen_resolution"
     const val SCALE_VIEW = "scale_view"
     const val CONNECT_FREE_DRAW = "connect_free_draw"
