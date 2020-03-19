@@ -36,7 +36,6 @@ namespace Svg
                     command = commandSet[0];
                     isRelative = char.IsLower(command);
                     // http://www.w3.org/TR/SVG11/paths.html#PathDataGeneralInformation
-                    Console.WriteLine(command);
                     switch (command)
                     {
                         case 'm': // relative moveto

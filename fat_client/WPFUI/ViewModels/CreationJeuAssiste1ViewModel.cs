@@ -168,7 +168,7 @@ namespace WPFUI.ViewModels
 
         public void preview(string filePath)
         {
-            Potrace.Potrace.potrace(filePath);
+            // Potrace.Potrace.potrace(filePath);
         }
     }
 

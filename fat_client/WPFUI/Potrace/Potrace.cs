@@ -1,19 +1,32 @@
 ﻿using Svg;
 using Svg.Pathing;
+using Svg.Transforms;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Ink;
 using System.Windows.Input;
+using System.Drawing;
 
 namespace WPFUI.Potrace
 {
     class Potrace
     {
-        public static StrokeCollection potrace(string filePath)
+        private const string TRANSFORM_KEY = "transform=\"";
+        private const string PATH_KEY = "d=\"";
+        private const string JPG = ".jpg";
+        private const string PNG = ".png";
+        private const string BMP = ".bmp";
+        private const string SVG = ".svg";
+        private static Boolean isPotraceDirectory = false;
+        public static StrokeCollection potrace(string fileName, int width, int height)
         {
-            Directory.SetCurrentDirectory(Directory.GetCurrentDirectory() + "/../../Potrace");
-            /*
+            if(!isPotraceDirectory)
+            {
+                Directory.SetCurrentDirectory(Directory.GetCurrentDirectory() + "/../../Potrace");
+                isPotraceDirectory = true;
+            }
             Process process = new Process();
             process.StartInfo.FileName = "cmd.exe";
             process.StartInfo.CreateNoWindow = true;
@@ -21,36 +34,43 @@ namespace WPFUI.Potrace
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.UseShellExecute = false;
             process.Start();
-            process.StandardInput.WriteLine("potrace.exe --svg -a 0 --flat Images/line.bmp");
+            // Console.WriteLine("potrace.exe --svg -a 0 --flat -P " + width + "ptx" + height + "pt Images/" + fileName);
+            process.StandardInput.WriteLine("mkbitmap.exe -o Images/mkbitmap-o/" + fileName.Substring(0, fileName.Length - 4) + BMP + " Images/" + fileName);
+            process.StandardInput.Flush();
+            process.StandardInput.WriteLine("potrace.exe --svg -o Images/potrace-o/" + fileName.Substring(0, fileName.Length - 4) + SVG + " -a 0 --flat -W " + width + "pt -H " + height + "pt Images/mkbitmap-o/" + fileName.Substring(0, fileName.Length - 4) + BMP);
             process.StandardInput.Flush();
             process.StandardInput.Close();
             process.WaitForExit();
-            Console.WriteLine(File.ReadAllText("Images/line.svg"));
-            */
-            string a = File.ReadAllText("Images/line.svg");
-            int startPathIndex = a.IndexOf("d=") + 3;
-            int endPathIndex = a.Length - startPathIndex - 16;
-            Console.WriteLine(a.Substring(startPathIndex, endPathIndex));
-            SvgPathSegmentList test = SvgPathBuilder.Parse(a);
-            StrokeCollection strokes = new StrokeCollection();
-            for(int i = 0; i < test.Count; i++)
+            string file = File.ReadAllText("Images/potrace-o/" + fileName.Substring(0, fileName.Length - 4) + SVG);
+
+            SvgTransformCollection transforms = (SvgTransformCollection)new SvgTransformConverter().ConvertFrom(file.Substring(file.IndexOf(TRANSFORM_KEY) + TRANSFORM_KEY.Length));
+            SvgPathSegmentList pathSegments = (SvgPathSegmentList)new SvgPathBuilder().ConvertFrom(file.Substring(file.IndexOf(PATH_KEY) + PATH_KEY.Length));
+
+            PointF translate = new PointF(0, 0);
+            PointF scale = new PointF(1, 1);
+
+            for (int i = 0; i < transforms.Count; i++)
             {
-                if(test[i].GetType() == typeof(SvgMoveToSegment)){
-                    StylusPointCollection stylusPoints = new StylusPointCollection();
-                    stylusPoints.Add(new StylusPoint(test[i].Start.X/15, 150 - test[i].Start.Y/15));
-                    strokes.Add(new Stroke(stylusPoints));
-                    Console.WriteLine("Move :" + test[i].Start.X + "," + test[i].Start.Y);
-                } else if(test[i].GetType() == typeof(SvgLineSegment))
+                if(transforms[i].GetType() == typeof(SvgTranslate))
                 {
-                    Console.WriteLine("Line start :" + test[i].Start.X + "," + test[i].Start.Y);
-                    Console.WriteLine("Line end :" + test[i].End.X + "," + test[i].End.Y);
-                    strokes[strokes.Count - 1].StylusPoints.Add(new StylusPoint(test[i].End.X/15, 150 - test[i].End.Y/15));
-                } else if(test[i].GetType() == typeof(SvgClosePathSegment))
+                    translate = new PointF(((SvgTranslate)transforms[i]).X, ((SvgTranslate)transforms[i]).Y);
+                } else if(transforms[i].GetType() == typeof(SvgScale))
                 {
-                    Console.WriteLine("Close start :" + test[i].Start.X + "," + test[i].Start.Y);
-                    Console.WriteLine("Close end :" + test[i].End.X + "," + test[i].End.Y);
+                    scale = new PointF(((SvgScale)transforms[i]).X, ((SvgScale)transforms[i]).Y);
                 }
-                Console.WriteLine("***");
+            }
+
+            StrokeCollection strokes = new StrokeCollection();
+            for(int i = 0; i < pathSegments.Count; i++)
+            {
+                if(pathSegments[i].GetType() == typeof(SvgMoveToSegment)){
+                    StylusPointCollection stylusPoints = new StylusPointCollection();
+                    stylusPoints.Add(new StylusPoint(scale.X * pathSegments[i].Start.X + translate.X, scale.Y * pathSegments[i].Start.Y + translate.Y));
+                    strokes.Add(new Stroke(stylusPoints));
+                } else if(pathSegments[i].GetType() == typeof(SvgLineSegment))
+                {
+                    strokes[strokes.Count - 1].StylusPoints.Add(new StylusPoint(scale.X * pathSegments[i].End.X + translate.X, scale.Y * pathSegments[i].End.Y + translate.Y));
+                }
             }
             return strokes;
         }

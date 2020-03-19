@@ -3,7 +3,7 @@ import { Game, Stroke, Mode, GamePreview, Level, StylusPoint } from "../../model
 export class VirtualPlayer {
 
     public username: string;
-    private readonly previewTime = 2;
+    private readonly previewTime = 10;
     private roomId: string | null;
     private io: SocketIO.Server | SocketIO.Socket;
     private timePerRound: number;
@@ -85,6 +85,8 @@ export class VirtualPlayer {
                 this.io.in(this.roomId).emit("new_stroke", JSON.stringify(stroke));
             } else {
                 this.io.emit("new_stroke", JSON.stringify(stroke));
+                console.log(JSON.stringify(stroke.StylusPoints[0].X));
+                console.log(JSON.stringify(stroke.StylusPoints[0].Y));
             }
             for(let stylusPoint of stroke.StylusPoints) {
                 await VirtualPlayer.delay(this.timePerRound * 1000 / totalPoints);
@@ -120,8 +122,8 @@ export class VirtualPlayer {
     private async centered(drawing: Stroke[], level: number): Promise<void> {
         // Point central : (180, 120)
         const center: StylusPoint = {
-            X: 180,
-            Y: 120
+            X: 300,
+            Y: 300
         }
 
         drawing.sort((a: Stroke, b: Stroke) => {
