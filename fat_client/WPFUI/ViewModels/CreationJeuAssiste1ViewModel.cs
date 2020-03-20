@@ -158,22 +158,39 @@ namespace WPFUI.ViewModels
             _events.PublishOnUIThread(new goBackCreationMenuEvent());
         }
 
-        public void createGame(string word, List<string> clues, int level, int mode)
+        public void createGame(string word, List<string> clues, int level, int mode, int option, string fileName, int width, int height)
         {
-            Game game = new Game(word, this.Traits, clues, (Level)level, (Mode)mode);
-            this._socketHandler.TestPOSTWebRequest(game, "/game/create");
-        }
-
-        public void preview(string fileName, int mode, int width, int height)
-        {
-            GamePreview gamePreview = new GamePreview(Potrace.Converter.exec(fileName, width, height), (Mode)mode);
-            // this._socketHandler.socket.Emit("preview", JsonConvert.SerializeObject(gamePreview));
             try
             {
+                Game game = new Game(word, Potrace.Converter.exec(fileName, width, height), clues, (Level)level, (Mode)mode, option);
+                this._socketHandler.TestPOSTWebRequest(game, "/game/create");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("This file provided is invalid (bmp, jpg, png)");
+            }
+        }
+
+        public void preview(string fileName, int mode, int option, int width, int height)
+        {
+            // this._socketHandler.socket.Emit("preview", JsonConvert.SerializeObject(gamePreview));
+            /*
+            try
+            {
+                GamePreview gamePreview = new GamePreview(Potrace.Converter.exec(fileName, width, height), (Mode)mode);
+                this._socketHandler.socket.Emit("preview", JsonConvert.SerializeObject(gamePreview));
+            } catch(Exception e)
+            {
+                Console.WriteLine("You must provide a file (bmp, png, jpg)");
+            }
+            */
+            try
+            {
+                GamePreview gamePreview = new GamePreview(Potrace.Converter.exec(fileName, width, height), (Mode)mode, option);
                 this._socketHandler.socket.Emit("preview", JsonConvert.SerializeObject(gamePreview));
             } catch(Exception)
             {
-                Console.WriteLine("You must provide a file (bmp, png, jpg)");
+                Console.WriteLine("This file provided is invalid (bmp, jpg, png)");
             }
         }
     }

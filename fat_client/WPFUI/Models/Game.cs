@@ -14,13 +14,15 @@ namespace WPFUI.Models
         public List<string> clues;
         public Level level;
         public Mode mode;
-        public Game(string word, StrokeCollection drawing, List<string> clues, Level level, Mode mode)
+        public int option;
+        public Game(string word, StrokeCollection drawing, List<string> clues, Level level, Mode mode, int option)
         {
             this.word = word;
             this.drawing = new StrokeCollection(drawing);
             this.clues = new List<string>(clues);
             this.level = level;
             this.mode = mode;
+            this.option = option;
         }
     }
 
@@ -28,10 +30,12 @@ namespace WPFUI.Models
     {
         public StrokeCollection drawing;
         public Mode mode;
-        public GamePreview(StrokeCollection drawing, Mode mode)
+        public int option;
+        public GamePreview(StrokeCollection drawing, Mode mode, int option)
         {
             this.drawing = new StrokeCollection(drawing);
             this.mode = mode;
+            this.option = option;
         }
     }
 
@@ -49,5 +53,4 @@ namespace WPFUI.Models
         Panoramic,
         Centered
     }
-    
 }

@@ -71,7 +71,6 @@ export default class MatchHandler {
 
     public async getDrawing(io: SocketIO.Server): Promise<void> {
         const game: Game = await gameDB.getRandomGame();
-        console.log(JSON.stringify(game));
         const virtualPlayer: VirtualPlayer = new VirtualPlayer("bot", "freeDrawRoomTest", io);
         virtualPlayer.setTimePerRound(10);
         virtualPlayer.draw(game);

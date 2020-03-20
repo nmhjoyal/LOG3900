@@ -56,17 +56,28 @@ namespace WPFUI.Views
         private void createGame(object sender, RoutedEventArgs e)
         {
             List<string> clues = new List<string>();
-            for (int i = 2; i < this.canContainer.Children.Count; i++)
+            for (int i = 0; i < this.canContainer.Children.Count; i++)
             {
                 clues.Add((this.canContainer.Children[i] as TextBox).Text);
 
             }
+            int option = -1;
+            if (this.Options.Children.Count > 0)
+            {
+                option = (this.Options.Children[0] as ComboBox).SelectedIndex;
+            }
             Console.WriteLine(JsonConvert.SerializeObject(clues));
+            (this.DataContext as CreationJeuAssiste1ViewModel).createGame(this.Word.Text, clues, this.Level.SelectedIndex, this.Mode.SelectedIndex, option, this.fileName.Text, (int)this.imageTransformee.ActualWidth, (int)this.imageTransformee.ActualHeight);
         }
 
         private void preview(object sender, RoutedEventArgs e)
         {
-            (this.DataContext as CreationJeuAssiste1ViewModel).preview(this.filePath.Text, this.Mode.SelectedIndex, (int)this.imageTransformee.ActualWidth, (int)this.imageTransformee.ActualHeight);
+            int option = -1;
+            if (this.Options.Children.Count > 0)
+            {
+                option = (this.Options.Children[0] as ComboBox).SelectedIndex;
+            }
+            (this.DataContext as CreationJeuAssiste1ViewModel).preview(this.fileName.Text, this.Mode.SelectedIndex, option, (int)this.imageTransformee.ActualWidth, (int)this.imageTransformee.ActualHeight);
         }
 
         private void elementSelectionne(object sender, RoutedEventArgs e)
@@ -82,10 +93,11 @@ namespace WPFUI.Views
             if (this.Mode.SelectedIndex == 2)
             {
                 this.optionBlock.Children.Add(text);
-                comboBox.Items.Add("De haut en bas");
-                comboBox.Items.Add("De bas en haut");
                 comboBox.Items.Add("De gauche à droite");
                 comboBox.Items.Add("De droite à gauche");
+                comboBox.Items.Add("De haut en bas");
+                comboBox.Items.Add("De bas en haut");
+                comboBox.SelectedIndex = 0;
                 this.Options.Children.Add(comboBox);
             }
 
@@ -94,6 +106,7 @@ namespace WPFUI.Views
                 this.optionBlock.Children.Add(text);
                 comboBox.Items.Add("De l'intérieur vers l'extérieur");
                 comboBox.Items.Add("Del'extérieur vers l'intérieur");
+                comboBox.SelectedIndex = 0;
                 this.Options.Children.Add(comboBox);
             }
 

@@ -321,6 +321,7 @@ namespace WPFUI.Models
                 });
                 strokes.Clear();
                 Console.WriteLine("cleared");
+                Console.WriteLine(Traits.Count);
             });
         }
 

@@ -21,11 +21,13 @@ export interface Game {
     clues: string[],
     level: Level,
     mode: Mode
+    option: number
 }
 
 export interface GamePreview {
     drawing: Stroke[],
     mode: Mode
+    option: number
 }
 
 export enum Level {
