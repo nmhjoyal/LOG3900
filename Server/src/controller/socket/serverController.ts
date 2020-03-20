@@ -7,12 +7,12 @@ import PrivateProfile from "../../models/privateProfile";
 export class ServerController {
  
     @OnConnect()
-    public connection(@ConnectedSocket() socket: SocketIO.Socket) {
+    public connection() {
         console.log("client connected");
     }
  
     @OnDisconnect()
-    public disconnect(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
+    public disconnect() {
         console.log("client disconnected");
     }
 
