@@ -168,14 +168,6 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         postInvalidate()
     }
 
-//    private fun getRelativePoint(unscaledPoint: StylusPoint): StylusPoint {
-//        if (screenResolution.height != 0 && screenResolution.width != 0) {
-//            return StylusPoint(floor(unscaledPoint.X.toDouble() / screenResolution.width.toDouble()) * this.width,
-//                floor(unscaledPoint.Y.toDouble() / screenResolution.height.toDouble()) * this.height)
-//        }
-//        return StylusPoint(unscaledPoint.X, unscaledPoint.Y)
-//    }
-
     private fun changePaint(paintOptions: PaintOptions) {
         mPaint.color = paintOptions.color
         mPaint.strokeWidth = paintOptions.strokeWidth
