@@ -63,6 +63,7 @@
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>
 		</ScrollViewer>
-		<TextBlock Grid.Column="1" Grid.Row="6" Text="{Binding currentRoomId}"></TextBlock>
+		<TextBlock Grid.Column="1" Grid.Row="6" Text="{Binding currentRoomId}" VerticalAlignment="Center"></TextBlock>
+		<Button Grid.Column="4" Grid.Row="6" x:Name="goBack" Content="Go Back" Background="#FFDA0909" BorderBrush="{x:Null}" Foreground="#DDFFFFFF" VerticalAlignment="Center"></Button>
 	</Grid>
 </UserControl>

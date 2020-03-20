@@ -95,6 +95,11 @@ namespace WPFUI.ViewModels
             }
         }
 
+        public void GoBack()
+        {
+            _events.PublishOnUIThread(new goBackMainEvent());
+        }
+
         public void Handle(createTheRoomEvent message)
         {
             Room newRoom = new Room(createdRoomName, new Models.Message[0], new Dictionary<string, string>());
