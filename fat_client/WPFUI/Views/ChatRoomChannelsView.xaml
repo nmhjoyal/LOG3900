@@ -28,7 +28,7 @@
 			<RowDefinition Height="20"/>
         </Grid.RowDefinitions>
 		<TextBox Text="{Binding createdRoomName}" Grid.Row="1" Grid.Column="1" BorderBrush="#FF686868"/>
-		<Button x:Name="createRoom" Grid.Row="1" Grid.Column="4" Content="create room" Height="auto"/>
+		<Button x:Name="createRoom" Grid.Row="1" Grid.Column="4" Content="create room" Height="auto" Background="#FF66CC00" Foreground="#DDFFFFFF"/>
 		<TextBlock Grid.Row="2" Grid.Column="1"> Available Rooms:</TextBlock>
 		<ScrollViewer Grid.Row="3" Grid.Column="1" VerticalScrollBarVisibility="Visible" FlowDirection="RightToLeft">
 			<ItemsControl ItemsSource="{Binding availableRooms}" FlowDirection="LeftToRight">
@@ -41,7 +41,7 @@
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>
 		</ScrollViewer>
-		<Button Grid.Row="3" Grid.Column="4" Content="join room" Height="auto" Background="#FFA2DC3D"/>
+		<Button Grid.Row="3" Grid.Column="4" Content="join room" Height="auto" Background="#FF66CC00" Foreground="#DDFFFFFF"/>
 		<TextBlock Grid.Row="4" Grid.Column="1"> Joined Rooms:</TextBlock>
 		<ScrollViewer Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="4" Grid.RowSpan="1" FlowDirection="RightToLeft">
 			<ItemsControl FlowDirection="LeftToRight" ItemsSource="{Binding joinedRooms}">

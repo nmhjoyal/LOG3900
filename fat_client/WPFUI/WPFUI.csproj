@@ -148,6 +148,7 @@
     <Compile Include="EventModels\signUpEvent.cs" />
     <Compile Include="EventModels\userNameTakenEvent.cs" />
     <Compile Include="EventModels\viewProfileEvent.cs" />
+    <Compile Include="EventModels\windowChatEvent.cs" />
     <Compile Include="Models\Game.cs" />
     <Compile Include="Models\Ranking.cs" />
     <Compile Include="Models\Trace.cs" />
@@ -475,6 +476,7 @@
     <Resource Include="Resources\F.gif" />
     <Resource Include="Resources\F_cropped.gif" />
     <Resource Include="Resources\fireworks.gif" />
+    <Resource Include="Resources\expand.png" />
     <Content Include="Resources\grape.svg" />
     <Resource Include="Resources\kiwi.png" />
     <Resource Include="Resources\HAND-DRAW.gif" />

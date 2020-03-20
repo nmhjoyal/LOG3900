@@ -69,6 +69,7 @@ namespace WPFUI.ViewModels
             _socketHandler = socketHandler;
             _userData = userdata;
             messages = userdata.messages;
+            DisplayName = "chatBox";
         }
 
         public string welcomeMessage
@@ -95,6 +96,11 @@ namespace WPFUI.ViewModels
             Console.WriteLine("hello");
             this._messages.Add(message.message);
             NotifyOfPropertyChange(() => messages);
+        }
+
+        public void windowMode()
+        {
+            _events.PublishOnUIThread(new windowChatEvent());
         }
     }
 
