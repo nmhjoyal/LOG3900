@@ -10,7 +10,7 @@ import PublicProfile from "../models/publicProfile";
 import ChatHandler from "./chatHandler";
 import MatchHandler from "./matchHandler";
 import RandomMatchIdGenerator from "./IdGenerator/idGenerator";
-import { CreateMatch } from "../models/match";
+import { CreateMatch, MatchInfos } from "../models/match";
 
 class ServerHandler {
     public users: Map<string, PrivateProfile>;
@@ -221,7 +221,7 @@ class ServerHandler {
         return await this.chatHandler.leaveChatRoom(io, socket, roomId, this.getUser(socket.id));
     }
 
-    public sendMessage(io: SocketIO.Server, socket: SocketIO.Socket, message: ClientMessage) { 
+    public sendMessage(io: SocketIO.Server, socket: SocketIO.Socket, message: ClientMessage): void { 
         const user: PrivateProfile | undefined = this.getUser(socket.id);
         if (user) {
             if (message.roomId.startsWith(RandomMatchIdGenerator.prefix)) {
@@ -245,6 +245,10 @@ class ServerHandler {
 
     public async leaveMatch(io: SocketIO.Server, socket: SocketIO.Socket, matchId: string): Promise<Feedback> {
         return await this.matchHandler.leaveMatch(io, socket, matchId, this.users, this.chatHandler);
+    }
+
+    public getAvailableMatches(): MatchInfos[] {
+        return this.matchHandler.getAvailableMatches(this.users);
     }
 }
 

@@ -36,4 +36,9 @@ export default class MatchController {
         socket.emit("match_left", await serverHandler.leaveMatch(io, socket, matchId));
     }
 
+    @OnMessage("get_matches")
+    public getMatches(@ConnectedSocket() socket: SocketIO.Socket) {
+        socket.emit("update_matches", serverHandler.getAvailableMatches());
+    }
+
 }

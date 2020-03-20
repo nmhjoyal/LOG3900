@@ -35,7 +35,7 @@ export default class MatchHandler {
             const chatRoomFeedback: Feedback = await chatHandler.createChatRoom(io, socket, matchRoom, user);
             if (chatRoomFeedback.status) {
                 this.currentMatches.set(matchId, MatchInstance.createMatch(socket.id, createMatch));
-                socket.broadcast.emit("update_matches", this.getAllAvailbaleMatches(users));
+                socket.broadcast.emit("update_matches", this.getAvailableMatches(users));
             } else {
                 createMatchFeedback.feedback = chatRoomFeedback;
             }
@@ -61,7 +61,7 @@ export default class MatchHandler {
                 feedback = (await chatHandler.joinChatRoom(io, socket, matchId, user)).feedback;
                 if (feedback.status) {
                     feedback = match.joinMatch(socket.id);
-                    socket.broadcast.emit("update_matches", this.getAllAvailbaleMatches(users));
+                    socket.broadcast.emit("update_matches", this.getAvailableMatches(users));
                 }
             } else {
                 feedback.log_message = "This match does not exist anymore.";
@@ -87,7 +87,7 @@ export default class MatchHandler {
                 feedback = await chatHandler.leaveChatRoom(io, socket, matchId, user);
                 if (feedback.status) {
                     feedback = match.leaveMatch(socket.id);
-                    socket.broadcast.emit("update_matches", this.getAllAvailbaleMatches(users));
+                    socket.broadcast.emit("update_matches", this.getAvailableMatches(users));
                 }
             } else {
                 feedback.log_message = "This match does not exist anymore.";
@@ -104,7 +104,7 @@ export default class MatchHandler {
         // TODO : check if it is a correct guess, or asking for a hint ("!hint"), and update the other players
     }
 
-    private getAllAvailbaleMatches(users: Map<string, PrivateProfile>): MatchInfos[] {
+    public getAvailableMatches(users: Map<string, PrivateProfile>): MatchInfos[] {
         let availableMatches: MatchInfos[] = [];
         this.currentMatches.forEach((match: Match) => {
             if (!match.isStarted && match.mode !== MatchMode.sprintSolo) {
