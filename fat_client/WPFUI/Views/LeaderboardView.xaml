@@ -37,7 +37,9 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
-        <TextBlock  FontSize="40"  Foreground="#FF66CC00" Text="Classement!" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="8" TextAlignment="Center"/>
+
+		<Image gif:ImageBehavior.AnimatedSource="/Resources/fireworks.gif" Grid.Column="1" Grid.Row="1" Opacity="0.3" Grid.ColumnSpan="8" Grid.RowSpan="13" VerticalAlignment="Center" HorizontalAlignment="Center" Height="350"/>
+		<TextBlock  FontSize="40"  Foreground="#FF66CC00" Text="Classement!" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="8" TextAlignment="Center"/>
         <Border Background="#FF00CCCC" BorderThickness="5" Grid.Column="1" Grid.Row="3" CornerRadius="10" Grid.ColumnSpan="2">
             <TextBlock FontSize="16" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="JEU SOLO" Grid.Column="1" Grid.Row="3"/>
         </Border>
@@ -69,14 +71,14 @@
             <TextBlock FontSize="16" Foreground="White"  VerticalAlignment="Center" TextAlignment="Center" Name="vs1GameScore"  Grid.Column="4" Grid.Row="3"/>
         </Border>
         <Border  BorderBrush="#FCBA03" BorderThickness="3" Grid.Column="4" Grid.Row="7" CornerRadius="10" Grid.ColumnSpan="2" >
-			<ItemsControl x:Name="vs1Pos">
+			<ItemsControl x:Name="vs1Pos" FontSize="16">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
-						<StackPanel Orientation="Vertical">
+						<StackPanel Orientation="Vertical" HorizontalAlignment="Center">
 							<StackPanel Orientation="Horizontal">
-								<Image Source="account_circle_grey_72x72.png" MaxHeight="20" VerticalAlignment="Center"></Image>
-								<TextBlock Text="{Binding position}" Foreground="DarkSlateGray"/>
-								<TextBlock Text="{Binding name}" Foreground="DarkSlateGray"/>
+								<TextBlock Text="{Binding position}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+								<Image Source="account_circle_grey_72x72.png" MaxHeight="20" VerticalAlignment="Center" Margin="0,0,2,0"></Image>
+								<TextBlock Text="{Binding username}" Foreground="#FF8AD63E" VerticalAlignment="Center"/>
 							</StackPanel>
 						</StackPanel>
 					</DataTemplate>
@@ -92,14 +94,14 @@
             <TextBlock FontSize="16" Foreground="White"  VerticalAlignment="Center" TextAlignment="Center" Name="inversedGameScore"  Grid.Column="4" Grid.Row="3"/>
         </Border>
         <Border  BorderBrush="#FCBA03" BorderThickness="3" Grid.Column="7" Grid.Row="7" CornerRadius="10" Grid.ColumnSpan="2" >
-			<ItemsControl x:Name="inversedPos">
+			<ItemsControl x:Name="invertedPos" FontSize="16">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
-						<StackPanel Orientation="Vertical">
+						<StackPanel Orientation="Vertical" HorizontalAlignment="Center">
 							<StackPanel Orientation="Horizontal">
-								<Image Source="account_circle_grey_72x72.png" MaxHeight="20" VerticalAlignment="Center"></Image>
-								<TextBlock Text="{Binding position}" Foreground="DarkSlateGray"/>
-								<TextBlock Text="{Binding name}" Foreground="DarkSlateGray"/>
+								<TextBlock Text="{Binding position}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+								<Image Source="account_circle_grey_72x72.png" MaxHeight="20" VerticalAlignment="Center" Margin="0,0,2,0"></Image>
+								<TextBlock Text="{Binding username}" Foreground="#FF8AD63E" VerticalAlignment="Center"/>
 							</StackPanel>
 						</StackPanel>
 					</DataTemplate>
@@ -115,14 +117,14 @@
             <TextBlock FontSize="16" Foreground="White"  VerticalAlignment="Center" TextAlignment="Center" Name="coopGameScore"  Grid.Column="1" Grid.Row="11"/>
         </Border>
         <Border  BorderBrush="#FCBA03" BorderThickness="3" Grid.Column="1" Grid.Row="13" CornerRadius="10" Grid.ColumnSpan="2" >
-			<ItemsControl x:Name="coopPos">
+			<ItemsControl x:Name="coopPos" FontSize="16">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
-						<StackPanel Orientation="Vertical">
+						<StackPanel Orientation="Vertical" HorizontalAlignment="Center">
 							<StackPanel Orientation="Horizontal">
-								<Image Source="account_circle_grey_72x72.png" MaxHeight="20" VerticalAlignment="Center"></Image>
-								<TextBlock Text="{Binding position}" Foreground="DarkSlateGray"/>
-								<TextBlock Text="{Binding name}" Foreground="DarkSlateGray"/>
+								<TextBlock Text="{Binding position}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+								<Image Source="account_circle_grey_72x72.png" MaxHeight="20" VerticalAlignment="Center" Margin="0,0,2,0"></Image>
+								<TextBlock Text="{Binding username}" Foreground="#FF8AD63E" VerticalAlignment="Center"/>
 							</StackPanel>
 						</StackPanel>
 					</DataTemplate>
@@ -139,21 +141,21 @@
             <TextBlock FontSize="16" Foreground="White"  VerticalAlignment="Center" TextAlignment="Center" Name="solomodeGameScore"  Grid.Column="8" Grid.Row="11"/>
         </Border>
         <Border  BorderBrush="#FCBA03" BorderThickness="3" Grid.Column="7" Grid.Row="13" CornerRadius="10" Grid.ColumnSpan="2" >
-			<ItemsControl x:Name="solo2Pos">
+			<ItemsControl x:Name="solo2Pos" FontSize="16">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
-						<StackPanel Orientation="Vertical">
+						<StackPanel Orientation="Vertical" HorizontalAlignment="Center">
 							<StackPanel Orientation="Horizontal">
-								<Image Source="account_circle_grey_72x72.png" MaxHeight="20" VerticalAlignment="Center"></Image>
-								<TextBlock Text="{Binding position}" Foreground="DarkSlateGray"/>
-								<TextBlock Text="{Binding name}" Foreground="DarkSlateGray"/>
+								<TextBlock Text="{Binding position}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+								<Image Source="account_circle_grey_72x72.png" MaxHeight="20" VerticalAlignment="Center" Margin="0,0,2,0"></Image>
+								<TextBlock Text="{Binding username}" Foreground="#FF8AD63E" VerticalAlignment="Center"/>
 							</StackPanel>
 						</StackPanel>
 					</DataTemplate>
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>
 		</Border>
-        <Image gif:ImageBehavior.AnimatedSource="/Resources/fireworks.gif" Grid.Column="4" Grid.Row="9" Opacity="0.6" Grid.ColumnSpan="2" Grid.RowSpan="5" RenderTransformOrigin="0.546,0.5"/>
+
         <Button  x:Name="goBack"  Grid.Column="8" Grid.Row="1" MaxWidth="100" HorizontalAlignment="Right"  Background="#FFBF0B0B" BorderBrush="#FFBF0B0B">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Foreground="White">Retour</TextBlock>
