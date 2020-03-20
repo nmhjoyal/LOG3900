@@ -56,6 +56,7 @@ class GameActivity : AppCompatActivity() {
             GameMode.REVERSE -> {}
             GameMode.NONE -> {}
         }
+
     }
 
     override fun onStart() {
@@ -97,7 +98,7 @@ class GameActivity : AppCompatActivity() {
             }
             LoginState.LOGGED_IN -> {
                 showChatFragment()
-                SocketHandler.connectOnlineDraw()
+               SocketHandler.connectOnlineDraw()
             }
         }
     }
@@ -174,4 +175,13 @@ class GameActivity : AppCompatActivity() {
                 })
             }))
     }
+
+    /*private fun showWaitingRoomFragment(){
+        val transaction = manager.beginTransaction()
+        val waitingRoomFragment = WaitingRoom()
+        transaction.replace(R.id.draw_view_container, waitingRoomFragment)
+        transaction.addToBackStack(null)
+        transaction.commitAllowingStateLoss()
+    }*/
+
 }
