@@ -34,7 +34,7 @@ export default class MatchHandler {
             const matchRoom: CreateRoom = { id: matchId, isPrivate: true };
             const chatRoomFeedback: Feedback = await chatHandler.createChatRoom(io, socket, matchRoom, user);
             if (chatRoomFeedback.status) {
-                this.currentMatches.set(matchId, MatchInstance.createMatch(user.username, createMatch));
+                this.currentMatches.set(matchId, MatchInstance.createMatch(socket.id, createMatch));
                 socket.broadcast.emit("update_matches", this.getAllAvailbaleMatches(users));
             } else {
                 createMatchFeedback.feedback = chatRoomFeedback;
@@ -60,7 +60,7 @@ export default class MatchHandler {
             if (match) {
                 feedback = (await chatHandler.joinChatRoom(io, socket, matchId, user)).feedback;
                 if (feedback.status) {
-                    feedback = match.joinMatch(user.username);
+                    feedback = match.joinMatch(socket.id);
                     socket.broadcast.emit("update_matches", this.getAllAvailbaleMatches(users));
                 }
             } else {
@@ -86,7 +86,7 @@ export default class MatchHandler {
             if (match) {
                 feedback = await chatHandler.leaveChatRoom(io, socket, matchId, user);
                 if (feedback.status) {
-                    feedback = match.leaveMatch(user.username);
+                    feedback = match.leaveMatch(socket.id);
                     socket.broadcast.emit("update_matches", this.getAllAvailbaleMatches(users));
                 }
             } else {

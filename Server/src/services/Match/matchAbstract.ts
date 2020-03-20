@@ -4,16 +4,16 @@ import PrivateProfile from "../../models/privateProfile";
 import Player from "../../models/player";
 
 export default abstract class Match {
-    protected players: Map<string, Player>; /* username, Player */
+    protected players: Map<string, Player>; /* socketid, Player */
     protected nbRounds: number;
     protected letterReveal: boolean;
     protected currentWord: string;
     public isStarted: boolean;
     public mode: number;
 
-    protected constructor(username: string, nbRounds: number) {
+    protected constructor(socketid: string, nbRounds: number) {
         this.players = new Map<string, Player>();
-        this.players.set(username, this.createPlayer(true, false));
+        this.players.set(socketid, this.createPlayer(true, false));
         this.isStarted = false;
         this.nbRounds = nbRounds;
     }
@@ -33,14 +33,14 @@ export default abstract class Match {
      * Functions used trough all match modes.
      * 
      */
-    public joinMatch(username: string): Feedback {
+    public joinMatch(socketid: string): Feedback {
         let feedback: Feedback = {
             status: true,
             log_message: ""
         };
 
         if (!this.isStarted) {
-            this.players.set(username, this.createPlayer(false, false));
+            this.players.set(socketid, this.createPlayer(false, false));
             feedback.log_message = "You joined the match.";
         } else {
             feedback.status = false;
@@ -50,8 +50,8 @@ export default abstract class Match {
         return feedback;
     }
 
-    public leaveMatch(username: string): Feedback {
-        const player: Player | undefined = this.players.get(username);
+    public leaveMatch(socketid: string): Feedback {
+        const player: Player | undefined = this.players.get(socketid);
         let feedback: Feedback = {
             status: true,
             log_message: ""
@@ -60,7 +60,7 @@ export default abstract class Match {
         if (player) {
             if (this.isStarted) {
                 // Not important to check if he's the host here.
-                this.players.delete(username);
+                this.players.delete(socketid);
                 if (player.isCurrent && !player.isVirtual) {
                     // If in between endRound and startRound (the player is choosing a word) 
                     // maybe feedback false log_
@@ -71,7 +71,7 @@ export default abstract class Match {
                     // Choose random new host in the players and notify him to change 
                     // his interface so he can start selecting the match settings.
                 } else {
-                    this.players.delete(username);
+                    this.players.delete(socketid);
                 }
             }
             feedback.log_message = "You left the match.";
@@ -90,8 +90,8 @@ export default abstract class Match {
     public getMatchInfos(users: Map<string, PrivateProfile>): MatchInfos {
         let userInfos: Map<string, string> = new Map<string, string>();
         let host: string = "";
-        this.players.forEach((player: Player, username: string) => {
-            let userInfo: PrivateProfile | undefined = this.getUserByUsername(username, users);
+        this.players.forEach((player: Player, socketid: string) => {
+            let userInfo: PrivateProfile | undefined = users.get(socketid);
             if (userInfo) {
                 if (player.isHost) host = userInfo.username; 
                 userInfos.set(userInfo.username, userInfo.avatar);
@@ -104,14 +104,6 @@ export default abstract class Match {
             nbRounds: this.nbRounds,
             players: userInfos
         };
-    }
-
-    private getUserByUsername(username: string, users: Map<string, PrivateProfile>): PrivateProfile | undefined {
-        let userInfo: PrivateProfile | undefined = undefined;
-        users.forEach((user: PrivateProfile) => {
-            if (user.username === username) userInfo = user;
-        });
-        return userInfo;
     }
 
     protected createPlayer(isHost: boolean, isVirtual: boolean) {
