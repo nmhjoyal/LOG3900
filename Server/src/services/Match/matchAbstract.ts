@@ -6,10 +6,14 @@ import Player from "../../models/player";
 export default abstract class Match {
     protected players: Map<string, Player>; /* socketid, Player */
     protected nbRounds: number;
+    protected round: number;
     protected letterReveal: boolean;
     protected currentWord: string;
     public isStarted: boolean;
     public mode: number;
+
+    protected setTimeoutId: number;
+    protected playerRound: number; // In one round each player draws.
 
     protected constructor(socketid: string, nbRounds: number) {
         this.players = new Map<string, Player>();
