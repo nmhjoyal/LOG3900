@@ -4,12 +4,12 @@ import PrivateProfile from "../../models/privateProfile";
 import Player from "../../models/player";
 
 export default abstract class Match {
-    protected mode: number;
-    protected players: Map<string, Player>; /* username, score */
+    protected players: Map<string, Player>; /* username, Player */
     protected nbRounds: number;
     protected letterReveal: boolean;
     protected currentWord: string;
     public isStarted: boolean;
+    public mode: number;
 
     protected constructor(username: string, nbRounds: number) {
         this.players = new Map<string, Player>();
@@ -88,19 +88,30 @@ export default abstract class Match {
     }
 
     public getMatchInfos(users: Map<string, PrivateProfile>): MatchInfos {
-        let userInfos: Map<string, string> = new Map<string, string>(); 
-        this.players.forEach((score: Player, socketid: string) => {
-            let userInfo: PrivateProfile | undefined = users.get(socketid);
-            if (userInfo) userInfos.set(userInfo.username, userInfo.avatar);
+        let userInfos: Map<string, string> = new Map<string, string>();
+        let host: string = "";
+        this.players.forEach((player: Player, username: string) => {
+            let userInfo: PrivateProfile | undefined = this.getUserByUsername(username, users);
+            if (userInfo) {
+                if (player.isHost) host = userInfo.username; 
+                userInfos.set(userInfo.username, userInfo.avatar);
+            }
         });
 
-        let matchInfos: MatchInfos = {
+        return {
+            host: host,
             matchMode: this.mode,
             nbRounds: this.nbRounds,
             players: userInfos
         };
+    }
 
-        return matchInfos;
+    private getUserByUsername(username: string, users: Map<string, PrivateProfile>): PrivateProfile | undefined {
+        let userInfo: PrivateProfile | undefined = undefined;
+        users.forEach((user: PrivateProfile) => {
+            if (user.username === username) userInfo = user;
+        });
+        return userInfo;
     }
 
     protected createPlayer(isHost: boolean, isVirtual: boolean) {

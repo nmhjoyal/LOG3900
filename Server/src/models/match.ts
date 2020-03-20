@@ -6,6 +6,7 @@ export interface CreateMatch {
 }
 
 export interface MatchInfos {
+    host: string
     nbRounds: number
     matchMode: MatchMode
     players: Map<string, string> /* username, avatar */

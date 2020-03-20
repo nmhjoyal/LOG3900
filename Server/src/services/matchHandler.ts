@@ -1,4 +1,4 @@
-import { MatchInstance } from "../models/matchMode";
+import { MatchInstance, MatchMode } from "../models/matchMode";
 import DrawPoint from "../models/drawPoint";
 import { CreateMatch, MatchInfos } from "../models/match";
 import { Feedback, CreateMatchFeedback } from "../models/feedback";
@@ -107,7 +107,7 @@ export default class MatchHandler {
     private getAllAvailbaleMatches(users: Map<string, PrivateProfile>): MatchInfos[] {
         let availableMatches: MatchInfos[] = [];
         this.currentMatches.forEach((match: Match) => {
-            if (!match.isStarted) {
+            if (!match.isStarted && match.mode !== MatchMode.sprintSolo) {
                 availableMatches.push(match.getMatchInfos(users));
             }
         });
