@@ -48,7 +48,7 @@ export default class MatchController {
 
     @OnMessage("get_matches")
     public getMatches(@ConnectedSocket() socket: SocketIO.Socket) {
-        socket.emit("update_matches", JSON.stringify(serverHandler.getAvailableMatches()));
+        socket.emit("update_matches", JSON.stringify(serverHandler.matchHandler.getAvailableMatches()));
     }
 
     @OnMessage("start_match")
@@ -68,6 +68,6 @@ export default class MatchController {
 
     @OnMessage("get_players")
     public getPlayers(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() matchId: string) {
-        socket.emit("update_players", JSON.stringify(serverHandler.getPlayers(matchId)));
+        socket.emit("update_players", JSON.stringify(serverHandler.matchHandler.getPlayers(matchId)));
     }
 }
