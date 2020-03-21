@@ -1,6 +1,6 @@
 import { MatchInstance, MatchMode } from "../models/matchMode";
 import DrawPoint from "../models/drawPoint";
-import { CreateMatch, MatchInfos } from "../models/match";
+import { CreateMatch, MatchInfos, StartMatch } from "../models/match";
 import { Feedback, CreateMatchFeedback } from "../models/feedback";
 import Match from "./Match/matchAbstract";
 import PrivateProfile from "../models/privateProfile";
@@ -35,7 +35,7 @@ export default class MatchHandler {
             const chatRoomFeedback: Feedback = await chatHandler.createChatRoom(io, socket, matchRoom, user);
             if (chatRoomFeedback.status) {
                 this.currentMatches.set(matchId, MatchInstance.createMatch(socket.id, createMatch));
-                socket.broadcast.emit("update_matches", this.getAvailableMatches(users));
+                socket.broadcast.emit("update_matches", JSON.stringify(this.getAvailableMatches(users)));
             } else {
                 createMatchFeedback.feedback = chatRoomFeedback;
             }
@@ -51,17 +51,14 @@ export default class MatchHandler {
                     matchId: string, users: Map<string, PrivateProfile>, chatHandler: ChatHandler): Promise<Feedback> {
         const user: PrivateProfile | undefined = users.get(socket.id);
         const match: Match | undefined = this.currentMatches.get(matchId);
-        let feedback: Feedback = {
-            status: false,
-            log_message: ""
-        }
+        let feedback: Feedback = { status: false, log_message: "" };
 
         if (user) {
             if (match) {
                 feedback = (await chatHandler.joinChatRoom(io, socket, matchId, user)).feedback;
                 if (feedback.status) {
                     feedback = match.joinMatch(socket.id);
-                    socket.broadcast.emit("update_matches", this.getAvailableMatches(users));
+                    socket.broadcast.emit("update_matches", JSON.stringify(this.getAvailableMatches(users)));
                 }
             } else {
                 feedback.log_message = "This match does not exist anymore.";
@@ -77,17 +74,14 @@ export default class MatchHandler {
                         matchId: string, users: Map<string, PrivateProfile>, chatHandler: ChatHandler): Promise<Feedback> {
         const user: PrivateProfile | undefined = users.get(socket.id);
         const match: Match | undefined = this.currentMatches.get(matchId);
-        let feedback: Feedback = {
-            status: false,
-            log_message: ""
-        }
+        let feedback: Feedback = { status: false, log_message: "" };
 
         if (user) {
             if (match) {
                 feedback = await chatHandler.leaveChatRoom(io, socket, matchId, user);
                 if (feedback.status) {
                     feedback = match.leaveMatch(socket.id);
-                    socket.broadcast.emit("update_matches", this.getAvailableMatches(users));
+                    socket.broadcast.emit("update_matches", JSON.stringify(this.getAvailableMatches(users)));
                 }
             } else {
                 feedback.log_message = "This match does not exist anymore.";
@@ -100,7 +94,24 @@ export default class MatchHandler {
 
     }
 
-    public sendMessage(io: SocketIO.Server, socket: SocketIO.Socket, message: ClientMessage, user: PrivateProfile | undefined) {
+    public startMatch(io: SocketIO.Server, socket: SocketIO.Socket, startMatch: StartMatch, user: PrivateProfile | undefined): Feedback {
+        const match: Match | undefined = this.currentMatches.get(startMatch.matchId);
+        let feedback: Feedback = { status: false, log_message: "" };
+
+        if (user) {
+            if (match) {
+                feedback = match.startMatch(io, startMatch);
+            } else {
+                feedback.log_message = "This match does not exist anymore.";
+            }
+        } else {
+            feedback.log_message = "You are not connected.";
+        }
+
+        return feedback;
+    }
+
+    public sendMessage(io: SocketIO.Server, socket: SocketIO.Socket, message: ClientMessage, user: PrivateProfile | undefined): void {
         // TODO : check if it is a correct guess, or asking for a hint ("!hint"), and update the other players
     }
 

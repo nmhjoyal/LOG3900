@@ -10,7 +10,7 @@ import PublicProfile from "../models/publicProfile";
 import ChatHandler from "./chatHandler";
 import MatchHandler from "./matchHandler";
 import RandomMatchIdGenerator from "./IdGenerator/idGenerator";
-import { CreateMatch, MatchInfos } from "../models/match";
+import { CreateMatch, MatchInfos, StartMatch } from "../models/match";
 
 class ServerHandler {
     public users: Map<string, PrivateProfile>;
@@ -249,6 +249,10 @@ class ServerHandler {
 
     public getAvailableMatches(): MatchInfos[] {
         return this.matchHandler.getAvailableMatches(this.users);
+    }
+
+    public startMatch(io: SocketIO.Server, socket: SocketIO.Socket, startMatch: StartMatch): Feedback {
+        return this.matchHandler.startMatch(io, socket, startMatch, this.getUser(socket.id));
     }
 }
 

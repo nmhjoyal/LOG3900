@@ -1,5 +1,5 @@
 import { Feedback } from "../../models/feedback";
-import { MatchInfos } from "../../models/match";
+import { MatchInfos, StartMatch } from "../../models/match";
 import PrivateProfile from "../../models/privateProfile";
 import Player from "../../models/player";
 
@@ -12,8 +12,8 @@ export default abstract class Match {
     public isStarted: boolean;
     public mode: number;
 
-    protected setTimeoutId: number;
-    protected playerRound: number; // In one round each player draws.
+    protected setTimeoutId: number; // setTimeout will be used for emitting end_round and we will cancel it if there is an unexpected leave of a room
+    protected playerTurn: number; // In one round each player will draw one time.
 
     protected constructor(socketid: string, nbRounds: number) {
         this.players = new Map<string, Player>();
@@ -28,7 +28,7 @@ export default abstract class Match {
      * The match routine starts. The routine varies depending on the match mode.
      *
      */
-    public abstract startMatch(): Feedback;
+    public abstract startMatch(io: SocketIO.Server, startMatch: StartMatch): Feedback;
     protected abstract endRound(): void;
     protected abstract startRound(): void;
 
@@ -38,10 +38,7 @@ export default abstract class Match {
      * 
      */
     public joinMatch(socketid: string): Feedback {
-        let feedback: Feedback = {
-            status: true,
-            log_message: ""
-        };
+        let feedback: Feedback = { status: true, log_message: "" };
 
         if (!this.isStarted) {
             this.players.set(socketid, this.createPlayer(false, false));
@@ -56,11 +53,10 @@ export default abstract class Match {
 
     public leaveMatch(socketid: string): Feedback {
         const player: Player | undefined = this.players.get(socketid);
-        let feedback: Feedback = {
-            status: true,
-            log_message: ""
-        };
-        
+        let feedback: Feedback = { status: true, log_message: "" };
+
+        // TODO: some other checks for mode restriction :
+        //      - this.players.length < min player for match mode, or maybe he can be replaced by virtual player?
         if (player) {
             if (this.isStarted) {
                 // Not important to check if he's the host here.
@@ -80,6 +76,7 @@ export default abstract class Match {
             }
             feedback.log_message = "You left the match.";
         } else {
+            feedback.status = false;
             feedback.log_message = "This player is not in this match, unexpected error!";
         }
 
@@ -110,14 +107,19 @@ export default abstract class Match {
         };
     }
 
-    protected createPlayer(isHost: boolean, isVirtual: boolean) {
-        const host: Player = {
+    protected addVirtualPlayers(nbVP: number): void {
+        for (let i: number = 0; i < nbVP; i++) {
+            this.players.set("", this.createPlayer(false, true)); // will be changed to add random presonality virtual player
+        }
+    }
+
+    protected createPlayer(isHost: boolean, isVirtual: boolean): Player {
+        return {
             isHost: isHost,
             isVirtual: isVirtual,
             isCurrent: false,
             score: 0
         };
-        return host;
     }
 
 }
