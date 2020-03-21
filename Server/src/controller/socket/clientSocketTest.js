@@ -17,7 +17,11 @@ var createroom = {
     isPrivate: true
 }
 
-socket1.on("connect", function (data) {socket1.emit("sign_in", { username : "hub2", password: "banane" });});
+socket1.on("connect", function (data) {
+    socket1.emit("test_get");
+});
+
+socket1.on("sent_path", function(data) {console.log("ICI !!!!! : " + data)});
 
 socket1.on("user_signed_in", function (data) {
     console.log("signed in : " + JSON.parse(data)["feedback"]);
@@ -32,7 +36,7 @@ socket1.on("user_signed_in", function (data) {
     // setTimeout(function(){socket1.emit("disconnect_free_draw");} , 20000);
 
 });
-
+socket1.on("path_is_sent", function() {console.log("You sent the drawing");});
 socket1.on("drawer", function() {console.log("You are the drawer!");});
 socket1.on("observer", function() {console.log("You are the observer!");});
 

@@ -7,6 +7,7 @@ import * as morgan from "morgan";
 import "reflect-metadata";
 import { useExpressServer } from "routing-controllers";
 import { ProfileController } from "./controller/http/profileController";
+import { GameController } from "./controller/http/gameController";
 import * as ServerConfig from "./serverConfig.json";
 import { useSocketServer } from "socket-controllers";
 import { ServerController } from "./controller/socket/serverController";
@@ -41,7 +42,7 @@ export class Server {
 
         // Start http server
         useExpressServer(this.app, {
-            controllers: [ ProfileController ] 
+            controllers: [ ProfileController, GameController ] 
         });
         
         this.server.listen(port);

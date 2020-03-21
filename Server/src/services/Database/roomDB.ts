@@ -10,7 +10,7 @@ class RoomDB {
 
     public constructor() { 
         const mongoClient: MongoClient = new MongoClient(ServerConfig["connection-url"], 
-            {useUnifiedTopology: true, useNewUrlParser: true});
+            { useUnifiedTopology: true, useNewUrlParser: true });
 
         // Connect to database
         mongoClient.connect((err, db) => {
@@ -41,7 +41,7 @@ class RoomDB {
             room = {
                 id: roomDB.id,
                 messages: roomDB.messages,
-                avatars: roomDB.users  
+                avatars: roomDB.avatars  
             }
         }
             

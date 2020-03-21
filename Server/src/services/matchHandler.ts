@@ -1,5 +1,4 @@
 import { MatchInstance, MatchMode } from "../models/matchMode";
-import DrawPoint from "../models/drawPoint";
 import { CreateMatch, MatchInfos, StartMatch } from "../models/match";
 import { Feedback, CreateMatchFeedback } from "../models/feedback";
 import Match from "./Match/matchAbstract";
@@ -9,6 +8,10 @@ import { ClientMessage } from "../models/message";
 import ChatHandler from "./chatHandler";
 import { CreateRoom } from "../models/room";
 import PublicProfile from "../models/publicProfile";
+import { Trace, Point, Game, GamePreview } from "../models/drawPoint";
+import { VirtualPlayer } from "./Drawing/virtualPlayer";
+import { gameDB } from "./Database/gameDB";
+// import { VirtualPlayer } from "./Drawing/virtualPlayer";
 
 export default class MatchHandler {
     private currentMatches: Map<string, Match>;
@@ -192,9 +195,30 @@ export default class MatchHandler {
         socket.leave("freeDrawRoomTest");
     }
 
-    public drawTest(io: SocketIO.Server, socket: SocketIO.Socket, point: DrawPoint) {
-        if (socket.id == this.drawer) {
-            socket.to("freeDrawRoomTest").emit("drawPoint", point);
-        }
+    public startTrace(io: SocketIO.Server, socket: SocketIO.Socket, trace: Trace): void {
+        // if (socket.id == this.drawer) {
+            socket.to("freeDrawRoomTest").emit("new_trace", JSON.stringify(trace));
+        // }
+    }
+
+    public drawTest(io: SocketIO.Server, socket: SocketIO.Socket, point: Point): void {
+        // if (socket.id == this.drawer) {
+            socket.to("freeDrawRoomTest").emit("new_point", JSON.stringify(point));
+        // }
+    }
+
+    public async getDrawing(io: SocketIO.Server): Promise<void> {
+        const game: Game = await gameDB.getRandomGame();
+        console.log(JSON.stringify(game));
+        const virtualPlayer: VirtualPlayer = new VirtualPlayer("bot", "freeDrawRoomTest", io);
+        virtualPlayer.setTimePerRound(10);
+        virtualPlayer.draw(game);
+    }
+
+    // previewHandler.ts
+    public async preview(socket: SocketIO.Socket, gamePreview: GamePreview): Promise<void> {
+        const virtualPlayer: VirtualPlayer = new VirtualPlayer("bot", null, socket);
+        virtualPlayer.setTimePerRound(5);
+        virtualPlayer.preview(gamePreview);
     }
 }
