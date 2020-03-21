@@ -8,6 +8,7 @@ import RandomMatchIdGenerator from "./IdGenerator/idGenerator";
 import { ClientMessage } from "../models/message";
 import ChatHandler from "./chatHandler";
 import { CreateRoom } from "../models/room";
+import PublicProfile from "../models/publicProfile";
 
 export default class MatchHandler {
     private currentMatches: Map<string, Match>;
@@ -22,8 +23,7 @@ export default class MatchHandler {
     }
     
     public async createMatch( io: SocketIO.Server, socket: SocketIO.Socket, 
-                    createMatch: CreateMatch, users: Map<string, PrivateProfile>, chatHandler: ChatHandler): Promise<CreateMatchFeedback> {
-        const user: PrivateProfile | undefined = users.get(socket.id);
+                    createMatch: CreateMatch, user: PrivateProfile | undefined, chatHandler: ChatHandler): Promise<CreateMatchFeedback> {
         let createMatchFeedback: CreateMatchFeedback = {
             feedback: { status: true, log_message: "Match created successfully." },
             matchId: ""
@@ -34,8 +34,8 @@ export default class MatchHandler {
             const matchRoom: CreateRoom = { id: matchId, isPrivate: true };
             const chatRoomFeedback: Feedback = await chatHandler.createChatRoom(io, socket, matchRoom, user);
             if (chatRoomFeedback.status) {
-                this.currentMatches.set(matchId, MatchInstance.createMatch(socket.id, createMatch));
-                socket.broadcast.emit("update_matches", JSON.stringify(this.getAvailableMatches(users)));
+                this.currentMatches.set(matchId, MatchInstance.createMatch(matchId, socket.id, {username: user.username, avatar: user.avatar}, createMatch));
+                socket.broadcast.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
             } else {
                 createMatchFeedback.feedback = chatRoomFeedback;
             }
@@ -48,8 +48,7 @@ export default class MatchHandler {
     }
 
     public async joinMatch(io: SocketIO.Server, socket: SocketIO.Socket, 
-                    matchId: string, users: Map<string, PrivateProfile>, chatHandler: ChatHandler): Promise<Feedback> {
-        const user: PrivateProfile | undefined = users.get(socket.id);
+                    matchId: string, user: PrivateProfile | undefined, chatHandler: ChatHandler): Promise<Feedback> {
         const match: Match | undefined = this.currentMatches.get(matchId);
         let feedback: Feedback = { status: false, log_message: "" };
 
@@ -57,8 +56,8 @@ export default class MatchHandler {
             if (match) {
                 feedback = (await chatHandler.joinChatRoom(io, socket, matchId, user)).feedback;
                 if (feedback.status) {
-                    feedback = match.joinMatch(socket.id);
-                    socket.broadcast.emit("update_matches", JSON.stringify(this.getAvailableMatches(users)));
+                    feedback = match.joinMatch(socket.id, {username: user.username, avatar: user.avatar});
+                    socket.broadcast.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
                 }
             } else {
                 feedback.log_message = "This match does not exist anymore.";
@@ -71,8 +70,7 @@ export default class MatchHandler {
     }
 
     public async leaveMatch(io: SocketIO.Server, socket: SocketIO.Socket, 
-                        matchId: string, users: Map<string, PrivateProfile>, chatHandler: ChatHandler): Promise<Feedback> {
-        const user: PrivateProfile | undefined = users.get(socket.id);
+                        matchId: string, user: PrivateProfile | undefined, chatHandler: ChatHandler): Promise<Feedback> {
         const match: Match | undefined = this.currentMatches.get(matchId);
         let feedback: Feedback = { status: false, log_message: "" };
 
@@ -81,7 +79,7 @@ export default class MatchHandler {
                 feedback = await chatHandler.leaveChatRoom(io, socket, matchId, user);
                 if (feedback.status) {
                     feedback = match.leaveMatch(socket.id);
-                    socket.broadcast.emit("update_matches", JSON.stringify(this.getAvailableMatches(users)));
+                    socket.broadcast.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
                 }
             } else {
                 feedback.log_message = "This match does not exist anymore.";
@@ -94,13 +92,49 @@ export default class MatchHandler {
 
     }
 
+    public addVirtualPlayer(io: SocketIO.Server, socket: SocketIO.Socket, 
+                        matchId: string, user: PrivateProfile | undefined, chatHandler: ChatHandler): Feedback {
+        const match: Match | undefined = this.currentMatches.get(matchId);
+        let feedback: Feedback = { status: false, log_message: "" };
+
+        if (user) {
+            if (match) {
+                feedback = match.addVirtualPlayer(socket.id, io);
+            } else {
+                feedback.log_message = "This match does not exist anymore.";
+            }
+        } else {
+            feedback.log_message = "You are not connected.";
+        }
+
+        return feedback;
+    }
+
+    public removeVirtualPlayer(io: SocketIO.Server, socket: SocketIO.Socket, 
+                        matchId: string, user: PrivateProfile | undefined, chatHandler: ChatHandler): Feedback {
+        const match: Match | undefined = this.currentMatches.get(matchId);
+        let feedback: Feedback = { status: false, log_message: "" };
+
+        if (user) {
+            if (match) {
+                feedback = match.removeVirtualPlayer(socket.id, io);
+            } else {
+                feedback.log_message = "This match does not exist anymore.";
+            }
+        } else {
+            feedback.log_message = "You are not connected.";
+        }
+
+        return feedback;
+    }
+
     public startMatch(io: SocketIO.Server, socket: SocketIO.Socket, startMatch: StartMatch, user: PrivateProfile | undefined): Feedback {
         const match: Match | undefined = this.currentMatches.get(startMatch.matchId);
         let feedback: Feedback = { status: false, log_message: "" };
 
         if (user) {
             if (match) {
-                feedback = match.startMatch(io, startMatch);
+                feedback = match.startMatch(socket.id, io, startMatch);
             } else {
                 feedback.log_message = "This match does not exist anymore.";
             }
@@ -115,11 +149,15 @@ export default class MatchHandler {
         // TODO : check if it is a correct guess, or asking for a hint ("!hint"), and update the other players
     }
 
-    public getAvailableMatches(users: Map<string, PrivateProfile>): MatchInfos[] {
+    public getPlayers(matchId: string): PublicProfile[] | undefined {
+        return this.currentMatches.get(matchId)?.getPlayersPublicProfile();
+    }
+
+    public getAvailableMatches(): MatchInfos[] {
         let availableMatches: MatchInfos[] = [];
         this.currentMatches.forEach((match: Match) => {
             if (!match.isStarted && match.mode !== MatchMode.sprintSolo) {
-                availableMatches.push(match.getMatchInfos(users));
+                availableMatches.push(match.getMatchInfos());
             }
         });
         return availableMatches;

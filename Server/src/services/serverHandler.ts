@@ -10,7 +10,7 @@ import PublicProfile from "../models/publicProfile";
 import ChatHandler from "./chatHandler";
 import MatchHandler from "./matchHandler";
 import RandomMatchIdGenerator from "./IdGenerator/idGenerator";
-import { CreateMatch, MatchInfos, StartMatch } from "../models/match";
+import { CreateMatch, StartMatch } from "../models/match";
 
 class ServerHandler {
     public users: Map<string, PrivateProfile>;
@@ -236,19 +236,23 @@ class ServerHandler {
     }
 
     public async createMatch(io: SocketIO.Server, socket: SocketIO.Socket, createMatch: CreateMatch): Promise<CreateMatchFeedback> {
-        return await this.matchHandler.createMatch(io, socket, createMatch, this.users, this.chatHandler);
+        return await this.matchHandler.createMatch(io, socket, createMatch, this.getUser(socket.id), this.chatHandler);
     }
 
     public async joinMatch(io: SocketIO.Server, socket: SocketIO.Socket, matchId: string): Promise<Feedback> {
-        return await this.matchHandler.joinMatch(io, socket, matchId, this.users, this.chatHandler);
+        return await this.matchHandler.joinMatch(io, socket, matchId, this.getUser(socket.id), this.chatHandler);
     }
 
     public async leaveMatch(io: SocketIO.Server, socket: SocketIO.Socket, matchId: string): Promise<Feedback> {
-        return await this.matchHandler.leaveMatch(io, socket, matchId, this.users, this.chatHandler);
+        return await this.matchHandler.leaveMatch(io, socket, matchId, this.getUser(socket.id), this.chatHandler);
     }
 
-    public getAvailableMatches(): MatchInfos[] {
-        return this.matchHandler.getAvailableMatches(this.users);
+    public addVirtualPlayer(io: SocketIO.Server, socket: SocketIO.Socket, matchId: string): Feedback {
+        return this.matchHandler.addVirtualPlayer(io, socket, matchId, this.getUser(socket.id), this.chatHandler);
+    }
+
+    public removeVirtualPlayer(io: SocketIO.Server, socket: SocketIO.Socket, matchId: string): Feedback {
+        return this.matchHandler.removeVirtualPlayer(io, socket, matchId, this.getUser(socket.id), this.chatHandler);
     }
 
     public startMatch(io: SocketIO.Server, socket: SocketIO.Socket, startMatch: StartMatch): Feedback {

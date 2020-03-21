@@ -1,11 +1,13 @@
 import Match from "./matchAbstract";
 import { Feedback } from "../../models/feedback";
+import PublicProfile from "../../models/publicProfile";
 
 export default class SprintSolo extends Match {
 
-    public constructor(host: string, nbRounds: number) {
-        super(host, nbRounds);
+    public constructor(matchId: string, host: string, user: PublicProfile, nbRounds: number) {
+        super(matchId, host, user, nbRounds);
         this.mode = 2;
+        this.maxNbVP = 0;
     }
     
     public startMatch(): Feedback {

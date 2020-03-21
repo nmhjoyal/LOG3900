@@ -55,4 +55,19 @@ export default class MatchController {
     public startMatch(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() startMatch: StartMatch) {
         socket.emit("match_started", JSON.stringify(serverHandler.startMatch(io, socket, startMatch)));
     }
+
+    @OnMessage("add_vp")
+    public addVirtualPlayer(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() matchId: string) {
+        socket.emit("vp_added", JSON.stringify(serverHandler.addVirtualPlayer(io, socket, matchId)));
+    }
+
+    @OnMessage("remove_vp")
+    public removeVirtualPlayer(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() matchId: string) {
+        socket.emit("vp_removed", JSON.stringify(serverHandler.removeVirtualPlayer(io, socket, matchId)));
+    }
+
+    @OnMessage("get_players")
+    public getPlayers(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() matchId: string) {
+        socket.emit("update_players", JSON.stringify(serverHandler.getPlayers(matchId)));
+    }
 }
