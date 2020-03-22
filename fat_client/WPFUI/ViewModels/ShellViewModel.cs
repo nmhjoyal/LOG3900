@@ -163,7 +163,7 @@ namespace WPFUI.ViewModels
 		{
 			Items.Clear();
 			Items.Add(_container.GetInstance<chatBoxViewModel>());
-			Items.Add(_container.GetInstance<ChatRoomChannelsViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
@@ -208,13 +208,7 @@ namespace WPFUI.ViewModels
 
 		public void Handle(windowChatEvent message)
 		{
-			Items.Clear();
-			Items.Add(_container.GetInstance<ChatRoomChannelsViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
-			NotifyOfPropertyChange(() => FirstSubViewModel);
-			NotifyOfPropertyChange(() => SecondSubViewModel);
-			_windowManager.ShowWindow(_container.GetInstance<chatBoxViewModel>());
-
+			_windowManager.ShowWindow(_container.GetInstance<chatBoxWindowViewModel>());
 		}
 	}
 }

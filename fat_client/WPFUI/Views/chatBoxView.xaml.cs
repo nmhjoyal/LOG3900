@@ -47,5 +47,22 @@ namespace WPFUI.Views
             }
             
         }
+
+        private void channelsMode_Click(object sender, RoutedEventArgs e)
+        {
+            if (channelsGrid.Visibility == Visibility.Hidden)
+            {
+                channelsGrid.Visibility = Visibility.Visible;
+                //channelsGrid.Focus();
+                messagesUI.Opacity = 0.5;
+            }
+            else
+            {
+                channelsGrid.Visibility = Visibility.Hidden;
+                //this.Focus();
+                messagesUI.Opacity = 1;
+            }
+
+        }
     }
 }
