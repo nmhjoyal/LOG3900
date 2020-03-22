@@ -182,6 +182,7 @@
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\MenuSelectionModeCreationViewModel.cs" />
     <Compile Include="ViewModels\NewUserViewModel.cs" />
+    <Compile Include="ViewModels\partieJeuViewModel.cs" />
     <Compile Include="ViewModels\profileViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="Views\chatBoxView.xaml.cs">
@@ -383,6 +384,7 @@
   <ItemGroup>
     <Resource Include="Resources\apple.png" />
     <Resource Include="Potrace\Images\yao.bmp" />
+    <Resource Include="Resources\alarmclock.png" />
     <Content Include="Resources\apple.svg" />
     <Resource Include="Resources\avocado.png" />
     <Content Include="Resources\avocado.svg" />
@@ -396,6 +398,7 @@
     <Resource Include="Resources\F.gif" />
     <Resource Include="Resources\F_cropped.gif" />
     <Resource Include="Resources\fireworks.gif" />
+    <Resource Include="Resources\clock.gif" />
     <Content Include="Resources\grape.svg" />
     <Resource Include="Resources\kiwi.png" />
     <Resource Include="Resources\HAND-DRAW.gif" />

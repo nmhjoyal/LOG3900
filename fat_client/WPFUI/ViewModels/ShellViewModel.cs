@@ -192,7 +192,11 @@ namespace WPFUI.ViewModels
 
 		public void Handle(joinGameEvent message)
 		{
-			//ActivateItem(_container.GetInstance<gameViewModel>());
+			Items.Clear();
+			Items.Add(_container.GetInstance<partieJeuViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
 
 		public void Handle(freeDrawEvent message)
