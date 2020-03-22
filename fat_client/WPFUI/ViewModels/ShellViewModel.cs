@@ -193,8 +193,8 @@ namespace WPFUI.ViewModels
 		public void Handle(joinGameEvent message)
 		{
 			Items.Clear();
+			Items.Add(_container.GetInstance<chatBoxViewModel>());
 			Items.Add(_container.GetInstance<partieJeuViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
