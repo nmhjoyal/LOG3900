@@ -11,7 +11,6 @@ import PublicProfile from "../models/publicProfile";
 import { Trace, Point, Game, GamePreview } from "../models/drawPoint";
 import { VirtualPlayer } from "./Drawing/virtualPlayer";
 import { gameDB } from "./Database/gameDB";
-// import { VirtualPlayer } from "./Drawing/virtualPlayer";
 
 export default class MatchHandler {
     private currentMatches: Map<string, Match>;
@@ -28,7 +27,7 @@ export default class MatchHandler {
     public async createMatch( io: SocketIO.Server, socket: SocketIO.Socket, 
                     createMatch: CreateMatch, user: PrivateProfile | undefined, chatHandler: ChatHandler): Promise<CreateMatchFeedback> {
         let createMatchFeedback: CreateMatchFeedback = {
-            feedback: { status: true, log_message: "Match created successfully." },
+            feedback: { status: false, log_message: "Match created successfully." },
             matchId: ""
         }
 
@@ -43,7 +42,6 @@ export default class MatchHandler {
                 createMatchFeedback.feedback = chatRoomFeedback;
             }
         } else {
-            createMatchFeedback.feedback.status = false;
             createMatchFeedback.feedback.log_message = "You are not connected.";
         }
 
