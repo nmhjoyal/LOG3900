@@ -7,14 +7,25 @@ import PrivateProfile from "../../models/privateProfile";
 export class ServerController {
  
     @OnConnect()
-    public connection(@ConnectedSocket() socket: SocketIO.Socket) {
+    public connection() {
         console.log("client connected");
     }
  
     @OnDisconnect()
-    public disconnect(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
-        serverHandler.signOut(io, socket);
+    public disconnect() {
         console.log("client disconnected");
+    }
+
+    @OnMessage("disconnecting")
+    public disconnecting(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
+        console.log("client disconnecting");
+        // console.log(socket.rooms);
+        // var clonedRooms = Object.keys(socket.rooms).slice();
+        // setTimeout(function() {
+        //     console.log("emptyarray:", socket.rooms); // empty array
+        //     console.log("rooms : ", clonedRooms);
+        // }, 100); https://github.com/socketio/socket.io/pull/2332
+        serverHandler.signOut(io, socket);
     }
 
     @OnMessage("sign_in")
