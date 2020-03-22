@@ -1,5 +1,6 @@
 package com.example.thin_client.ui
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -172,6 +173,20 @@ class Lobby : AppCompatActivity() {
                     }))
                     SocketHandler.disconnect()
                 }
+            }))
+            .on(Socket.EVENT_CONNECT_ERROR, ({
+                Handler(Looper.getMainLooper()).post(Runnable {
+                    val alertDialog = AlertDialog.Builder(this)
+                    alertDialog.setTitle(R.string.error_connect_title)
+                        .setCancelable(false)
+                        .setMessage(R.string.error_connect)
+                        .setPositiveButton(R.string.ok) { _, _ -> finishAffinity() }
+
+                    val dialog = alertDialog.create()
+                    dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+                    dialog.show()
+                })
+                SocketHandler.disconnect()
             }))
             .on(SocketEvent.USER_SIGNED_OUT, ({ data ->
                 val feedback = Gson().fromJson(data.first().toString(),Feedback::class.java)

@@ -1,5 +1,5 @@
 import { MatchMode } from "../models/matchMode";
-import { Trace, Point, Game, GamePreview } from "../models/drawPoint";
+import { Game, GamePreview, Stroke, StylusPoint } from "../models/drawPoint";
 import { VirtualPlayer } from "./Drawing/virtualPlayer";
 import { gameDB } from "./Database/gameDB";
 // import { VirtualPlayer } from "./Drawing/virtualPlayer";
@@ -10,10 +10,12 @@ export default class MatchHandler {
     // TEMPORARY
     private drawer: string;         // Socket id
     private observers: string[];    // Socket ids
+    private top: number;
 
     public constructor() {
         // this.currentMatches = new Array<Match>();
         this.observers = [];
+        this.top = 0;
     }
 
     public startMatch(matchMode: MatchMode) {
@@ -46,15 +48,24 @@ export default class MatchHandler {
         socket.leave("freeDrawRoomTest");
     }
 
-    public startTrace(io: SocketIO.Server, socket: SocketIO.Socket, trace: Trace): void {
+    public stroke(io: SocketIO.Server, socket: SocketIO.Socket, stroke: Stroke): void {
         // if (socket.id == this.drawer) {
-            socket.to("freeDrawRoomTest").emit("new_trace", JSON.stringify(trace));
+            stroke.DrawingAttributes.Top = this.top++;
+            socket.to("freeDrawRoomTest").emit("new_stroke", JSON.stringify(stroke));
         // }
     }
 
-    public drawTest(io: SocketIO.Server, socket: SocketIO.Socket, point: Point): void {
+    public eraseStroke(io: SocketIO.Server, socket: SocketIO.Socket): void {
+        socket.to("freeDrawRoomTest").emit("new_erase_stroke");
+    }
+
+    public erasePoint(io: SocketIO.Server, socket: SocketIO.Socket): void {
+        socket.to("freeDrawRoomTest").emit("new_erase_point");
+    }
+
+    public point(io: SocketIO.Server, socket: SocketIO.Socket, point: StylusPoint): void {
         // if (socket.id == this.drawer) {
-            socket.to("freeDrawRoomTest").emit("new_point", JSON.stringify(point));
+        socket.to("freeDrawRoomTest").emit("new_point", JSON.stringify(point));
         // }
     }
 
@@ -69,7 +80,6 @@ export default class MatchHandler {
     // previewHandler.ts
     public async preview(socket: SocketIO.Socket, gamePreview: GamePreview): Promise<void> {
         const virtualPlayer: VirtualPlayer = new VirtualPlayer("bot", null, socket);
-        virtualPlayer.setTimePerRound(5);
         virtualPlayer.preview(gamePreview);
     }
 }

@@ -86,6 +86,9 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WpfAnimatedGif, Version=1.4.18.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WpfAnimatedGif.1.4.18\lib\net\WpfAnimatedGif.dll</HintPath>
+    </Reference>
     <Reference Include="Xceed.Wpf.AvalonDock, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
       <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
     </Reference>
@@ -111,10 +114,16 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Commands\changeChannelCommand.cs" />
+    <Compile Include="Commands\IchangeChannelCommand.cs" />
+    <Compile Include="Commands\IselectAvatarCommand.cs" />
+    <Compile Include="Commands\selectAvatarCommand.cs" />
     <Compile Include="Converters\Converters.cs" />
+    <Compile Include="EventModels\addMessageEvent.cs" />
     <Compile Include="EventModels\AssisteIEvent.cs" />
     <Compile Include="EventModels\connectionEvent.cs" />
     <Compile Include="EventModels\createGameEvent.cs" />
+    <Compile Include="EventModels\createTheRoomEvent.cs" />
     <Compile Include="EventModels\DisconnectEvent.cs" />
     <Compile Include="EventModels\freeDrawEvent.cs" />
     <Compile Include="EventModels\fullScreenChatEvent.cs" />
@@ -123,24 +132,32 @@
     <Compile Include="EventModels\goBackMainEvent.cs" />
     <Compile Include="EventModels\joinChatEvent.cs" />
     <Compile Include="EventModels\joinChatroomEvent.cs" />
+    <Compile Include="EventModels\joinedRoomReceived.cs" />
     <Compile Include="EventModels\joinGameEvent.cs" />
+    <Compile Include="EventModels\LeaderboardEvent.cs" />
     <Compile Include="EventModels\LogInEvent.cs" />
     <Compile Include="EventModels\logOutEvent.cs" />
     <Compile Include="EventModels\ManuelIEvent.cs" />
     <Compile Include="EventModels\ManuelleIIEvent.cs" />
     <Compile Include="EventModels\passwordMismatchEvent.cs" />
+    <Compile Include="EventModels\refreshMessagesEvent.cs" />
+    <Compile Include="EventModels\refreshUIEvent.cs" />
+    <Compile Include="EventModels\roomsRetrievedEvent.cs" />
     <Compile Include="EventModels\sendMessageEvent.cs" />
     <Compile Include="EventModels\signUpEvent.cs" />
     <Compile Include="EventModels\userNameTakenEvent.cs" />
     <Compile Include="EventModels\viewProfileEvent.cs" />
-    <Compile Include="Models\CreateGame.cs" />
     <Compile Include="Models\Game.cs" />
     <Compile Include="Models\Trace.cs" />
+    <Compile Include="Models\Avatar.cs" />
+    <Compile Include="Models\ClientMessage.cs" />
+    <Compile Include="Models\CreateRoom.cs" />
     <Compile Include="Models\Editeur.cs" />
     <Compile Include="Models\Feedback.cs" />
     <Compile Include="Models\ISocketHandler.cs" />
     <Compile Include="Models\IUserData.cs" />
     <Compile Include="Models\JavaScriptSerializer.cs" />
+    <Compile Include="Models\JoinRoomFeedBack.cs" />
     <Compile Include="Models\MessageModel.cs" />
     <Compile Include="Models\PrivateProfile.cs" />
     <Compile Include="Models\RenderVisualService.cs" />
@@ -149,14 +166,17 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\socketHandler.cs" />
     <Compile Include="Models\UserData.cs" />
+    <Compile Include="Potrace\Potrace.cs" />
     <Compile Include="Utilitaires\RelayCommand.cs" />
     <Compile Include="ViewModels\chatBoxViewModel.cs" />
     <Compile Include="ViewModels\ChatRoomChannelsViewModel.cs" />
+    <Compile Include="ViewModels\CreationJeuAssiste1ViewModel.cs" />
     <Compile Include="ViewModels\CreationJeuManuelle1ViewModel.cs" />
     <Compile Include="ViewModels\CreationJeuManuelle2ViewModel.cs" />
     <Compile Include="ViewModels\EmptyViewModel.cs" />
     <Compile Include="ViewModels\FenetreDessinViewModel.cs" />
     <Compile Include="ViewModels\gameViewModel.cs" />
+    <Compile Include="ViewModels\LeaderboardViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
@@ -169,6 +189,9 @@
     </Compile>
     <Compile Include="Views\ChatRoomChannelsView.xaml.cs">
       <DependentUpon>ChatRoomChannelsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CreationJeuAssiste1View.xaml.cs">
+      <DependentUpon>CreationJeuAssiste1View.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CreationJeuManuelle1View.xaml.cs">
       <DependentUpon>CreationJeuManuelle1View.xaml</DependentUpon>
@@ -184,6 +207,9 @@
     </Compile>
     <Compile Include="Views\gameView.xaml.cs">
       <DependentUpon>gameView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LeaderboardView.xaml.cs">
+      <DependentUpon>LeaderboardView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
@@ -241,6 +267,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\CreationJeuAssiste1View.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\CreationJeuManuelle1View.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -258,6 +288,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\gameView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LeaderboardView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -313,7 +347,12 @@
   <ItemGroup>
     <Resource Include="Views\ProfileLogo.PNG" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\add.png" />
+    <Resource Include="Resources\lock.png" />
+    <Resource Include="Resources\login.png" />
+    <Resource Include="Resources\pencil.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\crayon.png" />
   </ItemGroup>
@@ -322,6 +361,61 @@
     <Resource Include="Resources\efface_crayon.png" />
     <Resource Include="Resources\position.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\logout.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\chat.png" />
+    <Resource Include="Resources\joystick.png" />
+    <Resource Include="Resources\pen.png" />
+    <Resource Include="Resources\ranking.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\apple.png" />
+    <Resource Include="Potrace\Images\yao.bmp" />
+    <Content Include="Resources\apple.svg" />
+    <Resource Include="Resources\avocado.png" />
+    <Content Include="Resources\avocado.svg" />
+    <Resource Include="Resources\banana.png" />
+    <Content Include="Resources\banana.svg" />
+    <Resource Include="Resources\cherry.png" />
+    <Content Include="Resources\cherry.svg" />
+    <Resource Include="Resources\grape.png" />
+    <Resource Include="Resources\duck.gif" />
+    <Resource Include="Resources\duck_cropped.gif" />
+    <Resource Include="Resources\F.gif" />
+    <Resource Include="Resources\F_cropped.gif" />
+    <Resource Include="Resources\fireworks.gif" />
+    <Content Include="Resources\grape.svg" />
+    <Resource Include="Resources\kiwi.png" />
+    <Resource Include="Resources\HAND-DRAW.gif" />
+    <Resource Include="Resources\heart.gif" />
+    <Resource Include="Resources\heart_crooped.gif" />
+    <Resource Include="Resources\invite.png" />
+    <Content Include="Resources\kiwi.svg" />
+    <Resource Include="Resources\lemon.png" />
+    <Content Include="Resources\lemon.svg" />
+    <Resource Include="Resources\orange.png" />
+    <Resource Include="Resources\mail.png" />
+    <Content Include="Resources\orange.svg" />
+    <Resource Include="Resources\pear.png" />
+    <Content Include="Resources\pear.svg" />
+    <Resource Include="Resources\pineapple.png" />
+    <Content Include="Resources\pineapple.svg" />
+    <Resource Include="Resources\strawberry.png" />
+    <Content Include="Resources\strawberry.svg" />
+    <Resource Include="Resources\watermelon.png" />
+    <Resource Include="Resources\trophy.gif" />
+    <Resource Include="Resources\trophy_cropped.gif" />
+    <Content Include="Resources\watermelon.svg" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.3.0.1\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.0.1\build\MaterialDesignThemes.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

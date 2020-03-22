@@ -8,15 +8,10 @@ import android.view.View
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
-import androidx.core.graphics.blue
-import androidx.core.graphics.green
-import androidx.core.graphics.red
 import com.divyanshu.draw.widget.MyPath
 import com.example.thin_client.R
 import com.example.thin_client.data.PaintOptions
-import com.example.thin_client.data.drawing.DrawPoint
-import com.example.thin_client.data.drawing.Point
-import com.example.thin_client.data.drawing.RGB
+import com.example.thin_client.data.drawing.*
 import com.example.thin_client.server.SocketHandler
 import java.util.*
 import kotlin.collections.ArrayList
@@ -30,6 +25,7 @@ import kotlin.collections.iterator
 class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     var mPaths = LinkedHashMap<MyPath, PaintOptions>()
     var isDrawer: Boolean = true
+    private var mIsFirstMove = false
 
     private var mLastPaths = LinkedHashMap<MyPath, PaintOptions>()
 
@@ -81,6 +77,14 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         return true
     }
 
+    private fun getStrokeCapShape(): Shape {
+        return if (mPaintOptions.cap == Paint.Cap.ROUND) Shape.ELLIPSE else Shape.RECTANGLE
+    }
+
+    private fun getStrokeCap(shape: Shape): Paint.Cap {
+        return if (shape == Shape.ELLIPSE) Paint.Cap.ROUND else Paint.Cap.SQUARE
+    }
+
     fun toggleEraser(isToggled: Boolean) {
         mIsErasing = isToggled
     }
@@ -107,21 +111,20 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         canvas.drawPath(mPath, mPaint)
     }
 
-    fun startTrace(drawPoint: DrawPoint) {
-        mStartX = drawPoint.point.x.toFloat()
-        mStartY = drawPoint.point.y.toFloat()
+    fun startTrace(drawPoint: Stroke) {
+        mStartX = drawPoint.StylusPoints[0].X.toFloat()
+        mStartY = drawPoint.StylusPoints[0].Y.toFloat()
         mCurX = mStartX
         mCurY = mStartY
-        setColor(((drawPoint.color.r.toInt() and 0xff) shl 16) or
-                ((drawPoint.color.g.toInt() and 0xff) shl 8) or
-                (drawPoint.color.b.toInt() and 0xff))
-        setStrokeWidth(drawPoint.width.toFloat())
-
-        mPath.moveTo(drawPoint.point.x.toFloat(), drawPoint.point.y.toFloat())
+        setColor(Color.parseColor(drawPoint.DrawingAttributes.Color))
+        setStrokeWidth(drawPoint.DrawingAttributes.Width.toFloat())
+        setStrokeCap(getStrokeCap(drawPoint.DrawingAttributes.StylusTip))
+        mPath.moveTo(mStartX, mStartY)
+        mIsFirstMove = false
     }
 
     fun stopTrace() {
-        if (mStartX == mCurX && mStartY == mCurY) {
+        if (mStartX == mCurX && mStartY == mCurY && mCurX != 0f && mCurY != 0f) {
             mPath.lineTo(mCurX, mCurY + 2)
             mPath.lineTo(mCurX + 1, mCurY + 2)
             mPath.lineTo(mCurX + 1, mCurY)
@@ -134,13 +137,34 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
             mPaintOptions.alpha,
             mPaintOptions.cap
         )
+        mIsFirstMove = true
         postInvalidate()
     }
 
-    fun addPath(drawPoint: DrawPoint) {
-        mCurX = drawPoint.point.x.toFloat()
-        mCurY = drawPoint.point.y.toFloat()
-        mPath.lineTo(drawPoint.point.x.toFloat(), drawPoint.point.y.toFloat())
+    fun addPath(drawPoint: StylusPoint) {
+        if (!mIsErasing) {
+            val x = drawPoint.X.toFloat()
+            val y = drawPoint.Y.toFloat()
+            if (mIsFirstMove) {
+                startTrace(
+                    Stroke(
+                    DrawingAttributes(
+                        String.format("#%8X", (0xFFFFFFFF and mPaintOptions.color.toLong())),
+                        mPaintOptions.strokeWidth,
+                        getStrokeCapShape(),
+                        0
+                    ),
+                        arrayOf(StylusPoint(x, y))
+                    )
+                )
+            } else {
+                mPath.quadTo(mCurX, mCurY, (x + mCurX) / 2, (y + mCurY) / 2)
+                mCurX = x
+                mCurY = y
+            }
+        } else {
+            eraseStrokes(drawPoint.X.toFloat(), drawPoint.Y.toFloat())
+        }
         postInvalidate()
     }
 
@@ -162,36 +186,56 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
             mPath.reset()
             mPath.moveTo(x, y)
         }
-
         mCurX = x
         mCurY = y
-        SocketHandler.touchDown(DrawPoint(RGB(mPaintOptions.color.red, mPaintOptions.color.green, mPaintOptions.color.blue),
-            Point(mCurX.toInt(), mCurY.toInt()), mPaintOptions.strokeWidth))
+
+        if (!mIsErasing) {
+            if (mPaintOptions.color.equals(ContextCompat.getColor(context!!, R.color.default_background))) {
+                SocketHandler.startErasePoint()
+            } else {
+                SocketHandler.startStroke(
+                    Stroke(
+                        DrawingAttributes(
+                            String.format("#%8X", (0xFFFFFFFF and mPaintOptions.color.toLong())),
+                            mPaintOptions.strokeWidth,
+                            getStrokeCapShape(),
+                            0
+                        ),
+                        arrayOf(StylusPoint(mCurX.toInt(), mCurY.toInt()))
+                    )
+                )
+            }
+        } else {
+            SocketHandler.startEraseStroke()
+        }
     }
 
     private fun actionMove(x: Float, y: Float) {
         if (mIsErasing) {
-            val rect = RectF(x - 10, y - 10, x + 10, y + 10)
-            val toDelete: ArrayList<MyPath> = ArrayList()
-            for (path in mPaths.entries) {
-                val tempPath = Path()
-                tempPath.moveTo(x, y)
-                tempPath.addRect(rect, Path.Direction.CW)
-                tempPath.op(path.key, Path.Op.INTERSECT)
-                if (!tempPath.isEmpty
-                    && path.value.color != ContextCompat.getColor(context, R.color.default_background)) {
-                    toDelete.add(path.key)
-                }
-            }
-            for (path in toDelete.iterator()) {
-                mPaths.remove(path)
-            }
+            eraseStrokes(x, y)
         } else {
             mPath.quadTo(mCurX, mCurY, (x + mCurX) / 2, (y + mCurY) / 2)
             mCurX = x
             mCurY = y
-            SocketHandler.drawPoint(DrawPoint(RGB(mPaintOptions.color.red, mPaintOptions.color.green, mPaintOptions.color.blue),
-                Point(mCurX.toInt(), mCurY.toInt()), mPaintOptions.strokeWidth))
+        }
+        SocketHandler.point(StylusPoint(x, y))
+    }
+
+    private fun eraseStrokes(x: Float, y: Float) {
+        val rect = RectF(x - 10, y - 10, x + 10, y + 10)
+        val toDelete: ArrayList<MyPath> = ArrayList()
+        for (path in mPaths.entries) {
+            val tempPath = Path()
+            tempPath.moveTo(x, y)
+            tempPath.addRect(rect, Path.Direction.CW)
+            tempPath.op(path.key, Path.Op.INTERSECT)
+            if (!tempPath.isEmpty
+                && path.value.color != ContextCompat.getColor(context, R.color.default_background)) {
+                toDelete.add(path.key)
+            }
+        }
+        for (path in toDelete.iterator()) {
+            mPaths.remove(path)
         }
     }
 
@@ -208,8 +252,6 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         if (!mIsErasing) {
             mPaths.put(mPath, mPaintOptions)
         }
-
-        SocketHandler.touchUp()
 
         mPath = MyPath()
         mPaintOptions = PaintOptions(
