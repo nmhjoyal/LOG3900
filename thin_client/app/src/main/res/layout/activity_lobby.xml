@@ -10,7 +10,7 @@
         android:id="@+id/lobby_menu_container"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        app:layout_constraintEnd_toStartOf="@+id/chat_guideline"
+        app:layout_constraintEnd_toStartOf="@+id/chatrooms_container"
         app:layout_constraintStart_toStartOf="parent">
     </androidx.cardview.widget.CardView>
 

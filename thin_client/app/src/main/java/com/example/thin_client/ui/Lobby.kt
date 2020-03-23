@@ -3,27 +3,22 @@ package com.example.thin_client.ui
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowManager
-import android.widget.RadioGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import com.example.thin_client.R
 import com.example.thin_client.data.Feedback
-import com.example.thin_client.data.app_preferences.Preferences
 import com.example.thin_client.data.SignInFeedback
 import com.example.thin_client.data.app_preferences.PreferenceHandler
+import com.example.thin_client.data.app_preferences.Preferences
 import com.example.thin_client.data.game.GameArgs
-import com.example.thin_client.data.game.GameManager
-import com.example.thin_client.data.game.GameMode
 import com.example.thin_client.data.lifecycle.LoginState
 import com.example.thin_client.data.model.User
 import com.example.thin_client.data.rooms.JoinRoomFeedback
@@ -33,15 +28,12 @@ import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.chat.ChatFragment
 import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
-import com.example.thin_client.ui.game_mode.GameActivity
-import com.example.thin_client.ui.game_mode.GamesList
 import com.example.thin_client.ui.leaderboard.LeaderboardActivity
 import com.example.thin_client.ui.login.LoginActivity
 import com.example.thin_client.ui.profile.ProfileActivity
 import com.github.nkzawa.socketio.client.Socket
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_lobby.*
-import kotlinx.android.synthetic.main.lobby_menu_fragment.*
 
 class Lobby : AppCompatActivity() {
     private lateinit var manager: FragmentManager

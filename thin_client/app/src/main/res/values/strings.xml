@@ -124,7 +124,7 @@
     <string name="play">Play</string>
     <string name="title_game_mode">Game mode</string>
     <string name="join_game">Join existing</string>
-    <string name="create_match">Start new game</string>
+    <string name="create_match">Create</string>
     <string name="solo_mode">Solo</string>
     <string name="collab_mode">Collaborative</string>
     <string name="general_mode">General</string>

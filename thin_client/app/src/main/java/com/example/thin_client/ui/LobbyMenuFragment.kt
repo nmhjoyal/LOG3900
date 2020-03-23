@@ -59,54 +59,10 @@ class LobbyMenuFragment : Fragment() {
             }
         }
 
-       create_match.setOnClickListener {
-            context?.let {context ->
-                showCreateMatchDialog(context)
-            }
-        }
+
 
 
     }
-
-
-    private fun showCreateMatchDialog(context: Context) {
-        val alertBuilder = android.app.AlertDialog.Builder(context)
-        alertBuilder.setTitle(R.string.create_match)
-        val dialogView = layoutInflater.inflate(R.layout.dialog_create_match, null)
-        alertBuilder.setView(dialogView)
-        val gameRadioGroup = dialogView.findViewById<RadioGroup>(R.id.game_mode_selection)
-        gameRadioGroup.check(R.id.is_solo_mode)
-
-        alertBuilder
-            .setPositiveButton(R.string.start) { _, _ ->
-                when(gameRadioGroup.checkedRadioButtonId) {
-                    R.id.is_solo_mode -> {
-                        GameManager.currentGameMode = GameMode.SOLO
-                    }
-                    R.id.is_collab_mode -> {
-                        GameManager.currentGameMode = GameMode.COLLAB
-                    }
-                    R.id.is_general_mode -> {
-                        GameManager.currentGameMode = GameMode.GENERAL
-                    }
-                    R.id.is_one_on_one_mode -> {
-                        GameManager.currentGameMode = GameMode.ONE_V_ONE
-                    }
-                    R.id.is_inverse_mode -> {
-                        GameManager.currentGameMode = GameMode.REVERSE
-                    }
-                }
-                val intent = Intent(context, GameActivity::class.java)
-                startActivity(intent)
-
-            }
-            .setNegativeButton(R.string.cancel) { _, _ -> }
-        val dialog = alertBuilder.create()
-        dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        dialog.show()
-    }
-
-
 
 
 }
