@@ -1,23 +1,17 @@
 package com.example.thin_client.ui.game_mode
 
-
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-
-
-
+import com.example.thin_client.data.game.GameManager.tabNames
 
 class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            0 -> {
-                Fragment1()
-            }
+            0 -> Fragment1()
             1 -> Fragment1()
             2 -> Fragment1()
-            3 -> Fragment1()
             else -> {
                 return Fragment1()
             }
@@ -25,18 +19,10 @@ class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     }
 
     override fun getCount(): Int {
-        return 5
+        return 4
     }
 
     override fun getPageTitle(position: Int): CharSequence {
-        return when (position) {
-            0 -> "Solo"
-            1 -> "Coop"
-            2 -> "Free for All"
-            3 -> "One vs One"
-            else -> {
-                return "Reversed"
-            }
-        }
+        return if (position < tabNames.size) tabNames[position] else tabNames[tabNames.lastIndex]
     }
 }

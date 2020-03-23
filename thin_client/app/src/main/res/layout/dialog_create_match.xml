@@ -50,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:text="@string/general_mode" />
+            android:text="@string/free_for_all_mode" />
 
         <RadioButton
             android:id="@+id/is_one_on_one_mode"
@@ -64,7 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:text="@string/inverse_mode" />
+            android:text="@string/reverse_mode" />
     </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

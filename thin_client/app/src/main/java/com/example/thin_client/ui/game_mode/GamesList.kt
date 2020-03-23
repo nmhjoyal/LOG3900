@@ -2,16 +2,21 @@ package com.example.thin_client.ui.game_mode
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.RadioGroup
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.thin_client.R
 import com.example.thin_client.data.game.GameManager
+import com.example.thin_client.data.game.GameManager.tabNames
 import com.example.thin_client.data.game.GameMode
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_games_list.*
 
 
@@ -26,6 +31,26 @@ class GamesList : Fragment() {
                 showCreateMatchDialog(context)
             }
         }
+        setupTabs()
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                val tabName =
+                    tab!!.customView!!.findViewById(R.id.tab_name) as TextView
+                tabName.setTextColor(Color.WHITE)
+                tab.customView!!.setBackgroundResource(R.drawable.tab_background_selected)
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                val tabName =
+                    tab!!.customView!!.findViewById(R.id.tab_name) as TextView
+                tabName.setTextColor(ContextCompat.getColor(context!!, R.color.colorPrimaryDark))
+                tab.customView!!.setBackgroundResource(R.drawable.tab_background)
+            }
+        })
+
     }
 
 
@@ -37,6 +62,22 @@ class GamesList : Fragment() {
 
         return inflater.inflate(R.layout.activity_games_list, container, false)
 
+    }
+
+    private fun setupTabs() {
+        for (i in 0 until tabLayout.tabCount) {
+            val customView = View.inflate(context,R.layout.tab_layout, null)
+            val tabName = customView.findViewById(R.id.tab_name) as TextView
+            tabName.text = tabNames[i]
+            if (i == 0) {
+                tabName.setTextColor(Color.WHITE)
+                customView.setBackgroundResource(R.drawable.tab_background_selected)
+            } else {
+                customView.setBackgroundResource(R.drawable.tab_background)
+            }
+            tabLayout.getTabAt(i)!!.customView = customView
+            tabLayout.getTabAt(i)!!.view.setPadding(0, 0, 0, -16)
+        }
     }
 
     private fun showCreateMatchDialog(context: Context) {

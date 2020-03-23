@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/lobby_menu"
@@ -14,65 +13,59 @@
         tools:layout_editor_absoluteY="0dp">
 
         <RelativeLayout
-            android:id="@+id/relativeLayout"
-            android:layout_width="298dp"
-            android:layout_height="78dp"
-            android:background="@drawable/play_border"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.495"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.396">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+            <LinearLayout
+                android:id="@+id/join_match"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:background="@drawable/button_primary_selector"
+                android:orientation="horizontal"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentTop="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:paddingStart="16dp"
+                    android:text="@string/play"
+                    android:textAllCaps="true"
+                    android:textColor="#ffffff"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="8dp"
+                    android:layout_gravity="center"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/ic_play_arrow_24px" />
+            </LinearLayout>
 
             <Button
                 android:id="@+id/free_draw"
                 android:layout_width="wrap_content"
-                android:layout_height="44dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="24dp"
-                android:layout_marginBottom="15dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
                 android:background="@drawable/button_primary_selector"
                 android:padding="12dp"
                 android:text="@string/title_activity_free_draw"
                 android:textColor="@color/color_white"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/join_match"
-                android:layout_width="wrap_content"
-                android:layout_height="45dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="15dp"
-                android:background="@drawable/button_primary_selector"
-                android:padding="12dp"
-                android:text="@string/play"
-                android:textColor="#ffffff"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="48dp"
-                android:layout_height="43dp"
-                android:layout_alignStart="@+id/join_match"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginStart="80dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="-128dp"
-                android:layout_marginBottom="15dp"
-                android:scaleType="fitXY"
-                app:srcCompat="@drawable/ic_play_arrow_24px" />
-
-
+                android:textStyle="bold"
+                android:layout_below="@id/join_match"
+                android:layout_centerHorizontal="true"/>
         </RelativeLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
