@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.word_letter.view.*
 
 class LetterHolder(val letter: String): Item<GroupieViewHolder>(){
 
+
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         if (letter.isBlank()) {
             viewHolder.itemView.letter_underline.setBackgroundColor(Color.WHITE)

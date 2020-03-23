@@ -21,6 +21,7 @@
 
     <!-- Profile -->
     <style name="profile">Profile</style>
+
     <string name="edit_profile">Edit profile</string>
     <string name="change_avatar">Change your avatar</string>
     <string name="undo_changes">Undo</string>
@@ -117,13 +118,13 @@
     <string name="cherry_cd">Cherry avatar</string>
     <string name="pear_cd">Pear avatar</string>
     <string name="title_activity_leaderboard">Leaderboard </string>
-    <string name="title_activity_waiting_room">Waiting Room</string>
+    <string name="title_activity_games_list">Join An Existing Game</string>
 
     <!-- Game strings -->
     <string name="play">Play</string>
     <string name="title_game_mode">Game mode</string>
     <string name="join_game">Join existing</string>
-    <string name="create_match">Start new game</string>
+    <string name="create_match">Create</string>
     <string name="solo_mode">Solo</string>
     <string name="collab_mode">Collaborative</string>
     <string name="general_mode">General</string>
@@ -133,4 +134,7 @@
     <string name="time_separator"> : </string>
     <string name="timer_cd">Timer</string>
     <string name="time_placeholder">00</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
