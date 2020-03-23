@@ -1,29 +1,174 @@
-import { MatchMode } from "../models/matchMode";
-import { Game, GamePreview, Stroke, StylusPoint } from "../models/drawPoint";
+import { MatchInstance, MatchMode } from "../models/matchMode";
+import { CreateMatch, MatchInfos, StartMatch } from "../models/match";
+import { Feedback, CreateMatchFeedback } from "../models/feedback";
+import Match from "./Match/matchAbstract";
+import PrivateProfile from "../models/privateProfile";
+import RandomMatchIdGenerator from "./IdGenerator/idGenerator";
+import { ClientMessage } from "../models/message";
+import ChatHandler from "./chatHandler";
+import { CreateRoom } from "../models/room";
+import PublicProfile from "../models/publicProfile";
+import { Trace, Point, Game, GamePreview } from "../models/drawPoint";
 import { VirtualPlayer } from "./Drawing/virtualPlayer";
 import { gameDB } from "./Database/gameDB";
-// import { VirtualPlayer } from "./Drawing/virtualPlayer";
 
 export default class MatchHandler {
-    // private currentMatches: Match[];
+    private currentMatches: Map<string, Match>;
 
-    // TEMPORARY
+    // Used for free draw testing.
     private drawer: string;         // Socket id
     private observers: string[];    // Socket ids
-    private top: number;
 
     public constructor() {
-        // this.currentMatches = new Array<Match>();
+        this.currentMatches = new Map<string, Match>();
         this.observers = [];
-        this.top = 0;
+    }
+    
+    public async createMatch( io: SocketIO.Server, socket: SocketIO.Socket, 
+                    createMatch: CreateMatch, user: PrivateProfile | undefined, chatHandler: ChatHandler): Promise<CreateMatchFeedback> {
+        let createMatchFeedback: CreateMatchFeedback = {
+            feedback: { status: false, log_message: "Match created successfully." },
+            matchId: ""
+        }
+
+        if (user) {
+            const matchId: string = RandomMatchIdGenerator.generate();
+            const matchRoom: CreateRoom = { id: matchId, isPrivate: true };
+            const chatRoomFeedback: Feedback = await chatHandler.createChatRoom(io, socket, matchRoom, user);
+            if (chatRoomFeedback.status) {
+                this.currentMatches.set(matchId, MatchInstance.createMatch(matchId, socket.id, {username: user.username, avatar: user.avatar}, createMatch));
+                socket.broadcast.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
+            } else {
+                createMatchFeedback.feedback = chatRoomFeedback;
+            }
+        } else {
+            createMatchFeedback.feedback.log_message = "You are not connected.";
+        }
+
+        return createMatchFeedback;
     }
 
-    public startMatch(matchMode: MatchMode) {
-        // this.currentMatches.push(MatchInstance.getMatchClassInstance(matchMode));
+    public async joinMatch(io: SocketIO.Server, socket: SocketIO.Socket, 
+                    matchId: string, user: PrivateProfile | undefined, chatHandler: ChatHandler): Promise<Feedback> {
+        const match: Match | undefined = this.currentMatches.get(matchId);
+        let feedback: Feedback = { status: false, log_message: "" };
+
+        if (user) {
+            if (match) {
+                feedback = (await chatHandler.joinChatRoom(io, socket, matchId, user)).feedback;
+                if (feedback.status) {
+                    feedback = match.joinMatch(socket.id, {username: user.username, avatar: user.avatar});
+                    socket.broadcast.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
+                }
+            } else {
+                feedback.log_message = "This match does not exist anymore.";
+            }
+        } else {
+            feedback.log_message = "You are not connected.";
+        }   
+
+        return feedback;
     }
 
+    public async leaveMatch(io: SocketIO.Server, socket: SocketIO.Socket, 
+                        matchId: string, user: PrivateProfile | undefined, chatHandler: ChatHandler): Promise<Feedback> {
+        const match: Match | undefined = this.currentMatches.get(matchId);
+        let feedback: Feedback = { status: false, log_message: "" };
 
-    // TEMPORARY
+        if (user) {
+            if (match) {
+                feedback = await chatHandler.leaveChatRoom(io, socket, matchId, user);
+                if (feedback.status) {
+                    feedback = match.leaveMatch(socket.id);
+                    socket.broadcast.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
+                }
+            } else {
+                feedback.log_message = "This match does not exist anymore.";
+            }
+        } else {
+            feedback.log_message = "You are not connected.";
+        }   
+
+        return feedback;
+
+    }
+
+    public addVirtualPlayer(io: SocketIO.Server, socket: SocketIO.Socket, 
+                        matchId: string, user: PrivateProfile | undefined, chatHandler: ChatHandler): Feedback {
+        const match: Match | undefined = this.currentMatches.get(matchId);
+        let feedback: Feedback = { status: false, log_message: "" };
+
+        if (user) {
+            if (match) {
+                feedback = match.addVirtualPlayer(socket.id, io);
+            } else {
+                feedback.log_message = "This match does not exist anymore.";
+            }
+        } else {
+            feedback.log_message = "You are not connected.";
+        }
+
+        return feedback;
+    }
+
+    public removeVirtualPlayer(io: SocketIO.Server, socket: SocketIO.Socket, 
+                        matchId: string, user: PrivateProfile | undefined, chatHandler: ChatHandler): Feedback {
+        const match: Match | undefined = this.currentMatches.get(matchId);
+        let feedback: Feedback = { status: false, log_message: "" };
+
+        if (user) {
+            if (match) {
+                feedback = match.removeVirtualPlayer(socket.id, io);
+            } else {
+                feedback.log_message = "This match does not exist anymore.";
+            }
+        } else {
+            feedback.log_message = "You are not connected.";
+        }
+
+        return feedback;
+    }
+
+    public startMatch(io: SocketIO.Server, socket: SocketIO.Socket, startMatch: StartMatch, user: PrivateProfile | undefined): Feedback {
+        const match: Match | undefined = this.currentMatches.get(startMatch.matchId);
+        let feedback: Feedback = { status: false, log_message: "" };
+
+        if (user) {
+            if (match) {
+                feedback = match.startMatch(socket.id, io, startMatch);
+            } else {
+                feedback.log_message = "This match does not exist anymore.";
+            }
+        } else {
+            feedback.log_message = "You are not connected.";
+        }
+
+        return feedback;
+    }
+
+    public sendMessage(io: SocketIO.Server, socket: SocketIO.Socket, message: ClientMessage, user: PrivateProfile | undefined): void {
+        // TODO : check if it is a correct guess, or asking for a hint ("!hint"), and update the other players
+    }
+
+    public getPlayers(matchId: string): PublicProfile[] | undefined {
+        return this.currentMatches.get(matchId)?.getPlayersPublicProfile();
+    }
+
+    public getAvailableMatches(): MatchInfos[] {
+        let availableMatches: MatchInfos[] = [];
+        this.currentMatches.forEach((match: Match) => {
+            if (!match.isStarted && match.mode !== MatchMode.sprintSolo) {
+                availableMatches.push(match.getMatchInfos());
+            }
+        });
+        return availableMatches;
+    }
+
+    /**
+     * 
+     * From here this code is used for free draw testing.
+     *  
+     */ 
     public enterFreeDrawTestRoom(socket: SocketIO.Socket): void {
         if (this.drawer) {
             this.observers.push(socket.id);
@@ -48,29 +193,21 @@ export default class MatchHandler {
         socket.leave("freeDrawRoomTest");
     }
 
-    public stroke(io: SocketIO.Server, socket: SocketIO.Socket, stroke: Stroke): void {
+    public startTrace(io: SocketIO.Server, socket: SocketIO.Socket, trace: Trace): void {
         // if (socket.id == this.drawer) {
-            stroke.DrawingAttributes.Top = this.top++;
-            socket.to("freeDrawRoomTest").emit("new_stroke", JSON.stringify(stroke));
+            socket.to("freeDrawRoomTest").emit("new_trace", JSON.stringify(trace));
         // }
     }
 
-    public eraseStroke(io: SocketIO.Server, socket: SocketIO.Socket): void {
-        socket.to("freeDrawRoomTest").emit("new_erase_stroke");
-    }
-
-    public erasePoint(io: SocketIO.Server, socket: SocketIO.Socket): void {
-        socket.to("freeDrawRoomTest").emit("new_erase_point");
-    }
-
-    public point(io: SocketIO.Server, socket: SocketIO.Socket, point: StylusPoint): void {
+    public drawTest(io: SocketIO.Server, socket: SocketIO.Socket, point: Point): void {
         // if (socket.id == this.drawer) {
-        socket.to("freeDrawRoomTest").emit("new_point", JSON.stringify(point));
+            socket.to("freeDrawRoomTest").emit("new_point", JSON.stringify(point));
         // }
     }
 
     public async getDrawing(io: SocketIO.Server): Promise<void> {
         const game: Game = await gameDB.getRandomGame();
+        console.log(JSON.stringify(game));
         const virtualPlayer: VirtualPlayer = new VirtualPlayer("bot", "freeDrawRoomTest", io);
         virtualPlayer.setTimePerRound(10);
         virtualPlayer.draw(game);
@@ -79,6 +216,7 @@ export default class MatchHandler {
     // previewHandler.ts
     public async preview(socket: SocketIO.Socket, gamePreview: GamePreview): Promise<void> {
         const virtualPlayer: VirtualPlayer = new VirtualPlayer("bot", null, socket);
+        virtualPlayer.setTimePerRound(5);
         virtualPlayer.preview(gamePreview);
     }
 }

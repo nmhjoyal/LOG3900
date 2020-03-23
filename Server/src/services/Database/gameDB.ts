@@ -33,8 +33,7 @@ class GameDB {
             drawing: gameDB.drawing,
             clues: gameDB.clues,
             level: gameDB.level,
-            mode: gameDB.mode,
-            option: gameDB.option
+            mode: gameDB.mode
         }
         return game;
     }

@@ -1,12 +1,16 @@
-import Match from "./match"
+import Match from "./matchAbstract";
+import { Feedback } from "../../models/feedback";
+import PublicProfile from "../../models/publicProfile";
 
-export default class Inverted extends Match{
+export default class Inverted extends Match {
 
-    public constructor(host: string, nbRounds: number) {
-        super(host, nbRounds);
+    public constructor(matchId: string, host: string, user: PublicProfile, nbRounds: number) {
+        super(matchId, host, user, nbRounds);
+        this.mode = 5;
+        this.maxNbVP = 0;
     }
     
-    public startMatch(): void {
+    public startMatch(): Feedback {
         throw new Error("Method not implemented.");
     }
     public endMatch(): void {

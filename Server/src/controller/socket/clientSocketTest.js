@@ -24,7 +24,7 @@ socket1.on("connect", function (data) {
 socket1.on("sent_path", function(data) {console.log("ICI !!!!! : " + data)});
 
 socket1.on("user_signed_in", function (data) {
-    console.log("signed in : " + data);
+    console.log("signed in : " + JSON.parse(data)["feedback"]);
     
     socket1.emit("connect_free_draw");
     // socket1.emit("create_chat_room", createroom);
@@ -59,7 +59,6 @@ socket1.on("user_joined_room", function(data) { console.log("joined room : " + d
 socket1.on("user_left_room", function(data) {console.log("left room : " + data);});
 socket1.on("new_message", function(data) { console.log("new message : " + JSON.parse(data).content + " in " +  JSON.parse(data).roomId + " *by* " + JSON.parse(data).username);});
 socket1.on("user_signed_out", function(data) {console.log("signed out : " + data);});
-socket1.on("load_history", function(data) {console.log("load history : "  + data);});
 socket1.on("getroom_test_res", function(data) {console.log("room : " + data);});
 socket1.on("avatar_update", function(data) {console.log("avatar update : " + data);});
 socket1.on("profile_updated", function(data) {console.log("profile updated  : " + data);});
