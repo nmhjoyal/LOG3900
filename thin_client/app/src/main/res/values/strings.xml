@@ -123,13 +123,14 @@
     <!-- Game strings -->
     <string name="play">Play</string>
     <string name="title_game_mode">Game mode</string>
-    <string name="join_game">Join existing</string>
-    <string name="create_match">Create</string>
+    <string name="join_game">Join existing game</string>
+    <string name="create_match">Start new game</string>
     <string name="solo_mode">Solo</string>
     <string name="collab_mode">Collaborative</string>
     <string name="free_for_all_mode">Free-for-All</string>
     <string name="one_v_one_mode">One-on-One</string>
     <string name="reverse_mode">Reverse</string>
+    <string name="prompt_nb_rounds">Number of words (rounds)</string>
     <string name="start">Start</string>
     <string name="time_separator"> : </string>
     <string name="timer_cd">Timer</string>

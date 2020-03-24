@@ -102,4 +102,11 @@
 
     </RelativeLayout>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/get_drawing_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@+id/chat_guideline"
+        app:layout_constraintTop_toTopOf="@+id/draw_view_container" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

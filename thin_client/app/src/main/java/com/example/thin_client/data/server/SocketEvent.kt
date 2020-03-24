@@ -39,4 +39,10 @@ object SocketEvent {
     const val CLEAR = "clear"
     const val CONNECT_FREE_DRAW = "connect_free_draw"
     const val DISCONNECT_FREE_DRAW = "disconnect_free_draw"
+    const val GET_DRAWING = "get_drawing"
+
+    const val CREATE_MATCH = "create_match"
+    const val MATCH_CREATED = "match_created"
+    const val START_MATCH = "start_match"
+    const val MATCH_STARTED = "match_started"
 }

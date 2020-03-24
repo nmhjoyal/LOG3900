@@ -30,6 +30,8 @@ import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.chat.ChatFragment
 import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
+import com.example.thin_client.ui.game_mode.GameActivity
+import com.example.thin_client.ui.game_mode.GamesList
 import com.example.thin_client.ui.leaderboard.LeaderboardActivity
 import com.example.thin_client.ui.login.LoginActivity
 import com.example.thin_client.ui.profile.ProfileActivity
@@ -37,7 +39,7 @@ import com.github.nkzawa.socketio.client.Socket
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_lobby.*
 
-class Lobby : AppCompatActivity() {
+class Lobby : AppCompatActivity(), GamesList.IGameStarter {
     private lateinit var manager: FragmentManager
     private lateinit var prefs: SharedPreferences
 
@@ -62,6 +64,11 @@ class Lobby : AppCompatActivity() {
             }
         }))
 
+    }
+
+    override fun startGame() {
+        val intent = Intent(this, GameActivity::class.java)
+        startActivity(intent)
     }
 
     override fun onStart() {

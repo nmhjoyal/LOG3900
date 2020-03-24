@@ -8,7 +8,7 @@ import { ClientMessage } from "../models/message";
 import ChatHandler from "./chatHandler";
 import { CreateRoom } from "../models/room";
 import PublicProfile from "../models/publicProfile";
-import { Game, GamePreview, Stroke, StylusPoint } from "../models/drawPoint";
+import { Game, GamePreview, Stroke, StylusPoint, Mode } from "../models/drawPoint";
 import { VirtualPlayer } from "./Drawing/virtualPlayer";
 import { gameDB } from "./Database/gameDB";
 
@@ -39,7 +39,9 @@ export default class MatchHandler {
             const chatRoomFeedback: Feedback = await chatHandler.createChatRoom(io, socket, matchRoom, user);
             if (chatRoomFeedback.status) {
                 this.currentMatches.set(matchId, MatchInstance.createMatch(matchId, socket.id, {username: user.username, avatar: user.avatar}, createMatch));
-                socket.broadcast.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
+                // socket.broadcast.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
+                createMatchFeedback.feedback.status = true
+                createMatchFeedback.matchId = matchId
             } else {
                 createMatchFeedback.feedback = chatRoomFeedback;
             }
@@ -172,13 +174,8 @@ export default class MatchHandler {
      *  
      */ 
     public enterFreeDrawTestRoom(socket: SocketIO.Socket): void {
-        if (this.drawer) {
-            this.observers.push(socket.id);
-            socket.emit("observer");
-        } else {
-            this.drawer = socket.id;
-            socket.emit("drawer");
-        }
+        this.observers.push(socket.id);
+        socket.emit("observer");
         socket.join("freeDrawRoomTest");
     }
 
@@ -218,9 +215,9 @@ export default class MatchHandler {
 
     public async getDrawing(io: SocketIO.Server): Promise<void> {
         const game: Game = await gameDB.getRandomGame();
-        console.log(JSON.stringify(game));
         const virtualPlayer: VirtualPlayer = new VirtualPlayer("bot", "freeDrawRoomTest", io);
         virtualPlayer.setTimePerRound(10);
+        game.mode = Mode.Classic
         virtualPlayer.draw(game);
     }
 

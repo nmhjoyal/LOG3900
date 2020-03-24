@@ -5,6 +5,8 @@ import com.example.thin_client.data.ClientMessage
 import com.example.thin_client.data.app_preferences.Preferences
 import com.example.thin_client.data.drawing.Stroke
 import com.example.thin_client.data.drawing.StylusPoint
+import com.example.thin_client.data.game.CreateMatch
+import com.example.thin_client.data.game.StartMatch
 import com.example.thin_client.data.lifecycle.LoginState
 import com.example.thin_client.data.model.PrivateProfile
 import com.example.thin_client.data.model.User
@@ -135,5 +137,19 @@ object SocketHandler {
     fun sendInvite(invite: Invitation) {
         val args = Gson().toJson(invite)
         socket!!.emit(SocketEvent.SEND_INVITE, args)
+    }
+
+    fun createMatch(match: CreateMatch) {
+        val args = Gson().toJson(match)
+        socket!!.emit(SocketEvent.CREATE_MATCH, args)
+    }
+
+    fun startMatch(matchParams: StartMatch) {
+        val args = Gson().toJson(matchParams)
+        socket!!.emit(SocketEvent.START_MATCH, args)
+    }
+
+    fun getDrawing() {
+        socket!!.emit(SocketEvent.GET_DRAWING)
     }
 }

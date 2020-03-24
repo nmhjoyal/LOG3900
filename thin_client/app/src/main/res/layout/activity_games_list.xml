@@ -7,6 +7,17 @@
     android:orientation="horizontal"
     android:background="@color/default_background">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="@string/join_game"
+        app:layout_constraintBottom_toTopOf="@id/top_view_pager"
+        app:layout_constraintStart_toStartOf="@id/start_view_pager"/>
+
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="wrap_content"

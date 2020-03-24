@@ -46,10 +46,6 @@ class LobbyMenuFragment : Fragment() {
                 startActivity(intent)
             }
         }
-
-
-
-
     }
 
 

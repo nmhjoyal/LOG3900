@@ -1,6 +1,7 @@
 package com.example.thin_client.ui.chat
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -34,6 +35,11 @@ class ChatFragment : Fragment() {
     private var roomID : String ?= ""
     private val admin : String ="Admin"
     private lateinit var userAvatarID: AvatarID
+    var wordGuessingListener: IWordGuessing? = null
+
+    interface IWordGuessing {
+        fun sendGuess(word: String)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,58 +57,8 @@ class ChatFragment : Fragment() {
             invite_user_button.visibility = View.GONE
         }
 
-        val roomsJoined = RoomManager.roomsJoined
-        val messages = roomsJoined[roomID]
-        if (messages !== null) {
-            for(i in 0 until messages.size){
-                when (messages[i].username) {
-                    admin -> showAdminMessage(messages[i].content)
-                    SocketHandler.user!!.username -> showToMessage(messages[i].content, messages[i].date)
-                    else -> {
-                        var userAvatar: AvatarID = AvatarID.AVOCADO
-                        if (RoomManager.roomAvatars[roomID] !== null) {
-                            userAvatar = getAvatar(RoomManager.roomAvatars[roomID]!![messages[i].username])
-                        }
-                        showFromMessage(
-                            messages[i].content,
-                            userAvatar,
-                            messages[i].username,
-                            messages[i].date
-                        )
-                    }
-                }
-            }
-        }
-
-
-        SocketHandler.socket?.on(SocketEvent.NEW_MESSAGE, ({ data ->
-                val jsonData = Gson().fromJson(data.first().toString(), Message::class.java)
-                val username = jsonData.username
-                val timestamp = jsonData.date
-                Handler(Looper.getMainLooper()).post(Runnable {
-                    when (username) {
-                        admin -> showAdminMessage(jsonData.content)
-                        SocketHandler.user!!.username -> showToMessage(jsonData.content, timestamp)
-                        else -> {
-                            var userAvatar: AvatarID = AvatarID.AVOCADO
-                            if (RoomManager.roomAvatars[roomID] !== null) {
-                                userAvatar = getAvatar(RoomManager.roomAvatars[roomID]!![username])
-                            }
-                            showFromMessage(
-                                jsonData.content,
-                                userAvatar,
-                                username,
-                                timestamp
-                            )
-                        }
-                    }
-                    if (RoomManager.roomsJoined.containsKey(roomID)) {
-                        if (!RoomManager.roomsJoined.get(roomID)!!.contains(jsonData)) {
-                            RoomManager.roomsJoined.get(roomID)!!.add(jsonData)
-                        }
-                    }
-                })
-            }))
+        retreiveExistingMessages()
+        setupSocketEvents()
 
         back_button.setOnClickListener(({
             goBackToRooms()
@@ -144,12 +100,86 @@ class ChatFragment : Fragment() {
         }))
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        wordGuessingListener = context as? IWordGuessing
+        if (wordGuessingListener == null) {
+            Toast.makeText(context, "Cannot start a new game at this time.", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return inflater.inflate(R.layout.activity_chat, container, false)
+    }
+
+    private fun retreiveExistingMessages() {
+        val roomsJoined = RoomManager.roomsJoined
+        val messages = roomsJoined[roomID]
+        if (messages !== null) {
+            for(i in 0 until messages.size){
+                when (messages[i].username) {
+                    admin -> showAdminMessage(messages[i].content)
+                    SocketHandler.user!!.username -> showToMessage(messages[i].content, messages[i].date)
+                    else -> {
+                        var userAvatar: AvatarID = AvatarID.AVOCADO
+                        if (RoomManager.roomAvatars[roomID] !== null) {
+                            userAvatar = getAvatar(RoomManager.roomAvatars[roomID]!![messages[i].username])
+                        }
+                        showFromMessage(
+                            messages[i].content,
+                            userAvatar,
+                            messages[i].username,
+                            messages[i].date
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setupSocketEvents() {
+        SocketHandler.socket
+            ?.on(SocketEvent.NEW_MESSAGE, ({ data ->
+                val jsonData = Gson().fromJson(data.first().toString(), Message::class.java)
+                val username = jsonData.username
+                val timestamp = jsonData.date
+                Handler(Looper.getMainLooper()).post(Runnable {
+                    when (username) {
+                        admin -> showAdminMessage(jsonData.content)
+                        SocketHandler.user!!.username -> showToMessage(jsonData.content, timestamp)
+                        else -> {
+                            var userAvatar: AvatarID = AvatarID.AVOCADO
+                            if (RoomManager.roomAvatars[roomID] !== null) {
+                                userAvatar = getAvatar(RoomManager.roomAvatars[roomID]!![username])
+                            }
+                            showFromMessage(
+                                jsonData.content,
+                                userAvatar,
+                                username,
+                                timestamp
+                            )
+                        }
+                    }
+                    if (RoomManager.roomsJoined.containsKey(roomID)) {
+                        if (!RoomManager.roomsJoined.get(roomID)!!.contains(jsonData)) {
+                            RoomManager.roomsJoined.get(roomID)!!.add(jsonData)
+                        }
+                    }
+                })
+            }))
+    }
+
     private fun showToMessage(text: String, date: Long){
-        adapter.add(ChatToItem(text.replace("\\n".toRegex(), ""),
-            userAvatarID, date))
+        val trimmedText = text.replace("\\n".toRegex(), "")
+        adapter.add(ChatToItem(trimmedText, userAvatarID, date))
         if (recyclerview_chat != null){
             recyclerview_chat.scrollToPosition(adapter.itemCount - 1)
         }
+        wordGuessingListener?.sendGuess(trimmedText)
     }
 
     private fun showFromMessage(text: String, avatarID: AvatarID, author:String, date: Long) {
@@ -157,6 +187,7 @@ class ChatFragment : Fragment() {
         if (recyclerview_chat != null){
             recyclerview_chat.scrollToPosition(adapter.itemCount - 1)
         }
+        wordGuessingListener?.sendGuess(text)
     }
 
     private fun showAdminMessage(text:String){
@@ -169,14 +200,6 @@ class ChatFragment : Fragment() {
         transaction.replace(R.id.chatrooms_container, chatRoomsFragment)
         transaction.addToBackStack(null)
         transaction.commit()
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.activity_chat, container, false)
     }
 
     private fun showInviteDialog() {
