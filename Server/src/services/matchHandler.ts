@@ -1,4 +1,4 @@
-import { MatchInstance, MatchMode } from "../models/matchMode";
+import { MatchInstance } from "../models/matchMode";
 import { CreateMatch, MatchInfos, StartMatch } from "../models/match";
 import { Feedback, CreateMatchFeedback } from "../models/feedback";
 import Match from "./Match/matchAbstract";
@@ -160,9 +160,8 @@ export default class MatchHandler {
     public getAvailableMatches(): MatchInfos[] {
         let availableMatches: MatchInfos[] = [];
         this.currentMatches.forEach((match: Match) => {
-            if (!match.isStarted && match.mode !== MatchMode.sprintSolo) {
-                availableMatches.push(match.getMatchInfos());
-            }
+            let matchInfos: MatchInfos | undefined = match.getMatchInfos();
+            if (matchInfos) availableMatches.push(matchInfos);
         });
         return availableMatches;
     }

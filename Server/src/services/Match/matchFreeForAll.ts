@@ -1,11 +1,12 @@
 import Match from "./matchAbstract";
 import PublicProfile from "../../models/publicProfile";
+import { MatchMode } from "../../models/matchMode";
 
 export default class FreeForAll extends Match {
 
     public constructor(matchId: string, host: string, user: PublicProfile, nbRounds: number) {
         super(matchId, host, user, nbRounds);
-        this.mode = 1;
+        this.mode = MatchMode.freeForAll;
         this.maxNbVP = 4;
     }
 

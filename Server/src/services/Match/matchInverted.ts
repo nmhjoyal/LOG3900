@@ -1,12 +1,13 @@
 import Match from "./matchAbstract";
 import { Feedback } from "../../models/feedback";
 import PublicProfile from "../../models/publicProfile";
+import { MatchMode } from "../../models/matchMode";
 
 export default class Inverted extends Match {
 
     public constructor(matchId: string, host: string, user: PublicProfile, nbRounds: number) {
         super(matchId, host, user, nbRounds);
-        this.mode = 5;
+        this.mode = MatchMode.inverted;
         this.maxNbVP = 0;
     }
     

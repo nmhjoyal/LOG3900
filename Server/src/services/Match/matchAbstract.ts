@@ -2,6 +2,7 @@ import { Feedback } from "../../models/feedback";
 import { MatchInfos, StartMatch, TIME_LIMIT_MIN, TIME_LIMIT_MAX } from "../../models/match";
 import Player from "../../models/player";
 import PublicProfile from "../../models/publicProfile";
+import { MatchMode } from "../../models/matchMode";
 
 export default abstract class Match {
     protected matchId: string;
@@ -12,10 +13,10 @@ export default abstract class Match {
     protected timeLimit: number;
     protected currentWord: string;
     protected nbVP: number;
-    public isStarted: boolean;
+    protected isStarted: boolean;
 
     // Depends on the instance
-    public mode: number;
+    protected mode: number;
     protected maxNbVP: number;
 
     protected setTimeoutId: number; // setTimeout will be used for emitting end_round and we will cancel it if there is an unexpected leave of a room
@@ -150,6 +151,7 @@ export default abstract class Match {
                     this.letterReveal = startMatch.letterReveal;
                     this.timeLimit = startMatch.timeLimit;
                     // TODO: match logic ... 
+                    this.isStarted = true;
                     feedback.status = true;
                     feedback.log_message = "Match is going to start...";
                 } else {
@@ -181,20 +183,27 @@ export default abstract class Match {
         return publicProfiles;
     }
 
-    public getMatchInfos(): MatchInfos {
-        let userInfos: PublicProfile[] = [];
-        let host: string = "";
-        this.players.forEach((player: Player) => {
-            if (player.isHost) host = player.user.username; 
-            userInfos.push(player.user);
-        });
+    public getMatchInfos(): MatchInfos | undefined {
+        let matchInfos: MatchInfos | undefined;
+        
+        if (!this.isStarted && this.mode !== MatchMode.sprintSolo) { // maybe this.players.length < this.maxPlayers?    
+            let userInfos: PublicProfile[] = [];
+            let host: string = "";
 
-        return {
-            host: host,
-            matchMode: this.mode,
-            nbRounds: this.nbRounds,
-            players: userInfos
-        };
+            this.players.forEach((player: Player) => {
+                if (player.isHost) host = player.user.username; 
+                userInfos.push(player.user);
+            });
+
+            matchInfos = {
+                host: host,
+                matchMode: this.mode,
+                nbRounds: this.nbRounds,
+                players: userInfos
+            };
+        }
+
+        return matchInfos;
     }
 
     protected createPlayer(user: PublicProfile, isHost: boolean, isVirtual: boolean): Player {
