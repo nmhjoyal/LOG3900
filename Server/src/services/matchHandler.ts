@@ -27,7 +27,7 @@ export default class MatchHandler {
     public async createMatch( io: SocketIO.Server, socket: SocketIO.Socket, 
                     createMatch: CreateMatch, user: PrivateProfile | undefined, chatHandler: ChatHandler): Promise<CreateMatchFeedback> {
         let createMatchFeedback: CreateMatchFeedback = {
-            feedback: { status: false, log_message: "Match created successfully." },
+            feedback: { status: false, log_message: "" },
             matchId: ""
         }
 
@@ -38,13 +38,14 @@ export default class MatchHandler {
             if (chatRoomFeedback.status) {
                 this.currentMatches.set(matchId, MatchInstance.createMatch(matchId, socket.id, {username: user.username, avatar: user.avatar}, createMatch));
                 socket.broadcast.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
-                createMatchFeedback.feedback.status = true
-                createMatchFeedback.matchId = matchId
+                createMatchFeedback.feedback.log_message = "Match created successfully.";
+                createMatchFeedback.feedback.status = true;
+                createMatchFeedback.matchId = matchId;
             } else {
                 createMatchFeedback.feedback = chatRoomFeedback;
             }
         } else {
-            createMatchFeedback.feedback.log_message = "You are not connected.";
+            createMatchFeedback.feedback.log_message = "You are not signed in.";
         }
 
         return createMatchFeedback;
@@ -66,7 +67,7 @@ export default class MatchHandler {
                 feedback.log_message = "This match does not exist anymore.";
             }
         } else {
-            feedback.log_message = "You are not connected.";
+            feedback.log_message = "You are not signed in.";
         }   
 
         return feedback;
@@ -88,7 +89,7 @@ export default class MatchHandler {
                 feedback.log_message = "This match does not exist anymore.";
             }
         } else {
-            feedback.log_message = "You are not connected.";
+            feedback.log_message = "You are not signed in.";
         }   
 
         return feedback;
@@ -107,7 +108,7 @@ export default class MatchHandler {
                 feedback.log_message = "This match does not exist anymore.";
             }
         } else {
-            feedback.log_message = "You are not connected.";
+            feedback.log_message = "You are not signed in.";
         }
 
         return feedback;
@@ -125,7 +126,7 @@ export default class MatchHandler {
                 feedback.log_message = "This match does not exist anymore.";
             }
         } else {
-            feedback.log_message = "You are not connected.";
+            feedback.log_message = "You are not signed in.";
         }
 
         return feedback;
@@ -142,7 +143,7 @@ export default class MatchHandler {
                 feedback.log_message = "This match does not exist anymore.";
             }
         } else {
-            feedback.log_message = "You are not connected.";
+            feedback.log_message = "You are not signed in.";
         }
 
         return feedback;
