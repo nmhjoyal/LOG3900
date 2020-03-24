@@ -22,10 +22,12 @@ export interface StartMatch {
 export const TIME_LIMIT_MIN: number = 30; /* 30 sec minimum */
 export const TIME_LIMIT_MAX: number = 120;/* 2 min maximum */
 
-export interface MatchStarted {
+export interface MatchBegin {
     choices: string[]
     letterRevel: boolean
     nbRounds: number
+    matchMode: MatchMode
     isCurrent: boolean  // indicates if he is the drawer in FreeForAll and OneVsOne.
                         // indicates if he is the judge in Inverted.
+                        // not used in SprintCoop and SprintSolo because the players are always guessing
 }
