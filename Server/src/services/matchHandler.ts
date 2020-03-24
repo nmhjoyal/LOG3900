@@ -38,6 +38,8 @@ export default class MatchHandler {
             if (chatRoomFeedback.status) {
                 this.currentMatches.set(matchId, MatchInstance.createMatch(matchId, socket.id, {username: user.username, avatar: user.avatar}, createMatch));
                 socket.broadcast.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
+                createMatchFeedback.feedback.status = true
+                createMatchFeedback.matchId = matchId
             } else {
                 createMatchFeedback.feedback = chatRoomFeedback;
             }
