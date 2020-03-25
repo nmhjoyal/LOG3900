@@ -16,7 +16,7 @@ namespace WPFUI.ViewModels
 						  IHandle<DisconnectEvent>, IHandle<userNameTakenEvent>,IHandle<signUpEvent>, IHandle<goBackEvent>,
 						  IHandle<passwordMismatchEvent>, IHandle<viewProfileEvent>, IHandle<goBackMainEvent>,
 						  IHandle<joinGameEvent>, IHandle<ManuelIEvent>, IHandle<ManuelleIIEvent>, IHandle<createGameEvent>,IHandle<freeDrawEvent>, 
-						  IHandle<joinChatroomEvent>, IHandle<goBackCreationMenuEvent>, IHandle<AssisteIEvent>, IHandle<LeaderboardEvent>,
+						  IHandle<joinChatroomEvent>, IHandle<goBackCreationMenuEvent>, IHandle<AssisteIEvent>, IHandle<LeaderboardEvent>, IHandle<gameEvent>,
 						  IHandle<windowChatEvent>
 	{
 		private IEventAggregator _events;
@@ -195,8 +195,16 @@ namespace WPFUI.ViewModels
 		public void Handle(joinGameEvent message)
 		{
 			Items.Clear();
-			Items.Add(_container.GetInstance<chatBoxViewModel>());
+			Items.Add(_container.GetInstance<ChoseGameViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
+		}
+		public void Handle(gameEvent message)
+		{
+			Items.Clear();
 			Items.Add(_container.GetInstance<partieJeuViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}

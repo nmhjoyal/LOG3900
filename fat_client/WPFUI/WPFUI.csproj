@@ -128,6 +128,7 @@
     <Compile Include="EventModels\DisconnectEvent.cs" />
     <Compile Include="EventModels\freeDrawEvent.cs" />
     <Compile Include="EventModels\fullScreenChatEvent.cs" />
+    <Compile Include="EventModels\gameEvent.cs" />
     <Compile Include="EventModels\goBackCreationMenuEvent.cs" />
     <Compile Include="EventModels\goBackEvent.cs" />
     <Compile Include="EventModels\goBackMainEvent.cs" />
@@ -257,6 +258,7 @@
     <Compile Include="ViewModels\chatBoxViewModel.cs" />
     <Compile Include="ViewModels\chatBoxWindowViewModel.cs" />
     <Compile Include="ViewModels\ChatRoomChannelsViewModel.cs" />
+    <Compile Include="ViewModels\ChoseGameViewModel.cs" />
     <Compile Include="ViewModels\CreationJeuAssiste1ViewModel.cs" />
     <Compile Include="ViewModels\CreationJeuManuelle1ViewModel.cs" />
     <Compile Include="ViewModels\CreationJeuManuelle2ViewModel.cs" />
@@ -515,6 +517,7 @@
     <Content Include="Resources\lemon.svg" />
     <Resource Include="Resources\orange.png" />
     <Resource Include="Resources\mail.png" />
+    <Resource Include="Resources\mad.gif" />
     <Content Include="Resources\orange.svg" />
     <Resource Include="Resources\pear.png" />
     <Content Include="Resources\pear.svg" />
