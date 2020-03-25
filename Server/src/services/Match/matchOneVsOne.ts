@@ -11,15 +11,14 @@ export default class OneVsOne extends Match {
         this.maxNbVP = 0;
     }
 
-    public endMatch(): void {
+    public startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): void {
         throw new Error("Method not implemented.");
     }
-    public startRound(): void {
+
+    public endTurn(io: SocketIO.Server): void {
         throw new Error("Method not implemented.");
     }
-    public endRound(): void {
-        throw new Error("Method not implemented.");
-    }
+    
     public draw(): void {
         throw new Error("Method not implemented.");
     }
