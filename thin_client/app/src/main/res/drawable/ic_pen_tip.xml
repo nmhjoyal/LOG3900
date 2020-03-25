@@ -1,0 +1,5 @@
+<vector android:height="40dp" android:viewportHeight="488"
+    android:viewportWidth="488" android:width="40dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#FFFFFF" android:pathData="m244,0c-3.273,0 -6.219,1.992 -7.434,5.031l-96,240c-0.375,0.945 -0.566,1.953 -0.566,2.969v232c0,4.418 3.582,8 8,8h192c4.418,0 8,-3.582 8,-8v-232c0,-1.016 -0.191,-2.023 -0.566,-2.969l-96,-240c-1.215,-3.039 -4.16,-5.031 -7.434,-5.031zM204,472h-48v-204.688l18.344,18.344c3.125,3.121 8.188,3.121 11.313,0l18.344,-18.344zM268,472h-48v-204.688l18.344,18.344c3.125,3.121 8.188,3.121 11.313,0l18.344,-18.344zM332,472h-48v-204.688l18.344,18.344c3.125,3.121 8.188,3.121 11.313,0l18.344,-18.344zM330.617,246.07 L308,268.688 281.656,242.344c-3.125,-3.121 -8.188,-3.121 -11.313,0l-26.344,26.344 -26.344,-26.344c-3.125,-3.121 -8.188,-3.121 -11.313,0l-26.344,26.344 -22.617,-22.617 60.031,-150.07h53.172zM223.816,80 L244,29.535 264.184,80zM223.816,80"/>
+</vector>
+    <!-- Icons made by <a href="https://www.flaticon.com/<?=_('authors/')?>turkkub" title="turkkub">turkkub</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a> -->

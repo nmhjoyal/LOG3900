@@ -55,6 +55,8 @@ namespace WPFUI.ViewModels
 
         public StrokeCollection Traits { get; set; }
 
+        public Dictionary<Stroke, int> strokes { get; set; }
+
         // Commandes sur lesquels la vue pourra se connecter.
 
         public RelayCommand<string> ChoisirPointe { get; set; }
@@ -67,8 +69,6 @@ namespace WPFUI.ViewModels
         /// sur lesquelles la vue se connectera.
         /// </summary>
         private IEventAggregator _events;
-        private IUserData _userdata;
-
         private ISocketHandler _socketHandler;
         public CreationJeuManuelle1ViewModel(IEventAggregator events, ISocketHandler socketHandler)
         {
@@ -84,13 +84,14 @@ namespace WPFUI.ViewModels
             AjusterPointe();
 
             Traits = editeur.traits;
-
+            this.strokes = new Dictionary<Stroke, int>();
 
             // Pour les commandes suivantes, il est toujours possible des les activer.
             // Donc, aucune vérification de type Peut"Action" à faire.
             ChoisirPointe = new RelayCommand<string>(editeur.ChoisirPointe);
             ChoisirOutil = new RelayCommand<string>(editeur.ChoisirOutil);
 
+            // this._socketHandler.onDrawing(this.Traits, this.strokes);
         }
 
         /// <summary>
@@ -159,7 +160,6 @@ namespace WPFUI.ViewModels
         {
             _events.PublishOnUIThread(new goBackCreationMenuEvent());
         }
-
     }
 
 }

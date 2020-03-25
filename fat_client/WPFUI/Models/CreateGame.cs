@@ -7,22 +7,50 @@ using System.Windows.Ink;
 
 namespace WPFUI.Models
 {
-    class CreateGame
+    public class CreateGame
     {
         public string word;
-        public StrokeCollection lines;
-        public int level;
+        public StrokeCollection drawing;
         public List<string> clues;
-        public int mode;
-
-        public CreateGame(string word, StrokeCollection lines, int level, List<string> clues, int mode)
+        public Level level;
+        public Mode mode;
+        public int option;
+        public CreateGame(string word, StrokeCollection drawing, List<string> clues, Level level, Mode mode, int option)
         {
             this.word = word;
-            this.lines = new StrokeCollection(lines);
-            this.level = level;
+            this.drawing = new StrokeCollection(drawing);
             this.clues = new List<string>(clues);
+            this.level = level;
             this.mode = mode;
+            this.option = option;
         }
     }
 
+    public class GamePreview
+    {
+        public StrokeCollection drawing;
+        public Mode mode;
+        public int option;
+        public GamePreview(StrokeCollection drawing, Mode mode, int option)
+        {
+            this.drawing = new StrokeCollection(drawing);
+            this.mode = mode;
+            this.option = option;
+        }
+    }
+
+    public enum Level
+    {
+        Easy,
+        Medium,
+        Hard
+    }
+
+    public enum Mode
+    {
+        Classic,
+        Random,
+        Panoramic,
+        Centered
+    }
 }

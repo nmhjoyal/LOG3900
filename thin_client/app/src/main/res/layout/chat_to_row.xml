@@ -10,18 +10,20 @@
 
         <ImageView
             android:id="@+id/image_to_view"
-            android:layout_width="72dp"
-            android:layout_height="56dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="8dp"
+            android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_account_circle_black_36dp" />
+            android:background="@drawable/circle_primary_dark" />
 
         <TextView
             android:id="@+id/text_view_to_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_margin="12dp"
             android:gravity="start"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="parent"

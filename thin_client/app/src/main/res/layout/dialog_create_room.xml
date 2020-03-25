@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/create_room_constraint"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/room_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:hint="@string/room_name"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RadioGroup
+        android:id="@+id/room_visibility"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="@+id/room_name"
+        app:layout_constraintStart_toStartOf="@+id/room_name"
+        app:layout_constraintTop_toBottomOf="@+id/room_name">
+
+        <RadioButton
+            android:id="@+id/is_public_room"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/public_room" />
+
+        <RadioButton
+            android:id="@+id/is_private_room"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/private_room" />
+    </RadioGroup>
+
+    <RelativeLayout
+        android:id="@+id/invite_users_frame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/room_visibility"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constrainedHeight="true">
+        <TextView
+            android:id="@+id/invite_list_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/invite_user"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/colorPrimaryDark"
+            android:textAllCaps="true"
+            android:layout_margin="8dp" />
+        <TableLayout
+            android:id="@+id/add_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/invite_list_title">
+            <TableRow>
+                <EditText
+                    android:id="@+id/add_user_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:maxLength="20"
+                    android:layout_margin="4dp"
+                    android:textSize="16sp"
+                    android:hint="@string/prompt_enter_username" />
+                <ImageButton
+                    android:id="@+id/add_user_button"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/circle_green"
+                    app:srcCompat="@drawable/ic_add_24px" />
+            </TableRow>
+        </TableLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/invite_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/add_user"
+            android:layout_below="@id/invite_list_title"
+            android:layout_alignParentEnd="true"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

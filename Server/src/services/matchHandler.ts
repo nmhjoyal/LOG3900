@@ -7,9 +7,8 @@ import RandomMatchIdGenerator from "./IdGenerator/idGenerator";
 import { ClientMessage } from "../models/message";
 import { CreateRoom } from "../models/room";
 import PublicProfile from "../models/publicProfile";
-import { Trace, Point, Game, GamePreview } from "../models/drawPoint";
-import { VirtualPlayer } from "./Drawing/virtualPlayer";
-import { gameDB } from "./Database/gameDB";
+import { GamePreview, Stroke, StylusPoint } from "../models/drawPoint";
+import { VirtualDrawing } from "./Drawing/virtualDrawing";
 import ChatHandler from "./chatHandler";
 
 export default class MatchHandler {
@@ -19,11 +18,15 @@ export default class MatchHandler {
     // Used for free draw testing.
     private drawer: string;         // Socket id
     private observers: string[];    // Socket ids
+    private top: number;
+    private previews: VirtualDrawing[];
 
     public constructor() {
         this.currentMatches = new Map<string, Match>();
         this.observers = [];
         this.chatHandler = new ChatHandler();
+        this.top = 0;
+        this.previews = [];
     }
     
     public async createMatch(io: SocketIO.Server, socket: SocketIO.Socket, 
@@ -197,30 +200,55 @@ export default class MatchHandler {
         socket.leave("freeDrawRoomTest");
     }
 
-    public startTrace(io: SocketIO.Server, socket: SocketIO.Socket, trace: Trace): void {
+    public stroke(io: SocketIO.Server, socket: SocketIO.Socket, stroke: Stroke): void {
         // if (socket.id == this.drawer) {
-            socket.to("freeDrawRoomTest").emit("new_trace", JSON.stringify(trace));
+            stroke.DrawingAttributes.Top = this.top++;
+            socket.to("freeDrawRoomTest").emit("new_stroke", JSON.stringify(stroke));
         // }
     }
 
-    public drawTest(io: SocketIO.Server, socket: SocketIO.Socket, point: Point): void {
+    public eraseStroke(io: SocketIO.Server, socket: SocketIO.Socket): void {
+        socket.to("freeDrawRoomTest").emit("new_erase_stroke");
+    }
+
+    public erasePoint(io: SocketIO.Server, socket: SocketIO.Socket): void {
+        socket.to("freeDrawRoomTest").emit("new_erase_point");
+    }
+
+    public point(io: SocketIO.Server, socket: SocketIO.Socket, point: StylusPoint): void {
         // if (socket.id == this.drawer) {
-            socket.to("freeDrawRoomTest").emit("new_point", JSON.stringify(point));
+        socket.to("freeDrawRoomTest").emit("new_point", JSON.stringify(point));
         // }
+    }
+
+    public clear(io: SocketIO.Server, socket: SocketIO.Socket): void {
+        // Pour preview seulement
+        let virtualDrawing: VirtualDrawing | undefined = this.previews.find(drawing => socket.id == drawing.getId());
+        if(virtualDrawing) {
+            console.log("clear");
+            virtualDrawing.clear();
+        };
     }
 
     public async getDrawing(io: SocketIO.Server): Promise<void> {
+        /*
         const game: Game = await gameDB.getRandomGame();
-        console.log(JSON.stringify(game));
-        const virtualPlayer: VirtualPlayer = new VirtualPlayer("bot", "freeDrawRoomTest", io);
-        virtualPlayer.setTimePerRound(10);
-        virtualPlayer.draw(game);
+        let virtualDrawing: VirtualDrawing | undefined = this.previews.find(drawing => "freeDrawRoomTest" == drawing.getId());
+        if(!virtualDrawing) {
+            virtualDrawing = new VirtualDrawing("froomDrawRoomTest", io, 20);
+            this.previews.push(virtualDrawing);
+        }
+        virtualDrawing.draw(game.drawing, game.level);
+        */
     }
 
     // previewHandler.ts
     public async preview(socket: SocketIO.Socket, gamePreview: GamePreview): Promise<void> {
-        const virtualPlayer: VirtualPlayer = new VirtualPlayer("bot", null, socket);
-        virtualPlayer.setTimePerRound(5);
-        virtualPlayer.preview(gamePreview);
+        let virtualDrawing: VirtualDrawing | undefined = this.previews.find(drawing => socket.id == drawing.getId());
+        if(!virtualDrawing) {
+            virtualDrawing = new VirtualDrawing(null, socket, 7.5);
+            this.previews.push(virtualDrawing);
+        }
+        virtualDrawing.preview(gamePreview);
     }
 }

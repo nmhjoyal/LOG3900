@@ -13,7 +13,7 @@ android:layout_height="wrap_content">
             android:id="@+id/text_view_username_from"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
+            android:text="@string/stat_placeholder"
             app:layout_constraintBottom_toTopOf="@id/image_from_message"
             app:layout_constraintEnd_toEndOf="@+id/image_from_message" />
         <TextView
@@ -27,18 +27,20 @@ android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/image_from_message"
-            android:layout_width="72dp"
-            android:layout_height="56dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="8dp"
+            android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_account_circle_black_36dp" />
+            android:background="@drawable/circle_primary_dark" />
 
         <TextView
             android:id="@+id/text_view_from_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_margin="12dp"
             android:gravity="end"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="parent"

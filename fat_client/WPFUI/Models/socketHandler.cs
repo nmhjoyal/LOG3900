@@ -12,6 +12,8 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using System.Windows;
 using System.Windows.Media;
+using Newtonsoft.Json.Linq;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace WPFUI.Models
@@ -47,7 +49,7 @@ namespace WPFUI.Models
             get { return _user; }
             set { _user = value; }
         }
-       
+
 
         public string traitJSon
         {
@@ -66,35 +68,32 @@ namespace WPFUI.Models
             this._socket = IO.Socket("http://localhost:5000");
             _socket.On("user_signed_in", (signInFeedback) =>
             {
-                Console.WriteLine("hello");
-                dynamic json = JsonConvert.DeserializeObject(signInFeedback.ToString());
-                if ((Boolean)json.feedback.status)
-                {
-                    Console.WriteLine("connect");
-                    _events.PublishOnUIThread(new LogInEvent());
-                }
-                else
-                {
-                    Console.WriteLine("cant connect");
+                SignInFeedback feedback = JsonConvert.DeserializeObject<SignInFeedback>(signInFeedback.ToString());
+            if (feedback.feedback.status)
+            {
+                _events.PublishOnUIThread(new joinedRoomReceived(feedback.rooms_joined));
+                _userdata.avatarName = feedback.rooms_joined.Single(i => i.roomName == "General").avatars[_userdata.userName];
+                Console.WriteLine("fruit:");
+                Console.WriteLine(_userdata.avatarName);
+                _events.PublishOnUIThread(new LogInEvent());
+
                 }
                 //voir doc
             });
 
-            /* _socket.On("new_message", (message) =>
+            _socket.On("new_message", (message) =>
              {
                  Message newMessage = JsonConvert.DeserializeObject<Message>(message.ToString());
-                 Console.WriteLine(newMessage.date);
-                 MessageModel newMessageModel = new MessageModel(newMessage.content, newMessage.author.username,
-                                                                 newMessage.date);
-                 _userdata.messages.Add(newMessageModel);
-             });*/
+                 Console.WriteLine("message received");
+                 _userdata.messages.Add(newMessage);
+             });
 
-            _socket.On("new_client", (socketId) =>
+            /*_socket.On("new_client", (socketId) =>
             {
                 MessageModel newMessageModel = new MessageModel("Nouvelle connection de: " + socketId.ToString(), "Server");
                 _userdata.messages.Add(newMessageModel);
                 ///Console.WriteLine(socketId + " is connected");
-            });
+            });*/
 
             _socket.On("user_signed_out", (feedback) =>
             {
@@ -106,43 +105,77 @@ namespace WPFUI.Models
                 //voir doc
             });
 
+            _socket.On("user_joined_room", (feedback) =>
+            {
+                JoinRoomFeedBack fb = JsonConvert.DeserializeObject<JoinRoomFeedBack>(feedback.ToString());
+                if (fb.feedback.status & fb.joinedRoom != null)
+                {
+                    _userdata.addRoom(fb.joinedRoom);
+                }
+                //voir doc
+            });
+
+            _socket.On("rooms_retrieved", (feedback) =>
+            {
+                Console.WriteLine("reception des public rooms");
+                dynamic json = JsonConvert.DeserializeObject(feedback.ToString());
+                string[] publicRooms = json.ToObject<string[]>();
+                Console.WriteLine("nb de room publiques:");
+                Console.WriteLine(publicRooms.Length);
+                _events.PublishOnUIThread(new roomsRetrievedEvent(publicRooms));
+            });
+
+            _socket.On("room_created", (feedback) =>
+            {
+                Feedback json = JsonConvert.DeserializeObject<Feedback>(feedback.ToString());
+                if (json.status)
+                {
+                    getPublicChannels();
+                    _events.PublishOnUIThread(new createTheRoomEvent());
+                }
+            });
         }
 
+        public void createRoom(string roomID)
+        {
+            CreateRoom cR = new CreateRoom(roomID, false);
+            _socket.Emit("create_chat_room", JsonConvert.SerializeObject(cR));
+        }
         public void connectionAttempt()
         {
-            
-
             _user = new User(_userdata.userName, _userdata.password);
-
             this._userJSON = JsonConvert.SerializeObject(_user);
-
             Console.WriteLine(this._userJSON);
-
             this._socket.Emit("sign_in", this._userJSON);
-
-           
         }
+
         public void SignOut()
         {
-            this._socket.Emit("sign_out");  
+            this._socket.Emit("sign_out");
         }
         public void disconnect()
         {
             _socket.Disconnect();
         }
-       /* public void sendMessage()
+        public void sendMessage()
         {
-            Message message = new Message(_user, _userdata.currentMessage, 0);
-            if(message.content.Trim() != "")
+            ClientMessage message = new ClientMessage(_userdata.currentMessage, _userdata.currentRoomId);
+
+            if (message.content.Trim() != "")
             {
                 _socket.Emit("send_message", JsonConvert.SerializeObject(message));
             }
-        }*/
+        }
 
         public void createUser(PrivateProfile privateProfile)
-        { 
-               this.TestPOSTWebRequest(privateProfile, "/profile/create/");
-
+        {
+            TestPOSTWebRequest(privateProfile, "/profile/create/");
+        }
+        
+        public void getPublicChannels()
+        {
+            _socket.Emit("get_rooms");
+            Console.WriteLine("demande des public rooms");
         }
         public void TestPOSTWebRequest(Object obj, string url)
         {
@@ -178,141 +211,130 @@ namespace WPFUI.Models
                 Console.WriteLine(result);
             }
         }
-
-        public void sendStroke(string path, string couleur, string width, bool stylusTip)
-        {
-
-            /*
-            _trait = new Trait(path,couleur,width,stylusTip);
-            Console.WriteLine(_trait.ToString());
-            this._traitJSON = JsonConvert.SerializeObject(_trait);
-            Console.WriteLine(_traitJSON.ToString());
-
-            this._socket.Emit("sent_path", this._traitJSON);
-            */
-        }
-
-        /*public void getStrokes(InkCanvas Canvas)
-        {
-            _socket.On("receive_path", (response) =>
-            {
-                Trait json = JsonConvert.DeserializeObject<Trait>(response.ToString());
-                System.Windows.Shapes.Path path = new System.Windows.Shapes.Path();
-                path.Data = Geometry.Parse(json.path);
-                path.StrokeThickness = 1;
-                path.Stroke = System.Windows.Media.Brushes.Blue;
-                path.StrokeEndLineCap = PenLineCap.Round;
-                path.StrokeStartLineCap = PenLineCap.Round;
-                path.StrokeLineJoin = PenLineJoin.Round;
-
-                Canvas.Children.Add(path);
-            });
-        }*/
-
-        public void freeDraw(StrokeCollection Traits, DrawingAttributes AttributsDessin)
+        public void onDrawing(StrokeCollection Traits, Dictionary<Stroke, int> strokes)
         {
             string drawersTool = "";
+            int currentStrokeIndex = -1;
 
-            this.socket.Emit("connect_free_draw");
-
-            this.socket.On("new_trace", (trace) => {
-                Console.WriteLine("new trace");
-                dynamic json = JsonConvert.DeserializeObject(trace.ToString());
-                drawersTool = json.tool;
-                if(drawersTool == "crayon")
+            this.socket.On("new_stroke", (new_stroke) => {
+                Console.WriteLine("new stroke");
+                dynamic json = JsonConvert.DeserializeObject(new_stroke.ToString());
+                drawersTool = "crayon";
+                StylusPoint stylusPoint = new StylusPoint((int)json.StylusPoints[0].X, (int)json.StylusPoints[0].Y);
+                StylusPointCollection stylusPointCollection = new StylusPointCollection();
+                stylusPointCollection.Add(stylusPoint);
+                Stroke stroke = new Stroke(stylusPointCollection);
+                stroke.DrawingAttributes.Width = json.DrawingAttributes.Width;
+                stroke.DrawingAttributes.Height = json.DrawingAttributes.Width;
+                stroke.DrawingAttributes.StylusTip = (StylusTip)json.DrawingAttributes.StylusTip;
+                string color = json.DrawingAttributes.Color;
+                stroke.DrawingAttributes.Color = (System.Windows.Media.Color)ColorConverter.ConvertFromString(color.Remove(1, 2));
+                int top = json.DrawingAttributes.Top;
+                if (Traits.Count == 0)
                 {
-                    StylusPoint stylusPoint = new StylusPoint((int)json.point.x, (int)json.point.y);
-                    StylusPointCollection stylusPointCollection = new StylusPointCollection();
-                    stylusPointCollection.Add(stylusPoint);
-                    Stroke stroke = new Stroke(stylusPointCollection);
-                    stroke.DrawingAttributes.Width = json.width;
-                    stroke.DrawingAttributes.Height = json.width;
-                    stroke.DrawingAttributes.StylusTip = StylusTip.Ellipse;
-                    stroke.DrawingAttributes.Color = (System.Windows.Media.Color)ColorConverter.ConvertFromString(new Color((int)json.color.r, (int)json.color.g, (int)json.color.b).getHex());
-
                     this.Dispatcher.Invoke(() =>
-                        Traits.Add(stroke)
-                    );
+                            Traits.Add(stroke)
+                        );
+                    currentStrokeIndex = 0;
                 }
+                else
+                {
+                    for (int i = Traits.Count - 1; i >= 0; i--)
+                    {
+                        if (strokes[Traits[i]] <= top)
+                        {
+                            this.Dispatcher.Invoke(() =>
+                                Traits.Insert(i + 1, stroke)
+                            );
+                            currentStrokeIndex = i + 1;
+                            break;
+                        }
+                        else if (i == 0)
+                        {
+                            this.Dispatcher.Invoke(() =>
+                                Traits.Insert(i, stroke)
+                            );
+                            currentStrokeIndex = i;
+                        }
+                    }
+                }
+                strokes.Add(stroke, top);
             });
 
-            this.socket.On("new_point", (point) => {
-                dynamic json = JsonConvert.DeserializeObject(point.ToString());
-                if(drawersTool == "crayon")
-                {
-                    StylusPoint stylusPoint = new StylusPoint((int)json.x, (int)json.y);
+            this._socket.On("new_erase_stroke", () => {
+                drawersTool = "efface_trait";
+            });
 
+            this._socket.On("new_erase_point", () => {
+                drawersTool = "efface_segment";
+            });
+
+            this.socket.On("new_point", (new_point) => {
+                dynamic json = JsonConvert.DeserializeObject(new_point.ToString());
+                if (drawersTool == "crayon")
+                {
+                    StylusPoint stylusPoint = new StylusPoint((int)json.X, (int)json.Y);
                     this.Dispatcher.Invoke(() =>
-                        Traits[Traits.Count - 1].StylusPoints.Add(stylusPoint)
+                        Traits[currentStrokeIndex].StylusPoints.Add(stylusPoint)
                     );
-                } else if(drawersTool == "efface_trait" || drawersTool == "efface_segment") 
+                }
+                else if (drawersTool == "efface_trait" || drawersTool == "efface_segment")
                 {
                     StrokeCollection erasedStrokes = new StrokeCollection();
-                    System.Windows.Point p = new System.Windows.Point((double)json.x, (double)json.y);
+                    System.Windows.Point point = new System.Windows.Point((double)json.X, (double)json.Y);
                     this.Dispatcher.Invoke(() =>
-                        erasedStrokes = Traits.HitTest(p, 8)
+                        erasedStrokes = Traits.HitTest(point, 8)
                     );
-                    for(int i = 0; i < erasedStrokes.Count; i ++)
-                    {
-                        this.Dispatcher.Invoke(() =>
-                            Traits.Remove(erasedStrokes[i])
-                        );
-                    }
 
                     if (drawersTool == "efface_segment")
                     {
                         for (int i = 0; i < erasedStrokes.Count; i++)
                         {
-                            StrokeCollection segments = new StrokeCollection(erasedStrokes[i].GetEraseResult(new List<System.Windows.Point>() { p }, new RectangleStylusShape(8, 8)));
-                            Console.WriteLine(segments.Count);
-                            this.Dispatcher.Invoke(() =>
-                                Traits.Add(segments)
-                            );
+                            StrokeCollection segments = new StrokeCollection(erasedStrokes[i].GetEraseResult(new List<System.Windows.Point>() { point }, new RectangleStylusShape(8, 8)));
+                            int index = Traits.IndexOf(erasedStrokes[i]);
+                            for (int j = 0; j < segments.Count; j++)
+                            {
+                                this.Dispatcher.Invoke(() =>
+                                    Traits.Insert(index, segments[j])
+                                );
+                                strokes.Add(segments[j], strokes[erasedStrokes[i]]);
+                            }
                         }
 
                     }
+
+                    for (int i = 0; i < erasedStrokes.Count; i++)
+                    {
+                        this.Dispatcher.Invoke(() =>
+                            Traits.Remove(erasedStrokes[i])
+                        );
+                        strokes.Remove(erasedStrokes[i]);
+                    }
                 }
+            });
+
+            this._socket.On(("new_clear"), () =>
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    Traits.Clear();
+                });
+                strokes.Clear();
             });
         }
 
-        public void preview(StrokeCollection Traits, GamePreview gamePreview)
+        public void offDrawing()
         {
-            string drawersTool = "";
-            this.socket.Emit("preview", JsonConvert.SerializeObject(gamePreview));
-            Traits.Clear();
+            this._socket.Off("new_stroke");
+            this._socket.Off("new_erase_point");
+            this._socket.Off("new_erase_stroke");
+            this._socket.Off("new_point");
+            this._socket.Off("clear");
+        }
 
-            this.socket.On("new_trace", (trace) => {
-                dynamic json = JsonConvert.DeserializeObject(trace.ToString());
-                drawersTool = json.tool;
-                if (drawersTool == "crayon")
-                {
-                    StylusPoint stylusPoint = new StylusPoint((int)json.point.x, (int)json.point.y);
-                    StylusPointCollection stylusPointCollection = new StylusPointCollection();
-                    stylusPointCollection.Add(stylusPoint);
-                    Stroke stroke = new Stroke(stylusPointCollection);
-                    stroke.DrawingAttributes.Width = json.width;
-                    stroke.DrawingAttributes.Height = json.width;
-                    stroke.DrawingAttributes.StylusTip = StylusTip.Ellipse;
-                    stroke.DrawingAttributes.Color = (System.Windows.Media.Color)ColorConverter.ConvertFromString(new Color((int)json.color.r, (int)json.color.g, (int)json.color.b).getHex());
-
-                    this.Dispatcher.Invoke(() =>
-                        Traits.Add(stroke)
-                    );
-                }
-            });
-
-            this.socket.On("new_point", (point) =>
-            {
-                dynamic json = JsonConvert.DeserializeObject(point.ToString());
-                if (drawersTool == "crayon")
-                {
-                    StylusPoint stylusPoint = new StylusPoint((int)json.x, (int)json.y);
-
-                    this.Dispatcher.Invoke(() =>
-                        Traits[Traits.Count - 1].StylusPoints.Add(stylusPoint)
-                    );
-                }
-            });
+        public void offPreviewing()
+        {
+            this._socket.Off("preview_done");
         }
     }
 
