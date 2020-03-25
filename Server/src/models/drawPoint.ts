@@ -20,6 +20,13 @@ export interface Game {
     drawing: Stroke[],
     clues: string[],
     level: Level,
+}
+
+export interface CreateGame {
+    word: string,
+    drawing: Stroke[],
+    clues: string[],
+    level: Level,
     mode: Mode
     option: number
 }

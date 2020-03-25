@@ -28,6 +28,11 @@ export default class MatchController {
         serverHandler.matchHandler.stroke(io, socket, stroke);
     }
 
+    @OnMessage("point")
+    public drawTest(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() point: StylusPoint) {
+        serverHandler.matchHandler.point(io, socket, point);
+    }
+
     @OnMessage("erase_stroke")
     public erase_stroke(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
         serverHandler.matchHandler.eraseStroke(io, socket);
@@ -38,9 +43,9 @@ export default class MatchController {
         serverHandler.matchHandler.erasePoint(io, socket);
     }
 
-    @OnMessage("point")
-    public drawTest(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() point: StylusPoint) {
-        serverHandler.matchHandler.point(io, socket, point);
+    @OnMessage("clear")
+    public clear(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
+        serverHandler.matchHandler.clear(io, socket);
     }
 
     @OnMessage("get_drawing")

@@ -14,8 +14,9 @@ namespace WPFUI.Models
         User user { get; set; }
 
         void onDrawing(StrokeCollection Traits, Dictionary<Stroke, int> strokes);
-
         void offDrawing();
+
+        void offPreviewing();
         void TestPOSTWebRequest(Object obj, string url);
 
         void TestGETWebRequest(string url);

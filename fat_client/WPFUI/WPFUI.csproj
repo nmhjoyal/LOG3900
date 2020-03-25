@@ -149,7 +149,7 @@
     <Compile Include="EventModels\userNameTakenEvent.cs" />
     <Compile Include="EventModels\viewProfileEvent.cs" />
     <Compile Include="EventModels\windowChatEvent.cs" />
-    <Compile Include="Models\Game.cs" />
+    <Compile Include="Models\CreateGame.cs" />
     <Compile Include="Models\Ranking.cs" />
     <Compile Include="Models\Trace.cs" />
     <Compile Include="Models\Avatar.cs" />
