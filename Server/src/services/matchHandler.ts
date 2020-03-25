@@ -1,31 +1,182 @@
-import { MatchMode } from "../models/matchMode";
+import { MatchMode, MatchInstance } from "../models/matchMode";
 import { GamePreview, Stroke, StylusPoint, Game } from "../models/drawPoint";
 import { VirtualDrawing } from "./Drawing/virtualDrawing";
+import { CreateMatch, MatchInfos, StartMatch } from "../models/match";
+import { Feedback, StartMatchFeedback, JoinRoomFeedback } from "../models/feedback";
+import Match from "./Match/matchAbstract";
+import PrivateProfile from "../models/privateProfile";
+import RandomMatchIdGenerator from "./IdGenerator/idGenerator";
+import { ClientMessage } from "../models/message";
+import { CreateRoom } from "../models/room";
+import PublicProfile from "../models/publicProfile";
 import { gameDB } from "./Database/gameDB";
-// import { VirtualPlayer } from "./Drawing/virtualPlayer";
+import ChatHandler from "./chatHandler";
 
 export default class MatchHandler {
-    // private currentMatches: Match[];
+    private currentMatches: Map<string, Match>;
+    private chatHandler: ChatHandler;
 
-    // TEMPORARY
+    // Used for free draw testing.
     private drawer: string;         // Socket id
     private observers: string[];    // Socket ids
     private top: number;
     private previews: VirtualDrawing[];
 
     public constructor() {
-        // this.currentMatches = new Array<Match>();
+        this.currentMatches = new Map<string, Match>();
         this.observers = [];
         this.top = 0;
         this.previews = [];
+        this.chatHandler = new ChatHandler();
+    }
+    
+    public async createMatch(io: SocketIO.Server, socket: SocketIO.Socket, 
+                    createMatch: CreateMatch, user: PrivateProfile | undefined): Promise<Feedback> {
+        let feedback: Feedback = { status: false, log_message: "" };
+
+        if (user) {
+            const matchId: string = RandomMatchIdGenerator.generate();
+            const matchRoom: CreateRoom = { id: matchId, isPrivate: true };
+            const chatRoomFeedback: Feedback = await this.chatHandler.createChatRoom(io, socket, matchRoom, user);
+            if (chatRoomFeedback.status) {
+                this.currentMatches.set(matchId, MatchInstance.createMatch(matchId, socket.id, {username: user.username, avatar: user.avatar}, createMatch, this.chatHandler));
+                io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
+                feedback.log_message = "Match created successfully.";
+                feedback.status = true;
+            } else {
+                feedback = chatRoomFeedback;
+            }
+        } else {
+            feedback.log_message = "You are not signed in.";
+        }
+
+        return feedback;
     }
 
-    public startMatch(matchMode: MatchMode) {
-        // this.currentMatches.push(MatchInstance.getMatchClassInstance(matchMode));
+    public async joinMatch(io: SocketIO.Server, socket: SocketIO.Socket, 
+                    matchId: string, user: PrivateProfile | undefined): Promise<JoinRoomFeedback> {
+        const match: Match | undefined = this.currentMatches.get(matchId);
+        let joinRoomFeedback: JoinRoomFeedback = { feedback: { status: false, log_message: "" }, room_joined: null, isPrivate: true };
+
+        if (user) {
+            if (match) {
+                joinRoomFeedback = await match.joinMatch(io, socket, user);
+                socket.broadcast.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
+            } else {
+                joinRoomFeedback.feedback.log_message = "This match does not exist anymore.";
+            }
+        } else {
+            joinRoomFeedback.feedback.log_message = "You are not signed in.";
+        }   
+
+        return joinRoomFeedback;
     }
 
+    public async leaveMatch(io: SocketIO.Server, socket: SocketIO.Socket, user: PrivateProfile | undefined): Promise<Feedback> {
+        const match: Match | undefined = this.getMatchFromPlayer(socket.id);
+        let feedback: Feedback = { status: false, log_message: "" };
 
-    // TEMPORARY
+        if (user) {
+            if (match) {
+                const deleteMatch: boolean = await match.leaveMatch(io, socket, user);
+                if (deleteMatch) this.currentMatches.delete(match.matchId);
+                socket.broadcast.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
+                feedback.status = true;
+                feedback.log_message = "You left the match.";
+            } else {
+                feedback.log_message = "This match does not exist anymore.";
+            }
+        } else {
+            feedback.log_message = "You are not signed in.";
+        }   
+
+        return feedback;
+
+    }
+
+    public addVirtualPlayer(io: SocketIO.Server, socket: SocketIO.Socket, user: PrivateProfile | undefined): Feedback {
+        const match: Match | undefined = this.getMatchFromPlayer(socket.id);
+        let feedback: Feedback = { status: false, log_message: "" };
+
+        if (user) {
+            if (match) {
+                feedback = match.addVirtualPlayer(socket.id, io);
+            } else {
+                feedback.log_message = "This match does not exist anymore.";
+            }
+        } else {
+            feedback.log_message = "You are not signed in.";
+        }
+
+        return feedback;
+    }
+
+    public removeVirtualPlayer(io: SocketIO.Server, socket: SocketIO.Socket, user: PrivateProfile | undefined): Feedback {
+        const match: Match | undefined = this.getMatchFromPlayer(socket.id);
+        let feedback: Feedback = { status: false, log_message: "" };
+
+        if (user) {
+            if (match) {
+                feedback = match.removeVirtualPlayer(socket.id, io);
+            } else {
+                feedback.log_message = "This match does not exist anymore.";
+            }
+        } else {
+            feedback.log_message = "You are not signed in.";
+        }
+
+        return feedback;
+    }
+
+    public startMatch(io: SocketIO.Server, socket: SocketIO.Socket, startMatch: StartMatch, user: PrivateProfile | undefined): StartMatchFeedback {
+        const match: Match | undefined = this.currentMatches.get(startMatch.matchId);
+        let startMatchFeedback: StartMatchFeedback = { feedback: { status: false, log_message: "" } , nbRounds: 0 };
+
+        if (user) {
+            if (match) {
+                startMatchFeedback = match.startMatch(socket.id, io, startMatch);
+            } else {
+                startMatchFeedback.feedback.log_message = "This match does not exist anymore.";
+            }
+        } else {
+            startMatchFeedback.feedback.log_message = "You are not signed in.";
+        }
+
+        return startMatchFeedback;
+    }
+
+    public sendMessage(io: SocketIO.Server, socket: SocketIO.Socket, message: ClientMessage, user: PrivateProfile | undefined): void {
+        // TODO : check if it is a correct guess, or asking for a hint ("!hint"), and update the other players
+    }
+
+    private getMatchFromPlayer(socketId: string): Match | undefined {
+        let matchFound: Match | undefined;
+
+        this.currentMatches.forEach((match: Match) => {
+            if (match.players.has(socketId)) matchFound = match;
+        });
+
+        return matchFound;
+    }
+
+    public getPlayers(matchId: string): PublicProfile[] | undefined {
+        return this.currentMatches.get(matchId)?.getPlayersPublicProfile();
+    }
+
+    public getAvailableMatches(): MatchInfos[] {
+        let availableMatches: MatchInfos[] = [];
+        this.currentMatches.forEach((match: Match) => {
+            let matchInfos: MatchInfos | undefined = match.getMatchInfos();
+            if (matchInfos) availableMatches.push(matchInfos);
+        });
+        return availableMatches;
+    }
+
+    /**
+     * 
+     * From here this code is used for free draw testing.
+     *  
+     */ 
     public enterFreeDrawTestRoom(socket: SocketIO.Socket): void {
         if (this.drawer) {
             this.observers.push(socket.id);
