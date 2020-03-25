@@ -191,6 +191,9 @@
     <Compile Include="Views\ChatRoomChannelsView.xaml.cs">
       <DependentUpon>ChatRoomChannelsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ChoseGameView.xaml.cs">
+      <DependentUpon>ChoseGameView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CreationJeuAssiste1View.xaml.cs">
       <DependentUpon>CreationJeuAssiste1View.xaml</DependentUpon>
     </Compile>
@@ -268,6 +271,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ChatRoomChannelsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ChoseGameView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
