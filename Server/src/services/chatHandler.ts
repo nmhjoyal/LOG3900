@@ -22,18 +22,17 @@ export default class ChatHandler {
         let status: boolean = false;
         let log_message: CreateRoomStatus;
         const roomId: string = room.id;
-        
         if (user) {
             if (!(this.findPrivateRoom(roomId) || (await roomDB.getRooms()).includes(roomId))) { // verifiy unicity 
                 if (room.isPrivate) { // private 
-                    const message: Message = this.connectSocketToRoom(io, socket, user.username, roomId);
+                    const message: Message = this.connectSocketToRoom(socket, user.username, roomId);
                     const newRoom: Room = this.createRoomObject(roomId, user.username, user.avatar, message);
                     this.privateRooms.push(newRoom);
                     status = true;
                     log_message = CreateRoomStatus.Create;
                 } else { // public room
                     try {
-                        const message: Message = this.connectSocketToRoom(io, socket, user.username, roomId);
+                        const message: Message = this.connectSocketToRoom(socket, user.username, roomId);
                         const newRoom: Room = this.createRoomObject(roomId, user.username, user.avatar, message);
                         await roomDB.createRoom(newRoom);
                         await profileDB.joinRoom(user.username, roomId);
@@ -123,9 +122,14 @@ export default class ChatHandler {
         let isPrivate: boolean | null = null;
 
         if(user) {
+            const publicProfile : PublicProfile = {
+                username : user.username,
+                avatar : user.avatar
+            };
             if (privateRoom) {
                 privateRoom.avatars.set(user.username, user.avatar);
-                privateRoom.messages.push(this.connectSocketToRoom(io, socket, user.username, privateRoom.id));
+                privateRoom.messages.push(this.connectSocketToRoom(socket, user.username, privateRoom.id));
+                this.notifyAvatarUpdate(io, publicProfile, privateRoom.id);
                 room_joined = privateRoom;
                 status = true;
                 log_message = JoinRoomStatus.Join;
@@ -136,13 +140,9 @@ export default class ChatHandler {
                     if(!user.rooms_joined.includes(room.id)) {
                         await profileDB.joinRoom(user.username, room.id);
                         user.rooms_joined.push(room.id);
-                        const publicProfile : PublicProfile = {
-                            username : user.username,
-                            avatar : user.avatar
-                        };
                         await roomDB.mapAvatar(publicProfile, room.id);
                         this.notifyAvatarUpdate(io, publicProfile, room.id);
-                        await roomDB.addMessage(this.connectSocketToRoom(io, socket, user.username, room.id));
+                        await roomDB.addMessage(this.connectSocketToRoom(socket, user.username, room.id));
                         room_joined = room;
                         status = true;
                         log_message = JoinRoomStatus.Join;
@@ -307,7 +307,7 @@ export default class ChatHandler {
         return room;
     }
 
-    private connectSocketToRoom(io: SocketIO.Server, socket: SocketIO.Socket, username: string, roomId: string): Message {
+    private connectSocketToRoom(socket: SocketIO.Socket, username: string, roomId: string): Message {
         const message: Message = Admin.createAdminMessage(username + " joined the room.", roomId);
         socket.join(roomId, () => {
             socket.to(roomId).emit("new_message", JSON.stringify(message));
@@ -342,7 +342,7 @@ export default class ChatHandler {
         io.in(roomId).emit("avatar_updated", JSON.stringify(avatarUpdate));
     }
 
-    private findPrivateRoom(roomId: string): Room | undefined {
+    public findPrivateRoom(roomId: string): Room | undefined {
         return this.privateRooms.find(room => room.id == roomId);
     }
 
