@@ -7,7 +7,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="600" d:DesignWidth="1000"
              MinHeight="200"
 			 MinWidth="600"
              FontSize="20"
@@ -21,59 +21,135 @@
              FontFamily="{DynamicResource MaterialDesignFont}" Background="#FFF1F2F1"
              >
 
-    <Grid Loaded="OnLoad">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="20"/>
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="15" />
-            <ColumnDefinition Width="120" />
-            <ColumnDefinition Width="20" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="35"/>
-            <RowDefinition Height="20"/>
-        </Grid.RowDefinitions>
+	<Grid Loaded="OnLoad">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="20"/>
+			<ColumnDefinition Width="auto" />
+			<ColumnDefinition Width="auto" />
+			<ColumnDefinition Width="auto" />
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="15" />
+			<ColumnDefinition Width="200" />
+			<ColumnDefinition Width="20" />
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="20"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="35"/>
+			<RowDefinition Height="20"/>
+		</Grid.RowDefinitions>
+		<Image Source="chat logo png.png" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" Grid.RowSpan="5"
+			   HorizontalAlignment="Center" Opacity="0.2" MaxHeight="400"/>
 
-        <Image Source="chat logo png.png" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" HorizontalAlignment="Left" MaxHeight="60"/>
-        <TextBlock Text="{Binding Path = welcomeMessage, Mode = Oneway}" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment ="Center" Grid.ColumnSpan="3" Foreground="DarkSlateGray" FontSize="14"/>
-        <ScrollViewer Grid.Column="1" Grid.Row="3" Grid.RowSpan="3" Grid.ColumnSpan="6" VerticalScrollBarVisibility="Visible" Margin="0,10,0,0">
-            <ItemsControl x:Name="messages">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Vertical">
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="account_circle_grey_72x72.png" MaxHeight="25" VerticalAlignment="Center"></Image>
-                                <TextBlock Text="{Binding senderName}" Foreground="DarkSlateGray"/>
-                            </StackPanel>
-                            <TextBlock Text="{Binding content}" Foreground="Black" TextWrapping="Wrap" Margin="10,0,0,0"/>
-                            <TextBlock Text="{Binding formattedTimeStamp}" Foreground="DarkSlateGray" HorizontalAlignment="Left" FontSize="12" Margin="10,0,0,10"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
-        <TextBox x:Name ="currentMessage" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="4" Foreground="DarkSlateGray" Background="White" KeyDown="currentMessage_KeyDown">
+		<TextBlock Text="{Binding Path = welcomeMessage, Mode = Oneway}" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment ="Center" Grid.ColumnSpan="3" Foreground="DarkSlateGray" FontSize="14"/>
+		<TextBlock Text="{Binding Path = currentRoomId, Mode = Oneway}" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment ="Center" Grid.ColumnSpan="3" Foreground="DarkSlateGray" FontSize="20"/>
+		<ScrollViewer Grid.Column="1" Grid.Row="3" Grid.RowSpan="3" Grid.ColumnSpan="6" VerticalScrollBarVisibility="Hidden" Margin="0,10,0,0" Name="messagesUI">
+			<ItemsControl x:Name="messages">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<StackPanel Orientation="Vertical">
+							<StackPanel Orientation="Horizontal">
+								<Image Source="account_circle_grey_72x72.png" MaxHeight="25" VerticalAlignment="Center"></Image>
+								<TextBlock Text="{Binding senderName}" Foreground="DarkSlateGray"/>
+							</StackPanel>
+							<TextBlock Text="{Binding content}" Foreground="Black" TextWrapping="Wrap" Margin="10,0,0,0"/>
+							<TextBlock Text="{Binding formattedTimeStamp}" Foreground="DarkSlateGray" HorizontalAlignment="Left" FontSize="12" Margin="10,0,0,10"/>
+						</StackPanel>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+		</ScrollViewer>
+		<TextBox x:Name ="currentMessage" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="4" Foreground="DarkSlateGray" Background="White" KeyDown="currentMessage_KeyDown">
 
-        </TextBox>
-        
-		<Button x:Name ="sendMessage" Style="{DynamicResource MaterialDesignRaisedLightButton}" Grid.Column="6" Grid.Row="6" Background="#FF66CC00" Foreground="White" Click="refocus">
-            Send
-        </Button>
+		</TextBox>
 
-		<Button Grid.Row="1" Grid.Column="6" Background="#FF31AF91" Width="80" BorderBrush="{x:Null}" x:Name ="windowMode">
-			<StackPanel Orientation="Horizontal">
-				<TextBlock Foreground="White" VerticalAlignment="Center"></TextBlock>
-				<Image Source="/Resources/expand.png" Height="20"></Image>
-			</StackPanel>
+		<Button x:Name ="sendMessage" Style="{DynamicResource MaterialDesignRaisedLightButton}" Grid.Column="6" Grid.Row="6" Background="#FF31AF91" Foreground="White" Click="refocus">
+			Send
 		</Button>
-    </Grid>
+		<StackPanel Grid.Row="1" Grid.Column="6" Orientation="Horizontal" HorizontalAlignment="Center">
+			<Button Background="#FF31AF91" BorderBrush="{x:Null}" x:Name ="windowMode">
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Foreground="White" VerticalAlignment="Center"></TextBlock>
+					<Image Source="/Resources/expand.png" Height="20"></Image>
+				</StackPanel>
+			</Button>
+
+			<Button Background="#FF31AF91" BorderBrush="{x:Null}" x:Name ="channelsMode" Margin="5,0,0,0" Click="channelsMode_Click">
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Foreground="White" VerticalAlignment="Center"></TextBlock>
+					<Image Source="/Resources/chat.png" Height="20"></Image>
+				</StackPanel>
+			</Button>
+
+			<Button Background="#FF31AF91" BorderBrush="{x:Null}" x:Name ="goBack" Margin="5,0,0,0">
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Foreground="White" VerticalAlignment="Center"> Go Back</TextBlock>
+				</StackPanel>
+			</Button>
+		</StackPanel>
+
+		<Grid Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="6" Name="channelsGrid" Visibility="Visible">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="3*"/>
+				<ColumnDefinition Width="2*" />
+				<ColumnDefinition Width="auto" />
+				<ColumnDefinition Width="auto" />
+				<ColumnDefinition Width="auto" />
+				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="2" />
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="20"/>
+				<RowDefinition Height="30"/>
+				<RowDefinition Height="20"/>
+				<RowDefinition Height="2*"/>
+				<RowDefinition Height="20"/>
+				<RowDefinition Height="6*"/>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="10"/>
+			</Grid.RowDefinitions>
+			<Canvas Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="6" Grid.RowSpan="8" Background="#FFCBE5DE" Opacity="0.9"></Canvas>
+			<TextBox Text="{Binding createdRoomName}" Grid.Row="1" Grid.Column="1" BorderBrush="#FF686868"/>
+			<Button x:Name="createRoom" Grid.Row="1" Grid.Column="4" Content="create room" Height="auto" Background="#FF31AF91" Foreground="#DDFFFFFF" Grid.ColumnSpan="2" BorderBrush="{x:Null}"/>
+			<TextBlock Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" Grid.ColumnSpan="3"> Available Rooms:</TextBlock>
+			<ScrollViewer Grid.Row="3" Grid.Column="1" VerticalScrollBarVisibility="Visible" FlowDirection="RightToLeft">
+				<ItemsControl ItemsSource="{Binding availableRooms}" FlowDirection="LeftToRight">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+								<TextBlock Text="{Binding roomName}" Foreground="DarkSlateGray" Margin="5,0,0,0" FontSize="20"/>
+							</StackPanel>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</ScrollViewer>
+			<Button Grid.Row="3" Grid.Column="4" Content="join room" Height="auto" Background="#FF31AF91" Foreground="#DDFFFFFF" Grid.ColumnSpan="2" BorderBrush="{x:Null}"/>
+			<TextBlock Grid.Row="4" Grid.Column="1" HorizontalAlignment="Center" Grid.ColumnSpan="3"> Joined Rooms:</TextBlock>
+			<ScrollViewer Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="5" Grid.RowSpan="1" FlowDirection="RightToLeft">
+				<ItemsControl FlowDirection="LeftToRight" ItemsSource="{Binding joinedRooms}">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+								<StackPanel Orientation="Horizontal">
+									<TextBlock Text="{Binding roomName}" Foreground="DarkSlateGray" FontSize="20" Margin="5,0,0,0"/>
+									<Button Content="+" Margin="5,0,0,0" BorderBrush="{x:Null}" Background="#FF31AF91">
+									</Button>
+									<Button Content="view" Margin="5,0,0,0" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext._changeChannelCommand}"
+									CommandParameter="{Binding roomName}" BorderBrush="{x:Null}" Background="#FF31AF91">
+									</Button>
+									<Button Content="leave" Margin="5,0,0,0" Background="#FF31AF91" BorderBrush="{x:Null}">
+									</Button>
+								</StackPanel>
+							</StackPanel>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</ScrollViewer>
+		</Grid>
+
+	</Grid>
 </UserControl>

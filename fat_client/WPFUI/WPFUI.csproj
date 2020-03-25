@@ -253,6 +253,7 @@
     <Compile Include="Potrace\SvgLibrary\Web\SvgHandler.cs" />
     <Compile Include="Utilitaires\RelayCommand.cs" />
     <Compile Include="ViewModels\chatBoxViewModel.cs" />
+    <Compile Include="ViewModels\chatBoxWindowViewModel.cs" />
     <Compile Include="ViewModels\ChatRoomChannelsViewModel.cs" />
     <Compile Include="ViewModels\CreationJeuAssiste1ViewModel.cs" />
     <Compile Include="ViewModels\CreationJeuManuelle1ViewModel.cs" />
@@ -270,6 +271,9 @@
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="Views\chatBoxView.xaml.cs">
       <DependentUpon>chatBoxView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\chatBoxWindowView.xaml.cs">
+      <DependentUpon>chatBoxWindowView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ChatRoomChannelsView.xaml.cs">
       <DependentUpon>ChatRoomChannelsView.xaml</DependentUpon>
@@ -347,6 +351,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\chatBoxView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\chatBoxWindowView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
