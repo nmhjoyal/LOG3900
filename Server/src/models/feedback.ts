@@ -18,9 +18,9 @@ export interface JoinRoomFeedback {
     isPrivate: boolean | null
 }
 
-export interface CreateMatchFeedback {
+export interface StartMatchFeedback {
     feedback: Feedback
-    matchId: string
+    nbRounds: number
 }
 
 export enum SignInStatus {

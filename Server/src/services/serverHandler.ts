@@ -1,7 +1,7 @@
 import SignIn from "../models/signIn";
 import PrivateProfile from "../models/privateProfile";
 import { Room, CreateRoom, Invitation } from "../models/room";
-import { Feedback, SignInFeedback, SignInStatus, SignOutStatus, UpdateProfileStatus, JoinRoomFeedback, CreateMatchFeedback } from "../models/feedback";
+import { Feedback, SignInFeedback, SignInStatus, SignOutStatus, UpdateProfileStatus, JoinRoomFeedback, StartMatchFeedback } from "../models/feedback";
 import { profileDB } from "../services/Database/profileDB";
 import { roomDB } from "../services/Database/roomDB";
 import Admin from "../models/admin";
@@ -200,7 +200,6 @@ class ServerHandler {
      * ChatHandler and MatchHandler function calls while passing the private profile of the user.
      * 
      */
-
     public async createChatRoom(io: SocketIO.Server, socket: SocketIO.Socket, room: CreateRoom): Promise<Feedback> {
         return await this.chatHandler.createChatRoom(io, socket, room, this.getUser(socket.id));
     }
@@ -235,27 +234,27 @@ class ServerHandler {
         }
     }
 
-    public async createMatch(io: SocketIO.Server, socket: SocketIO.Socket, createMatch: CreateMatch): Promise<CreateMatchFeedback> {
-        return await this.matchHandler.createMatch(io, socket, createMatch, this.getUser(socket.id), this.chatHandler);
+    public async createMatch(io: SocketIO.Server, socket: SocketIO.Socket, createMatch: CreateMatch): Promise<Feedback> {
+        return await this.matchHandler.createMatch(io, socket, createMatch, this.getUser(socket.id));
     }
 
-    public async joinMatch(io: SocketIO.Server, socket: SocketIO.Socket, matchId: string): Promise<Feedback> {
-        return await this.matchHandler.joinMatch(io, socket, matchId, this.getUser(socket.id), this.chatHandler);
+    public async joinMatch(io: SocketIO.Server, socket: SocketIO.Socket, matchId: string): Promise<JoinRoomFeedback> {
+        return await this.matchHandler.joinMatch(io, socket, matchId, this.getUser(socket.id));
     }
 
-    public async leaveMatch(io: SocketIO.Server, socket: SocketIO.Socket, matchId: string): Promise<Feedback> {
-        return await this.matchHandler.leaveMatch(io, socket, matchId, this.getUser(socket.id), this.chatHandler);
+    public async leaveMatch(io: SocketIO.Server, socket: SocketIO.Socket): Promise<Feedback> {
+        return await this.matchHandler.leaveMatch(io, socket, this.getUser(socket.id));
     }
 
-    public addVirtualPlayer(io: SocketIO.Server, socket: SocketIO.Socket, matchId: string): Feedback {
-        return this.matchHandler.addVirtualPlayer(io, socket, matchId, this.getUser(socket.id), this.chatHandler);
+    public addVirtualPlayer(io: SocketIO.Server, socket: SocketIO.Socket): Feedback {
+        return this.matchHandler.addVirtualPlayer(io, socket, this.getUser(socket.id));
     }
 
-    public removeVirtualPlayer(io: SocketIO.Server, socket: SocketIO.Socket, matchId: string): Feedback {
-        return this.matchHandler.removeVirtualPlayer(io, socket, matchId, this.getUser(socket.id), this.chatHandler);
+    public removeVirtualPlayer(io: SocketIO.Server, socket: SocketIO.Socket): Feedback {
+        return this.matchHandler.removeVirtualPlayer(io, socket, this.getUser(socket.id));
     }
 
-    public startMatch(io: SocketIO.Server, socket: SocketIO.Socket, startMatch: StartMatch): Feedback {
+    public startMatch(io: SocketIO.Server, socket: SocketIO.Socket, startMatch: StartMatch): StartMatchFeedback {
         return this.matchHandler.startMatch(io, socket, startMatch, this.getUser(socket.id));
     }
 }

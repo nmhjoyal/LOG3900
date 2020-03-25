@@ -6,6 +6,7 @@ import OneVsOne from "../services/Match/matchOneVsOne";
 import Inverted from "../services/Match/matchInverted";
 import { CreateMatch } from "./match";
 import PublicProfile from "./publicProfile";
+import ChatHandler from "../services/chatHandler";
 
 export enum MatchMode {
     freeForAll = 1,
@@ -16,18 +17,18 @@ export enum MatchMode {
 }
 
 export class MatchInstance {
-    public static createMatch(matchId: string, socketId: string, user: PublicProfile, createMatch: CreateMatch): Match {
+    public static createMatch(matchId: string, socketId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler): Match {
         switch (createMatch.matchMode) {
             case MatchMode.freeForAll:
-                return new FreeForAll(matchId, socketId, user, createMatch.nbRounds);
+                return new FreeForAll(matchId, socketId, user, createMatch.nbRounds, chatHandler);
             case MatchMode.sprintSolo:
-                return new SprintSolo(matchId, socketId, user, createMatch.nbRounds);
+                return new SprintSolo(matchId, socketId, user, createMatch.nbRounds, chatHandler);
             case MatchMode.sprintCoop:
-                return new SprintCoop(matchId, socketId, user, createMatch.nbRounds);
+                return new SprintCoop(matchId, socketId, user, createMatch.nbRounds, chatHandler);
             case MatchMode.oneVsOne:
-                return new OneVsOne(matchId, socketId, user, createMatch.nbRounds);
+                return new OneVsOne(matchId, socketId, user, createMatch.nbRounds, chatHandler);
             case MatchMode.inverted:
-                return new Inverted(matchId, socketId, user, createMatch.nbRounds);
+                return new Inverted(matchId, socketId, user, createMatch.nbRounds, chatHandler);
         }
     }
 }

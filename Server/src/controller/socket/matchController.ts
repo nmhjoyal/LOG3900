@@ -55,8 +55,8 @@ export default class MatchController {
     }
 
     @OnMessage("leave_match")
-    public async leaveMatch(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() matchId: string) {
-        socket.emit("match_left", JSON.stringify(await serverHandler.leaveMatch(io, socket, matchId)));
+    public async leaveMatch(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
+        socket.emit("match_left", JSON.stringify(await serverHandler.leaveMatch(io, socket)));
     }
 
     @OnMessage("get_matches")
@@ -66,17 +66,17 @@ export default class MatchController {
 
     @OnMessage("start_match")
     public startMatch(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() startMatch: StartMatch) {
-        socket.emit("match_started", JSON.stringify(serverHandler.startMatch(io, socket, startMatch)));
+        io.in(startMatch.matchId).emit("match_started", JSON.stringify(serverHandler.startMatch(io, socket, startMatch)));
     }
 
     @OnMessage("add_vp")
-    public addVirtualPlayer(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() matchId: string) {
-        socket.emit("vp_added", JSON.stringify(serverHandler.addVirtualPlayer(io, socket, matchId)));
+    public addVirtualPlayer(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
+        socket.emit("vp_added", JSON.stringify(serverHandler.addVirtualPlayer(io, socket)));
     }
 
     @OnMessage("remove_vp")
-    public removeVirtualPlayer(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() matchId: string) {
-        socket.emit("vp_removed", JSON.stringify(serverHandler.removeVirtualPlayer(io, socket, matchId)));
+    public removeVirtualPlayer(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
+        socket.emit("vp_removed", JSON.stringify(serverHandler.removeVirtualPlayer(io, socket)));
     }
 
     @OnMessage("get_players")
@@ -89,7 +89,6 @@ export default class MatchController {
      * Preview
      * 
      */
-    
     @OnMessage("preview")
     public async preview(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() gamePreview: GamePreview) {
         await serverHandler.matchHandler.preview(socket, gamePreview);

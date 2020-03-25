@@ -7,27 +7,28 @@ export interface CreateMatch {
 }
 
 export interface MatchInfos {
+    matchId: string
     host: string
     nbRounds: number
     matchMode: MatchMode
     players: PublicProfile[] /* username, avatar */
 }
 
-export interface StartMatch { 
+export interface StartMatch {
     matchId: string
-    letterReveal: boolean
     timeLimit: number /* in seconds */
-    nbVirtualPlayer: number
-} 
+}
+
 export const TIME_LIMIT_MIN: number = 30; /* 30 sec minimum */
 export const TIME_LIMIT_MAX: number = 120;/* 2 min maximum */
 
-export interface MatchBegin {
+export interface StartTurn {
+    currentRound: number
+}
+
+export interface EndTurn {
+    scores: Map<string, number> /* username, score */
     choices: string[]
-    letterRevel: boolean
-    nbRounds: number
-    matchMode: MatchMode
-    isCurrent: boolean  // indicates if he is the drawer in FreeForAll and OneVsOne.
-                        // indicates if he is the judge in Inverted.
-                        // not used in SprintCoop and SprintSolo because the players are always guessing
+    drawer: string  // indicates if he is the drawer in FreeForAll and OneVsOne.
+                    // not used in SprintCoop and SprintSolo because the players are always guessing
 }
