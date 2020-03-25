@@ -12,16 +12,15 @@ export default class SprintSolo extends Match {
         this.mode = MatchMode.sprintSolo;
         this.maxNbVP = 0;
     }
+
+    public startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): void {
+        throw new Error("Method not implemented.");
+    }
+
+    public endTurn(io: SocketIO.Server): void {
+        throw new Error("Method not implemented.");
+    }
     
-    public endMatch(): void {
-        throw new Error("Method not implemented.");
-    }
-    public startRound(): void {
-        throw new Error("Method not implemented.");
-    }
-    public endRound(): void {
-        throw new Error("Method not implemented.");
-    }
     public draw(): void {
         throw new Error("Method not implemented.");
     }

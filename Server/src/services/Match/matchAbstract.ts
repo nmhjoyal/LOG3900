@@ -1,5 +1,5 @@
 import { Feedback, StartMatchFeedback, JoinRoomFeedback } from "../../models/feedback";
-import { MatchInfos, StartMatch, TIME_LIMIT_MIN, TIME_LIMIT_MAX } from "../../models/match";
+import { MatchInfos, StartMatch, TIME_LIMIT_MIN, TIME_LIMIT_MAX, UpdateScore } from "../../models/match";
 import Player from "../../models/player";
 import PublicProfile from "../../models/publicProfile";
 import { MatchMode } from "../../models/matchMode";
@@ -19,9 +19,10 @@ export default abstract class Match {
     protected mode: number;
     protected maxNbVP: number;
 
-    protected setTimeoutId: number; // setTimeout will be used for emitting end_round and we will cancel it if there is an unexpected leave of a room
+    protected timeout: NodeJS.Timeout; // setTimeout will be used for emitting end_round and we will cancel it if there is an unexpected leave of a room
+    protected scores: Map<string, UpdateScore> // Key: username, Value: score
     protected round: number;
-    protected playerTurn: number; // In one round each player will draw one time.
+    protected currentPlayers: IterableIterator<Player>; // In one round each player will draw one time.
 
     protected constructor(matchId: string, socketId: string, user: PublicProfile, nbRounds: number, chatHandler: ChatHandler) {
         this.players = new Map<string, Player>();
@@ -29,7 +30,7 @@ export default abstract class Match {
         this.isStarted = false;
         this.nbRounds = nbRounds;
         this.matchId = matchId;
-        this.chatHandler = chatHandler;;
+        this.chatHandler = chatHandler;
     }
 
     /**
@@ -156,12 +157,15 @@ export default abstract class Match {
                 if (startMatch.timeLimit > TIME_LIMIT_MIN && startMatch.timeLimit < TIME_LIMIT_MAX) {
                     this.isStarted = true;
                     this.timeLimit = startMatch.timeLimit;
-                    // TODO: match logic ... 
+                    this.currentPlayers = this.players.values();
+                    this.round = 1;
+                    this.initScores();
+                    this.endTurn(io);
                     startMatchFeedback.nbRounds = this.nbRounds;
                     startMatchFeedback.feedback.status = true;
                     startMatchFeedback.feedback.log_message = "Match is going to start...";
                 } else {
-                    startMatchFeedback.feedback.log_message = "Time limit has to be in between 30 and 120 seconds.";
+                    startMatchFeedback.feedback.log_message = "Time limit has to be in between 30 seconds and 2 minutes.";
                 }
             } else {
                 startMatchFeedback.feedback.log_message = "You are not the host. Only the host can start the match.";
@@ -173,11 +177,35 @@ export default abstract class Match {
         return startMatchFeedback;
     }
     
-    protected abstract startRound(): void;
-    protected abstract endRound(): void;
+    protected abstract startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): void;
+    protected abstract endTurn(io: SocketIO.Server): void;
     
     protected endMatch(): void {
 
+    }
+
+    protected initScores(): void {
+        this.scores = new Map<string, UpdateScore>();
+        this.players.forEach((player: Player) => {
+            if(!player.isVirtual) {
+                this.scores.set(player.user.username, { scoreTotal: 0, scoreTurn: 0 });
+            }
+        });
+    }
+
+    protected updateScore(username: string, score: number): void {
+        let playerScore: UpdateScore | undefined = this.scores.get(username);
+
+        if (playerScore) {
+            const oldScore: number = playerScore.scoreTotal;
+            const updatedScore: UpdateScore = {
+                scoreTotal: oldScore + score,
+                scoreTurn: score
+            };
+            this.scores.set(username, updatedScore);
+        } else {
+            console.log("error while updating score of : " + username);       
+        }
     }
 
     protected getNbVirtualPlayers(): number {
