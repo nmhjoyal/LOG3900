@@ -69,13 +69,13 @@ namespace WPFUI.Models
             _socket.On("user_signed_in", (signInFeedback) =>
             {
                 SignInFeedback feedback = JsonConvert.DeserializeObject<SignInFeedback>(signInFeedback.ToString());
-            if (feedback.feedback.status)
-            {
-                _events.PublishOnUIThread(new joinedRoomReceived(feedback.rooms_joined));
-                _userdata.avatarName = feedback.rooms_joined.Single(i => i.roomName == "General").avatars[_userdata.userName];
-                Console.WriteLine("fruit:");
-                Console.WriteLine(_userdata.avatarName);
-                _events.PublishOnUIThread(new LogInEvent());
+                if (feedback.feedback.status)
+                {
+                    _events.PublishOnUIThread(new joinedRoomReceived(feedback.rooms_joined));
+                    _userdata.avatarName = feedback.rooms_joined.Single(i => i.roomName == "General").avatars[_userdata.userName];
+                    Console.WriteLine("fruit:");
+                    Console.WriteLine(_userdata.avatarName);
+                    _events.PublishOnUIThread(new LogInEvent());
 
                 }
                 //voir doc
@@ -110,6 +110,8 @@ namespace WPFUI.Models
                 JoinRoomFeedBack fb = JsonConvert.DeserializeObject<JoinRoomFeedBack>(feedback.ToString());
                 if (fb.feedback.status & fb.joinedRoom != null)
                 {
+                    Console.WriteLine("user_joined_room :");
+                    Console.WriteLine(fb.joinedRoom.id);
                     _userdata.addRoom(fb.joinedRoom);
                 }
                 //voir doc
@@ -130,8 +132,8 @@ namespace WPFUI.Models
                 Feedback json = JsonConvert.DeserializeObject<Feedback>(feedback.ToString());
                 if (json.status)
                 {
+                    Console.WriteLine(json.log_message);
                     getPublicChannels();
-                    _events.PublishOnUIThread(new createTheRoomEvent());
                 }
             });
         }
@@ -141,6 +143,12 @@ namespace WPFUI.Models
             CreateRoom cR = new CreateRoom(roomID, false);
             _socket.Emit("create_chat_room", JsonConvert.SerializeObject(cR));
         }
+
+        public void joinRoom(string roomID)
+        {
+            _socket.Emit("join_chat_room", JsonConvert.SerializeObject(roomID));
+        }
+
         public void connectionAttempt()
         {
             _user = new User(_userdata.userName, _userdata.password);
@@ -171,7 +179,7 @@ namespace WPFUI.Models
         {
             TestPOSTWebRequest(privateProfile, "/profile/create/");
         }
-        
+
         public void getPublicChannels()
         {
             _socket.Emit("get_rooms");
@@ -216,7 +224,8 @@ namespace WPFUI.Models
             string drawersTool = "";
             int currentStrokeIndex = -1;
 
-            this.socket.On("new_stroke", (new_stroke) => {
+            this.socket.On("new_stroke", (new_stroke) =>
+            {
                 Console.WriteLine("new stroke");
                 dynamic json = JsonConvert.DeserializeObject(new_stroke.ToString());
                 drawersTool = "crayon";
@@ -261,15 +270,18 @@ namespace WPFUI.Models
                 strokes.Add(stroke, top);
             });
 
-            this._socket.On("new_erase_stroke", () => {
+            this._socket.On("new_erase_stroke", () =>
+            {
                 drawersTool = "efface_trait";
             });
 
-            this._socket.On("new_erase_point", () => {
+            this._socket.On("new_erase_point", () =>
+            {
                 drawersTool = "efface_segment";
             });
 
-            this.socket.On("new_point", (new_point) => {
+            this.socket.On("new_point", (new_point) =>
+            {
                 dynamic json = JsonConvert.DeserializeObject(new_point.ToString());
                 if (drawersTool == "crayon")
                 {

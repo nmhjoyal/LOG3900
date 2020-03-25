@@ -150,6 +150,7 @@
     <Compile Include="EventModels\viewProfileEvent.cs" />
     <Compile Include="EventModels\windowChatEvent.cs" />
     <Compile Include="Models\Game.cs" />
+    <Compile Include="Models\ISocketHandler.cs" />
     <Compile Include="Models\Ranking.cs" />
     <Compile Include="Models\Trace.cs" />
     <Compile Include="Models\Avatar.cs" />
@@ -157,7 +158,6 @@
     <Compile Include="Models\CreateRoom.cs" />
     <Compile Include="Models\Editeur.cs" />
     <Compile Include="Models\Feedback.cs" />
-    <Compile Include="Models\ISocketHandler.cs" />
     <Compile Include="Models\IUserData.cs" />
     <Compile Include="Models\JavaScriptSerializer.cs" />
     <Compile Include="Models\JoinRoomFeedBack.cs" />

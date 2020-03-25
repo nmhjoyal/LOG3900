@@ -1,7 +1,5 @@
 ﻿using Quobject.SocketIoClientDotNet.Client;
-using System;
 using System.Collections.Generic;
-using System.Windows.Controls;
 using System.Windows.Ink;
 
 namespace WPFUI.Models
@@ -13,19 +11,17 @@ namespace WPFUI.Models
         string traitJSon { get; set; }
         User user { get; set; }
 
-        void onDrawing(StrokeCollection Traits, Dictionary<Stroke, int> strokes);
-
-        void offDrawing();
-        void TestPOSTWebRequest(Object obj, string url);
-
-        void TestGETWebRequest(string url);
-        
         void connectionAttempt();
         void createRoom(string roomID);
         void createUser(PrivateProfile privateProfile);
         void disconnect();
         void getPublicChannels();
+        void joinRoom(string roomID);
+        void offDrawing();
+        void onDrawing(StrokeCollection Traits, Dictionary<Stroke, int> strokes);
         void sendMessage();
         void SignOut();
+        void TestGETWebRequest(string request);
+        void TestPOSTWebRequest(object obj, string url);
     }
 }
