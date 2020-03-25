@@ -141,6 +141,7 @@
     <Compile Include="EventModels\ManuelIEvent.cs" />
     <Compile Include="EventModels\ManuelleIIEvent.cs" />
     <Compile Include="EventModels\passwordMismatchEvent.cs" />
+    <Compile Include="EventModels\refreshAvailableRoomsEvent.cs" />
     <Compile Include="EventModels\refreshMessagesEvent.cs" />
     <Compile Include="EventModels\refreshUIEvent.cs" />
     <Compile Include="EventModels\roomsRetrievedEvent.cs" />
@@ -152,6 +153,7 @@
     <Compile Include="Models\Game.cs" />
     <Compile Include="Models\ISocketHandler.cs" />
     <Compile Include="Models\Ranking.cs" />
+    <Compile Include="Models\SelectableRoom.cs" />
     <Compile Include="Models\Trace.cs" />
     <Compile Include="Models\Avatar.cs" />
     <Compile Include="Models\ClientMessage.cs" />
@@ -267,6 +269,7 @@
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\MenuSelectionModeCreationViewModel.cs" />
     <Compile Include="ViewModels\NewUserViewModel.cs" />
+    <Compile Include="ViewModels\partieJeuViewModel.cs" />
     <Compile Include="ViewModels\profileViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="Views\chatBoxView.xaml.cs">
@@ -277,6 +280,9 @@
     </Compile>
     <Compile Include="Views\ChatRoomChannelsView.xaml.cs">
       <DependentUpon>ChatRoomChannelsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ChoseGameView.xaml.cs">
+      <DependentUpon>ChoseGameView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CreationJeuAssiste1View.xaml.cs">
       <DependentUpon>CreationJeuAssiste1View.xaml</DependentUpon>
@@ -310,6 +316,9 @@
     </Compile>
     <Compile Include="Views\NewUserView.xaml.cs">
       <DependentUpon>NewUserView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\partieJeuView.xaml.cs">
+      <DependentUpon>partieJeuView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\profileView.xaml.cs">
       <DependentUpon>profileView.xaml</DependentUpon>
@@ -362,6 +371,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\ChoseGameView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\CreationJeuAssiste1View.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -403,6 +416,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\NewUserView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\partieJeuView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -471,6 +488,7 @@
   <ItemGroup>
     <Resource Include="Resources\apple.png" />
     <Resource Include="Potrace\Images\yao.bmp" />
+    <Resource Include="Resources\alarmclock.png" />
     <Content Include="Resources\apple.svg" />
     <Resource Include="Resources\avocado.png" />
     <Content Include="Resources\avocado.svg" />
@@ -485,6 +503,7 @@
     <Resource Include="Resources\F_cropped.gif" />
     <Resource Include="Resources\fireworks.gif" />
     <Resource Include="Resources\expand.png" />
+    <Resource Include="Resources\clock.gif" />
     <Content Include="Resources\grape.svg" />
     <Resource Include="Resources\kiwi.png" />
     <Resource Include="Resources\HAND-DRAW.gif" />

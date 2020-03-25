@@ -119,7 +119,7 @@
             <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center"  Text="Difficulté:" Grid.Column="1" Grid.Row="12"/>
         </Border>
         <ComboBox Name="Level" Grid.Column="3" Grid.Row="12">
-            <ComboBoxItem IsSelected="True">
+            <ComboBoxItem>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock  Foreground="Green">Facile</TextBlock>
                 </StackPanel>
@@ -143,7 +143,7 @@
             <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center"  Text="Mode:" Grid.Column="1" Grid.Row="14"/>
         </Border>
             <ComboBox SelectionChanged="elementSelectionne" Name="Mode" Grid.Column="3" Grid.Row="14">
-            <ComboBoxItem IsSelected="True">
+            <ComboBoxItem >
                 <StackPanel Orientation="Horizontal">
                     <TextBlock>Classique</TextBlock>
                 </StackPanel>

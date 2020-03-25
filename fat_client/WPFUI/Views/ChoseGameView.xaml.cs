@@ -16,18 +16,13 @@ using System.Windows.Shapes;
 namespace WPFUI.Views
 {
     /// <summary>
-    /// Interaction logic for gameView.xaml
+    /// Logique d'interaction pour ChoseGameView.xaml
     /// </summary>
-    public partial class gameView : UserControl
+    public partial class ChoseGameView : UserControl
     {
-        public gameView()
+        public ChoseGameView()
         {
             InitializeComponent();
-        }
-
-        private void chatBoxView_Loaded(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

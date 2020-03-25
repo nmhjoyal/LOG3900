@@ -1,0 +1,76 @@
+﻿<UserControl x:Class="WPFUI.Views.partieJeuView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WPFUI.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="930">
+    <Grid Background="#FFF5F5F6" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="600" />
+                <ColumnDefinition Width="20" />
+               
+                
+        </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="500"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="20"/>
+               
+            </Grid.RowDefinitions>
+        <TextBlock  FontSize="40"  Foreground="#FF66CC00" Text="Partie de jeu" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="10" TextAlignment="Center"/>
+        <Border  Background="#FF00CCCC" Grid.Column="1" Grid.Row="2" Grid.RowSpan="5" Grid.ColumnSpan="9"/>
+        <Border BorderBrush="Black" BorderThickness="2" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="5" Grid.RowSpan="5"/>
+        <Border BorderBrush="Black" BorderThickness="2" Grid.Column="6" Grid.Row="2" Grid.ColumnSpan="3" Grid.RowSpan="5"/>
+        <Border BorderBrush="Black" BorderThickness="2" Grid.Column="9" Grid.Row="2" Grid.ColumnSpan="1" Grid.RowSpan="5"/>
+        <Image Source="/Resources/alarmclock.png" Grid.Column="2" Grid.Row="3" Grid.RowSpan="3"/>
+        <TextBlock Grid.Row="3" TextAlignment="Center" Grid.Column="4" Text="Temps Restant"/>
+        <TextBlock Grid.Row="5" TextAlignment="Center" Grid.Column="4" Name="tempsRestant"/>
+        <TextBlock Grid.Row="3" TextAlignment="Center" Grid.Column="7" Text="Round"/>
+        <TextBlock Grid.Row="5" TextAlignment="Center" Grid.Column="7" Name="nbRound"/>
+        <TextBlock Grid.Row="3" TextAlignment="Center" Grid.Column="9" Text="Mot à deviner"/>
+        <TextBlock Grid.Row="5" TextAlignment="Center" Grid.Column="9" Name="word"/>
+        <InkCanvas Grid.Column="9" Grid.Row="8"/>
+        <Border  BorderBrush="Black" BorderThickness="2" Grid.Column="9" Grid.Row="8"/>
+        <Border  BorderBrush="Black" BorderThickness="2" Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="7"/>
+        <ScrollViewer Grid.Column="1" Grid.Row="8"  Grid.ColumnSpan="7" VerticalScrollBarVisibility="Visible">
+            <ItemsControl x:Name="joueurs">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding position}" Foreground="DarkSlateGray"/>
+                                <TextBlock Text="{Binding senderName}" Foreground="DarkSlateGray"/>
+                                <Image Source="{Binding avatarSource}" Height="30" VerticalAlignment="Center"></Image>
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <Button  x:Name="goBack"  Grid.Column="9" Grid.Row="0" MaxWidth="100" HorizontalAlignment="Right"  Background="#FFBF0B0B" BorderBrush="#FFBF0B0B">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Foreground="White">Retour</TextBlock>
+                <Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
+            </StackPanel>
+        </Button>
+    </Grid>
+</UserControl>
