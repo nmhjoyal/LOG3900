@@ -1,30 +1,46 @@
-export interface Stroke {
+export interface Color {
+    r: number
+    g: number
+    b: number
+}
+
+export interface Point {
+    x: number
+    y: number
+}
+
+export interface Trace {
+    color: Color
+    point: Point
+    width: number
+    tool: string
+}
+
+export interface Line {
     DrawingAttributes: DrawingAttributes
     StylusPoints: StylusPoint[]
 }
 
 export interface DrawingAttributes {
-    Color: string
+    Color: string,
     Width: number
-    StylusTip: Shape
-    Top: number
 }
 
 export interface StylusPoint {
-    X: number
+    X: number,
     Y: number
 }
 
 export interface Game {
     word: string,
-    drawing: Stroke[],
+    drawing: Line[],
     clues: string[],
     level: Level,
     mode: Mode
 }
 
 export interface GamePreview {
-    drawing: Stroke[],
+    drawing: Line[],
     mode: Mode
 }
 
@@ -39,9 +55,4 @@ export enum Mode {
     Random,
     Panoramic,
     Centered
-}
-
-export enum Shape {
-    Rectangle,
-    Ellipse
 }
