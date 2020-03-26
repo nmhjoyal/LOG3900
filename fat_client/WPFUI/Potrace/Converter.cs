@@ -28,7 +28,7 @@ namespace WPFUI.Potrace
                 Directory.SetCurrentDirectory(Directory.GetCurrentDirectory() + "/../../Potrace");
                 isPotraceDirectory = true;
             }
-            Console.WriteLine(filename.Length);
+            Console.WriteLine(Directory.GetCurrentDirectory());
             string extension = filename.Substring(filename.Length - 4, 4);
             if (extension.ToLower() == PNG || extension.ToLower() == JPG)
             {

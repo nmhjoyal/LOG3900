@@ -7,7 +7,7 @@ using System.Windows.Ink;
 
 namespace WPFUI.Models
 {
-    public class Game
+    public class CreateGame
     {
         public string word;
         public StrokeCollection drawing;
@@ -15,7 +15,7 @@ namespace WPFUI.Models
         public Level level;
         public Mode mode;
         public int option;
-        public Game(string word, StrokeCollection drawing, List<string> clues, Level level, Mode mode, int option)
+        public CreateGame(string word, StrokeCollection drawing, List<string> clues, Level level, Mode mode, int option)
         {
             this.word = word;
             this.drawing = new StrokeCollection(drawing);

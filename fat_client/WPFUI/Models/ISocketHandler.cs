@@ -10,7 +10,9 @@ namespace WPFUI.Models
         Socket socket { get; set; }
         string traitJSon { get; set; }
         User user { get; set; }
-
+        void offPreviewing();
+        void TestPOSTWebRequest(Object obj, string url);
+        void TestGETWebRequest(string url);
         void connectionAttempt();
         void createRoom(string roomID);
         void createUser(PrivateProfile privateProfile);

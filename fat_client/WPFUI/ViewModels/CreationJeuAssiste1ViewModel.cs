@@ -80,14 +80,13 @@ namespace WPFUI.ViewModels
 
             Traits = editeur.traits;
             this.strokes = new Dictionary<Stroke, int>();
-
+    
             // Pour les commandes suivantes, il est toujours possible des les activer.
             // Donc, aucune vérification de type Peut"Action" à faire.
             ChoisirPointe = new RelayCommand<string>(editeur.ChoisirPointe);
             ChoisirOutil = new RelayCommand<string>(editeur.ChoisirOutil);
 
             this._socketHandler.onDrawing(this.Traits, this.strokes);
-
         }
 
         /// <summary>
@@ -149,12 +148,15 @@ namespace WPFUI.ViewModels
 
         public void mainMenu()
         {
-            _events.PublishOnUIThread(new goBackMainEvent());
+            this._socketHandler.socket.Emit("clear");
             this._socketHandler.offDrawing();
+            _events.PublishOnUIThread(new goBackMainEvent());
         }
 
         public void goBack()
         {
+            this._socketHandler.socket.Emit("clear");
+            this._socketHandler.offDrawing();
             _events.PublishOnUIThread(new goBackCreationMenuEvent());
         }
 
@@ -162,7 +164,7 @@ namespace WPFUI.ViewModels
         {
             try
             {
-                Game game = new Game(word, Potrace.Converter.exec(fileName, width, height), clues, (Level)level, (Mode)mode, option);
+                CreateGame game = new CreateGame(word, Potrace.Converter.exec(fileName, width, height), clues, (Level)level, (Mode)mode, option);
                 this._socketHandler.TestPOSTWebRequest(game, "/game/create");
             }
             catch (Exception)
@@ -173,22 +175,12 @@ namespace WPFUI.ViewModels
 
         public void preview(string fileName, int mode, int option, int width, int height)
         {
-            // this._socketHandler.socket.Emit("preview", JsonConvert.SerializeObject(gamePreview));
-            /*
-            try
-            {
-                GamePreview gamePreview = new GamePreview(Potrace.Converter.exec(fileName, width, height), (Mode)mode);
-                this._socketHandler.socket.Emit("preview", JsonConvert.SerializeObject(gamePreview));
-            } catch(Exception e)
-            {
-                Console.WriteLine("You must provide a file (bmp, png, jpg)");
-            }
-            */
             try
             {
                 GamePreview gamePreview = new GamePreview(Potrace.Converter.exec(fileName, width, height), (Mode)mode, option);
                 this._socketHandler.socket.Emit("preview", JsonConvert.SerializeObject(gamePreview));
-            } catch(Exception)
+            }
+            catch (Exception)
             {
                 Console.WriteLine("This file provided is invalid (bmp, jpg, png)");
             }

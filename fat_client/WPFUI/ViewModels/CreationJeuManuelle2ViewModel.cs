@@ -53,7 +53,6 @@ namespace WPFUI.ViewModels
         public Dictionary<Stroke, int> strokes { get; set; }
 
         // Commandes sur lesquels la vue pourra se connecter.
-
         public RelayCommand<string> ChoisirPointe { get; set; }
         public RelayCommand<string> ChoisirOutil { get; set; }
 
@@ -88,7 +87,6 @@ namespace WPFUI.ViewModels
             ChoisirOutil = new RelayCommand<string>(editeur.ChoisirOutil);
 
             this._socketHandler.onDrawing(this.Traits, this.strokes);
-
         }
 
         /// <summary>
@@ -150,23 +148,25 @@ namespace WPFUI.ViewModels
 
         public void mainMenu()
         {
-            _events.PublishOnUIThread(new goBackMainEvent());
+            this._socketHandler.socket.Emit("clear");
             this._socketHandler.offDrawing();
+            _events.PublishOnUIThread(new goBackMainEvent());
         }
 
         public void goBack()
         {
+            this._socketHandler.socket.Emit("clear");
+            this._socketHandler.offDrawing();
             _events.PublishOnUIThread(new goBackCreationMenuEvent());
         }
-       
         public void createGame(string word, List<string> clues, int level, int mode, int option)
         {
-            Game game = new Game(word, this.Traits, clues, (Level)level, (Mode)mode, option);
+            CreateGame game = new CreateGame(word, this.Traits, clues, (Level)level, (Mode)mode, option);
             this._socketHandler.TestPOSTWebRequest(game, "/game/create");
         }
 
         public void preview(int mode, int option)
-        {            
+        {
             GamePreview gamePreview = new GamePreview(this.Traits, (Mode)mode, option);
             this._socketHandler.socket.Emit("preview", JsonConvert.SerializeObject(gamePreview));
         }
