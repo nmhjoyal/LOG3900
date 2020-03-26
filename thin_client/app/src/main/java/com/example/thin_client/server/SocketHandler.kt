@@ -3,7 +3,10 @@ package com.example.thin_client.server
 import android.content.SharedPreferences
 import com.example.thin_client.data.ClientMessage
 import com.example.thin_client.data.app_preferences.Preferences
-import com.example.thin_client.data.drawing.DrawPoint
+import com.example.thin_client.data.drawing.Stroke
+import com.example.thin_client.data.drawing.StylusPoint
+import com.example.thin_client.data.game.CreateMatch
+import com.example.thin_client.data.game.StartMatch
 import com.example.thin_client.data.lifecycle.LoginState
 import com.example.thin_client.data.model.PrivateProfile
 import com.example.thin_client.data.model.User
@@ -55,6 +58,9 @@ object SocketHandler {
         this.user = user
         val gson = Gson()
         val jsonUser = gson.toJson(user)
+        if(socket == null) {
+            connect()
+        }
         socket!!.emit(SocketEvent.SIGN_IN, jsonUser)
     }
 
@@ -79,7 +85,6 @@ object SocketHandler {
     }
 
     fun deleteChatRoom(roomid: String) {
-        // comment
         socket!!.emit(SocketEvent.DELETE_ROOM, roomid)
     }
 
@@ -106,24 +111,45 @@ object SocketHandler {
         socket!!.emit(SocketEvent.DISCONNECT_FREE_DRAW)
     }
 
-    fun drawPoint(drawPoint: DrawPoint) {
-        val gson = Gson()
-        val args = gson.toJson(drawPoint)
-        socket!!.emit(SocketEvent.DRAW_TEST, args)
+    fun startStroke(drawPoint: Stroke) {
+        val args = Gson().toJson(drawPoint)
+        socket!!.emit(SocketEvent.STROKE, args)
     }
 
-    fun touchDown(drawPoint: DrawPoint) {
-        val gson = Gson()
-        val args = gson.toJson(drawPoint)
-        socket!!.emit(SocketEvent.TOUCH_DOWN, args)
+    fun startEraseStroke() {
+        socket!!.emit(SocketEvent.ERASE_STROKE)
     }
 
-    fun touchUp() {
-        socket!!.emit(SocketEvent.TOUCH_UP)
+    fun startErasePoint() {
+        socket!!.emit(SocketEvent.ERASE_POINT)
     }
+
+    fun point(drawPoint: StylusPoint) {
+        val args = Gson().toJson(drawPoint)
+        socket!!.emit(SocketEvent.POINT, args)
+    }
+
+//    fun sendScreenResolution(screen: ScreenResolution) {
+//        val args = Gson().toJson(screen)
+//        socket!!.emit(SocketEvent.SEND_SCREEN_RESOLUTION, args)
+//    }
 
     fun sendInvite(invite: Invitation) {
         val args = Gson().toJson(invite)
         socket!!.emit(SocketEvent.SEND_INVITE, args)
+    }
+
+    fun createMatch(match: CreateMatch) {
+        val args = Gson().toJson(match)
+        socket!!.emit(SocketEvent.CREATE_MATCH, args)
+    }
+
+    fun startMatch(matchParams: StartMatch) {
+        val args = Gson().toJson(matchParams)
+        socket!!.emit(SocketEvent.START_MATCH, args)
+    }
+
+    fun getDrawing() {
+        socket!!.emit(SocketEvent.GET_DRAWING)
     }
 }

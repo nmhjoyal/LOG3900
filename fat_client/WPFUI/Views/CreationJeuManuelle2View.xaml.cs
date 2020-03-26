@@ -57,7 +57,7 @@ namespace WPFUI.Views
         private void createGame(object sender, RoutedEventArgs e)
         {
             List<string> clues = new List<string>();
-            for(int i = 2; i < this.canContainer.Children.Count; i++)
+            for(int i = 0; i < this.canContainer.Children.Count; i++)
             {
                 clues.Add((this.canContainer.Children[i] as TextBox).Text);
             }

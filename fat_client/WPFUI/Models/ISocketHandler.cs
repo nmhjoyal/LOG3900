@@ -1,4 +1,6 @@
 ﻿using Quobject.SocketIoClientDotNet.Client;
+using System;
+using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Ink;
 
@@ -11,12 +13,9 @@ namespace WPFUI.Models
         string traitJSon { get; set; }
         User user { get; set; }
 
-       // void getStrokes(InkCanvas Canvas);
+        void onDrawing(StrokeCollection Traits, Dictionary<Stroke, int> strokes);
 
-        void freeDraw(StrokeCollection Traits, DrawingAttributes AttributsDessin);
-
-        void preview(StrokeCollection Traits, GamePreview gamePreview);
-
+        void offDrawing();
         void TestPOSTWebRequest(Object obj, string url);
 
         void TestGETWebRequest(string url);
@@ -26,9 +25,7 @@ namespace WPFUI.Models
         void createUser(PrivateProfile privateProfile);
         void disconnect();
         void getPublicChannels();
-        void getStrokes(InkCanvas Canvas);
         void sendMessage();
-        void sendStroke(string path, string couleur, string width, bool stylusTip);
         void SignOut();
     }
 }

@@ -7,12 +7,15 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import com.example.thin_client.R
+import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.app_preferences.Preferences
 import com.example.thin_client.data.game.GameArgs
 import com.example.thin_client.data.game.GameManager
-import com.example.thin_client.data.game.GameMode
+import com.example.thin_client.data.game.MatchMode
+import com.example.thin_client.data.game.StartMatch
 import com.example.thin_client.data.lifecycle.LoginState
 import com.example.thin_client.data.rooms.RoomArgs
 import com.example.thin_client.data.rooms.RoomManager
@@ -22,6 +25,7 @@ import com.example.thin_client.ui.chat.ChatFragment
 import com.example.thin_client.ui.game_mode.free_draw.DrawerFragment
 import com.example.thin_client.ui.game_mode.free_draw.ObserverFragment
 import com.github.nkzawa.socketio.client.Socket
+import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.activity_game.*
@@ -29,7 +33,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class GameActivity : AppCompatActivity() {
+class GameActivity : AppCompatActivity(), ChatFragment.IWordGuessing {
     private lateinit var manager: FragmentManager
     private lateinit var prefs: SharedPreferences
     private val SECOND_INTERVAL: Long = 1000
@@ -48,14 +52,9 @@ class GameActivity : AppCompatActivity() {
         words.add("Medal")
         words.add("Lawn mower")
 
-        when (GameManager.currentGameMode) {
-            GameMode.SOLO -> {}
-            GameMode.COLLAB -> {}
-            GameMode.GENERAL -> {}
-            GameMode.ONE_V_ONE -> {}
-            GameMode.REVERSE -> {}
-            GameMode.NONE -> {}
-        }
+        get_drawing_button.setOnClickListener(({
+            SocketHandler.getDrawing()
+        }))
 
     }
 
@@ -63,7 +62,21 @@ class GameActivity : AppCompatActivity() {
         super.onStart()
         manager = supportFragmentManager
         setupSocket()
-        startGame()
+        when (GameManager.currentGameMode) {
+            MatchMode.SOLO -> {
+//                val transaction = manager.beginTransaction()
+//                val observerFragment = ObserverFragment()
+//                transaction.replace(R.id.draw_view_container, observerFragment)
+//                transaction.addToBackStack(null)
+//                transaction.commitAllowingStateLoss()
+//                SocketHandler.startMatch(StartMatch(GameManager.roomName, false, 30, 1))
+            }
+            MatchMode.COLLAB -> {}
+            MatchMode.FREE_FOR_ALL -> {}
+            MatchMode.ONE_V_ONE -> {}
+            MatchMode.REVERSE -> {}
+        }
+//        startGame()
     }
 
     override fun onStop() {
@@ -74,6 +87,10 @@ class GameActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         SocketHandler.disconnectOnlineDraw()
+    }
+
+    // Called when gameStarted and someone uses chat
+    override fun sendGuess(word: String) {
     }
 
     private fun startGame() {
@@ -98,7 +115,7 @@ class GameActivity : AppCompatActivity() {
             }
             LoginState.LOGGED_IN -> {
                 showChatFragment()
-               SocketHandler.connectOnlineDraw()
+                SocketHandler.connectOnlineDraw()
             }
         }
     }
@@ -107,11 +124,11 @@ class GameActivity : AppCompatActivity() {
         val transaction = manager.beginTransaction()
         val chatFragment = ChatFragment()
         val bundle = Bundle()
-        if (!RoomManager.roomsJoined.containsKey("placeholderRoom")) {
-            RoomManager.roomsJoined.put("placeholderRoom", arrayListOf())
-            RoomManager.roomAvatars.put("placeholderRoom", mapOf())
+        if (!RoomManager.roomsJoined.containsKey(GameManager.roomName)) {
+            RoomManager.roomsJoined.put(GameManager.roomName, arrayListOf())
+            RoomManager.roomAvatars.put(GameManager.roomName, mapOf())
         }
-        bundle.putString(RoomArgs.ROOM_ID, "placeholderRoom")
+        bundle.putString(RoomArgs.ROOM_ID, GameManager.roomName)
         bundle.putBoolean(GameArgs.IS_GAME_CHAT, true)
         chatFragment.arguments = bundle
         transaction.replace(R.id.chatrooms_container, chatFragment)
@@ -150,7 +167,7 @@ class GameActivity : AppCompatActivity() {
             SocketHandler.socket!!
                 .off(SocketEvent.OBSERVER)
                 .off(SocketEvent.DRAWER)
-                .off(Socket.EVENT_ERROR)
+                .off(SocketEvent.MATCH_STARTED)
         }
     }
 
@@ -173,6 +190,16 @@ class GameActivity : AppCompatActivity() {
                     transaction.addToBackStack(null)
                     transaction.commitAllowingStateLoss()
                 })
+            }))
+            .on(SocketEvent.MATCH_STARTED, ({ data ->
+                val feedback = Gson().fromJson(data.first().toString(), Feedback::class.java)
+                if (feedback.status) {
+//                    SocketHandler.getDrawing()
+                } else {
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        Toast.makeText(this, feedback.log_message, Toast.LENGTH_LONG).show()
+                    })
+                }
             }))
     }
 

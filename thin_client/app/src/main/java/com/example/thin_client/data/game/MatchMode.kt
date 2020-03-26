@@ -1,10 +1,10 @@
 package com.example.thin_client.data.game
 
-enum class GameMode {
+enum class MatchMode {
+    NONE,
+    FREE_FOR_ALL,
     SOLO,
     COLLAB,
-    GENERAL,
     ONE_V_ONE,
-    REVERSE,
-    NONE
+    REVERSE
 }

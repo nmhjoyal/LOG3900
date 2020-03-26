@@ -65,6 +65,8 @@ namespace WPFUI.ViewModels
             get { return _traits;  }
             set { _traits = value; ProprieteModifiee(); }
         }
+
+        public Dictionary<Stroke, int> strokes;
         // Commandes sur lesquels la vue pourra se connecter.
 
         public RelayCommand<string> ChoisirPointe { get; set; }
@@ -107,21 +109,36 @@ namespace WPFUI.ViewModels
             ChoisirPointe = new RelayCommand<string>(editeur.ChoisirPointe);
             ChoisirOutil = new RelayCommand<string>(editeur.ChoisirOutil);
             //_socketHandler.getStrokes(Canvas);
-
-            this._socketHandler.freeDraw(Traits, AttributsDessin);
+            this.strokes = new Dictionary<Stroke, int>();
+            this._socketHandler.onDrawing(this.Traits, this.strokes);
+            this._socketHandler.socket.Emit("connect_free_draw");
         }
 
-        public void sendPointAction(int x, int y)
+        public void sendPoint(int x, int y)
         {
-            Models.Point point = new Models.Point(x, y, this.OutilSelectionne);
-            this._socketHandler.socket.Emit("point", JsonConvert.SerializeObject(point));
+            StylusPoint stylusPoint = new StylusPoint(x, y);
+            this._socketHandler.socket.Emit("point", JsonConvert.SerializeObject(stylusPoint));
         }
 
-        public void sendStrokeAction(int x, int y)
+        public void sendStroke(int x, int y)
         {
-            Models.Point point = new Models.Point(x, y, this.OutilSelectionne);
-            Trace trace = new Trace(point, this.AttributsDessin.Color.ToString(), (int)this.AttributsDessin.Width, this.OutilSelectionne);
-            this._socketHandler.socket.Emit("trace", JsonConvert.SerializeObject(trace));
+            if(this.OutilSelectionne == "crayon")
+            {
+                StylusPointCollection stylusPoint = new StylusPointCollection();
+                stylusPoint.Add(new StylusPoint(x, y));
+                Stroke stroke = new Stroke(stylusPoint);
+                stroke.DrawingAttributes.Width = this.AttributsDessin.Width;
+                stroke.DrawingAttributes.Height = this.AttributsDessin.Height;
+                stroke.DrawingAttributes.Color = this.AttributsDessin.Color;
+                this._socketHandler.socket.Emit("stroke", JsonConvert.SerializeObject(stroke));
+            } else if(this.OutilSelectionne == "efface_trait")
+            {
+                this._socketHandler.socket.Emit("erase_stroke");
+            } else if(this.OutilSelectionne == "efface_segment")
+            {
+                Console.WriteLine("should emit");
+                this._socketHandler.socket.Emit("erase_point");
+            }
         }
 
         public void getDrawing()
@@ -188,6 +205,7 @@ namespace WPFUI.ViewModels
 
         public void mainMenu()
         {
+            this._socketHandler.offDrawing();
             _events.PublishOnUIThread(new goBackMainEvent());
         }
 

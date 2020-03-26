@@ -1,5 +1,6 @@
 package com.example.thin_client.ui
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -9,6 +10,7 @@ import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -28,6 +30,8 @@ import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.chat.ChatFragment
 import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
+import com.example.thin_client.ui.game_mode.GameActivity
+import com.example.thin_client.ui.game_mode.GamesList
 import com.example.thin_client.ui.leaderboard.LeaderboardActivity
 import com.example.thin_client.ui.login.LoginActivity
 import com.example.thin_client.ui.profile.ProfileActivity
@@ -35,7 +39,7 @@ import com.github.nkzawa.socketio.client.Socket
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_lobby.*
 
-class Lobby : AppCompatActivity() {
+class Lobby : AppCompatActivity(), GamesList.IGameStarter {
     private lateinit var manager: FragmentManager
     private lateinit var prefs: SharedPreferences
 
@@ -60,6 +64,11 @@ class Lobby : AppCompatActivity() {
             }
         }))
 
+    }
+
+    override fun startGame() {
+        val intent = Intent(this, GameActivity::class.java)
+        startActivity(intent)
     }
 
     override fun onStart() {
@@ -162,6 +171,20 @@ class Lobby : AppCompatActivity() {
                     }))
                     SocketHandler.disconnect()
                 }
+            }))
+            .on(Socket.EVENT_CONNECT_ERROR, ({
+                Handler(Looper.getMainLooper()).post(Runnable {
+                    val alertDialog = AlertDialog.Builder(this)
+                    alertDialog.setTitle(R.string.error_connect_title)
+                        .setCancelable(false)
+                        .setMessage(R.string.error_connect)
+                        .setPositiveButton(R.string.ok) { _, _ -> finishAffinity() }
+
+                    val dialog = alertDialog.create()
+                    dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+                    dialog.show()
+                })
+                SocketHandler.disconnect()
             }))
             .on(SocketEvent.USER_SIGNED_OUT, ({ data ->
                 val feedback = Gson().fromJson(data.first().toString(),Feedback::class.java)
