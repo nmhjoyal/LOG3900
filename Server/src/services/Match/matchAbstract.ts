@@ -1,34 +1,41 @@
-import { Feedback } from "../../models/feedback";
-import { MatchInfos, StartMatch, TIME_LIMIT_MIN, TIME_LIMIT_MAX } from "../../models/match";
+import { Feedback, StartMatchFeedback, JoinRoomFeedback } from "../../models/feedback";
+import { MatchInfos, StartMatch, TIME_LIMIT_MIN, TIME_LIMIT_MAX, UpdateScore } from "../../models/match";
 import Player from "../../models/player";
 import PublicProfile from "../../models/publicProfile";
+import { MatchMode } from "../../models/matchMode";
+import ChatHandler from "../chatHandler";
+import PrivateProfile from "../../models/privateProfile";
+import { VirtualDrawing } from "../Drawing/virtualDrawing";
+import { Drawing } from "../Drawing/drawing";
+import { Stroke, StylusPoint } from "../../models/drawPoint";
 
 export default abstract class Match {
-    protected matchId: string;
-    protected players: Map<string, Player>; /* socketid, Player */
+    public matchId: string;
+    public players: Player[]; /* socketid, Player */
     protected nbRounds: number;
-    protected round: number;
-    protected letterReveal: boolean;
     protected timeLimit: number;
     protected currentWord: string;
-    protected nbVP: number;
-    public isStarted: boolean;
+    protected isStarted: boolean;
+    protected chatHandler: ChatHandler;
 
     // Depends on the instance
-    public mode: number;
+    protected mode: number;
     protected maxNbVP: number;
 
-    protected setTimeoutId: number; // setTimeout will be used for emitting end_round and we will cancel it if there is an unexpected leave of a room
-    protected playerTurn: number; // In one round each player will draw one time.
+    protected timeout: NodeJS.Timeout; // setTimeout will be used for emitting end_round and we will cancel it if there is an unexpected leave of a room
+    protected timer: number;
+    protected scores: Map<string, UpdateScore> // Key: username, Value: score
+    protected round: number;
+    protected currentPlayer: string /* username */; // In one round each player will draw one time //
+    protected drawing: Drawing;
+    protected virtualDrawing: VirtualDrawing;
 
-    protected constructor(matchId: string, socketId: string, user: PublicProfile, nbRounds: number) {
-        this.players = new Map<string, Player>();
-        this.players.set(socketId, this.createPlayer(user, true, false));
+    protected constructor(matchId: string, user: PublicProfile, nbRounds: number, chatHandler: ChatHandler) {
+        this.players = [this.createPlayer(user, true, false)];
         this.isStarted = false;
         this.nbRounds = nbRounds;
-        this.nbVP = 0;
-        this.letterReveal = false;
         this.matchId = matchId;
+        this.chatHandler = chatHandler;
     }
 
     /**
@@ -36,68 +43,74 @@ export default abstract class Match {
      * Functions used trough all match modes.
      * 
      */
-    public joinMatch(socketId: string, user: PublicProfile): Feedback {
-        let feedback: Feedback = { status: true, log_message: "" };
+    public async joinMatch(io: SocketIO.Server, socket: SocketIO.Socket, user: PrivateProfile): Promise<JoinRoomFeedback> {
+        let joinRoomFeedback: JoinRoomFeedback = { feedback: { status: true, log_message: "" }, room_joined: null, isPrivate: true };
 
         if (!this.isStarted) {
-            this.players.set(socketId, this.createPlayer(user, false, false));
-            feedback.log_message = "You joined the match.";
+            joinRoomFeedback = await this.chatHandler.joinChatRoom(io, socket, this.matchId, user);
+            this.players.push(this.createPlayer(user, false, false));
+            joinRoomFeedback.feedback.log_message = "You joined the match.";
         } else {
-            feedback.status = false;
-            feedback.log_message = "The match is already started.";
+            joinRoomFeedback.feedback.status = false;
+            joinRoomFeedback.feedback.log_message = "The match is already started.";
         }
 
-        return feedback;
+        return joinRoomFeedback;
     }
 
-    public leaveMatch(socketId: string): Feedback {
-        const player: Player | undefined = this.players.get(socketId);
-        let feedback: Feedback = { status: true, log_message: "" };
+    // boolean : true -> delete match
+    public async leaveMatch(io: SocketIO.Server, socket: SocketIO.Socket, user: PrivateProfile): Promise<boolean> {
+        const player: Player | undefined = this.getPlayer(user.username);
+        let deleteMatch: boolean = false;
 
         // TODO: some other checks for mode restriction :
         //      - this.players.length < min player for match mode, or maybe he can be replaced by virtual player?
         if (player) {
-            if (this.isStarted) {
-                // Not important to check if he's the host here.
-                this.players.delete(socketId);
-                if (player.isCurrent && !player.isVirtual) {
-                    // If in between endRound and startRound (the player is choosing a word) 
-                    // maybe feedback false log_
-                    // sinon this.endRound(); et gérer 
-                }
-            } else {
-                if (player.isHost) {
-                    // Choose random new host in the players and notify him to change 
-                    // his interface so he can start selecting the match settings.
+            await this.chatHandler.leaveChatRoom(io, socket, this.matchId, user);
+            if (this.players.length - this.getNbVirtualPlayers() > 1) {
+                this.players.splice(this.players.indexOf(player), 1);
+                if (this.isStarted) {
+                    if (player.user.username == this.currentPlayer) {
+                        this.endTurn(io);
+                    }
                 } else {
-                    this.players.delete(socketId);
+                    if (player.isHost) {
+                        for(let player of this.players) {
+                            if (!player.isHost && !player.isVirtual) {
+                                player.isHost = true;
+                                io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
+                                break;
+                            }
+                        }
+                    } 
                 }
+
+            } else {
+                deleteMatch = true;
             }
-            feedback.log_message = "You left the match.";
-        } else {
-            feedback.status = false;
-            feedback.log_message = "This player is not in this match, unexpected error!";
         }
 
-        return feedback;
+        return deleteMatch;
     }
 
-    public addVirtualPlayer(socketId: string, io: SocketIO.Server): Feedback {
-        const player: Player | undefined = this.players.get(socketId);
+    public addVirtualPlayer(username: string, io: SocketIO.Server): Feedback {
+        const player: Player | undefined = this.getPlayer(username);
         let feedback: Feedback = { status: false, log_message: "" };
 
         if (player) {
             if (player.isHost) {
-                if (this.nbVP < this.maxNbVP) {
+                const nbVirtualPlayers: number = this.getNbVirtualPlayers();
+                if (nbVirtualPlayers < this.maxNbVP) {
                     /* EVENTUALLY, GENERATE RANDOM VP, also need to check if it is already in the players array (so we dont have two identical VP)*/ 
-                    const randomVP: PublicProfile = { username: "random", avatar: "random" };
-                    this.players.set("VP" + this.nbVP, this.createPlayer(randomVP, false, true));
-                    this.nbVP++;
-                    io.in(this.matchId).emit("update_players", JSON.stringify(this.getPlayersPublicProfile()));
+                    const randomVP: PublicProfile = { username: "Mr Avocado", avatar: "AVOCADO" };
+                    this.players.push(this.createPlayer(randomVP, false, true));
+                    this.chatHandler.findPrivateRoom(this.matchId)?.avatars.set(randomVP.username, randomVP.avatar);
+                    this.chatHandler.notifyAvatarUpdate(io, randomVP, this.matchId);
+                    io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
                     feedback.status = true;
-                    feedback.log_message = "A virtual player was added."
+                    feedback.log_message = "A virtual player was added.";
                 } else {
-                    feedback.log_message = "You can not have more than" + this.maxNbVP + "virtual players in this mode."
+                    feedback.log_message = "You can not have more than" + this.maxNbVP + "virtual players in this mode.";
                 }
             } else {
                 feedback.log_message = "You are not the host. Only the host can add a virtual player.";
@@ -109,16 +122,21 @@ export default abstract class Match {
         return feedback;
     }
 
-    public removeVirtualPlayer(socketId: string, io: SocketIO.Server): Feedback {
-        const player: Player | undefined = this.players.get(socketId);
+    public removeVirtualPlayer(username: string, io: SocketIO.Server): Feedback {
+        const player: Player | undefined = this.getPlayer(username);
         let feedback: Feedback = { status: false, log_message: "" };
 
         if (player) {
             if (player.isHost) {
-                if (this.nbVP > 0) {
-                    this.players.delete("VP" + this.nbVP);
-                    this.nbVP--;
-                    io.in(this.matchId).emit("update_players", JSON.stringify(this.getPlayersPublicProfile()));
+                const nbVirtualPlayers: number = this.getNbVirtualPlayers();
+                if (nbVirtualPlayers > 0) {
+                    for(let i: number = this.players.length - 1; i > -1; i--) {
+                        if(this.players[i].isVirtual) {
+                            this.players.splice(i, 1);
+                            break;
+                        }
+                    }
+                    io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
                     feedback.status = true;
                     feedback.log_message = "A virtual player was removed."
                 } else {
@@ -140,61 +158,151 @@ export default abstract class Match {
      * The match routine starts. The routine varies depending on the match mode.
      *
      */
-    public startMatch(socketId: string, io: SocketIO.Server, startMatch: StartMatch): Feedback {
-        const player: Player | undefined = this.players.get(socketId);
-        let feedback: Feedback = { status: false, log_message: "" };
+    public startMatch(username: string, io: SocketIO.Server, startMatch: StartMatch): StartMatchFeedback {
+        const player: Player | undefined = this.getPlayer(username);
+        let startMatchFeedback: StartMatchFeedback = { feedback : { status: false, log_message: "" }, nbRounds : 0 };
 
         if (player) {
             if (player.isHost) {
                 if (startMatch.timeLimit > TIME_LIMIT_MIN && startMatch.timeLimit < TIME_LIMIT_MAX) {
-                    this.letterReveal = startMatch.letterReveal;
+                    this.isStarted = true;
                     this.timeLimit = startMatch.timeLimit;
-                    // TODO: match logic ... 
-                    feedback.status = true;
-                    feedback.log_message = "Match is going to start...";
+                    this.drawing = new Drawing(this.matchId);
+                    this.virtualDrawing = new VirtualDrawing(this.matchId, this.timeLimit);
+                    this.currentPlayer = this.players[0].user.username;
+                    this.round = 1;
+                    this.initScores();
+                    this.endTurn(io);
+                    startMatchFeedback.nbRounds = this.nbRounds;
+                    startMatchFeedback.feedback.status = true;
+                    startMatchFeedback.feedback.log_message = "Match is starting...";
                 } else {
-                    feedback.log_message = "Time limit has to be in between 30 and 120 seconds.";
+                    startMatchFeedback.feedback.log_message = "Time limit has to be in between 30 seconds and 2 minutes.";
                 }
             } else {
-                feedback.log_message = "You are not the host. Only the host can start the match.";
+                startMatchFeedback.feedback.log_message = "You are not the host. Only the host can start the match.";
             }
         } else {
-            feedback.log_message = "This player is not in this match, unexpected error!";
+            startMatchFeedback.feedback.log_message = "This player is not in this match, unexpected error!";
         }
 
-        return feedback
+        return startMatchFeedback;
+    }
+
+    protected stroke(socket: SocketIO.Socket, stroke: Stroke): void {
+        this.drawing.stroke(socket, stroke);
     }
     
-    protected abstract startRound(): void;
-    protected abstract endRound(): void;
+    protected point(socket: SocketIO.Socket, point: StylusPoint): void {
+        this.drawing.point(socket, point);
+    }
+
+    protected eraseStroke(socket: SocketIO.Socket): void {
+        this.drawing.eraseStroke(socket);
+    }
+
+    protected erasePoint(socket: SocketIO.Socket): void {
+        this.drawing.erasePoint(socket);
+    }
+
+    protected clear(socket: SocketIO.Socket): void {
+        this.drawing.clear(socket);
+    }
+
+    public abstract startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): void;
+    protected abstract endTurn(io: SocketIO.Server): void;
+    public abstract guess(io: SocketIO.Server, guess: string, username: string): void;
     
     protected endMatch(): void {
 
     }
 
-    public getPlayersPublicProfile(): PublicProfile[] {
-        let publicProfiles: PublicProfile[] = [];
-        this.players.forEach((player: Player) => {
-            publicProfiles.push(player.user);
-        });
-
-        return publicProfiles;
+    protected initScores(): void {
+        this.scores = new Map<string, UpdateScore>();
+        for (let player of this.players) {
+            if(!player.isVirtual) {
+                this.scores.set(player.user.username, { scoreTotal: 0, scoreTurn: 0 });
+            }
+        }
     }
 
-    public getMatchInfos(): MatchInfos {
-        let userInfos: PublicProfile[] = [];
-        let host: string = "";
-        this.players.forEach((player: Player) => {
-            if (player.isHost) host = player.user.username; 
-            userInfos.push(player.user);
+    protected resetScoresTurn(): void {
+        this.scores.forEach((score: UpdateScore) => {
+            score.scoreTurn = 0;
+        });
+    }
+
+    protected everyoneHasGuessed(): boolean {
+        let everyoneHasGuessed: boolean = true;
+
+        this.scores.forEach((score: UpdateScore, username: string) => {
+            if (score.scoreTurn == 0 && username != this.currentPlayer) everyoneHasGuessed = false;
         });
 
-        return {
-            host: host,
-            matchMode: this.mode,
-            nbRounds: this.nbRounds,
-            players: userInfos
-        };
+        return everyoneHasGuessed;
+    }
+
+    protected updateScore(username: string, score: number): void {
+        let playerScore: UpdateScore | undefined = this.scores.get(username);
+
+        if (playerScore) {
+            const oldScore: number = playerScore.scoreTotal;
+            const updatedScore: UpdateScore = {
+                scoreTotal: oldScore + score,
+                scoreTurn: score
+            };
+            this.scores.set(username, updatedScore);
+        } else {
+            console.log("error while updating score of : " + username);       
+        }
+    }
+
+    protected getNbVirtualPlayers(): number {
+        let count: number = 0;
+
+        for (let player of this.players) {
+            if (player.isVirtual) count++;
+        }
+        
+        return count;
+    }
+
+    protected getNbRealPlayers(): number {
+        let count: number = 0;
+
+        for (let player of this.players) {
+            if (!player.isVirtual) count++;
+        }
+
+        return count;
+    }
+
+    public getMatchInfos(): MatchInfos | undefined {
+        let matchInfos: MatchInfos | undefined;
+        
+        if (!this.isStarted && this.mode !== MatchMode.sprintSolo) { // maybe this.players.length < this.maxPlayers?    
+            let userInfos: PublicProfile[] = [];
+            let host: string = "";
+
+            for (let player of this.players) {
+                if (player.isHost) host = player.user.username; 
+                userInfos.push(player.user);
+            }
+
+            matchInfos = {
+                matchId: this.matchId,
+                host: host,
+                matchMode: this.mode,
+                nbRounds: this.nbRounds,
+                players: userInfos
+            };
+        }
+
+        return matchInfos;
+    }
+
+    public getPlayer(username: string): Player | undefined {
+        return this.players.find(player => username == player.user.username)
     }
 
     protected createPlayer(user: PublicProfile, isHost: boolean, isVirtual: boolean): Player {
@@ -202,9 +310,7 @@ export default abstract class Match {
             user: user,
             isHost: isHost,
             isVirtual: isVirtual,
-            isCurrent: false,
             score: 0
         };
     }
-
 }

@@ -4,6 +4,5 @@ export default interface Player {
     user: PublicProfile
     isHost: boolean
     isVirtual: boolean
-    isCurrent: boolean
     score: number
 }
