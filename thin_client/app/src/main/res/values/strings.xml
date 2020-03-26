@@ -136,5 +136,8 @@
     <string name="time_placeholder">00</string>
 
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="hostname">Hostname</string>
+    <string name="rounds">Rounds</string>
+    <string name="numberplayers">Number of players</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
