@@ -10,9 +10,7 @@ namespace WPFUI.Models
         Socket socket { get; set; }
         string traitJSon { get; set; }
         User user { get; set; }
-        void offPreviewing();
-        void TestPOSTWebRequest(Object obj, string url);
-        void TestGETWebRequest(string url);
+
         void connectionAttempt();
         void createRoom(string roomID);
         void createUser(PrivateProfile privateProfile);
@@ -20,6 +18,7 @@ namespace WPFUI.Models
         void getPublicChannels();
         void joinRoom(string roomID);
         void offDrawing();
+        void offPreviewing();
         void onDrawing(StrokeCollection Traits, Dictionary<Stroke, int> strokes);
         void sendMessage();
         void SignOut();
