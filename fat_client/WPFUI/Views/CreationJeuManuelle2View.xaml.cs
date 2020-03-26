@@ -24,16 +24,10 @@ namespace WPFUI.Views
     /// </summary>
     public partial class CreationJeuManuelle2View : UserControl
     {
-        IEventAggregator events;
-        ISocketHandler socketHandler;
-
         public CreationJeuManuelle2View()
         {
             InitializeComponent();
-            DataContext = new CreationJeuManuelle1ViewModel(events, socketHandler);
         }
-
-
 
         // Pour la gestion de l'affichage de position du pointeur.
         //private void surfaceDessin_MouseLeave(object sender, MouseEventArgs e) => textBlockPosition.Text = "";
@@ -51,7 +45,7 @@ namespace WPFUI.Views
 
         private void addClue(object sender, RoutedEventArgs e)
         {
-            this.canContainer.Children.Add(new TextBox());;
+            this.canContainer.Children.Add(new TextBox());
         }
 
         private void createGame(object sender, RoutedEventArgs e)
@@ -61,7 +55,12 @@ namespace WPFUI.Views
             {
                 clues.Add((this.canContainer.Children[i] as TextBox).Text);
             }
-            (this.DataContext as CreationJeuManuelle2ViewModel).createGame(this.Word.Text, clues, this.Level.SelectedIndex, this.Mode.SelectedIndex);
+            int option = -1;
+            if(this.Options.Children.Count > 0)
+            {
+                option = (this.Options.Children[0] as ComboBox).SelectedIndex;
+            }
+            (this.DataContext as CreationJeuManuelle2ViewModel).createGame(this.Word.Text, clues, this.Level.SelectedIndex, this.Mode.SelectedIndex, option);
             
             Console.WriteLine(JsonConvert.SerializeObject(clues));
 
@@ -70,7 +69,43 @@ namespace WPFUI.Views
 
         private void preview(object sender, RoutedEventArgs e)
         {
-            (this.DataContext as CreationJeuManuelle2ViewModel).preview(this.Mode.SelectedIndex);
+            int option = -1;
+            if (this.Options.Children.Count > 0)
+            {
+                option = (this.Options.Children[0] as ComboBox).SelectedIndex;
+            }
+            (this.DataContext as CreationJeuManuelle2ViewModel).preview(this.Mode.SelectedIndex, option);
+        }
+        private void elementSelectionne(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine(this.Mode.SelectedIndex);
+            ComboBox comboBox = new ComboBox();
+            TextBlock text = new TextBlock();
+            text.Text = "Options:";
+            text.TextAlignment = TextAlignment.Center;
+
+            this.Options.Children.Clear();
+            this.optionBlock.Children.Clear();
+            if (this.Mode.SelectedIndex==2)
+            {
+                this.optionBlock.Children.Add(text);
+                comboBox.Items.Add("De gauche à droite");
+                comboBox.Items.Add("De droite à gauche");
+                comboBox.Items.Add("De haut en bas");
+                comboBox.Items.Add("De bas en haut");
+                comboBox.SelectedIndex = 0;
+                this.Options.Children.Add(comboBox);
+            }
+
+            else if (this.Mode.SelectedIndex == 3)
+            {
+                this.optionBlock.Children.Add(text);
+                comboBox.Items.Add("De l'intérieur vers l'extérieur");
+                comboBox.Items.Add("Del'extérieur vers l'intérieur");
+                comboBox.SelectedIndex = 0;
+                this.Options.Children.Add(comboBox);
+            }
+
         }
     }
 }

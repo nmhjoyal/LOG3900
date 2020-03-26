@@ -26,14 +26,31 @@ class GameDB {
     }
 
     public async getRandomGame(): Promise<Game> {
-        const gameDB: any = (await this.mongoDB.db("Games").collection("games")
-            .aggregate([ { $sample: { size: 1 } } ]).toArray())[0];
+        const gameDB: any = await this.mongoDB.db("Games").collection("games")
+            .aggregate([ { $sample: { size: 1 } } ]).toArray()[0];
         const game: Game = {
             word: gameDB.word,
             drawing: gameDB.drawing,
             clues: gameDB.clues,
             level: gameDB.level,
-            mode: gameDB.mode
+        }
+        return game;
+    }
+
+    public async getRandomWord(): Promise<string> {
+        const word: string = await this.mongoDB.db("Games").collection("games")
+            .aggregate([ { $sample: { size: 1 } } ]).project({ word: 1 }).toArray()[0];
+        return word;
+    }
+
+    public async getGame(word: string): Promise<Game> {
+        const gameDB: any = await this.mongoDB.db("Games").collection("games")
+            .findOne({id: { $eq: word}});
+        const game: Game = {
+            word: gameDB.word,
+            drawing: gameDB.drawing,
+            clues: gameDB.clues,
+            level: gameDB.level,
         }
         return game;
     }

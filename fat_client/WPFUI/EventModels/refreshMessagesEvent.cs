@@ -10,9 +10,11 @@ namespace WPFUI.EventModels
     public class refreshMessagesEvent
     {
         public BindableCollection<Models.Message> _messages;
-        public refreshMessagesEvent(BindableCollection<Models.Message> newMessages)
+        public string _currentRoomId;
+        public refreshMessagesEvent(BindableCollection<Models.Message> newMessages, string roomId)
         {
             _messages = newMessages;
+            _currentRoomId = roomId;
         }
     }
 }

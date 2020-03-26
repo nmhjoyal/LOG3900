@@ -89,7 +89,7 @@ namespace WPFUI.Models
             Console.WriteLine("changing channel in userdata: " + roomID);
             this.currentRoomId = roomID;
             this.messages = new BindableCollection<Message>(this.joinedRooms.Single(i => i.roomName == roomID).messages);
-            _events.PublishOnUIThread(new refreshMessagesEvent(this.messages));
+            _events.PublishOnUIThread(new refreshMessagesEvent(this.messages, roomID));
         }
 
         public void Handle(roomsRetrievedEvent message)

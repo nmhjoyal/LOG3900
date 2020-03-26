@@ -313,14 +313,13 @@ namespace WPFUI.Models
                 }
             });
 
-            this._socket.On(("clear"), () =>
+            this._socket.On(("new_clear"), () =>
             {
                 this.Dispatcher.Invoke(() =>
                 {
                     Traits.Clear();
                 });
                 strokes.Clear();
-                Console.WriteLine("cleared");
             });
         }
 
@@ -331,6 +330,11 @@ namespace WPFUI.Models
             this._socket.Off("new_erase_stroke");
             this._socket.Off("new_point");
             this._socket.Off("clear");
+        }
+
+        public void offPreviewing()
+        {
+            this._socket.Off("preview_done");
         }
     }
 

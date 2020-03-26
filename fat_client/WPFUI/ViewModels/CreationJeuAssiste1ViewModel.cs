@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Ink;
 using System.Windows.Media;
 using WPFUI.EventModels;
@@ -48,6 +50,8 @@ namespace WPFUI.ViewModels
 
         public StrokeCollection Traits { get; set; }
 
+        public Dictionary<Stroke, int> strokes { get; set; }
+
         // Commandes sur lesquels la vue pourra se connecter.
 
         public RelayCommand<string> ChoisirPointe { get; set; }
@@ -60,8 +64,6 @@ namespace WPFUI.ViewModels
         /// sur lesquelles la vue se connectera.
         /// </summary>
         private IEventAggregator _events;
-        private IUserData _userdata;
-
         private ISocketHandler _socketHandler;
         public CreationJeuAssiste1ViewModel(IEventAggregator events, ISocketHandler socketHandler)
         {
@@ -77,13 +79,14 @@ namespace WPFUI.ViewModels
             AjusterPointe();
 
             Traits = editeur.traits;
-
-
+            this.strokes = new Dictionary<Stroke, int>();
+    
             // Pour les commandes suivantes, il est toujours possible des les activer.
             // Donc, aucune vérification de type Peut"Action" à faire.
             ChoisirPointe = new RelayCommand<string>(editeur.ChoisirPointe);
             ChoisirOutil = new RelayCommand<string>(editeur.ChoisirOutil);
 
+            this._socketHandler.onDrawing(this.Traits, this.strokes);
         }
 
         /// <summary>
@@ -137,11 +140,7 @@ namespace WPFUI.ViewModels
             AttributsDessin.Width = (editeur.PointeSelectionnee == "verticale") ? 1 : editeur.TailleTrait;
             AttributsDessin.Height = (editeur.PointeSelectionnee == "horizontale") ? 1 : editeur.TailleTrait;
         }
-         
-        public void preview(string filePath)
-        {
-            Potrace.Potrace.potrace(filePath);
-        }
+
         public void fullScreenChat()
         {
             _events.PublishOnUIThread(new fullScreenChatEvent());
@@ -149,14 +148,43 @@ namespace WPFUI.ViewModels
 
         public void mainMenu()
         {
+            this._socketHandler.socket.Emit("clear");
+            this._socketHandler.offDrawing();
             _events.PublishOnUIThread(new goBackMainEvent());
         }
 
         public void goBack()
         {
+            this._socketHandler.socket.Emit("clear");
+            this._socketHandler.offDrawing();
             _events.PublishOnUIThread(new goBackCreationMenuEvent());
         }
 
+        public void createGame(string word, List<string> clues, int level, int mode, int option, string fileName, int width, int height)
+        {
+            try
+            {
+                CreateGame game = new CreateGame(word, Potrace.Converter.exec(fileName, width, height), clues, (Level)level, (Mode)mode, option);
+                this._socketHandler.TestPOSTWebRequest(game, "/game/create");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("This file provided is invalid (bmp, jpg, png)");
+            }
+        }
+
+        public void preview(string fileName, int mode, int option, int width, int height)
+        {
+            try
+            {
+                GamePreview gamePreview = new GamePreview(Potrace.Converter.exec(fileName, width, height), (Mode)mode, option);
+                this._socketHandler.socket.Emit("preview", JsonConvert.SerializeObject(gamePreview));
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("This file provided is invalid (bmp, jpg, png)");
+            }
+        }
     }
 
 }

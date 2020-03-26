@@ -1,7 +1,7 @@
 import { OnMessage, SocketController, MessageBody, ConnectedSocket, SocketIO } from "socket-controllers";
 import { serverHandler } from "../../services/serverHandler";
 import { CreateMatch, StartMatch } from "../../models/match";
-import { GamePreview, StylusPoint, Stroke } from "../../models/drawPoint";
+import { GamePreview, Stroke, StylusPoint } from "../../models/drawPoint";
 
 @SocketController()
 export default class MatchController {
@@ -28,6 +28,11 @@ export default class MatchController {
         serverHandler.matchHandler.stroke(io, socket, stroke);
     }
 
+    @OnMessage("point")
+    public drawTest(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() point: StylusPoint) {
+        serverHandler.matchHandler.point(io, socket, point);
+    }
+
     @OnMessage("erase_stroke")
     public erase_stroke(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
         serverHandler.matchHandler.eraseStroke(io, socket);
@@ -38,9 +43,9 @@ export default class MatchController {
         serverHandler.matchHandler.erasePoint(io, socket);
     }
 
-    @OnMessage("point")
-    public drawTest(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() point: StylusPoint) {
-        serverHandler.matchHandler.point(io, socket, point);
+    @OnMessage("clear")
+    public clear(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
+        serverHandler.matchHandler.clear(io, socket);
     }
 
     @OnMessage("get_drawing")
@@ -64,8 +69,8 @@ export default class MatchController {
     }
 
     @OnMessage("leave_match")
-    public async leaveMatch(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() matchId: string) {
-        socket.emit("match_left", JSON.stringify(await serverHandler.leaveMatch(io, socket, matchId)));
+    public async leaveMatch(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
+        socket.emit("match_left", JSON.stringify(await serverHandler.leaveMatch(io, socket)));
     }
 
     @OnMessage("get_matches")
@@ -75,17 +80,17 @@ export default class MatchController {
 
     @OnMessage("start_match")
     public startMatch(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() startMatch: StartMatch) {
-        socket.emit("match_started", JSON.stringify(serverHandler.startMatch(io, socket, startMatch)));
+        io.in(startMatch.matchId).emit("match_started", JSON.stringify(serverHandler.startMatch(io, socket, startMatch)));
     }
 
     @OnMessage("add_vp")
-    public addVirtualPlayer(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() matchId: string) {
-        socket.emit("vp_added", JSON.stringify(serverHandler.addVirtualPlayer(io, socket, matchId)));
+    public addVirtualPlayer(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
+        socket.emit("vp_added", JSON.stringify(serverHandler.addVirtualPlayer(io, socket)));
     }
 
     @OnMessage("remove_vp")
-    public removeVirtualPlayer(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() matchId: string) {
-        socket.emit("vp_removed", JSON.stringify(serverHandler.removeVirtualPlayer(io, socket, matchId)));
+    public removeVirtualPlayer(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
+        socket.emit("vp_removed", JSON.stringify(serverHandler.removeVirtualPlayer(io, socket)));
     }
 
     @OnMessage("get_players")
@@ -93,12 +98,16 @@ export default class MatchController {
         socket.emit("update_players", JSON.stringify(serverHandler.matchHandler.getPlayers(matchId)));
     }
 
+    @OnMessage("start_turn")
+    public start_turn(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() word: string) {
+        serverHandler.startTurn(io, socket, word);
+    }
+
     /**
      * 
      * Preview
      * 
      */
-    
     @OnMessage("preview")
     public async preview(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() gamePreview: GamePreview) {
         await serverHandler.matchHandler.preview(socket, gamePreview);

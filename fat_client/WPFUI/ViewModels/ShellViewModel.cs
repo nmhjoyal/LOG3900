@@ -15,7 +15,9 @@ namespace WPFUI.ViewModels
     class ShellViewModel: Conductor<Screen>.Collection.AllActive, IHandle<LogInEvent>, IHandle<logOutEvent>, IHandle<joinChatEvent>,
 						  IHandle<DisconnectEvent>, IHandle<userNameTakenEvent>,IHandle<signUpEvent>, IHandle<goBackEvent>,
 						  IHandle<passwordMismatchEvent>, IHandle<viewProfileEvent>, IHandle<goBackMainEvent>,
-						  IHandle<joinGameEvent>, IHandle<ManuelIEvent>, IHandle<ManuelleIIEvent>, IHandle<createGameEvent>,IHandle<freeDrawEvent>, IHandle<joinChatroomEvent>, IHandle<goBackCreationMenuEvent>, IHandle<AssisteIEvent>, IHandle<LeaderboardEvent>
+						  IHandle<joinGameEvent>, IHandle<ManuelIEvent>, IHandle<ManuelleIIEvent>, IHandle<createGameEvent>,IHandle<freeDrawEvent>, 
+						  IHandle<joinChatroomEvent>, IHandle<goBackCreationMenuEvent>, IHandle<AssisteIEvent>, IHandle<LeaderboardEvent>,
+						  IHandle<windowChatEvent>
 	{
 		private IEventAggregator _events;
 		private SimpleContainer _container;
@@ -161,7 +163,7 @@ namespace WPFUI.ViewModels
 		{
 			Items.Clear();
 			Items.Add(_container.GetInstance<chatBoxViewModel>());
-			Items.Add(_container.GetInstance<ChatRoomChannelsViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
@@ -202,6 +204,11 @@ namespace WPFUI.ViewModels
 			Items.Add(_container.GetInstance<EmptyViewModel>());
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
+		}
+
+		public void Handle(windowChatEvent message)
+		{
+			_windowManager.ShowWindow(_container.GetInstance<chatBoxWindowViewModel>());
 		}
 	}
 }

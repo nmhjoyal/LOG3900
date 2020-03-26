@@ -1,27 +1,24 @@
 import Match from "./matchAbstract";
-import { Feedback } from "../../models/feedback";
 import PublicProfile from "../../models/publicProfile";
+import { MatchMode } from "../../models/matchMode";
+import ChatHandler from "../chatHandler";
 
 export default class OneVsOne extends Match {
 
-    public constructor(matchId: string, host: string, user: PublicProfile, nbRounds: number) {
-        super(matchId, host, user, nbRounds);
-        this.mode = 4;
+    public constructor(matchId: string, user: PublicProfile, nbRounds: number, chatHandler: ChatHandler) {
+        super(matchId, user, nbRounds, chatHandler);
+        this.mode = MatchMode.oneVsOne;
         this.maxNbVP = 0;
     }
 
-    public startMatch(): Feedback {
+    public startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): void {
         throw new Error("Method not implemented.");
     }
-    public endMatch(): void {
+
+    public endTurn(io: SocketIO.Server): void {
         throw new Error("Method not implemented.");
     }
-    public startRound(): void {
-        throw new Error("Method not implemented.");
-    }
-    public endRound(): void {
-        throw new Error("Method not implemented.");
-    }
+    
     public draw(): void {
         throw new Error("Method not implemented.");
     }
