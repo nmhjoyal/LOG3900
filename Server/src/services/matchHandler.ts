@@ -1,6 +1,6 @@
 import { MatchInstance } from "../models/matchMode";
 import { CreateMatch, MatchInfos, StartMatch } from "../models/match";
-import { Feedback, StartMatchFeedback, JoinRoomFeedback } from "../models/feedback";
+import { Feedback, StartMatchFeedback, JoinRoomFeedback, CreateMatchFeedback } from "../models/feedback";
 import Match from "./Match/matchAbstract";
 import PrivateProfile from "../models/privateProfile";
 import RandomMatchIdGenerator from "./IdGenerator/idGenerator";
@@ -30,26 +30,25 @@ export default class MatchHandler {
     }
     
     public async createMatch(io: SocketIO.Server, socket: SocketIO.Socket, 
-                    createMatch: CreateMatch, user: PrivateProfile | undefined): Promise<Feedback> {
-        let feedback: Feedback = { status: false, log_message: "" };
+                    createMatch: CreateMatch, user: PrivateProfile | undefined): Promise<CreateMatchFeedback> {
+        let createMatchFeedback: CreateMatchFeedback = { feedback: { status: false, log_message: "" }, matchId: ""};
 
         if (user) {
             const matchId: string = RandomMatchIdGenerator.generate();
             const matchRoom: CreateRoom = { id: matchId, isPrivate: true };
-            const chatRoomFeedback: Feedback = await this.chatHandler.createChatRoom(io, socket, matchRoom, user);
-            if (chatRoomFeedback.status) {
+            createMatchFeedback.feedback = await this.chatHandler.createChatRoom(io, socket, matchRoom, user);
+            if (createMatchFeedback.feedback.status) {
                 this.currentMatches.set(matchId, MatchInstance.createMatch(matchId, {username: user.username, avatar: user.avatar}, createMatch, this.chatHandler));
                 io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
-                feedback.log_message = "Match created successfully.";
-                feedback.status = true;
-            } else {
-                feedback = chatRoomFeedback;
+                createMatchFeedback.feedback.status = true;
+                createMatchFeedback.feedback.log_message = "Match created successfully.";
+                createMatchFeedback.matchId = matchId;
             }
         } else {
-            feedback.log_message = "You are not signed in.";
+            createMatchFeedback.feedback.log_message = "You are not signed in.";
         }
 
-        return feedback;
+        return createMatchFeedback;
     }
 
     public async joinMatch(io: SocketIO.Server, socket: SocketIO.Socket, matchId: string, user: PrivateProfile | undefined): Promise<JoinRoomFeedback> {

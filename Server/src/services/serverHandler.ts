@@ -1,7 +1,7 @@
 import SignIn from "../models/signIn";
 import PrivateProfile from "../models/privateProfile";
 import { Room, CreateRoom, Invitation } from "../models/room";
-import { Feedback, SignInFeedback, SignInStatus, SignOutStatus, UpdateProfileStatus, JoinRoomFeedback, StartMatchFeedback } from "../models/feedback";
+import { Feedback, SignInFeedback, SignInStatus, SignOutStatus, UpdateProfileStatus, JoinRoomFeedback, StartMatchFeedback, CreateMatchFeedback } from "../models/feedback";
 import { profileDB } from "../services/Database/profileDB";
 import { roomDB } from "../services/Database/roomDB";
 import Admin from "../models/admin";
@@ -234,7 +234,7 @@ class ServerHandler {
         }
     }
 
-    public async createMatch(io: SocketIO.Server, socket: SocketIO.Socket, createMatch: CreateMatch): Promise<Feedback> {
+    public async createMatch(io: SocketIO.Server, socket: SocketIO.Socket, createMatch: CreateMatch): Promise<CreateMatchFeedback> {
         return await this.matchHandler.createMatch(io, socket, createMatch, this.getUser(socket.id));
     }
 
