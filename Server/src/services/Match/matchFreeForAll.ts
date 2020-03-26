@@ -27,6 +27,7 @@ export default class FreeForAll extends Match {
             this.virtualDrawing.draw(io, game.drawing, game.level);
         }
         
+        this.timer = Date.now();
         this.timeout = setTimeout(() => {
             if(isVirtual) {
                 this.virtualDrawing.clear(io);
@@ -36,7 +37,8 @@ export default class FreeForAll extends Match {
     }
 
     protected async endTurn(io: SocketIO.Server): Promise<void> {
-
+        clearTimeout(this.timeout);
+        this.currentWord = "";
         let currentPlayer: Player | undefined = this.getPlayer(this.currentPlayer);
         if (currentPlayer) {
             const currentIndex: number = this.players.indexOf(currentPlayer);
@@ -53,16 +55,28 @@ export default class FreeForAll extends Match {
                 drawer: currentPlayer.user.username,
                 scores: this.scores
             };
-    
             const message: Message = Admin.createAdminMessage("The word was " + this.currentWord, this.matchId);
-            io.in(this.matchId).emit("new_message", message);
-            io.in(this.matchId).emit("turn_ended", endTurn);
+            io.in(this.matchId).emit("new_message", JSON.stringify(message));
+            io.in(this.matchId).emit("turn_ended", JSON.stringify(endTurn));
+            this.resetScoresTurn();
+            
             if (currentPlayer.isVirtual) {
                 let word: string;
                 setTimeout(() => {
                     this.startTurn(io, word, true);
                 }, 5000);
                 word = await gameDB.getRandomWord();
+            }
+        }
+    }
+
+    public guess(io: SocketIO.Server, guess: string, username: string): void {
+        if(guess == this.currentWord && this.currentPlayer != username && this.currentWord != "") {
+            const score: number = Math.round((Date.now() - this.timer) / 1000) * 10;
+            this.updateScore(username, score);
+            this.updateScore(this.currentPlayer, Math.round(score / this.players.length));
+            if(this.everyoneHasGuessed()) {
+                this.endTurn(io);
             }
         }
     }

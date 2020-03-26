@@ -18,6 +18,11 @@ export interface JoinRoomFeedback {
     isPrivate: boolean | null
 }
 
+export interface CreateMatchFeedback {
+    feedback: Feedback
+    matchId: string
+}
+
 export interface StartMatchFeedback {
     feedback: Feedback
     nbRounds: number

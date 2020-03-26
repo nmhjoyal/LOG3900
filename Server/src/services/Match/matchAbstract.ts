@@ -23,6 +23,7 @@ export default abstract class Match {
     protected maxNbVP: number;
 
     protected timeout: NodeJS.Timeout; // setTimeout will be used for emitting end_round and we will cancel it if there is an unexpected leave of a room
+    protected timer: number;
     protected scores: Map<string, UpdateScore> // Key: username, Value: score
     protected round: number;
     protected currentPlayer: string /* username */; // In one round each player will draw one time //
@@ -67,25 +68,21 @@ export default abstract class Match {
         if (player) {
             await this.chatHandler.leaveChatRoom(io, socket, this.matchId, user);
             if (this.players.length - this.getNbVirtualPlayers() > 1) {
+                this.players.splice(this.players.indexOf(player), 1);
                 if (this.isStarted) {
-                    this.players.splice(this.players.indexOf(player), 1);
                     if (player.user.username == this.currentPlayer) {
-                        clearTimeout(this.timeout);
                         this.endTurn(io);
                     }
                 } else {
                     if (player.isHost) {
-                        let hostAssigned: boolean = false;
-                        this.players.forEach((player: Player) => {
-                            if (!player.isHost && !player.isVirtual && !hostAssigned) {
+                        for(let player of this.players) {
+                            if (!player.isHost && !player.isVirtual) {
                                 player.isHost = true;
-                                io.in(this.matchId).emit("host", player.user.username);
-                                hostAssigned = true;
+                                io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
+                                break;
                             }
-                        });
-                    } else {
-                        this.players.splice(this.players.indexOf(player), 1);
-                    }
+                        }
+                    } 
                 }
 
             } else {
@@ -214,6 +211,7 @@ export default abstract class Match {
 
     public abstract startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): void;
     protected abstract endTurn(io: SocketIO.Server): void;
+    public abstract guess(io: SocketIO.Server, guess: string, username: string): void;
     
     protected endMatch(): void {
 
@@ -226,6 +224,22 @@ export default abstract class Match {
                 this.scores.set(player.user.username, { scoreTotal: 0, scoreTurn: 0 });
             }
         }
+    }
+
+    protected resetScoresTurn(): void {
+        this.scores.forEach((score: UpdateScore) => {
+            score.scoreTurn = 0;
+        });
+    }
+
+    protected everyoneHasGuessed(): boolean {
+        let everyoneHasGuessed: boolean = true;
+
+        this.scores.forEach((score: UpdateScore, username: string) => {
+            if (score.scoreTurn == 0 && username != this.currentPlayer) everyoneHasGuessed = false;
+        });
+
+        return everyoneHasGuessed;
     }
 
     protected updateScore(username: string, score: number): void {
