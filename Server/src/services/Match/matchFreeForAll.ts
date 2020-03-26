@@ -37,28 +37,33 @@ export default class FreeForAll extends Match {
 
     protected async endTurn(io: SocketIO.Server): Promise<void> {
 
-        const currentPlayer: Player = this.currentPlayers.next();
-        if(currentPlayer.done) {
-            this.currentPlayer = this.players.values().next();
-            this.round++;
-        }
-
-        const endTurn: EndTurn = {
-            currentRound: this.round,
-            choices: RandomWordGenerator.generateChoices(),
-            drawer: currentPlayer.value.user.username,
-            scores: this.scores
-        };
-
-        const message: Message = Admin.createAdminMessage("The word was " + this.currentWord, this.matchId);
-        io.in(this.matchId).emit("new_message", message);
-        io.in(this.matchId).emit("turn_ended", endTurn);
-        if (currentPlayer.value.isVirtual) {
-            let word: string;
-            setTimeout(() => {
-                this.startTurn(io, word, true);
-            }, 5000);
-            word = await gameDB.getRandomWord();
+        let currentPlayer: Player | undefined = this.getPlayer(this.currentPlayer);
+        if (currentPlayer) {
+            const currentIndex: number = this.players.indexOf(currentPlayer);
+            if (currentIndex == this.players.length - 1) {
+                this.currentPlayer = this.players[0].user.username;
+                this.round++;
+            } else {
+                this.currentPlayer = this.players[currentIndex + 1].user.username;
+            }
+    
+            const endTurn: EndTurn = {
+                currentRound: this.round,
+                choices: RandomWordGenerator.generateChoices(),
+                drawer: currentPlayer.user.username,
+                scores: this.scores
+            };
+    
+            const message: Message = Admin.createAdminMessage("The word was " + this.currentWord, this.matchId);
+            io.in(this.matchId).emit("new_message", message);
+            io.in(this.matchId).emit("turn_ended", endTurn);
+            if (currentPlayer.isVirtual) {
+                let word: string;
+                setTimeout(() => {
+                    this.startTurn(io, word, true);
+                }, 5000);
+                word = await gameDB.getRandomWord();
+            }
         }
     }
 }

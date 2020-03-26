@@ -6,10 +6,10 @@ import PrivateProfile from "../models/privateProfile";
 import RandomMatchIdGenerator from "./IdGenerator/idGenerator";
 import { ClientMessage } from "../models/message";
 import { CreateRoom } from "../models/room";
-import PublicProfile from "../models/publicProfile";
 import { GamePreview, Stroke, StylusPoint } from "../models/drawPoint";
 import { VirtualDrawing } from "./Drawing/virtualDrawing";
 import ChatHandler from "./chatHandler";
+import Player from "../models/player";
 
 export default class MatchHandler {
     private currentMatches: Map<string, Match>;
@@ -38,7 +38,7 @@ export default class MatchHandler {
             const matchRoom: CreateRoom = { id: matchId, isPrivate: true };
             const chatRoomFeedback: Feedback = await this.chatHandler.createChatRoom(io, socket, matchRoom, user);
             if (chatRoomFeedback.status) {
-                this.currentMatches.set(matchId, MatchInstance.createMatch(matchId, socket.id, {username: user.username, avatar: user.avatar}, createMatch, this.chatHandler));
+                this.currentMatches.set(matchId, MatchInstance.createMatch(matchId, {username: user.username, avatar: user.avatar}, createMatch, this.chatHandler));
                 io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
                 feedback.log_message = "Match created successfully.";
                 feedback.status = true;
@@ -52,12 +52,11 @@ export default class MatchHandler {
         return feedback;
     }
 
-    public async joinMatch(io: SocketIO.Server, socket: SocketIO.Socket, 
-                    matchId: string, user: PrivateProfile | undefined): Promise<JoinRoomFeedback> {
-        const match: Match | undefined = this.currentMatches.get(matchId);
+    public async joinMatch(io: SocketIO.Server, socket: SocketIO.Socket, matchId: string, user: PrivateProfile | undefined): Promise<JoinRoomFeedback> {
         let joinRoomFeedback: JoinRoomFeedback = { feedback: { status: false, log_message: "" }, room_joined: null, isPrivate: true };
 
         if (user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
                 joinRoomFeedback = await match.joinMatch(io, socket, user);
                 socket.broadcast.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
@@ -72,10 +71,10 @@ export default class MatchHandler {
     }
 
     public async leaveMatch(io: SocketIO.Server, socket: SocketIO.Socket, user: PrivateProfile | undefined): Promise<Feedback> {
-        const match: Match | undefined = this.getMatchFromPlayer(socket.id);
         let feedback: Feedback = { status: false, log_message: "" };
 
         if (user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
                 const deleteMatch: boolean = await match.leaveMatch(io, socket, user);
                 if (deleteMatch) this.currentMatches.delete(match.matchId);
@@ -94,10 +93,10 @@ export default class MatchHandler {
     }
 
     public addVirtualPlayer(io: SocketIO.Server, socket: SocketIO.Socket, user: PrivateProfile | undefined): Feedback {
-        const match: Match | undefined = this.getMatchFromPlayer(socket.id);
         let feedback: Feedback = { status: false, log_message: "" };
 
         if (user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
                 feedback = match.addVirtualPlayer(socket.id, io);
             } else {
@@ -111,10 +110,10 @@ export default class MatchHandler {
     }
 
     public removeVirtualPlayer(io: SocketIO.Server, socket: SocketIO.Socket, user: PrivateProfile | undefined): Feedback {
-        const match: Match | undefined = this.getMatchFromPlayer(socket.id);
         let feedback: Feedback = { status: false, log_message: "" };
 
         if (user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
                 feedback = match.removeVirtualPlayer(socket.id, io);
             } else {
@@ -144,19 +143,22 @@ export default class MatchHandler {
         return startMatchFeedback;
     }
 
-    public startTurn(io: SocketIO.Server, socket: SocketIO.Socket, word: string) {
-        const match: Match | undefined = this.getMatchFromPlayer(socket.id);
-        if(match) {
-            match.startTurn(io, word, false);
+    public startTurn(io: SocketIO.Server, socket: SocketIO.Socket, word: string, user: PrivateProfile | undefined) {
+        if (user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
+            if(match) {
+                match.startTurn(io, word, false);
+            } else {
+                console.log("This match does not exist anymore");
+            }
         } else {
-            console.log("This match does not exist anymore");
+            console.log("You are not signed in.");
         }
     }
 
     public sendMessage(io: SocketIO.Server, socket: SocketIO.Socket, message: ClientMessage, user: PrivateProfile | undefined): void {
-        const match: Match | undefined = this.getMatchFromPlayer(socket.id);
-
         if (user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
                 this.chatHandler.sendMessage(io, message, user);
             } else {
@@ -168,18 +170,18 @@ export default class MatchHandler {
 
     }
 
-    private getMatchFromPlayer(socketId: string): Match | undefined {
+    private getMatchFromPlayer(username: string): Match | undefined {
         let matchFound: Match | undefined;
 
         this.currentMatches.forEach((match: Match) => {
-            if (match.players.has(socketId)) matchFound = match;
+            if (match.getPlayer(username)) matchFound = match;
         });
 
         return matchFound;
     }
 
-    public getPlayers(matchId: string): PublicProfile[] | undefined {
-        return this.currentMatches.get(matchId)?.getPlayersPublicProfile();
+    public getPlayers(matchId: string): Player[] | undefined {
+        return this.currentMatches.get(matchId)?.players;
     }
 
     public getAvailableMatches(): MatchInfos[] {
