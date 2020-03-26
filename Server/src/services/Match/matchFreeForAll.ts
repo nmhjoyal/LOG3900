@@ -5,51 +5,60 @@ import ChatHandler from "../chatHandler";
 import { EndTurn } from "../../models/match";
 import RandomWordGenerator from "../wordGenerator/wordGenerator";
 import Player from "../../models/player";
-import { Game } from "../../models/drawPoint";
 import { gameDB } from "../Database/gameDB";
+import { Game } from "../../models/drawPoint";
+import { Message } from "../../models/message";
+import Admin from "../../models/admin";
 
 export default class FreeForAll extends Match {
 
-    public constructor(matchId: string, host: string, user: PublicProfile, nbRounds: number, chatHandler: ChatHandler) {
-        super(matchId, host, user, nbRounds, chatHandler);
+    public constructor(matchId: string, user: PublicProfile, nbRounds: number, chatHandler: ChatHandler) {
+        super(matchId, user, nbRounds, chatHandler);
         this.mode = MatchMode.freeForAll;
         this.maxNbVP = 4;
     }
 
-    public startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): void {
-        this.currentWord = chosenWord;
-        io.in(this.matchId).emit("start_turn", this.timeLimit);
-
+    public async startTurn(io: SocketIO.Server, word: string, isVirtual: boolean): Promise<void> {
+        this.currentWord = word;
+        io.in(this.matchId).emit("turn_started", this.timeLimit);
+        
+        if (isVirtual) {
+            const game: Game = await gameDB.getGame(word);
+            this.virtualDrawing.draw(io, game.drawing, game.level);
+        }
+        
         this.timeout = setTimeout(() => {
-            if (isVirtual) {
-                // this.virtualDrawing.draw()
+            if(isVirtual) {
+                this.virtualDrawing.clear(io);
             }
             this.endTurn(io);
         }, this.timeLimit * 1000);
     }
 
-    public async endTurn(io: SocketIO.Server): Promise<void> {
+    protected async endTurn(io: SocketIO.Server): Promise<void> {
 
-        const currentPlayer: IteratorResult<Player, any> = this.currentPlayers.next();
+        const currentPlayer: Player = this.currentPlayers.next();
         if(currentPlayer.done) {
-            this.currentPlayers = this.players.values();
+            this.currentPlayer = this.players.values().next();
             this.round++;
         }
 
         const endTurn: EndTurn = {
             currentRound: this.round,
-            choices: RandomWordGenerator.generate(3),
+            choices: RandomWordGenerator.generateChoices(),
             drawer: currentPlayer.value.user.username,
             scores: this.scores
         };
-        io.in(this.matchId).emit("end_turn", endTurn);
 
+        const message: Message = Admin.createAdminMessage("The word was " + this.currentWord, this.matchId);
+        io.in(this.matchId).emit("new_message", message);
+        io.in(this.matchId).emit("turn_ended", endTurn);
         if (currentPlayer.value.isVirtual) {
-            let game: Game;
+            let word: string;
             setTimeout(() => {
-                this.startTurn(io, game.word, true);
+                this.startTurn(io, word, true);
             }, 5000);
-            game = await gameDB.getRandomGame();
+            word = await gameDB.getRandomWord();
         }
     }
 }

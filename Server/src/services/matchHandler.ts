@@ -19,14 +19,14 @@ export default class MatchHandler {
     private drawer: string;         // Socket id
     private observers: string[];    // Socket ids
     private top: number;
-    private previews: VirtualDrawing[];
+    private previews: Map<string, VirtualDrawing>; // Key : socket.id or roomId, Value : virtual drawing
 
     public constructor() {
         this.currentMatches = new Map<string, Match>();
         this.observers = [];
         this.chatHandler = new ChatHandler();
         this.top = 0;
-        this.previews = [];
+        this.previews = new Map<string, VirtualDrawing>();
     }
     
     public async createMatch(io: SocketIO.Server, socket: SocketIO.Socket, 
@@ -144,8 +144,28 @@ export default class MatchHandler {
         return startMatchFeedback;
     }
 
+    public startTurn(io: SocketIO.Server, socket: SocketIO.Socket, word: string) {
+        const match: Match | undefined = this.getMatchFromPlayer(socket.id);
+        if(match) {
+            match.startTurn(io, word, false);
+        } else {
+            console.log("This match does not exist anymore");
+        }
+    }
+
     public sendMessage(io: SocketIO.Server, socket: SocketIO.Socket, message: ClientMessage, user: PrivateProfile | undefined): void {
-        // TODO : check if it is a correct guess, or asking for a hint ("!hint"), and update the other players
+        const match: Match | undefined = this.getMatchFromPlayer(socket.id);
+
+        if (user) {
+            if (match) {
+                this.chatHandler.sendMessage(io, message, user);
+            } else {
+                console.log("This match does not exist anymore.");
+            }
+        } else {
+            console.log("You are not signed in.");
+        }
+
     }
 
     private getMatchFromPlayer(socketId: string): Match | undefined {
@@ -223,10 +243,10 @@ export default class MatchHandler {
 
     public clear(io: SocketIO.Server, socket: SocketIO.Socket): void {
         // Pour preview seulement
-        let virtualDrawing: VirtualDrawing | undefined = this.previews.find(drawing => socket.id == drawing.getId());
+        let virtualDrawing: VirtualDrawing | undefined = this.previews.get(socket.id);
         if(virtualDrawing) {
             console.log("clear");
-            virtualDrawing.clear();
+            virtualDrawing.clear(socket);
         };
     }
 
@@ -244,11 +264,11 @@ export default class MatchHandler {
 
     // previewHandler.ts
     public async preview(socket: SocketIO.Socket, gamePreview: GamePreview): Promise<void> {
-        let virtualDrawing: VirtualDrawing | undefined = this.previews.find(drawing => socket.id == drawing.getId());
+        let virtualDrawing: VirtualDrawing | undefined = this.previews.get(socket.id);
         if(!virtualDrawing) {
-            virtualDrawing = new VirtualDrawing(null, socket, 7.5);
-            this.previews.push(virtualDrawing);
+            virtualDrawing = new VirtualDrawing(null, 7.5);
+            this.previews.set(socket.id, virtualDrawing);
         }
-        virtualDrawing.preview(gamePreview);
+        virtualDrawing.preview(socket, gamePreview);
     }
 }

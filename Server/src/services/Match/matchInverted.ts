@@ -5,8 +5,8 @@ import ChatHandler from "../chatHandler";
 
 export default class Inverted extends Match {
 
-    public constructor(matchId: string, host: string, user: PublicProfile, nbRounds: number, chatHandler: ChatHandler) {
-        super(matchId, host, user, nbRounds, chatHandler);
+    public constructor(matchId: string, user: PublicProfile, nbRounds: number, chatHandler: ChatHandler) {
+        super(matchId, user, nbRounds, chatHandler);
         this.mode = MatchMode.inverted;
         this.maxNbVP = 0;
     }

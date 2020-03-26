@@ -98,6 +98,11 @@ export default class MatchController {
         socket.emit("update_players", JSON.stringify(serverHandler.matchHandler.getPlayers(matchId)));
     }
 
+    @OnMessage("start_turn")
+    public start_turn(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() word: string) {
+        serverHandler.startTurn(io, socket, word);
+    }
+
     /**
      * 
      * Preview

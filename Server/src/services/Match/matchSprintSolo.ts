@@ -5,8 +5,8 @@ import ChatHandler from "../chatHandler";
 
 export default class SprintSolo extends Match {
 
-    public constructor(matchId: string, host: string, user: PublicProfile, nbRounds: number, chatHandler: ChatHandler) {
-        super(matchId, host, user, nbRounds, chatHandler);
+    public constructor(matchId: string, user: PublicProfile, nbRounds: number, chatHandler: ChatHandler) {
+        super(matchId, user, nbRounds, chatHandler);
         // add virtual player 
         // io.in(this.matchId).emit("update_players", JSON.stringify(this.getPlayersPublicProfile()));
         this.mode = MatchMode.sprintSolo;

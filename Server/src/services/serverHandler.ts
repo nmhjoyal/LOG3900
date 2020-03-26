@@ -230,7 +230,7 @@ class ServerHandler {
                 this.chatHandler.sendMessage(io, message, user);
             }
         } else {
-            console.log("User not connected");
+            console.log("User not signed in");
         }
     }
 
@@ -256,6 +256,10 @@ class ServerHandler {
 
     public startMatch(io: SocketIO.Server, socket: SocketIO.Socket, startMatch: StartMatch): StartMatchFeedback {
         return this.matchHandler.startMatch(io, socket, startMatch, this.getUser(socket.id));
+    }
+
+    public startTurn(io: SocketIO.Server, socket: SocketIO.Socket, word: string): void {
+        return this.matchHandler.startTurn(io, socket, word, this.getUser(socket.id));
     }
 }
 
