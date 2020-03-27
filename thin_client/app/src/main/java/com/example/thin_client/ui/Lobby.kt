@@ -35,7 +35,7 @@ import com.example.thin_client.ui.chat.ChatFragment
 import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
 import com.example.thin_client.ui.game_mode.GameActivity
 import com.example.thin_client.ui.game_mode.MatchList
-import com.example.thin_client.ui.game_mode.OneVsOneMatchMode
+import com.example.thin_client.ui.game_mode.free_draw.FreeDrawActivity
 import com.example.thin_client.ui.leaderboard.LeaderboardActivity
 import com.example.thin_client.ui.login.LoginActivity
 import com.example.thin_client.ui.profile.ProfileActivity
@@ -43,7 +43,7 @@ import com.github.nkzawa.socketio.client.Socket
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_lobby.*
 
-class Lobby : AppCompatActivity(), MatchList.IGameStarter {
+class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.IStartNewFragment {
     private lateinit var manager: FragmentManager
     private lateinit var prefs: SharedPreferences
 
@@ -78,6 +78,7 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter {
     override fun onStart() {
         super.onStart()
         manager = supportFragmentManager
+        SocketHandler.searchMatches()
         setupSocket()
     }
 
@@ -110,6 +111,19 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter {
             }
 
         }
+    }
+
+    override fun startFreeDraw() {
+        val intent = Intent(this, FreeDrawActivity::class.java)
+        startActivity(intent)
+    }
+
+    override fun startGameList() {
+        val transaction = manager.beginTransaction()
+        val gamesList = MatchList()
+        transaction.replace(R.id.lobby_menu_container, gamesList)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 
     private fun showChatRoomsFragment() {
@@ -165,16 +179,16 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter {
                 val gson = Gson()
                 val matchInfosFeedback=
                     gson.fromJson(data.first().toString(), ArrayList<MatchInfos>()::class.java)
-                for(match in matchInfosFeedback){
-                when(match.matchMode){
-                        MatchMode.SOLO -> GameManager.soloModeMatchList.add(match)
-                        MatchMode.COLLAB-> GameManager.collabModeMatchList.add(match)
-                        MatchMode.FREE_FOR_ALL -> GameManager.freeForAllMatchList.add(match)
-                        else -> {
-                            GameManager.oneVsOneMatchList.add(match)
+                for(match in matchInfosFeedback) {
+                    when(match.matchMode){
+                            MatchMode.SOLO -> GameManager.soloModeMatchList.add(match)
+                            MatchMode.COLLAB-> GameManager.collabModeMatchList.add(match)
+                            MatchMode.FREE_FOR_ALL -> GameManager.freeForAllMatchList.add(match)
+                            else -> {
+                                GameManager.oneVsOneMatchList.add(match)
+                        }
                     }
                 }
-            }
             }))
             .on(SocketEvent.USER_SIGNED_IN, ({ data ->
                 val gson = Gson()

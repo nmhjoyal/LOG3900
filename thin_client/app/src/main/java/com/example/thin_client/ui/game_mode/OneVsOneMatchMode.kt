@@ -38,7 +38,6 @@ class OneVsOneMatchMode: Fragment() {
 
     override fun onStart() {
         super.onStart()
-        SocketHandler.searchMatches()
         refreshMatchesAdapter()
     }
 

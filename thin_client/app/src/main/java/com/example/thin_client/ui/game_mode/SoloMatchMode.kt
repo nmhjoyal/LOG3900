@@ -38,7 +38,6 @@ class SoloMatchMode: Fragment() {
 
     override fun onStart() {
         super.onStart()
-        SocketHandler.searchMatches()
         refreshMatchesAdapter()
     }
 
