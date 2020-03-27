@@ -17,8 +17,8 @@ namespace WPFUI.Models
         private string _currentRoomId;
         private string _avatarName;
         private BindableCollection<Message> _messages;
-        private BindableCollection<Room> _publicRooms;
-        private BindableCollection<Room> _joinedRooms;
+        private BindableCollection<SelectableRoom> _selectablePublicRooms;
+        private BindableCollection<SelectableRoom> _selectableJoinedRooms;
         private IEventAggregator _events;
 
         public string avatarName
@@ -31,15 +31,17 @@ namespace WPFUI.Models
             get { return _currentRoomId; }
             set { _currentRoomId = value; }
         }
-        public BindableCollection<Room> publicRooms
+
+        public BindableCollection<SelectableRoom> selectablePublicRooms
         {
-            get { return _publicRooms; }
-            set { _publicRooms = value; }
+            get { return _selectablePublicRooms; }
+            set { _selectablePublicRooms = value; }
         }
-        public BindableCollection<Room> joinedRooms
+
+        public BindableCollection<SelectableRoom> selectableJoinedRooms
         {
-            get { return _joinedRooms; }
-            set { _joinedRooms = value; }
+            get { return _selectableJoinedRooms; }
+            set { _selectableJoinedRooms = value; }
         }
 
         public BindableCollection<Message> messages
@@ -78,8 +80,8 @@ namespace WPFUI.Models
             _events = events;
             _events.Subscribe(this);
             _messages = new BindableCollection<Message>();
-            _joinedRooms = new BindableCollection<Room>();
-            _publicRooms = new BindableCollection<Room>();
+            _selectableJoinedRooms = new BindableCollection<SelectableRoom>();
+            _selectablePublicRooms = new BindableCollection<SelectableRoom>();
             _currentRoomId = null;
             _avatarName = null;
         }
@@ -88,37 +90,46 @@ namespace WPFUI.Models
         {
             Console.WriteLine("changing channel in userdata: " + roomID);
             this.currentRoomId = roomID;
-            this.messages = new BindableCollection<Message>(this.joinedRooms.Single(i => i.roomName == roomID).messages);
+            this.messages = new BindableCollection<Message>((this.selectableJoinedRooms.Single(i => i.id == roomID)).room.messages);
             _events.PublishOnUIThread(new refreshMessagesEvent(this.messages, roomID));
         }
 
         public void Handle(roomsRetrievedEvent message)
         {
-            _publicRooms.Clear();
+            Console.WriteLine("roomsRetrievedEvent Handled");
+            this.selectablePublicRooms.Clear();
+            Console.WriteLine(message._publicRooms.Length);
             foreach (string channelID in message._publicRooms)
             {
-                publicRooms.Add(new Room(channelID, null, null));
+                this.selectablePublicRooms.Add(new SelectableRoom(new Room(channelID, null, null)));
             }
         }
 
         public void Handle(joinedRoomReceived message)
         {
-            BindableCollection<Room> joinedRooms = new BindableCollection<Room>(message._joinedRooms);
-            this.joinedRooms = joinedRooms;
-            this.currentRoomId = this.joinedRooms[0].id;
-            Console.WriteLine("currentRoomId:");
-            Console.WriteLine(currentRoomId);
-            this.messages = new BindableCollection<Message>(this.joinedRooms[0].messages);
+            this.selectableJoinedRooms = new BindableCollection<SelectableRoom>();
+            foreach (Room r in message._joinedRooms)
+            {
+                this.selectableJoinedRooms.Add(new SelectableRoom(r));
+            }
+
+            this.currentRoomId = this.selectableJoinedRooms[0].id;
+            this.messages = new BindableCollection<Message>(this.selectableJoinedRooms[0].room.messages);
         }
 
-        public void addRoom(Room room)
+        public void addJoinedRoom(Room room)
         {
-            joinedRooms.Add(room);
+            selectableJoinedRooms.Add(new SelectableRoom(room));
+        }
+
+        public void addPublicRoom(Room room)
+        {
+            selectablePublicRooms.Add(new SelectableRoom(room));
         }
 
         public void addMessage(Message message)
         {
-            Message[] messagesToUpdate = this.joinedRooms.Single(i => i.roomName == message.roomId).messages;
+            Message[] messagesToUpdate = this.selectableJoinedRooms.Single(i => i.id == message.roomId).room.messages;
 
             if (messagesToUpdate != null)
             {
@@ -128,7 +139,7 @@ namespace WPFUI.Models
                 }
                 List<Message> list = new List<Message>(messagesToUpdate);
                 list.Add(message);
-                this.joinedRooms.Single(i => i.roomName == message.roomId).messages = list.ToArray();
+                this.selectableJoinedRooms.Single(i => i.id == message.roomId).room.messages = list.ToArray();
             }
         }
     }

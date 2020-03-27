@@ -117,7 +117,11 @@
     </Compile>
     <Compile Include="Commands\changeChannelCommand.cs" />
     <Compile Include="Commands\IchangeChannelCommand.cs" />
+    <Compile Include="Commands\IselectAvailableRoomCommand.cs" />
     <Compile Include="Commands\IselectAvatarCommand.cs" />
+    <Compile Include="Commands\IselectJoinedRoomCommand.cs" />
+    <Compile Include="Commands\selectJoinedRoomCommand.cs" />
+    <Compile Include="Commands\selectAvailableRoomCommand.cs" />
     <Compile Include="Commands\selectAvatarCommand.cs" />
     <Compile Include="Converters\Converters.cs" />
     <Compile Include="EventModels\addMessageEvent.cs" />
@@ -143,9 +147,10 @@
     <Compile Include="EventModels\ManuelIEvent.cs" />
     <Compile Include="EventModels\ManuelleIIEvent.cs" />
     <Compile Include="EventModels\passwordMismatchEvent.cs" />
-    <Compile Include="EventModels\refreshAvailableRoomsEvent.cs" />
+    <Compile Include="EventModels\refreshRoomsEvent.cs" />
     <Compile Include="EventModels\refreshMessagesEvent.cs" />
     <Compile Include="EventModels\refreshUIEvent.cs" />
+    <Compile Include="EventModels\roomsChangedEvent.cs" />
     <Compile Include="EventModels\roomsRetrievedEvent.cs" />
     <Compile Include="EventModels\sendMessageEvent.cs" />
     <Compile Include="EventModels\signUpEvent.cs" />
@@ -155,6 +160,7 @@
     <Compile Include="EventModels\windowChatEvent.cs" />
     <Compile Include="Models\CreateGame.cs" />
     <Compile Include="Models\ISocketHandler.cs" />
+    <Compile Include="Models\IUserData.cs" />
     <Compile Include="Models\Ranking.cs" />
     <Compile Include="Models\SelectableRoom.cs" />
     <Compile Include="Models\Trace.cs" />
@@ -163,7 +169,6 @@
     <Compile Include="Models\CreateRoom.cs" />
     <Compile Include="Models\Editeur.cs" />
     <Compile Include="Models\Feedback.cs" />
-    <Compile Include="Models\IUserData.cs" />
     <Compile Include="Models\JavaScriptSerializer.cs" />
     <Compile Include="Models\JoinRoomFeedBack.cs" />
     <Compile Include="Models\MessageModel.cs" />
@@ -259,7 +264,6 @@
     <Compile Include="Utilitaires\RelayCommand.cs" />
     <Compile Include="ViewModels\chatBoxViewModel.cs" />
     <Compile Include="ViewModels\chatBoxWindowViewModel.cs" />
-    <Compile Include="ViewModels\ChatRoomChannelsViewModel.cs" />
     <Compile Include="ViewModels\ChoseGameViewModel.cs" />
     <Compile Include="ViewModels\createMatchViewModel.cs" />
     <Compile Include="ViewModels\CreationJeuAssiste1ViewModel.cs" />
