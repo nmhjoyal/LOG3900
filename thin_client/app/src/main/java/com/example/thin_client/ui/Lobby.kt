@@ -178,9 +178,10 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
             .on(SocketEvent.UPDATE_MATCHES, ({data ->
                 val gson = Gson()
                 val matchInfosFeedback=
-                    gson.fromJson(data.first().toString(), ArrayList<MatchInfos>()::class.java)
+                    gson.fromJson(data.first().toString(), Array<MatchInfos>::class.java)
                 for(match in matchInfosFeedback) {
-                    when(match.matchMode){
+                    val mode = if (match.matchMode != null) match.matchMode else MatchMode.SOLO
+                    when(mode){
                             MatchMode.SOLO -> GameManager.soloModeMatchList.add(match)
                             MatchMode.COLLABORATIVE-> GameManager.collabModeMatchList.add(match)
                             MatchMode.FREE_FOR_ALL -> GameManager.freeForAllMatchList.add(match)

@@ -7,6 +7,7 @@ data class MatchInfos (
     val matchId: String,
     val host: String,
     val nbRounds: Number,
+    val timeLimit: Number,
     val matchMode: MatchMode,
     val players: ArrayList<PublicProfile>
 )
