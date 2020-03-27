@@ -117,17 +117,8 @@
             <TextBlock  VerticalAlignment="Center" TextAlignment="Center" Text="Tout le monde est là?"/>
         </StackPanel>
 
-        <Border BorderBrush="Black" BorderThickness="3" Grid.Row="13" Grid.Column="1" Grid.ColumnSpan="7"/>
-        <ComboBox x:Name="dureeRound" Grid.Row="13" Grid.Column="5" Grid.ColumnSpan="3">
-            <ComboBoxItem Content="30 secondes"/>
-            <ComboBoxItem Content="60 secondes"/>
-            <ComboBoxItem Content="90 secondes"/>
-            <ComboBoxItem Content="120 secondes"/>
-            <ComboBoxItem Content="150 secondes"/>
-        </ComboBox>
-        <Border Background="#FF66CC00" BorderThickness="5" Grid.Column="1" Grid.Row="13" CornerRadius="10" Grid.ColumnSpan="4">
-            <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Durée de chaque round:" Grid.Column="1" Grid.Row="3"/>
-        </Border>
+        
+       
         <Border BorderBrush="Black" BorderThickness="3" Grid.ColumnSpan="2" Grid.Row="13" Grid.Column="11"/>
         <TextBlock Text="Pas assez de gens à ton goût? Ajoute des joueurs virtuels!" Grid.Column="11" Grid.Row="13" VerticalAlignment="Center"/>
         <StackPanel Orientation="Horizontal" Grid.Column="12" Grid.Row="13" >

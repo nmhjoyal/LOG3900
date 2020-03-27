@@ -10,13 +10,15 @@
     <Grid Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="50"/>
-            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="250" />
             <ColumnDefinition Width="250" />
             <ColumnDefinition Width="50" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="100"/>
             <RowDefinition Height="60"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="50"/>
             <RowDefinition Height="10"/>
             <RowDefinition Height="50"/>
             <RowDefinition Height="10"/>
@@ -38,7 +40,7 @@
         </ComboBox>
         
         <Border Background="#FF66CC00" BorderThickness="5" Grid.ColumnSpan="1" Grid.Column="1" Grid.Row="5" CornerRadius="10">
-            <TextBlock FontSize="14" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Choisi le nombre de round" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="5"/>
+            <TextBlock FontSize="14" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Choisi le nombre de rounds:" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="5"/>
         </Border>
         <ComboBox Width="200" Grid.Column="2" Grid.Row="5"  Name="roundcomboBox" >
             <ComboBoxItem Content="3"/>
@@ -48,10 +50,22 @@
             <ComboBoxItem Content="7"/>
             <ComboBoxItem Content="8"/>
         </ComboBox>
+        <Border Background="#FF66CC00" BorderThickness="5" Grid.ColumnSpan="1" Grid.Column="1" Grid.Row="7" CornerRadius="10">
+            <TextBlock FontSize="14" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Choisi la durée de chaque round:" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="5"/>
+        </Border>
+        <ComboBox Width="200" Grid.Column="2" Grid.Row="7"  Name="tempsRoundcomboBox" >
+            <ComboBoxItem Content="30 secondes"/>
+            <ComboBoxItem Content="60 secondes"/>
+            <ComboBoxItem Content="90 secondes"/>
+            <ComboBoxItem Content="120 secondes"/>
+            <ComboBoxItem Content="150 secondes"/>
+           
+        </ComboBox>
 
-       
-       
-        <Button HorizontalAlignment="Right" x:Name="start" BorderBrush="{x:Null}" Background="#FC038C" Grid.Column="2" Grid.Row="7" Content="C'est parti! " Foreground="White"/>
+
+
+
+        <Button HorizontalAlignment="Right" x:Name="start" BorderBrush="{x:Null}" Background="#FC038C" Grid.Column="2" Grid.Row="9" Content="C'est parti! " Foreground="White"/>
         <Button  x:Name="goBack"  Grid.Column="2" Grid.Row="0" MaxWidth="100" HorizontalAlignment="Right"  Background="#FFBF0B0B" BorderBrush="#FFBF0B0B">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Foreground="White">Retour</TextBlock>
