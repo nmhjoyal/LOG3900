@@ -1,5 +1,5 @@
 import { MatchInstance } from "../models/matchMode";
-import { CreateMatch, MatchInfos, StartMatch } from "../models/match";
+import { CreateMatch, MatchInfos, TIME_LIMIT_MIN, TIME_LIMIT_MAX, NB_ROUNDS_MIN, NB_ROUNDS_MAX } from "../models/match";
 import { Feedback, StartMatchFeedback, JoinRoomFeedback, CreateMatchFeedback } from "../models/feedback";
 import Match from "./Match/matchAbstract";
 import PrivateProfile from "../models/privateProfile";
@@ -38,11 +38,19 @@ export default class MatchHandler {
             const matchRoom: CreateRoom = { id: matchId, isPrivate: true };
             createMatchFeedback.feedback = await this.chatHandler.createChatRoom(io, socket, matchRoom, user);
             if (createMatchFeedback.feedback.status) {
-                this.currentMatches.set(matchId, MatchInstance.createMatch(matchId, {username: user.username, avatar: user.avatar}, createMatch, this.chatHandler));
-                io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
-                createMatchFeedback.feedback.status = true;
-                createMatchFeedback.feedback.log_message = "Match created successfully.";
-                createMatchFeedback.matchId = matchId;
+                if (createMatch.timeLimit > TIME_LIMIT_MIN && createMatch.timeLimit < TIME_LIMIT_MAX) {
+                    if (createMatch.nbRounds > NB_ROUNDS_MIN && createMatch.nbRounds < NB_ROUNDS_MAX) {
+                        this.currentMatches.set(matchId, MatchInstance.createMatch(matchId, user, createMatch, this.chatHandler));
+                        io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
+                        createMatchFeedback.feedback.status = true;
+                        createMatchFeedback.feedback.log_message = "Match created successfully.";
+                        createMatchFeedback.matchId = matchId;
+                    } else {
+                        createMatchFeedback.feedback.log_message = "The number of rounds has to be in between 1 and 10.";
+                    }
+                } else {
+                    createMatchFeedback.feedback.log_message = "The time limit has to be in between 30 seconds and 2 minutes.";
+                }
             }
         } else {
             createMatchFeedback.feedback.log_message = "You are not signed in.";
@@ -125,13 +133,15 @@ export default class MatchHandler {
         return feedback;
     }
 
-    public startMatch(io: SocketIO.Server, socket: SocketIO.Socket, startMatch: StartMatch, user: PrivateProfile | undefined): StartMatchFeedback {
-        const match: Match | undefined = this.currentMatches.get(startMatch.matchId);
+    public startMatch(io: SocketIO.Server, socket: SocketIO.Socket, user: PrivateProfile | undefined): StartMatchFeedback {
         let startMatchFeedback: StartMatchFeedback = { feedback: { status: false, log_message: "" } , nbRounds: 0 };
 
         if (user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
-                startMatchFeedback = match.startMatch(socket.id, io, startMatch);
+                startMatchFeedback = match.startMatch(socket.id, io);
+                if (startMatchFeedback.feedback.status) 
+                    io.in(match.matchId).emit("match_started", JSON.stringify(startMatchFeedback));
             } else {
                 startMatchFeedback.feedback.log_message = "This match does not exist anymore.";
             }
