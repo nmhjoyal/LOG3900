@@ -112,20 +112,20 @@ class MatchList : Fragment() {
         val gameSelectionSpinner = dialogView.findViewById<Spinner>(R.id.game_mode_selection)
         val nbRoundsSpinner = dialogView.findViewById<Spinner>(R.id.nb_rounds)
         val timeLimitSpinner = dialogView.findViewById<Spinner>(R.id.time_limit)
-        ArrayAdapter.createFromResource(context, R.array.nb_rounds_array, android.R.layout.simple_spinner_item)
+        ArrayAdapter.createFromResource(context, R.array.nb_rounds_array, R.layout.spinner_selected)
             .also { adapter ->
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                adapter.setDropDownViewResource(R.layout.spinner_item)
                 nbRoundsSpinner.adapter = adapter
             }
 
-        ArrayAdapter.createFromResource(context, R.array.time_limit_array, android.R.layout.simple_spinner_item)
+        ArrayAdapter.createFromResource(context, R.array.time_limit_array, R.layout.spinner_selected)
             .also { adapter ->
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                adapter.setDropDownViewResource(R.layout.spinner_item)
                 timeLimitSpinner.adapter = adapter
             }
-        ArrayAdapter.createFromResource(context, R.array.game_modes, android.R.layout.simple_spinner_item)
+        ArrayAdapter.createFromResource(context, R.array.game_modes, R.layout.spinner_selected)
             .also { adapter ->
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                adapter.setDropDownViewResource(R.layout.spinner_item)
                 gameSelectionSpinner.adapter = adapter
             }
 

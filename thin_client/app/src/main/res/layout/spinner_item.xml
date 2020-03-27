@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/text1"
+    android:textColor="@color/color_white"
+    android:background="@drawable/spinner_select"
+    style="?attr/spinnerDropDownItemStyle"
+    android:singleLine="true"
+    android:textSize="16sp"
+    android:textStyle="bold"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ellipsize="marquee"/>
