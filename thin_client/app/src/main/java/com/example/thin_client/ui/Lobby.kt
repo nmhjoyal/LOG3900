@@ -182,7 +182,7 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
                 for(match in matchInfosFeedback) {
                     when(match.matchMode){
                             MatchMode.SOLO -> GameManager.soloModeMatchList.add(match)
-                            MatchMode.COLLAB-> GameManager.collabModeMatchList.add(match)
+                            MatchMode.COLLABORATIVE-> GameManager.collabModeMatchList.add(match)
                             MatchMode.FREE_FOR_ALL -> GameManager.freeForAllMatchList.add(match)
                             else -> {
                                 GameManager.oneVsOneMatchList.add(match)

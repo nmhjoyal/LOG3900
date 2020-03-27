@@ -28,6 +28,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_games_list.*
 import kotlinx.android.synthetic.main.chatrooms_fragment.*
+import java.util.*
 
 
 class MatchList : Fragment() {
@@ -108,8 +109,7 @@ class MatchList : Fragment() {
         alertBuilder.setTitle(R.string.create_match)
         val dialogView = layoutInflater.inflate(R.layout.dialog_create_match, null)
         alertBuilder.setView(dialogView)
-        val gameRadioGroup = dialogView.findViewById<RadioGroup>(R.id.game_mode_selection)
-        gameRadioGroup.check(R.id.is_solo_mode)
+        val gameSelectionSpinner = dialogView.findViewById<Spinner>(R.id.game_mode_selection)
         val nbRoundsSpinner = dialogView.findViewById<Spinner>(R.id.nb_rounds)
         val timeLimitSpinner = dialogView.findViewById<Spinner>(R.id.time_limit)
         ArrayAdapter.createFromResource(context, R.array.nb_rounds_array, android.R.layout.simple_spinner_item)
@@ -123,25 +123,20 @@ class MatchList : Fragment() {
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 timeLimitSpinner.adapter = adapter
             }
+        ArrayAdapter.createFromResource(context, R.array.game_modes, android.R.layout.simple_spinner_item)
+            .also { adapter ->
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                gameSelectionSpinner.adapter = adapter
+            }
 
         alertBuilder
             .setPositiveButton(R.string.start) { _, _ ->
-                when(gameRadioGroup.checkedRadioButtonId) {
-                    R.id.is_solo_mode -> {
-                        GameManager.currentGameMode = MatchMode.SOLO
-                    }
-                    R.id.is_collab_mode -> {
-                        GameManager.currentGameMode = MatchMode.COLLAB
-                    }
-                    R.id.is_general_mode -> {
-                        GameManager.currentGameMode = MatchMode.FREE_FOR_ALL
-                    }
-                    R.id.is_one_on_one_mode -> {
-                        GameManager.currentGameMode = MatchMode.ONE_VS_ONE
-                    }
-                }
+                val stringMatchMode = gameSelectionSpinner.selectedItem.toString().replace("-", "_").toUpperCase(Locale.CANADA)
+                GameManager.currentGameMode = MatchMode.valueOf(stringMatchMode)
                 GameManager.nbRounds = nbRoundsSpinner.selectedItem.toString().toInt()
-                SocketHandler.createMatch(CreateMatch(GameManager.nbRounds, GameManager.currentGameMode.ordinal))
+                GameManager.timeLimit = timeLimitSpinner.selectedItem.toString().toInt()
+                SocketHandler.createMatch(CreateMatch(GameManager.nbRounds, GameManager.timeLimit,
+                    GameManager.currentGameMode.ordinal))
             }
             .setNegativeButton(R.string.cancel) { _, _ -> }
         val dialog = alertBuilder.create()

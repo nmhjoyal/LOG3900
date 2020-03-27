@@ -12,64 +12,33 @@
         android:text="@string/title_game_mode"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:textStyle="bold"
         android:textSize="16sp"
         android:textColor="@color/colorPrimaryDark"
-        android:textAllCaps="true"
-        android:layout_marginStart="16dp"
+        android:layout_margin="8dp"
         android:layout_marginTop="16dp"/>
 
-    <RadioGroup
+    <Spinner
         android:id="@+id/game_mode_selection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginStart="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintTop_toBottomOf="@id/game_mode_title">
-
-        <RadioButton
-            android:id="@+id/is_solo_mode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="@string/solo_mode" />
-
-        <RadioButton
-            android:id="@+id/is_collab_mode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="@string/collab_mode" />
-
-        <RadioButton
-            android:id="@+id/is_general_mode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="@string/free_for_all_mode" />
-
-        <RadioButton
-            android:id="@+id/is_one_on_one_mode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="@string/one_v_one_mode" />
-    </RadioGroup>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/game_mode_title"/>
 
     <TextView
         android:id="@+id/nb_rounds_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/prompt_nb_rounds"
-        android:layout_marginStart="16dp"
+        android:layout_margin="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/game_mode_title"
-        app:layout_constraintStart_toEndOf="@id/game_mode_selection"
+        app:layout_constraintTop_toBottomOf="@id/game_mode_selection"
+        app:layout_constraintStart_toStartOf="parent"
         android:textStyle="bold"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:textColor="@color/colorPrimaryDark"/>
 
     <Spinner
@@ -77,9 +46,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/game_mode_selection"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/nb_rounds_title"
-        android:layout_marginStart="16dp" />
+        android:layout_margin="8dp" />
 
     <TextView
         android:id="@+id/time_limit_title"
@@ -88,11 +57,10 @@
         android:text="@string/prompt_time_limit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/nb_rounds"
-        app:layout_constraintStart_toEndOf="@id/game_mode_selection"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="8dp"
         android:textStyle="bold"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:textColor="@color/colorPrimaryDark"/>
 
     <Spinner
@@ -100,8 +68,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/game_mode_selection"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/time_limit_title"
-        android:layout_marginStart="16dp" />
+        android:layout_margin="8dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

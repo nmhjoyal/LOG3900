@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="game_modes">
+        <item>Solo</item>
+        <item>Collaborative</item>
+        <item>Free-for-All</item>
+        <item>One-on-One</item>
+    </string-array>
     <string-array name="nb_rounds_array">
         <item>1</item>
         <item>2</item>
