@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,19 +14,23 @@ import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.thin_client.R
+import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.game.CreateMatch
 import com.example.thin_client.data.game.CreateMatchFeedback
 import com.example.thin_client.data.game.GameManager
 import com.example.thin_client.data.game.GameManager.tabNames
 import com.example.thin_client.data.game.MatchMode
+import com.example.thin_client.data.model.MatchInfos
+import com.example.thin_client.data.rooms.RoomManager
 import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_games_list.*
+import kotlinx.android.synthetic.main.chatrooms_fragment.*
 
 
-class GamesList : Fragment() {
+class MatchList : Fragment() {
 
     interface IGameStarter {
         fun startGame()
@@ -117,6 +122,7 @@ class GamesList : Fragment() {
                 when(gameRadioGroup.checkedRadioButtonId) {
                     R.id.is_solo_mode -> {
                         GameManager.currentGameMode = MatchMode.SOLO
+
                     }
                     R.id.is_collab_mode -> {
                         GameManager.currentGameMode = MatchMode.COLLAB
@@ -125,10 +131,7 @@ class GamesList : Fragment() {
                         GameManager.currentGameMode = MatchMode.FREE_FOR_ALL
                     }
                     R.id.is_one_on_one_mode -> {
-                        GameManager.currentGameMode = MatchMode.ONE_V_ONE
-                    }
-                    R.id.is_inverse_mode -> {
-                        GameManager.currentGameMode = MatchMode.REVERSE
+                        GameManager.currentGameMode = MatchMode.ONE_VS_ONE
                     }
                 }
                 GameManager.nbRounds = nbRoundsSpinner.selectedItem.toString().toInt()
@@ -155,4 +158,5 @@ class GamesList : Fragment() {
                 }
             }))
     }
+
 }

@@ -6,13 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.thin_client.R
-import com.example.thin_client.ui.chat.ChatFromItem
-import com.example.thin_client.ui.chat.ChatUserJoined
+import com.example.thin_client.data.game.GameManager
+import com.example.thin_client.data.model.MatchInfos
+import com.example.thin_client.data.rooms.RoomManager
+import com.example.thin_client.server.SocketHandler
+import com.example.thin_client.ui.chatrooms.ChatRoomItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
+import kotlinx.android.synthetic.main.chatrooms_fragment.*
 import kotlinx.android.synthetic.main.games_list.*
 
-class TabsGameMode: Fragment() {
+class FreeForAllMatchMode: Fragment() {
 
     private val adapter = GroupAdapter<GroupieViewHolder>()
 
@@ -30,8 +34,19 @@ class TabsGameMode: Fragment() {
         return inflater.inflate(R.layout.games_list, container, false)
 
     }
-    private fun showAvailableGames(text:String){
-      // adapter.add)
+
+
+    override fun onStart() {
+        super.onStart()
+        SocketHandler.searchMatches()
+        refreshMatchesAdapter()
     }
 
+    private fun refreshMatchesAdapter() {
+        adapter.clear()
+        var freeForAllMatchList = GameManager.freeForAllMatchList
+        for (match in freeForAllMatchList) {
+            adapter.add(MatchItem(match.host,match.nbRounds, match.players.size))
+        }
+    }
 }

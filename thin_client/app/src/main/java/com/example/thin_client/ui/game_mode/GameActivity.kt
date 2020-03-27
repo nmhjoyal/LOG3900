@@ -71,10 +71,10 @@ class GameActivity : AppCompatActivity(), ChatFragment.IWordGuessing {
 //                transaction.commitAllowingStateLoss()
 //                SocketHandler.startMatch(StartMatch(GameManager.roomName, false, 30, 1))
             }
-            MatchMode.COLLAB -> {}
+            MatchMode.COLLAB-> {}
             MatchMode.FREE_FOR_ALL -> {}
-            MatchMode.ONE_V_ONE -> {}
-            MatchMode.REVERSE -> {}
+            MatchMode.ONE_VS_ONE -> {}
+
         }
 //        startGame()
     }

@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 
 import com.example.thin_client.R
-import com.example.thin_client.ui.game_mode.GamesList
+import com.example.thin_client.ui.game_mode.MatchList
 import com.example.thin_client.ui.game_mode.free_draw.FreeDrawActivity
 import kotlinx.android.synthetic.main.lobby_menu_fragment.*
 
@@ -29,7 +29,7 @@ class LobbyMenuFragment : Fragment() {
         joinMatch.setOnClickListener(object : View.OnClickListener{
             override fun onClick(v: View?) {
                 val transaction = fragmentManager!!.beginTransaction()
-                val gamesList = GamesList()
+                val gamesList = MatchList()
                 transaction.replace(R.id.lobby_menu_container, gamesList)
                 transaction.addToBackStack(null)
                 transaction.commit()
