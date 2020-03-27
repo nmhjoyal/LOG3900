@@ -38,8 +38,9 @@ export default class MatchHandler {
             const matchRoom: CreateRoom = { id: matchId, isPrivate: true };
             createMatchFeedback.feedback = await this.chatHandler.createChatRoom(io, socket, matchRoom, user);
             if (createMatchFeedback.feedback.status) {
-                if (createMatch.timeLimit > TIME_LIMIT_MIN && createMatch.timeLimit < TIME_LIMIT_MAX) {
-                    if (createMatch.nbRounds > NB_ROUNDS_MIN && createMatch.nbRounds < NB_ROUNDS_MAX) {
+                createMatchFeedback.feedback.status = false
+                if (createMatch.timeLimit >= TIME_LIMIT_MIN && createMatch.timeLimit <= TIME_LIMIT_MAX) {
+                    if (createMatch.nbRounds >= NB_ROUNDS_MIN && createMatch.nbRounds <= NB_ROUNDS_MAX) {
                         this.currentMatches.set(matchId, MatchInstance.createMatch(matchId, user, createMatch, this.chatHandler));
                         io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
                         createMatchFeedback.feedback.status = true;
