@@ -1,8 +1,7 @@
 import Match from "./matchAbstract";
 import PublicProfile from "../../models/publicProfile";
-import { MatchMode } from "../../models/matchMode";
 import ChatHandler from "../chatHandler";
-import { EndTurn } from "../../models/match";
+import { EndTurn, CreateMatch } from "../../models/match";
 import RandomWordGenerator from "../wordGenerator/wordGenerator";
 import Player from "../../models/player";
 import { gameDB } from "../Database/gameDB";
@@ -12,9 +11,8 @@ import Admin from "../../models/admin";
 
 export default class FreeForAll extends Match {
 
-    public constructor(matchId: string, user: PublicProfile, nbRounds: number, chatHandler: ChatHandler) {
-        super(matchId, user, nbRounds, chatHandler);
-        this.mode = MatchMode.freeForAll;
+    public constructor(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler) {
+        super(matchId, user, createMatch, chatHandler);
         this.maxNbVP = 4;
     }
 

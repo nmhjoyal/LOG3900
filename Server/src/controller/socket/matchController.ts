@@ -1,6 +1,6 @@
 import { OnMessage, SocketController, MessageBody, ConnectedSocket, SocketIO } from "socket-controllers";
 import { serverHandler } from "../../services/serverHandler";
-import { CreateMatch, StartMatch } from "../../models/match";
+import { CreateMatch } from "../../models/match";
 import { GamePreview, Stroke, StylusPoint } from "../../models/drawPoint";
 
 @SocketController()
@@ -79,8 +79,8 @@ export default class MatchController {
     }
 
     @OnMessage("start_match")
-    public startMatch(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() startMatch: StartMatch) {
-        io.in(startMatch.matchId).emit("match_started", JSON.stringify(serverHandler.startMatch(io, socket, startMatch)));
+    public startMatch(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
+        serverHandler.startMatch(io, socket);
     }
 
     @OnMessage("add_vp")

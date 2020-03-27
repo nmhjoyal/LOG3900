@@ -1,5 +1,5 @@
 import { Feedback, StartMatchFeedback, JoinRoomFeedback } from "../../models/feedback";
-import { MatchInfos, StartMatch, TIME_LIMIT_MIN, TIME_LIMIT_MAX, UpdateScore } from "../../models/match";
+import { MatchInfos, UpdateScore, CreateMatch } from "../../models/match";
 import Player from "../../models/player";
 import PublicProfile from "../../models/publicProfile";
 import { MatchMode } from "../../models/matchMode";
@@ -30,11 +30,13 @@ export default abstract class Match {
     protected drawing: Drawing;
     protected virtualDrawing: VirtualDrawing;
 
-    protected constructor(matchId: string, user: PublicProfile, nbRounds: number, chatHandler: ChatHandler) {
+    protected constructor(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler) {
         this.players = [this.createPlayer(user, true, false)];
         this.isStarted = false;
-        this.nbRounds = nbRounds;
+        this.nbRounds = createMatch.nbRounds;
         this.matchId = matchId;
+        this.mode = createMatch.matchMode;
+        this.timeLimit = createMatch.timeLimit;
         this.chatHandler = chatHandler;
     }
 
@@ -67,7 +69,7 @@ export default abstract class Match {
         //      - this.players.length < min player for match mode, or maybe he can be replaced by virtual player?
         if (player) {
             await this.chatHandler.leaveChatRoom(io, socket, this.matchId, user);
-            if (this.players.length - this.getNbVirtualPlayers() > 1) {
+            if (this.getNbRealPlayers() > 1) {
                 this.players.splice(this.players.indexOf(player), 1);
                 if (this.isStarted) {
                     if (player.user.username == this.currentPlayer) {
@@ -84,7 +86,6 @@ export default abstract class Match {
                         }
                     } 
                 }
-
             } else {
                 deleteMatch = true;
             }
@@ -158,15 +159,13 @@ export default abstract class Match {
      * The match routine starts. The routine varies depending on the match mode.
      *
      */
-    public startMatch(username: string, io: SocketIO.Server, startMatch: StartMatch): StartMatchFeedback {
+    public startMatch(username: string, io: SocketIO.Server): StartMatchFeedback {
         const player: Player | undefined = this.getPlayer(username);
         let startMatchFeedback: StartMatchFeedback = { feedback : { status: false, log_message: "" }, nbRounds : 0 };
 
         if (player) {
             if (player.isHost) {
-                if (startMatch.timeLimit > TIME_LIMIT_MIN && startMatch.timeLimit < TIME_LIMIT_MAX) {
                     this.isStarted = true;
-                    this.timeLimit = startMatch.timeLimit;
                     this.drawing = new Drawing(this.matchId);
                     this.virtualDrawing = new VirtualDrawing(this.matchId, this.timeLimit);
                     this.currentPlayer = this.players[0].user.username;
@@ -176,9 +175,6 @@ export default abstract class Match {
                     startMatchFeedback.nbRounds = this.nbRounds;
                     startMatchFeedback.feedback.status = true;
                     startMatchFeedback.feedback.log_message = "Match is starting...";
-                } else {
-                    startMatchFeedback.feedback.log_message = "Time limit has to be in between 30 seconds and 2 minutes.";
-                }
             } else {
                 startMatchFeedback.feedback.log_message = "You are not the host. Only the host can start the match.";
             }
@@ -294,6 +290,7 @@ export default abstract class Match {
                 host: host,
                 matchMode: this.mode,
                 nbRounds: this.nbRounds,
+                timeLimit: this.timeLimit,
                 players: userInfos
             };
         }
