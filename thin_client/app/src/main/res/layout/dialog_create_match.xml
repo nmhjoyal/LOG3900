@@ -57,13 +57,6 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:text="@string/one_v_one_mode" />
-
-        <RadioButton
-            android:id="@+id/is_inverse_mode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="@string/reverse_mode" />
     </RadioGroup>
 
     <TextView

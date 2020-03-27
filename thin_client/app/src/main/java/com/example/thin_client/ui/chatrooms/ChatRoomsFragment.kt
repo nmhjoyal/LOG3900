@@ -233,6 +233,7 @@ class ChatRoomsFragment : Fragment() {
                     }
                 })
             }))
+
     }
 
     private fun removeRoom(feedback: Feedback) {

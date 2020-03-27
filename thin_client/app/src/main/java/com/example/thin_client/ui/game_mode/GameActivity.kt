@@ -65,10 +65,10 @@ class GameActivity : AppCompatActivity(), ChatFragment.IWordGuessing {
         when (GameManager.currentGameMode) {
             MatchMode.SOLO -> {
             }
-            MatchMode.COLLAB -> {}
+            MatchMode.COLLAB-> {}
             MatchMode.FREE_FOR_ALL -> {}
-            MatchMode.ONE_V_ONE -> {}
-            MatchMode.REVERSE -> {}
+            MatchMode.ONE_VS_ONE -> {}
+
         }
 //        startGame()
     }

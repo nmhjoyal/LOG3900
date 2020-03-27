@@ -8,6 +8,7 @@ import com.example.thin_client.data.drawing.StylusPoint
 import com.example.thin_client.data.game.CreateMatch
 import com.example.thin_client.data.game.StartMatch
 import com.example.thin_client.data.lifecycle.LoginState
+import com.example.thin_client.data.model.MatchInfos
 import com.example.thin_client.data.model.PrivateProfile
 import com.example.thin_client.data.model.User
 import com.example.thin_client.data.rooms.CreateRoom
@@ -152,4 +153,16 @@ object SocketHandler {
     fun getDrawing() {
         socket!!.emit(SocketEvent.GET_DRAWING)
     }
+
+    fun updateMatches(matchInfos:ArrayList<MatchInfos>) {
+        val gson = Gson()
+        val args = gson.toJson(matchInfos)
+        socket!!.emit(SocketEvent.UPDATE_MATCHES, args)
+    }
+
+    fun searchMatches() {
+        socket!!.emit(SocketEvent.GET_MATCHES)
+    }
+
+
 }

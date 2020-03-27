@@ -9,11 +9,11 @@ class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            0 -> Fragment1()
-            1 -> Fragment1()
-            2 -> Fragment1()
+            0 -> CollabMatchMode()
+            1 -> SoloMatchMode()
+            2 -> FreeForAllMatchMode()
             else -> {
-                return Fragment1()
+                return OneVsOneMatchMode()
             }
         }
     }

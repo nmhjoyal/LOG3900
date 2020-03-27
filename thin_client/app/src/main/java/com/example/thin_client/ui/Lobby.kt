@@ -21,7 +21,10 @@ import com.example.thin_client.data.SignInFeedback
 import com.example.thin_client.data.app_preferences.PreferenceHandler
 import com.example.thin_client.data.app_preferences.Preferences
 import com.example.thin_client.data.game.GameArgs
+import com.example.thin_client.data.game.GameManager
+import com.example.thin_client.data.game.MatchMode
 import com.example.thin_client.data.lifecycle.LoginState
+import com.example.thin_client.data.model.MatchInfos
 import com.example.thin_client.data.model.User
 import com.example.thin_client.data.rooms.JoinRoomFeedback
 import com.example.thin_client.data.rooms.RoomArgs
@@ -31,7 +34,8 @@ import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.chat.ChatFragment
 import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
 import com.example.thin_client.ui.game_mode.GameActivity
-import com.example.thin_client.ui.game_mode.GamesList
+import com.example.thin_client.ui.game_mode.MatchList
+import com.example.thin_client.ui.game_mode.free_draw.FreeDrawActivity
 import com.example.thin_client.ui.leaderboard.LeaderboardActivity
 import com.example.thin_client.ui.login.LoginActivity
 import com.example.thin_client.ui.profile.ProfileActivity
@@ -39,7 +43,7 @@ import com.github.nkzawa.socketio.client.Socket
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_lobby.*
 
-class Lobby : AppCompatActivity(), GamesList.IGameStarter {
+class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.IStartNewFragment {
     private lateinit var manager: FragmentManager
     private lateinit var prefs: SharedPreferences
 
@@ -74,6 +78,7 @@ class Lobby : AppCompatActivity(), GamesList.IGameStarter {
     override fun onStart() {
         super.onStart()
         manager = supportFragmentManager
+        SocketHandler.searchMatches()
         setupSocket()
     }
 
@@ -108,6 +113,19 @@ class Lobby : AppCompatActivity(), GamesList.IGameStarter {
         }
     }
 
+    override fun startFreeDraw() {
+        val intent = Intent(this, FreeDrawActivity::class.java)
+        startActivity(intent)
+    }
+
+    override fun startGameList() {
+        val transaction = manager.beginTransaction()
+        val gamesList = MatchList()
+        transaction.replace(R.id.lobby_menu_container, gamesList)
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
+
     private fun showChatRoomsFragment() {
         val transaction = manager.beginTransaction()
         val chatroomsFragment = ChatRoomsFragment()
@@ -115,6 +133,7 @@ class Lobby : AppCompatActivity(), GamesList.IGameStarter {
         transaction.addToBackStack(null)
         transaction.commitAllowingStateLoss()
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
@@ -156,6 +175,21 @@ class Lobby : AppCompatActivity(), GamesList.IGameStarter {
 
     private fun setupSocketEvents() {
         SocketHandler.socket!!
+            .on(SocketEvent.UPDATE_MATCHES, ({data ->
+                val gson = Gson()
+                val matchInfosFeedback=
+                    gson.fromJson(data.first().toString(), ArrayList<MatchInfos>()::class.java)
+                for(match in matchInfosFeedback) {
+                    when(match.matchMode){
+                            MatchMode.SOLO -> GameManager.soloModeMatchList.add(match)
+                            MatchMode.COLLAB-> GameManager.collabModeMatchList.add(match)
+                            MatchMode.FREE_FOR_ALL -> GameManager.freeForAllMatchList.add(match)
+                            else -> {
+                                GameManager.oneVsOneMatchList.add(match)
+                        }
+                    }
+                }
+            }))
             .on(SocketEvent.USER_SIGNED_IN, ({ data ->
                 val gson = Gson()
                 val signInFeedback =
