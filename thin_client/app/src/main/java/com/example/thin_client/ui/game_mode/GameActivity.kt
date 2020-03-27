@@ -64,12 +64,6 @@ class GameActivity : AppCompatActivity(), ChatFragment.IWordGuessing {
         setupSocket()
         when (GameManager.currentGameMode) {
             MatchMode.SOLO -> {
-//                val transaction = manager.beginTransaction()
-//                val observerFragment = ObserverFragment()
-//                transaction.replace(R.id.draw_view_container, observerFragment)
-//                transaction.addToBackStack(null)
-//                transaction.commitAllowingStateLoss()
-//                SocketHandler.startMatch(StartMatch(GameManager.roomName, false, 30, 1))
             }
             MatchMode.COLLAB -> {}
             MatchMode.FREE_FOR_ALL -> {}
@@ -124,11 +118,11 @@ class GameActivity : AppCompatActivity(), ChatFragment.IWordGuessing {
         val transaction = manager.beginTransaction()
         val chatFragment = ChatFragment()
         val bundle = Bundle()
-        if (!RoomManager.roomsJoined.containsKey(GameManager.roomName)) {
-            RoomManager.roomsJoined.put(GameManager.roomName, arrayListOf())
-            RoomManager.roomAvatars.put(GameManager.roomName, mapOf())
+        if (!RoomManager.roomsJoined.containsKey(RoomManager.currentRoom)) {
+            RoomManager.roomsJoined.put(RoomManager.currentRoom, arrayListOf())
+            RoomManager.roomAvatars.put(RoomManager.currentRoom, mapOf())
         }
-        bundle.putString(RoomArgs.ROOM_ID, GameManager.roomName)
+        bundle.putString(RoomArgs.ROOM_ID, RoomManager.currentRoom)
         bundle.putBoolean(GameArgs.IS_GAME_CHAT, true)
         chatFragment.arguments = bundle
         transaction.replace(R.id.chatrooms_container, chatFragment)
@@ -203,12 +197,5 @@ class GameActivity : AppCompatActivity(), ChatFragment.IWordGuessing {
             }))
     }
 
-    /*private fun showWaitingRoomFragment(){
-        val transaction = manager.beginTransaction()
-        val waitingRoomFragment = WaitingRoom()
-        transaction.replace(R.id.draw_view_container, waitingRoomFragment)
-        transaction.addToBackStack(null)
-        transaction.commitAllowingStateLoss()
-    }*/
 
 }

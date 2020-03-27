@@ -13,11 +13,13 @@ import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.thin_client.R
+import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.game.CreateMatch
 import com.example.thin_client.data.game.CreateMatchFeedback
 import com.example.thin_client.data.game.GameManager
 import com.example.thin_client.data.game.GameManager.tabNames
 import com.example.thin_client.data.game.MatchMode
+import com.example.thin_client.data.rooms.RoomManager
 import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
 import com.google.android.material.tabs.TabLayout
@@ -145,8 +147,7 @@ class GamesList : Fragment() {
             .on(SocketEvent.MATCH_CREATED, ({ data ->
                 val feedback = Gson().fromJson(data.first().toString(), CreateMatchFeedback::class.java)
                 if (feedback.feedback.status) {
-                    GameManager.roomName = feedback.matchId
-                    // start game activity
+                    RoomManager.currentRoom = feedback.matchId
                     gameStartedListener?.startGame()
                 } else {
                     Handler(Looper.getMainLooper()).post(({
