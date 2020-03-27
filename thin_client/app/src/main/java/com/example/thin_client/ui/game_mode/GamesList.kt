@@ -108,10 +108,17 @@ class GamesList : Fragment() {
         val gameRadioGroup = dialogView.findViewById<RadioGroup>(R.id.game_mode_selection)
         gameRadioGroup.check(R.id.is_solo_mode)
         val nbRoundsSpinner = dialogView.findViewById<Spinner>(R.id.nb_rounds)
+        val timeLimitSpinner = dialogView.findViewById<Spinner>(R.id.time_limit)
         ArrayAdapter.createFromResource(context, R.array.nb_rounds_array, android.R.layout.simple_spinner_item)
             .also { adapter ->
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 nbRoundsSpinner.adapter = adapter
+            }
+
+        ArrayAdapter.createFromResource(context, R.array.time_limit_array, android.R.layout.simple_spinner_item)
+            .also { adapter ->
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                timeLimitSpinner.adapter = adapter
             }
 
         alertBuilder
