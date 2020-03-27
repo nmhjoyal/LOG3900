@@ -12,7 +12,7 @@ namespace WPFUI.Models
         public Room joinedRoom;
         public Boolean isPrivate;
 
-        public JoinRoomFeedBack(Feedback fb, Room joinedRoom, Boolean isPrivate)
+        public JoinRoomFeedBack(Feedback fb, Room joinedRoom , Boolean isPrivate)
         {
             this.feedback = fb;
             this.joinedRoom = joinedRoom;

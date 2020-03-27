@@ -1,4 +1,4 @@
-﻿using Caliburn.Micro;
+using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ using WPFUI.Models;
 
 namespace WPFUI.Commands
 {
-    public class selectAvailableRoomCommand : ICommand, IselectAvailableRoomCommand
+    public class selectJoinedRoomCommand : ICommand, IselectJoinedRoomCommand
     {
         public event EventHandler CanExecuteChanged;
         public IEventAggregator _events;
@@ -22,12 +22,12 @@ namespace WPFUI.Commands
 
         public void Execute(object parameter)
         {
-            Console.WriteLine("Available Room clicked");
+            Console.WriteLine("Joined Room clicked");
 
-            _events.PublishOnUIThread(new refreshRoomsEvent((string)parameter, false));
+            _events.PublishOnUIThread(new refreshRoomsEvent((string)parameter, true));
         }
 
-        public selectAvailableRoomCommand(IEventAggregator events)
+        public selectJoinedRoomCommand(IEventAggregator events)
         {
             _events = events;
         }

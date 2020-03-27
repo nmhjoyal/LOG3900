@@ -9,14 +9,15 @@ namespace WPFUI.Models
         string currentMessage { get; set; }
         string currentRoomId { get; set; }
         string ipAdress { get; set; }
-        BindableCollection<Room> joinedRooms { get; set; }
         BindableCollection<Message> messages { get; set; }
         string password { get; set; }
-        BindableCollection<Room> publicRooms { get; set; }
+        BindableCollection<SelectableRoom> selectableJoinedRooms { get; set; }
+        BindableCollection<SelectableRoom> selectablePublicRooms { get; set; }
         string userName { get; set; }
 
+        void addJoinedRoom(Room room);
         void addMessage(Message message);
-        void addRoom(Room room);
+        void addPublicRoom(Room room);
         void changeChannel(string roomID);
         void Handle(joinedRoomReceived message);
         void Handle(roomsRetrievedEvent message);

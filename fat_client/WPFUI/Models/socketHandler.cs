@@ -107,13 +107,34 @@ namespace WPFUI.Models
 
             _socket.On("user_joined_room", (feedback) =>
             {
-                JoinRoomFeedBack fb = JsonConvert.DeserializeObject<JoinRoomFeedBack>(feedback.ToString());
-                if (fb.feedback.status & fb.joinedRoom != null)
+                Console.WriteLine("3");
+                dynamic magic = JsonConvert.DeserializeObject(feedback.ToString());
+                if (magic.room_joined != null & magic.isPrivate != null)
                 {
-                    Console.WriteLine("user_joined_room :");
-                    Console.WriteLine(fb.joinedRoom.id);
-                    _userdata.addRoom(fb.joinedRoom);
+                    JoinRoomFeedBack fb = JsonConvert.DeserializeObject<JoinRoomFeedBack>(feedback.ToString());
+                    if (fb.feedback.status & fb.joinedRoom != null)
+                    {
+                        Console.WriteLine("user_joined_room :");
+                        Console.WriteLine(fb.joinedRoom.id);
+
+                        if (fb.isPrivate)
+                        {
+                            _userdata.addJoinedRoom(fb.joinedRoom);
+                        }
+                        else
+                        {
+                            _userdata.addJoinedRoom(fb.joinedRoom);
+                        }
+                    }
+                    else if (!fb.feedback.status)
+                    {
+                        Console.WriteLine(fb.feedback.log_message);
+                    }
+                } else
+                {
+                    Console.WriteLine(magic.feedback.log_message);
                 }
+                
                 //voir doc
             });
 
@@ -130,6 +151,7 @@ namespace WPFUI.Models
             _socket.On("room_created", (feedback) =>
             {
                 Feedback json = JsonConvert.DeserializeObject<Feedback>(feedback.ToString());
+                Console.WriteLine("Room created !!!");
                 if (json.status)
                 {
                     Console.WriteLine(json.log_message);
@@ -146,6 +168,7 @@ namespace WPFUI.Models
 
         public void joinRoom(string roomID)
         {
+            Console.WriteLine("tentive de join de : " + roomID);
             _socket.Emit("join_chat_room", JsonConvert.SerializeObject(roomID));
         }
 

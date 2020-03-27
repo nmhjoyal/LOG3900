@@ -64,5 +64,11 @@ namespace WPFUI.Views
             }
 
         }
+
+        private void joinButton_click(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("HELLLO");
+            (DataContext as chatBoxViewModel).joinRoom();
+        }
     }
 }
