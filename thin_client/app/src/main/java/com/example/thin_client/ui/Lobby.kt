@@ -180,13 +180,23 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
                 val matchInfosFeedback=
                     gson.fromJson(data.first().toString(), Array<MatchInfos>::class.java)
                 for(match in matchInfosFeedback) {
-                    val mode = if (match.matchMode != null) match.matchMode else MatchMode.SOLO
-                    when(mode){
-                            MatchMode.SOLO -> GameManager.soloModeMatchList.add(match)
-                            MatchMode.COLLABORATIVE-> GameManager.collabModeMatchList.add(match)
-                            MatchMode.FREE_FOR_ALL -> GameManager.freeForAllMatchList.add(match)
+                    when(match.matchMode){
+                            MatchMode.SOLO.ordinal ->
+                                if (!GameManager.soloModeMatchList.contains(match)) {
+                                    GameManager.soloModeMatchList.add(match)
+                                }
+                            MatchMode.COLLABORATIVE.ordinal ->
+                                if (!GameManager.collabModeMatchList.contains(match)) {
+                                    GameManager.collabModeMatchList.add(match)
+                                }
+                            MatchMode.FREE_FOR_ALL.ordinal ->
+                                if (!GameManager.freeForAllMatchList.contains(match)) {
+                                    GameManager.freeForAllMatchList.add(match)
+                                }
                             else -> {
-                                GameManager.oneVsOneMatchList.add(match)
+                                if (!GameManager.oneVsOneMatchList.contains(match)) {
+                                    GameManager.oneVsOneMatchList.add(match)
+                                }
                         }
                     }
                 }

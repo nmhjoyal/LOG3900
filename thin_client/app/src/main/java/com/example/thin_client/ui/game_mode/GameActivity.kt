@@ -80,7 +80,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IWordGuessing {
 
     override fun onDestroy() {
         super.onDestroy()
-        SocketHandler.disconnectOnlineDraw()
+//        SocketHandler.disconnectOnlineDraw()
     }
 
     // Called when gameStarted and someone uses chat
@@ -109,7 +109,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IWordGuessing {
             }
             LoginState.LOGGED_IN -> {
                 showChatFragment()
-                SocketHandler.connectOnlineDraw()
+//                SocketHandler.connectOnlineDraw()
             }
         }
     }
