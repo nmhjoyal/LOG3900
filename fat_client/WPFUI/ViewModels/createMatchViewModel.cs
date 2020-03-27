@@ -9,30 +9,27 @@ using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    class ChoseGameViewModel:Screen
+    class createMatchViewModel: Screen
     {
+
         private IEventAggregator _events;
         private ISocketHandler _socketHandler;
-        
-       
-        public ChoseGameViewModel(IEventAggregator events, ISocketHandler socketHandler)
+
+
+        public createMatchViewModel(IEventAggregator events, ISocketHandler socketHandler)
         {
             _events = events;
             _socketHandler = socketHandler;
-           
+
 
         }
         public void goBack()
         {
             _events.PublishOnUIThread(new goBackMainEvent());
         }
-        public void rejoindrePartie()
+        public void start()
         {
-            _events.PublishOnUIThread(new gameEvent());
-        }
-        public void createGame()
-        {
-            _events.PublishOnUIThread(new createMatchEvent());
+            _events.PublishOnUIThread(new waitingRoomEvent());
         }
     }
 }

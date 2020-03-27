@@ -16,7 +16,7 @@ namespace WPFUI.ViewModels
 						  IHandle<DisconnectEvent>, IHandle<userNameTakenEvent>,IHandle<signUpEvent>, IHandle<goBackEvent>,
 						  IHandle<passwordMismatchEvent>, IHandle<viewProfileEvent>, IHandle<goBackMainEvent>,
 						  IHandle<joinGameEvent>, IHandle<ManuelIEvent>, IHandle<ManuelleIIEvent>, IHandle<createGameEvent>,IHandle<freeDrawEvent>, 
-						  IHandle<joinChatroomEvent>, IHandle<goBackCreationMenuEvent>, IHandle<AssisteIEvent>, IHandle<LeaderboardEvent>, IHandle<gameEvent>,
+						  IHandle<joinChatroomEvent>, IHandle<goBackCreationMenuEvent>, IHandle<AssisteIEvent>, IHandle<LeaderboardEvent>, IHandle<gameEvent>, IHandle<waitingRoomEvent>, IHandle<createMatchEvent>,
 						  IHandle<windowChatEvent>
 	{
 		private IEventAggregator _events;
@@ -208,7 +208,22 @@ namespace WPFUI.ViewModels
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
-
+		public void Handle(waitingRoomEvent message)
+		{
+			Items.Clear();
+			Items.Add(_container.GetInstance<WaitingRoomViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
+		}
+		public void Handle(createMatchEvent message)
+		{
+			Items.Clear();
+			Items.Add(_container.GetInstance<createMatchViewModel>());
+			Items.Add(_container.GetInstance<EmptyViewModel>());
+			NotifyOfPropertyChange(() => FirstSubViewModel);
+			NotifyOfPropertyChange(() => SecondSubViewModel);
+		}
 		public void Handle(freeDrawEvent message)
 		{
 			Items.Clear();

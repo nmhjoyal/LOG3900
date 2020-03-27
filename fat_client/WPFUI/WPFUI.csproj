@@ -124,6 +124,7 @@
     <Compile Include="EventModels\AssisteIEvent.cs" />
     <Compile Include="EventModels\connectionEvent.cs" />
     <Compile Include="EventModels\createGameEvent.cs" />
+    <Compile Include="EventModels\createMatchEvent.cs" />
     <Compile Include="EventModels\createTheRoomEvent.cs" />
     <Compile Include="EventModels\DisconnectEvent.cs" />
     <Compile Include="EventModels\freeDrawEvent.cs" />
@@ -150,6 +151,7 @@
     <Compile Include="EventModels\signUpEvent.cs" />
     <Compile Include="EventModels\userNameTakenEvent.cs" />
     <Compile Include="EventModels\viewProfileEvent.cs" />
+    <Compile Include="EventModels\waitingRoomEvent.cs" />
     <Compile Include="EventModels\windowChatEvent.cs" />
     <Compile Include="Models\CreateGame.cs" />
     <Compile Include="Models\ISocketHandler.cs" />
@@ -259,6 +261,7 @@
     <Compile Include="ViewModels\chatBoxWindowViewModel.cs" />
     <Compile Include="ViewModels\ChatRoomChannelsViewModel.cs" />
     <Compile Include="ViewModels\ChoseGameViewModel.cs" />
+    <Compile Include="ViewModels\createMatchViewModel.cs" />
     <Compile Include="ViewModels\CreationJeuAssiste1ViewModel.cs" />
     <Compile Include="ViewModels\CreationJeuManuelle1ViewModel.cs" />
     <Compile Include="ViewModels\CreationJeuManuelle2ViewModel.cs" />
@@ -274,6 +277,7 @@
     <Compile Include="ViewModels\partieJeuViewModel.cs" />
     <Compile Include="ViewModels\profileViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
+    <Compile Include="ViewModels\WaitingRoomViewModel.cs" />
     <Compile Include="Views\chatBoxView.xaml.cs">
       <DependentUpon>chatBoxView.xaml</DependentUpon>
     </Compile>
@@ -285,6 +289,9 @@
     </Compile>
     <Compile Include="Views\ChoseGameView.xaml.cs">
       <DependentUpon>ChoseGameView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\createMatchView.xaml.cs">
+      <DependentUpon>createMatchView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CreationJeuAssiste1View.xaml.cs">
       <DependentUpon>CreationJeuAssiste1View.xaml</DependentUpon>
@@ -327,6 +334,9 @@
     </Compile>
     <Compile Include="Views\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WaitingRoomView.xaml.cs">
+      <DependentUpon>WaitingRoomView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -374,6 +384,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ChoseGameView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\createMatchView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -430,6 +444,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ShellView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WaitingRoomView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -497,6 +515,7 @@
     <Resource Include="Resources\banana.png" />
     <Content Include="Resources\banana.svg" />
     <Resource Include="Resources\cherry.png" />
+    <Resource Include="Resources\chat.gif" />
     <Content Include="Resources\cherry.svg" />
     <Resource Include="Resources\grape.png" />
     <Resource Include="Resources\duck.gif" />
@@ -520,10 +539,12 @@
     <Resource Include="Resources\mad.gif" />
     <Content Include="Resources\orange.svg" />
     <Resource Include="Resources\pear.png" />
+    <Resource Include="Resources\party.gif" />
     <Content Include="Resources\pear.svg" />
     <Resource Include="Resources\pineapple.png" />
     <Content Include="Resources\pineapple.svg" />
     <Resource Include="Resources\strawberry.png" />
+    <Resource Include="Resources\questions.gif" />
     <Content Include="Resources\strawberry.svg" />
     <Resource Include="Resources\watermelon.png" />
     <Resource Include="Resources\trophy.gif" />

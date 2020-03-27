@@ -17,12 +17,14 @@ using WPFUI.ViewModels;
 namespace WPFUI.Views
 {
     /// <summary>
-    /// Logique d'interaction pour partieJeuView.xaml
+    /// Logique d'interaction pour WaitingRoomView.xaml
     /// </summary>
-    public partial class partieJeuView : UserControl
+    public partial class WaitingRoomView : UserControl
     {
-        partieJeuViewModel _viewModel;
-        public partieJeuView()
+       
+
+        WaitingRoomViewModel _viewModel;
+        public WaitingRoomView()
         {
             InitializeComponent();
         }
@@ -33,7 +35,7 @@ namespace WPFUI.Views
 
         private void OnLoad(object sender, RoutedEventArgs e)
         {
-            _viewModel = DataContext as partieJeuViewModel;
+            _viewModel = DataContext as WaitingRoomViewModel;
         }
 
         private void currentMessage_KeyDown(object sender, KeyEventArgs e)
