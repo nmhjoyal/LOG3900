@@ -6,7 +6,7 @@
               xmlns:gif="http://wpfanimatedgif.codeplex.com"
              xmlns:local="clr-namespace:WPFUI.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="900" d:DesignWidth="800"
+             d:DesignHeight="950" d:DesignWidth="900"
              FontFamily="Microsoft JhengHei UI Light">
     <Grid Background="#FFF5F5F6" >
         <Grid.ColumnDefinitions>
@@ -21,7 +21,7 @@
             <ColumnDefinition Width="10" />
             <ColumnDefinition Width="40" />
             <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="400" />
             <ColumnDefinition Width="120" />
             <ColumnDefinition Width="20" />
 
@@ -41,6 +41,8 @@
             <RowDefinition Height="5"/>
             <RowDefinition Height="20"/>
             <RowDefinition Height="5"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="10"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="20"/>
 
@@ -108,9 +110,9 @@
             Envoyer
         </Button>
         
-        <Border BorderBrush="Black" BorderThickness="3" Grid.ColumnSpan="2" Grid.Row="13" Grid.Column="11"/>
-        <Button x:Name="start" BorderBrush="{x:Null}" Background="#FC038C" Grid.Column="12" Grid.Row="13" Content="Commencer " Foreground="White"/>
-        <StackPanel Grid.Row="13" Grid.Column="11" Orientation="Horizontal">
+        <Border BorderBrush="Black" BorderThickness="3" Grid.ColumnSpan="2" Grid.Row="15" Grid.Column="11"/>
+        <Button x:Name="start" BorderBrush="{x:Null}" Background="#FC038C" Grid.Column="12" Grid.Row="15" Content="Commencer " Foreground="White"/>
+        <StackPanel Grid.Row="15" Grid.Column="11" Orientation="Horizontal">
             <Image Width="40" gif:ImageBehavior.AnimatedSource="/Resources/party.gif"/>
             <TextBlock  VerticalAlignment="Center" TextAlignment="Center" Text="Tout le monde est là?"/>
         </StackPanel>
@@ -126,5 +128,11 @@
         <Border Background="#FF66CC00" BorderThickness="5" Grid.Column="1" Grid.Row="13" CornerRadius="10" Grid.ColumnSpan="4">
             <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Durée de chaque round:" Grid.Column="1" Grid.Row="3"/>
         </Border>
+        <Border BorderBrush="Black" BorderThickness="3" Grid.ColumnSpan="2" Grid.Row="13" Grid.Column="11"/>
+        <TextBlock Text="Pas assez de gens à ton goût? Ajoute des joueurs virtuels!" Grid.Column="11" Grid.Row="13" VerticalAlignment="Center"/>
+        <StackPanel Orientation="Horizontal" Grid.Column="12" Grid.Row="13" >
+            <Button x:Name="more" Content="+"/>
+            <Button x:Name="less" HorizontalAlignment="Right" Content="-" />
+        </StackPanel>
     </Grid>
 </UserControl>
