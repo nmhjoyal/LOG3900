@@ -112,18 +112,18 @@ namespace WPFUI.Models
                 if (magic.room_joined != null & magic.isPrivate != null)
                 {
                     JoinRoomFeedBack fb = JsonConvert.DeserializeObject<JoinRoomFeedBack>(feedback.ToString());
-                    if (fb.feedback.status & fb.joinedRoom != null)
+                    if (fb.feedback.status & fb.room_joined != null)
                     {
                         Console.WriteLine("user_joined_room :");
-                        Console.WriteLine(fb.joinedRoom.id);
+                        Console.WriteLine(fb.room_joined.id);
 
                         if (fb.isPrivate)
                         {
-                            _userdata.addJoinedRoom(fb.joinedRoom);
+                            _userdata.addJoinedRoom(fb.room_joined);
                         }
                         else
                         {
-                            _userdata.addJoinedRoom(fb.joinedRoom);
+                            _userdata.addJoinedRoom(fb.room_joined);
                         }
                     }
                     else if (!fb.feedback.status)
@@ -134,7 +134,7 @@ namespace WPFUI.Models
                 {
                     Console.WriteLine(magic.feedback.log_message);
                 }
-                
+
                 //voir doc
             });
 
@@ -372,15 +372,34 @@ namespace WPFUI.Models
             this._socket.Off("preview_done");
         }
 
-        public void onLobby(BindableCollection<Match> matches) 
+        public void onLobby(BindableCollection<Match> matches)
         {
             this.socket.On("update_matches", (new_matches) => {
-                this.Dispatcher.Invoke(() =>
-                {
-                    matches = JsonConvert.DeserializeObject<BindableCollection<Match>>(new_matches.ToString());
-                });
-                Console.WriteLine("update");
+                matches.Clear();
+                matches.AddRange(JsonConvert.DeserializeObject<BindableCollection<Match>>(new_matches.ToString()));
             });
+
+            this.socket.On("match_joined", (joinRoomFeedback) =>
+            {
+                JoinRoomFeedBack jRF = JsonConvert.DeserializeObject<JoinRoomFeedBack>(joinRoomFeedback.ToString());
+                if(jRF.feedback.status)
+                {
+                    if (jRF.isPrivate)
+                    {
+                        this._userdata.matchId = jRF.room_joined.id;
+                        this._userdata.addJoinedRoom(jRF.room_joined);
+                        this._events.PublishOnUIThread(new waitingRoomEvent());
+                    }
+                } else
+                {
+                    Console.WriteLine(jRF.feedback.log_message);
+                }
+            });
+        }
+
+        public void offLobby()
+        {
+            this.socket.Off("update_matches");
         }
 
         public void onCreateMatch()
@@ -388,9 +407,11 @@ namespace WPFUI.Models
             this.socket.On("match_created", (new_match) =>
             {
                 dynamic json = JsonConvert.DeserializeObject(new_match.ToString());
-                if((Boolean)json.feedback.status)
+                if ((Boolean)json.feedback.status)
                 {
                     this._userdata.matchId = json.matchId;
+                    Room room = new Room(this._userdata.matchId, new Message[0], new Dictionary<string, string>());
+                    this._userdata.addJoinedRoom(room);
                     this._events.PublishOnUIThread(new waitingRoomEvent());
                     this.offCreateMatch();
                 }
@@ -400,6 +421,32 @@ namespace WPFUI.Models
         public void offCreateMatch()
         {
             this.socket.Off("match_created");
+        }
+
+        public void onWaitingRoom(BindableCollection<Player> players)
+        {
+            this.socket.On("update_players", (new_players) =>
+            {
+                players.Clear();
+                players.AddRange(JsonConvert.DeserializeObject<BindableCollection<Player>>(new_players.ToString()));
+            });
+
+            this.socket.On("match_left", (feedback) =>
+            {
+                dynamic json = JsonConvert.DeserializeObject(feedback.ToString());
+                Console.WriteLine(json);
+                if((Boolean)json.status)
+                {
+                    this._events.PublishOnUIThread(new goBackMainEvent());
+                    this.offWaitingRoom();
+                }
+            });
+        }
+
+        public void offWaitingRoom()
+        {
+            this.socket.Off("update_players");
+            this.socket.Off("match_left");
         }
     }
 

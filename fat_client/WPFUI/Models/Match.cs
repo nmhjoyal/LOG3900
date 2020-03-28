@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Caliburn.Micro;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -94,6 +95,59 @@ namespace WPFUI.Models
     {
         public string username;
         public string avatar;
+
+        public string Username
+        {
+            get
+            {
+                return this.username;
+            }
+        }
+        public string Avatar
+        {
+            get
+            {
+                BindableCollection<Avatar> _avatars = new BindableCollection<Avatar>();
+                _avatars.Add(new Avatar("/Resources/apple.png", "APPLE"));
+                _avatars.Add(new Avatar("/Resources/avocado.png", "AVOCADO"));
+                _avatars.Add(new Avatar("/Resources/banana.png", "BANANA"));
+                _avatars.Add(new Avatar("/Resources/cherry.png", "CHERRY"));
+                _avatars.Add(new Avatar("/Resources/grape.png", "GRAPE"));
+                _avatars.Add(new Avatar("/Resources/kiwi.png", "KIWI"));
+                _avatars.Add(new Avatar("/Resources/lemon.png", "LEMON"));
+                _avatars.Add(new Avatar("/Resources/orange.png", "ORANGE"));
+                _avatars.Add(new Avatar("/Resources/pear.png", "PEAR"));
+                _avatars.Add(new Avatar("/Resources/pineapple.png", "PINEAPPLE"));
+                _avatars.Add(new Avatar("/Resources/strawberry.png", "STRAWBERRY"));
+                _avatars.Add(new Avatar("/Resources/watermelon.png", "WATERMELON"));
+                Console.WriteLine("***" + this.avatar);
+                return _avatars.Single(i => i.name == this.avatar).source;
+            }
+        }
+    }
+
+    public class Player
+    {
+        public PublicProfile user;
+        public Boolean isHost;
+        public Boolean isVirtual;
+        public int score;
+
+        public string Username
+        {
+            get
+            {
+                return user.Username;
+            }
+        }
+
+        public string Avatar
+        {
+            get
+            {
+                return user.Avatar;
+            }
+        }
     }
 
     public class CreateMatch

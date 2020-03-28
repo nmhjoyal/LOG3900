@@ -65,7 +65,7 @@ export default class MatchHandler {
         let joinRoomFeedback: JoinRoomFeedback = { feedback: { status: false, log_message: "" }, room_joined: null, isPrivate: true };
 
         if (user) {
-            const match: Match | undefined = this.getMatchFromPlayer(user.username);
+            const match: Match | undefined = this.currentMatches.get(matchId);
             if (match) {
                 joinRoomFeedback = await match.joinMatch(io, socket, user);
                 socket.broadcast.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
@@ -144,6 +144,7 @@ export default class MatchHandler {
                 startMatchFeedback = match.startMatch(socket.id, io);
                 if (startMatchFeedback.feedback.status) 
                     io.in(match.matchId).emit("match_started", JSON.stringify(startMatchFeedback));
+                    io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
             } else {
                 startMatchFeedback.feedback.log_message = "This match does not exist anymore.";
             }

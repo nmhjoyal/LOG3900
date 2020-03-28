@@ -60,7 +60,6 @@ export default class MatchController {
      */
     @OnMessage("create_match")
     public async createMatch(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() createMatch: CreateMatch) {
-        console.log(JSON.stringify(createMatch));
         socket.emit("match_created", JSON.stringify(await serverHandler.createMatch(io, socket, createMatch)));
     }
 

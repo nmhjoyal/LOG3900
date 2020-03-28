@@ -50,8 +50,11 @@ export default abstract class Match {
 
         if (!this.isStarted) {
             joinRoomFeedback = await this.chatHandler.joinChatRoom(io, socket, this.matchId, user);
-            this.players.push(this.createPlayer(user, false, false));
-            joinRoomFeedback.feedback.log_message = "You joined the match.";
+            if(joinRoomFeedback.feedback.status) {
+                this.players.push(this.createPlayer(user, false, false));
+                io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
+                joinRoomFeedback.feedback.log_message = "You joined the match.";
+            }
         } else {
             joinRoomFeedback.feedback.status = false;
             joinRoomFeedback.feedback.log_message = "The match is already started.";
@@ -80,12 +83,12 @@ export default abstract class Match {
                         for(let player of this.players) {
                             if (!player.isHost && !player.isVirtual) {
                                 player.isHost = true;
-                                io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
                                 break;
                             }
                         }
                     } 
                 }
+                io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
             } else {
                 deleteMatch = true;
             }

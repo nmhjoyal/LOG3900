@@ -68,14 +68,13 @@
        
         <Border  BorderBrush="Black" BorderThickness="2" Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="7" Grid.RowSpan="2"/>
         <ScrollViewer Grid.Column="1" Grid.Row="8" Grid.RowSpan="2" Grid.ColumnSpan="7" VerticalScrollBarVisibility="Visible">
-            <ItemsControl x:Name="joueurs">
+            <ItemsControl ItemsSource="{Binding Players}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Vertical">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding position}" Foreground="DarkSlateGray"/>
-                                <TextBlock Text="{Binding senderName}" Foreground="DarkSlateGray"/>
-                                <Image Source="{Binding avatarSource}" Height="30" VerticalAlignment="Center"></Image>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <TextBlock Text="{Binding Username}" Height="30" FontSize="20" VerticalAlignment="Center" Foreground="DarkSlateGray"/>
+                                <Image Source="{Binding Avatar}" Height="30" VerticalAlignment="Center"></Image>
                             </StackPanel>
                         </StackPanel>
                     </DataTemplate>
@@ -122,8 +121,8 @@
         <Border BorderBrush="Black" BorderThickness="3" Grid.ColumnSpan="2" Grid.Row="13" Grid.Column="11"/>
         <TextBlock Text="Pas assez de gens à ton goût? Ajoute des joueurs virtuels!" Grid.Column="11" Grid.Row="13" VerticalAlignment="Center"/>
         <StackPanel Orientation="Horizontal" Grid.Column="12" Grid.Row="13" >
-            <Button x:Name="more" Content="+"/>
-            <Button x:Name="less" HorizontalAlignment="Right" Content="-" />
+            <Button x:Name="addVirtualPlayer" Content="+"/>
+            <Button x:Name="removeVirtualPlayer" HorizontalAlignment="Right" Content="-" />
         </StackPanel>
     </Grid>
 </UserControl>

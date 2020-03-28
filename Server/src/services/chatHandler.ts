@@ -168,7 +168,7 @@ export default class ChatHandler {
             room_joined: room_joined,
             isPrivate: isPrivate
         };
-        
+        console.log(JSON.stringify(joinRoomFeedback));
         return joinRoomFeedback;
     }
 

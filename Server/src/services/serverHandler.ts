@@ -63,7 +63,7 @@ class ServerHandler {
 
             // TEMPORARY
             this.matchHandler.leaveFreeDrawTestRoom(io, socket);
-
+            this.matchHandler.leaveMatch(io, socket, this.getUser(socket.id));
             this.diconnectFromJoinedRooms(io, socket, user);
             this.users.delete(socket.id);
             status = true;
