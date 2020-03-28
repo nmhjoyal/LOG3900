@@ -20,15 +20,15 @@ export class MatchInstance {
     public static createMatch(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler): Match {
         switch (createMatch.matchMode) {
             case MatchMode.freeForAll:
-                return new FreeForAll(matchId, user, createMatch.nbRounds, chatHandler);
+                return new FreeForAll(matchId, user, createMatch, chatHandler);
             case MatchMode.sprintSolo:
-                return new SprintSolo(matchId, user, createMatch.nbRounds, chatHandler);
+                return new SprintSolo(matchId, user, createMatch, chatHandler);
             case MatchMode.sprintCoop:
-                return new SprintCoop(matchId, user, createMatch.nbRounds, chatHandler);
+                return new SprintCoop(matchId, user, createMatch, chatHandler);
             case MatchMode.oneVsOne:
-                return new OneVsOne(matchId, user, createMatch.nbRounds, chatHandler);
+                return new OneVsOne(matchId, user, createMatch, chatHandler);
             case MatchMode.inverted:
-                return new Inverted(matchId, user, createMatch.nbRounds, chatHandler);
+                return new Inverted(matchId, user, createMatch, chatHandler);
         }
     }
 }

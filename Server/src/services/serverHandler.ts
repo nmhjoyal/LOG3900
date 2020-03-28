@@ -10,7 +10,7 @@ import PublicProfile from "../models/publicProfile";
 import ChatHandler from "./chatHandler";
 import MatchHandler from "./matchHandler";
 import RandomMatchIdGenerator from "./IdGenerator/idGenerator";
-import { CreateMatch, StartMatch } from "../models/match";
+import { CreateMatch } from "../models/match";
 
 class ServerHandler {
     public users: Map<string, PrivateProfile>;
@@ -254,8 +254,12 @@ class ServerHandler {
         return this.matchHandler.removeVirtualPlayer(io, socket, this.getUser(socket.id));
     }
 
-    public startMatch(io: SocketIO.Server, socket: SocketIO.Socket, startMatch: StartMatch): StartMatchFeedback {
-        return this.matchHandler.startMatch(io, socket, startMatch, this.getUser(socket.id));
+    public startMatch(io: SocketIO.Server, socket: SocketIO.Socket): StartMatchFeedback {
+        return this.matchHandler.startMatch(io, socket, this.getUser(socket.id));
+    }
+
+    public startTurn(io: SocketIO.Server, socket: SocketIO.Socket, word: string): void {
+        return this.matchHandler.startTurn(io, socket, word, this.getUser(socket.id));
     }
 
     public startTurn(io: SocketIO.Server, socket: SocketIO.Socket, word: string): void {
