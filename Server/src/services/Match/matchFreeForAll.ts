@@ -8,6 +8,7 @@ import { gameDB } from "../Database/gameDB";
 import { Game } from "../../models/drawPoint";
 import { Message } from "../../models/message";
 import Admin from "../../models/admin";
+import { Feedback } from "../../models/feedback";
 
 export default class FreeForAll extends Match {
 
@@ -68,14 +69,32 @@ export default class FreeForAll extends Match {
         }
     }
 
-    public guess(io: SocketIO.Server, guess: string, username: string): void {
-        if(guess == this.currentWord && this.currentPlayer != username && this.currentWord != "") {
-            const score: number = Math.round((Date.now() - this.timer) / 1000) * 10;
-            this.updateScore(username, score);
-            this.updateScore(this.currentPlayer, Math.round(score / this.players.length));
-            if(this.everyoneHasGuessed()) {
-                this.endTurn(io);
+    public guess(io: SocketIO.Server, guess: string, username: string): Feedback {
+        let feedback: Feedback = { status: false, log_message: "" };
+
+        if (this.currentWord != "") {
+            if (this.currentPlayer != username) {
+                if(guess == this.currentWord) {
+                    const message: Message = Admin.createAdminMessage(username + " guessed the word.", this.matchId);
+                    io.in(this.matchId).emit("new_message", JSON.stringify(message));
+        
+                    const score: number = Math.round((Date.now() - this.timer) / 1000) * 10;
+                    this.updateScore(username, score);
+                    this.updateScore(this.currentPlayer, Math.round(score / this.players.length));
+        
+                    if(this.everyoneHasGuessed()) {
+                        this.endTurn(io);
+                    }
+                } else {
+                    feedback.log_message = "Your guess is wrong.";
+                }
+            } else {
+                feedback.log_message = "The player drawing is not supposed to guess.";
             }
+        } else  {
+            feedback.log_message = "The word guessed is empty.";
         }
+
+        return feedback;
     }
 }
