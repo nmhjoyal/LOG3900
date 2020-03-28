@@ -4,9 +4,6 @@ import ChatHandler from "../chatHandler";
 import { CreateMatch } from "../../models/match";
 
 export default class Inverted extends Match {
-    public guess(io: SocketIO.Server, guess: string, username: string): void {
-        throw new Error("Method not implemented.");
-    }
 
     public constructor(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler) {
         super(matchId, user, createMatch, chatHandler);

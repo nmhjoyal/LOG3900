@@ -39,6 +39,7 @@ export default class MatchHandler {
             createMatchFeedback.feedback = await this.chatHandler.createChatRoom(io, socket, matchRoom, user);
             if (createMatchFeedback.feedback.status) {
                 createMatchFeedback.feedback.status = false
+                console.log(JSON.stringify(createMatch));
                 if (createMatch.timeLimit >= TIME_LIMIT_MIN && createMatch.timeLimit <= TIME_LIMIT_MAX) {
                     if (createMatch.nbRounds >= NB_ROUNDS_MIN && createMatch.nbRounds <= NB_ROUNDS_MAX) {
                         this.currentMatches.set(matchId, MatchInstance.createMatch(matchId, user, createMatch, this.chatHandler));
@@ -200,35 +201,6 @@ export default class MatchHandler {
             let matchInfos: MatchInfos | undefined = match.getMatchInfos();
             if (matchInfos) availableMatches.push(matchInfos);
         });
-        //
-        const a: PublicProfile = {
-            username: "a",
-            avatar: "ab"
-        };
-        const b: PublicProfile = {
-            username: "b",
-            avatar: "bc"
-        };
-        const test: MatchInfos = {
-            matchId: "id1",
-            host: "host-test",
-            nbRounds: 10,
-            matchMode: MatchMode.freeForAll,
-            players: [a, b] /* username, avatar */
-        }
-        const test2: MatchInfos = {
-            matchId: "id2",
-            host: "host-test",
-            nbRounds: 10,
-            matchMode: MatchMode.freeForAll,
-            players: [a, b] /* username, avatar */
-        }
-        availableMatches.push(test);
-        availableMatches.push(test2);
-        availableMatches.push(test);
-        availableMatches.push(test2);
-        console.log(JSON.stringify(availableMatches));
-        //
         return availableMatches;
     }
 

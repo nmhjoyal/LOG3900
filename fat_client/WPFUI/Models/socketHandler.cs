@@ -372,15 +372,34 @@ namespace WPFUI.Models
             this._socket.Off("preview_done");
         }
 
-        public void onLobby(BindableCollection<MatchModel> matches) 
+        public void onLobby(BindableCollection<Match> matches) 
         {
             this.socket.On("update_matches", (new_matches) => {
                 this.Dispatcher.Invoke(() =>
                 {
-                    matches = JsonConvert.DeserializeObject<BindableCollection<MatchModel>>(new_matches.ToString());
+                    matches = JsonConvert.DeserializeObject<BindableCollection<Match>>(new_matches.ToString());
                 });
                 Console.WriteLine("update");
             });
+        }
+
+        public void onCreateMatch()
+        {
+            this.socket.On("match_created", (new_match) =>
+            {
+                dynamic json = JsonConvert.DeserializeObject(new_match.ToString());
+                if((Boolean)json.feedback.status)
+                {
+                    this._userdata.matchId = json.matchId;
+                    this._events.PublishOnUIThread(new waitingRoomEvent());
+                    this.offCreateMatch();
+                }
+            });
+        }
+
+        public void offCreateMatch()
+        {
+            this.socket.Off("match_created");
         }
     }
 

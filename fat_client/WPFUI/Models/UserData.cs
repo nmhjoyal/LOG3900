@@ -19,6 +19,7 @@ namespace WPFUI.Models
         private BindableCollection<Message> _messages;
         private BindableCollection<SelectableRoom> _selectablePublicRooms;
         private BindableCollection<SelectableRoom> _selectableJoinedRooms;
+        private string _matchId;
         private IEventAggregator _events;
 
         public string avatarName
@@ -75,6 +76,11 @@ namespace WPFUI.Models
             set { _password = value; }
         }
 
+        public string matchId
+        {
+            get { return _matchId; }
+            set { _matchId = value; }
+        }
         public UserData(IEventAggregator events)
         {
             _events = events;

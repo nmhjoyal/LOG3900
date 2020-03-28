@@ -14,9 +14,9 @@ namespace WPFUI.ViewModels
     {
         private IEventAggregator _events;
         private ISocketHandler _socketHandler;
-        public BindableCollection<MatchModel> matches;
+        public BindableCollection<Match> matches;
 
-        public BindableCollection<MatchModel> Matches
+        public BindableCollection<Match> Matches
         {
             get
             {
@@ -29,11 +29,11 @@ namespace WPFUI.ViewModels
         {
             _events = events;
             _socketHandler = socketHandler;
-            this.matches = new BindableCollection<MatchModel>();
+            this.matches = new BindableCollection<Match>();
             // this._socketHandler.onLobby(this.matches);
             this._socketHandler.socket.On("update_matches", (matches) => {
                 this.matches.Clear();
-                this.matches.AddRange(JsonConvert.DeserializeObject<BindableCollection<MatchModel>>(matches.ToString()));
+                this.matches.AddRange(JsonConvert.DeserializeObject<BindableCollection<Match>>(matches.ToString()));
             });
             this._socketHandler.socket.Emit("get_matches");
         }

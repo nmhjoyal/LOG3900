@@ -161,7 +161,7 @@
     <Compile Include="Models\CreateGame.cs" />
     <Compile Include="Models\ISocketHandler.cs" />
     <Compile Include="Models\IUserData.cs" />
-    <Compile Include="Models\MatchModel.cs" />
+    <Compile Include="Models\Match.cs" />
     <Compile Include="Models\Ranking.cs" />
     <Compile Include="Models\SelectableRoom.cs" />
     <Compile Include="Models\Trace.cs" />

@@ -13,8 +13,8 @@ namespace WPFUI.Models
         string password { get; set; }
         BindableCollection<SelectableRoom> selectableJoinedRooms { get; set; }
         BindableCollection<SelectableRoom> selectablePublicRooms { get; set; }
-        string userName { get; set; }
-
+        string userName { get; set; } 
+        string matchId { get; set; }
         void addJoinedRoom(Room room);
         void addMessage(Message message);
         void addPublicRoom(Room room);

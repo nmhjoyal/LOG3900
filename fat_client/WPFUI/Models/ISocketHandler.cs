@@ -21,7 +21,9 @@ namespace WPFUI.Models
         void offDrawing();
         void offPreviewing();
         void onDrawing(StrokeCollection Traits, Dictionary<Stroke, int> strokes);
-        void onLobby(BindableCollection<MatchModel> matches);
+        void onLobby(BindableCollection<Match> matches);
+        void onCreateMatch();
+        void offCreateMatch();
         void sendMessage();
         void SignOut();
         void TestGETWebRequest(string request);

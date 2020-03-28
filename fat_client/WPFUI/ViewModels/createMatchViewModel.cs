@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,8 +21,7 @@ namespace WPFUI.ViewModels
         {
             _events = events;
             _socketHandler = socketHandler;
-
-
+            this._socketHandler.onCreateMatch();
         }
         public void goBack()
         {
@@ -29,7 +29,8 @@ namespace WPFUI.ViewModels
         }
         public void createMatch(MatchMode matchMode, int nbRounds, int timeLimit)
         {
-            _events.PublishOnUIThread(new waitingRoomEvent());
+            CreateMatch createMatch = new CreateMatch(nbRounds, timeLimit, matchMode);
+            this._socketHandler.socket.Emit("create_match", JsonConvert.SerializeObject(createMatch));
         }
     }
 }

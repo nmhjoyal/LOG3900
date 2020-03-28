@@ -261,10 +261,6 @@ class ServerHandler {
     public startTurn(io: SocketIO.Server, socket: SocketIO.Socket, word: string): void {
         return this.matchHandler.startTurn(io, socket, word, this.getUser(socket.id));
     }
-
-    public startTurn(io: SocketIO.Server, socket: SocketIO.Socket, word: string): void {
-        return this.matchHandler.startTurn(io, socket, word, this.getUser(socket.id));
-    }
 }
 
 export var serverHandler: ServerHandler = new ServerHandler();

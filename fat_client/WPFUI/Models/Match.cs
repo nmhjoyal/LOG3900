@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WPFUI.Models
 {
-    public class MatchModel
+    public class Match
     {
         public string matchId;
         public string host;
@@ -14,7 +14,7 @@ namespace WPFUI.Models
         public MatchMode matchMode;
         public List<PublicProfile> players;
 
-        public MatchModel(string matchId, string host, int nbRounds, MatchMode matchMode, List<PublicProfile> players)
+        public Match(string matchId, string host, int nbRounds, MatchMode matchMode, List<PublicProfile> players)
         {
             this.matchId = matchId;
             this.host = host;
@@ -94,5 +94,19 @@ namespace WPFUI.Models
     {
         public string username;
         public string avatar;
+    }
+
+    public class CreateMatch
+    {
+        public int nbRounds;
+        public int timeLimit;
+        public MatchMode matchMode;
+
+        public CreateMatch(int nbRounds, int timeLimit, MatchMode matchMode)
+        {
+            this.nbRounds = nbRounds;
+            this.timeLimit = timeLimit;
+            this.matchMode = matchMode;
+        }
     }
 }
