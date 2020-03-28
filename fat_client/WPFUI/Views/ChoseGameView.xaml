@@ -64,7 +64,7 @@
             <Border BorderBrush="Black" BorderThickness="3" Grid.Column="1" Grid.Row="11" Grid.ColumnSpan="15" />
             <TextBlock Grid.ColumnSpan="2" Grid.Column="2" Grid.Row="6" TextAlignment="Center" VerticalAlignment="Center" FontSize="15">Hôte</TextBlock>
             <TextBlock Grid.ColumnSpan="3" Grid.Column="4" Grid.Row="6" TextAlignment="Center" VerticalAlignment="Center" FontSize="15">Rounds</TextBlock>
-            <TextBlock Grid.ColumnSpan="3" Grid.Column="7" Grid.Row="6" TextAlignment="Center" VerticalAlignment="Center" FontSize="15">Rounds Complétés</TextBlock>
+            <TextBlock Grid.ColumnSpan="3" Grid.Column="7" Grid.Row="6" TextAlignment="Center" VerticalAlignment="Bottom" FontSize="15" Margin="0,0,0,10">Mode</TextBlock>
             <TextBlock Grid.ColumnSpan="3" Grid.Column="10" Grid.Row="6" TextAlignment="Center" VerticalAlignment="Center" FontSize="15">Participants</TextBlock>
             <TextBlock Grid.ColumnSpan="2" Grid.Column="13" Grid.Row="6" TextAlignment="Center" VerticalAlignment="Center" FontSize="15">Joindre</TextBlock>
             <Button  x:Name="goBack"  Grid.ColumnSpan="2" Grid.Column="14" Grid.Row="0" MaxWidth="100" HorizontalAlignment="Right"  Background="#FFBF0B0B" BorderBrush="#FFBF0B0B">
@@ -73,15 +73,53 @@
                     <Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
                 </StackPanel>
             </Button>
-            <StackPanel x:Name="hote" Orientation="Vertical" Grid.Column="2" Grid.Row="8"></StackPanel>
-            <StackPanel x:Name="rounds" Orientation="Vertical" Grid.Column="5" Grid.Row="8"></StackPanel>
-            <StackPanel x:Name="roundsComplete" Orientation="Vertical" Grid.Column="8" Grid.Row="8"></StackPanel>
-            <StackPanel x:Name="participants" Orientation="Vertical" Grid.Column="11" Grid.Row="8"></StackPanel>
-            <StackPanel x:Name="joindrePartie" Orientation="Vertical" Grid.Column="14" Grid.Row="8">
-                <Button BorderBrush="{x:Null}" Background="#FF00CCCC"  x:Name="rejoindrePartie" Width="50">
-                    <Image Source="/Resources/add.png"/>
-                </Button>
-            </StackPanel>
+            <ItemsControl ItemsSource="{Binding Matches}" Grid.Column="2" Grid.Row="8">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="{Binding Host}" Height="40" TextAlignment="Center"></TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <ItemsControl ItemsSource="{Binding Matches}" Grid.Column="5" Grid.Row="8">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="{Binding NbRounds}" Height="40" TextAlignment="Center"></TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <ItemsControl ItemsSource="{Binding Matches}" Grid.Column="8" Grid.Row="8">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="{Binding MatchMode}" Height="40" TextAlignment="Center"></TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <ItemsControl ItemsSource="{Binding Matches}" Grid.Column="11" Grid.Row="8">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="{Binding Players}" Height="40" TextAlignment="Center"></TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <ItemsControl ItemsSource ="{Binding Matches}" Grid.Column="14" Grid.Row="8">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical">
+                            <Button Tag="{Binding MatchId}" BorderBrush="{x:Null}" Background="#FF00CCCC" Click="joinGame" Width="50" Height="40">
+                                <Image Source="/Resources/add.png"/>
+                            </Button>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
             <Button  BorderBrush="{x:Null}" Background="#FC038C" FontSize="12" Foreground="White" x:Name="createGame" Content="Crée ton match" Grid.ColumnSpan="4" Grid.Column="11" Grid.Row="11" HorizontalAlignment="Right"/>
             <Image gif:ImageBehavior.AnimatedSource="/Resources/mad.gif" Grid.Column="1" Grid.Row="11" Grid.ColumnSpan="2" Margin="10.333,0,111,0" />
             <TextBlock Grid.Column="2" Grid.Row="11" VerticalAlignment="Center" Grid.ColumnSpan="4" TextAlignment="Center">Tu ne trouves pas de partie à ton goût?</TextBlock>

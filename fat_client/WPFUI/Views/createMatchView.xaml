@@ -33,10 +33,11 @@
             <TextBlock FontSize="14" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Choisi le mode:" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="3"/>
         </Border>
         <ComboBox Width="200" Grid.Column="2" Grid.Row="3"  Name="modecomboBox" >
-            <ComboBoxItem Content="Mode 1"/>
-            <ComboBoxItem Content="Mode 2"/>
-            <ComboBoxItem Content="Mode 3"/>
-            <ComboBoxItem Content="Mode 4"/>
+            <ComboBoxItem Content="Mêlée générale"/>
+            <ComboBoxItem Content="Sprint solo"/>
+            <ComboBoxItem Content="Sprint coopératif"/>
+            <ComboBoxItem Content="1 vs 1"/>
+            <ComboBoxItem Content="Mode inversé"/>
         </ComboBox>
         
         <Border Background="#FF66CC00" BorderThickness="5" Grid.ColumnSpan="1" Grid.Column="1" Grid.Row="5" CornerRadius="10">
@@ -53,7 +54,7 @@
         <Border Background="#FF66CC00" BorderThickness="5" Grid.ColumnSpan="1" Grid.Column="1" Grid.Row="7" CornerRadius="10">
             <TextBlock FontSize="14" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Choisi la durée de chaque round:" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="5"/>
         </Border>
-        <ComboBox Width="200" Grid.Column="2" Grid.Row="7"  Name="tempsRoundcomboBox" >
+        <ComboBox Width="200" Grid.Column="2" Grid.Row="7"  Name="timecomboBox">
             <ComboBoxItem Content="30 secondes"/>
             <ComboBoxItem Content="60 secondes"/>
             <ComboBoxItem Content="90 secondes"/>
@@ -65,7 +66,7 @@
 
 
 
-        <Button HorizontalAlignment="Right" x:Name="start" BorderBrush="{x:Null}" Background="#FC038C" Grid.Column="2" Grid.Row="9" Content="C'est parti! " Foreground="White"/>
+        <Button HorizontalAlignment="Right" Click="createMatch" BorderBrush="{x:Null}" Background="#FC038C" Grid.Column="2" Grid.Row="9" Content="C'est parti! " Foreground="White"/>
         <Button  x:Name="goBack"  Grid.Column="2" Grid.Row="0" MaxWidth="100" HorizontalAlignment="Right"  Background="#FFBF0B0B" BorderBrush="#FFBF0B0B">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Foreground="White">Retour</TextBlock>

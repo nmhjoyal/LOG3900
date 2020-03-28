@@ -1,4 +1,4 @@
-import { MatchInstance } from "../models/matchMode";
+import { MatchInstance, MatchMode } from "../models/matchMode";
 import { CreateMatch, MatchInfos, StartMatch } from "../models/match";
 import { Feedback, StartMatchFeedback, JoinRoomFeedback, CreateMatchFeedback } from "../models/feedback";
 import Match from "./Match/matchAbstract";
@@ -10,6 +10,7 @@ import { GamePreview, Stroke, StylusPoint } from "../models/drawPoint";
 import { VirtualDrawing } from "./Drawing/virtualDrawing";
 import ChatHandler from "./chatHandler";
 import Player from "../models/player";
+import PublicProfile from "../models/publicProfile";
 
 export default class MatchHandler {
     private currentMatches: Map<string, Match>;
@@ -189,6 +190,35 @@ export default class MatchHandler {
             let matchInfos: MatchInfos | undefined = match.getMatchInfos();
             if (matchInfos) availableMatches.push(matchInfos);
         });
+        //
+        const a: PublicProfile = {
+            username: "a",
+            avatar: "ab"
+        };
+        const b: PublicProfile = {
+            username: "b",
+            avatar: "bc"
+        };
+        const test: MatchInfos = {
+            matchId: "id1",
+            host: "host-test",
+            nbRounds: 10,
+            matchMode: MatchMode.freeForAll,
+            players: [a, b] /* username, avatar */
+        }
+        const test2: MatchInfos = {
+            matchId: "id2",
+            host: "host-test",
+            nbRounds: 10,
+            matchMode: MatchMode.freeForAll,
+            players: [a, b] /* username, avatar */
+        }
+        availableMatches.push(test);
+        availableMatches.push(test2);
+        availableMatches.push(test);
+        availableMatches.push(test2);
+        console.log(JSON.stringify(availableMatches));
+        //
         return availableMatches;
     }
 

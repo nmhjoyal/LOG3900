@@ -27,7 +27,7 @@ namespace WPFUI.ViewModels
         {
             _events.PublishOnUIThread(new goBackMainEvent());
         }
-        public void start()
+        public void createMatch(MatchMode matchMode, int nbRounds, int timeLimit)
         {
             _events.PublishOnUIThread(new waitingRoomEvent());
         }

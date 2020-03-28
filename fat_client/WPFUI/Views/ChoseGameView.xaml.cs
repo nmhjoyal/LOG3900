@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Caliburn.Micro;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WPFUI.Models;
+using WPFUI.ViewModels;
 
 namespace WPFUI.Views
 {
@@ -24,5 +27,12 @@ namespace WPFUI.Views
         {
             InitializeComponent();
         }
+
+        private void joinGame(object sender, RoutedEventArgs e)
+        {
+            string matchId = (string)(sender as Button).Tag;
+            (this.DataContext as ChoseGameViewModel).joinGame(matchId);
+        }
     }
+
 }

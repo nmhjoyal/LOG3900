@@ -1,4 +1,5 @@
-﻿using Quobject.SocketIoClientDotNet.Client;
+﻿using Caliburn.Micro;
+using Quobject.SocketIoClientDotNet.Client;
 using System.Collections.Generic;
 using System.Windows.Ink;
 
@@ -20,6 +21,7 @@ namespace WPFUI.Models
         void offDrawing();
         void offPreviewing();
         void onDrawing(StrokeCollection Traits, Dictionary<Stroke, int> strokes);
+        void onLobby(BindableCollection<MatchModel> matches);
         void sendMessage();
         void SignOut();
         void TestGETWebRequest(string request);

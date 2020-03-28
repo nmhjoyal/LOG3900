@@ -111,5 +111,10 @@ namespace WPFUI.Views
             }
 
         }
+
+        private void imageTransformee_StrokeCollected(object sender, InkCanvasStrokeCollectedEventArgs e)
+        {
+            (this.DataContext as CreationJeuAssiste1ViewModel).preventDrawing(e.Stroke);
+        }
     }
 }

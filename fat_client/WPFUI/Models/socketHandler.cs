@@ -371,6 +371,17 @@ namespace WPFUI.Models
         {
             this._socket.Off("preview_done");
         }
+
+        public void onLobby(BindableCollection<MatchModel> matches) 
+        {
+            this.socket.On("update_matches", (new_matches) => {
+                this.Dispatcher.Invoke(() =>
+                {
+                    matches = JsonConvert.DeserializeObject<BindableCollection<MatchModel>>(new_matches.ToString());
+                });
+                Console.WriteLine("update");
+            });
+        }
     }
 
 }
