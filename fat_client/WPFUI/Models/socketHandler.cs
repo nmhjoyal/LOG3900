@@ -27,6 +27,7 @@ namespace WPFUI.Models
         Socket _socket;
         public bool _canConnect;
         private string _traitJSON;
+        private string _roomToBeCreated;
 
 
         public bool canConnect
@@ -63,6 +64,7 @@ namespace WPFUI.Models
         {
             _userdata = userdata;
             _events = events;
+            _roomToBeCreated = null;
             // TestPOSTWebRequest(user);
             // TestGETWebRequest("Testing get...");
             this._socket = IO.Socket("http://localhost:5000");
@@ -107,7 +109,6 @@ namespace WPFUI.Models
 
             _socket.On("user_joined_room", (feedback) =>
             {
-                Console.WriteLine("3");
                 dynamic magic = JsonConvert.DeserializeObject(feedback.ToString());
                 if (magic.room_joined != null & magic.isPrivate != null)
                 {
@@ -126,12 +127,13 @@ namespace WPFUI.Models
                             _userdata.addJoinedRoom(fb.room_joined);
                         }
                     }
-                    else if (!fb.feedback.status)
+                    else
                     {
                         Console.WriteLine(fb.feedback.log_message);
                     }
                 } else
                 {
+                    Console.WriteLine(magic);
                     Console.WriteLine(magic.feedback.log_message);
                 }
 
@@ -151,17 +153,21 @@ namespace WPFUI.Models
             _socket.On("room_created", (feedback) =>
             {
                 Feedback json = JsonConvert.DeserializeObject<Feedback>(feedback.ToString());
-                Console.WriteLine("Room created !!!");
-                if (json.status)
+                Console.WriteLine("Room created onSocket");
+                if (json.status & _roomToBeCreated != null)
                 {
                     Console.WriteLine(json.log_message);
                     getPublicChannels();
+                    _userdata.addJoinedRoom(new Room(_roomToBeCreated, new Message[0], new Dictionary<string, string>()));
+                    _roomToBeCreated = null;
+                    /* TODO: Ajouter l'avatar du user dans le dictionnaire */
                 }
             });
         }
 
         public void createRoom(string roomID)
         {
+            _roomToBeCreated = roomID;
             CreateRoom cR = new CreateRoom(roomID, false);
             _socket.Emit("create_chat_room", JsonConvert.SerializeObject(cR));
         }
@@ -169,7 +175,7 @@ namespace WPFUI.Models
         public void joinRoom(string roomID)
         {
             Console.WriteLine("tentive de join de : " + roomID);
-            _socket.Emit("join_chat_room", JsonConvert.SerializeObject(roomID));
+            _socket.Emit("join_chat_room", roomID);
         }
 
         public void connectionAttempt()

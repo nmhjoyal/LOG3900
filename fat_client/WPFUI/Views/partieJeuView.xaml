@@ -6,29 +6,29 @@
               xmlns:gif="http://wpfanimatedgif.codeplex.com"
              xmlns:local="clr-namespace:WPFUI.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="900" d:DesignWidth="1340"
+             d:DesignHeight="800" d:DesignWidth="1200"
              FontFamily="Microsoft JhengHei UI Light">
     <Grid Background="#FFF5F5F6" >
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
                 <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="2*" />
                 <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="10*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="6*" />
+                <ColumnDefinition Width="100" />
                 <ColumnDefinition Width="50" />
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="100" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="100" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="600" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="300" />
-                <ColumnDefinition Width="100" />
-                <ColumnDefinition Width="20" />
 
 
         </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="100"/>
+                <RowDefinition Height="80"/>
                 <RowDefinition Height="60"/>
                 <RowDefinition Height="10"/>
                 <RowDefinition Height="20"/>
@@ -36,7 +36,7 @@
                 <RowDefinition Height="20"/>
                 <RowDefinition Height="10"/>
                 <RowDefinition Height="10"/>
-                <RowDefinition Height="500"/>
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="5"/>
                 <RowDefinition Height="40"/>
@@ -78,7 +78,7 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        <Button  x:Name="goBack"  Grid.Column="12" Grid.Row="0" MaxWidth="100" HorizontalAlignment="Right"  Background="#FFBF0B0B" BorderBrush="#FFBF0B0B">
+        <Button  x:Name="goBack"  Grid.Column="12" Grid.Row="1" MaxWidth="100" HorizontalAlignment="Right"  Background="#FFBF0B0B" BorderBrush="#FFBF0B0B">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Foreground="White">Retour</TextBlock>
                 <Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
@@ -112,7 +112,7 @@
         <Border BorderBrush="Black" BorderThickness="3" Grid.ColumnSpan="2" Grid.Row="13" Grid.Column="11"/>
         <Button Grid.Column="12" Grid.Row="13" Content="Indice" Foreground="White"/>
         <StackPanel Grid.Row="13" Grid.Column="11" Orientation="Horizontal">
-            <Image Width="40" gif:ImageBehavior.AnimatedSource="/Resources/questions.gif"/>
+            <Image Width="40" gif:ImageBehavior.AnimatedSource="/Resources/questions.gif" Margin="3,3,3,3"/>
             <TextBlock  VerticalAlignment="Center" TextAlignment="Center" Text="En manque d'inspiration?"/>
         </StackPanel>
     </Grid>
