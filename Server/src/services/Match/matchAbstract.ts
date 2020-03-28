@@ -207,7 +207,7 @@ export default abstract class Match {
 
     public abstract startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): void;
     protected abstract endTurn(io: SocketIO.Server): void;
-    public abstract guess(io: SocketIO.Server, guess: string, username: string): void;
+    public abstract guess(io: SocketIO.Server, guess: string, username: string): Feedback;
     
     protected endMatch(): void {
 

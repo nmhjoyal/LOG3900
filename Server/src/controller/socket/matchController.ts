@@ -103,6 +103,11 @@ export default class MatchController {
         serverHandler.startTurn(io, socket, word);
     }
 
+    @OnMessage("guess")
+    public guess(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() guess: string) {
+        socket.emit("guess_res", JSON.stringify(serverHandler.guess(io, socket, guess)));
+    }
+
     /**
      * 
      * Preview

@@ -153,7 +153,7 @@ export default class MatchHandler {
         return startMatchFeedback;
     }
 
-    public startTurn(io: SocketIO.Server, socket: SocketIO.Socket, word: string, user: PrivateProfile | undefined) {
+    public startTurn(io: SocketIO.Server, socket: SocketIO.Socket, word: string, user: PrivateProfile | undefined): void {
         if (user) {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if(match) {
@@ -177,6 +177,23 @@ export default class MatchHandler {
         } else {
             console.log("You are not signed in.");
         }
+    }
+
+    public guess(io: SocketIO.Server, socket: SocketIO.Socket, guess: string, user: PrivateProfile | undefined): Feedback {
+        let feedback: Feedback = { status: false, log_message: "" };
+
+        if (user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
+            if (match) {
+                feedback = match.guess(io, guess, user.username);
+            } else {
+                console.log("This match does not exist anymore.");
+            }
+        } else {
+            console.log("You are not signed in.");
+        }
+
+        return feedback;
 
     }
 

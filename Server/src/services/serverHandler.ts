@@ -259,7 +259,11 @@ class ServerHandler {
     }
 
     public startTurn(io: SocketIO.Server, socket: SocketIO.Socket, word: string): void {
-        return this.matchHandler.startTurn(io, socket, word, this.getUser(socket.id));
+        this.matchHandler.startTurn(io, socket, word, this.getUser(socket.id));
+    }
+    
+    public guess(io: SocketIO.Server, socket: SocketIO.Socket, guess: string): Feedback {
+        return this.matchHandler.guess(io, socket, guess, this.getUser(socket.id));
     }
 }
 
