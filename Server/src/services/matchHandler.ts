@@ -142,8 +142,8 @@ export default class MatchHandler {
             if (match) {
                 startMatchFeedback = match.startMatch(socket.id, io);
                 startMatchFeedback.feedback.status ?
-                    socket.emit("match_started", JSON.stringify(startMatchFeedback)) :
-                    io.in(match.matchId).emit("match_started", JSON.stringify(startMatchFeedback));
+                    io.in(match.matchId).emit("match_started", JSON.stringify(startMatchFeedback)) :
+                    socket.emit("match_started", JSON.stringify(startMatchFeedback));
             } else {
                 startMatchFeedback.feedback.log_message = "This match does not exist anymore.";
             }
