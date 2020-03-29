@@ -9,12 +9,12 @@ import { Game } from "../../models/drawPoint";
 import { Message } from "../../models/message";
 import Admin from "../../models/admin";
 import { Feedback } from "../../models/feedback";
+import { freeForAllSettings } from "../../models/matchMode";
 
 export default class FreeForAll extends Match {
 
     public constructor(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler) {
-        super(matchId, user, createMatch, chatHandler);
-        this.maxNbVP = 4;
+        super(matchId, user, createMatch, chatHandler, freeForAllSettings);
     }
 
     public async startTurn(io: SocketIO.Server, word: string, isVirtual: boolean): Promise<void> {

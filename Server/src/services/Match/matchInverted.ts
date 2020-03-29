@@ -3,12 +3,17 @@ import PublicProfile from "../../models/publicProfile";
 import ChatHandler from "../chatHandler";
 import { CreateMatch } from "../../models/match";
 import { Feedback } from "../../models/feedback";
+import { freeForAllSettings } from "../../models/matchMode";
+
+
+/**
+ * TO BE DELETED SOON NOT UPDATED.
+ */
 
 export default class Inverted extends Match {
 
     public constructor(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler) {
-        super(matchId, user, createMatch, chatHandler);
-        this.maxNbVP = 0;
+        super(matchId, user, createMatch, chatHandler, freeForAllSettings); 
     }
 
     public startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): void {
@@ -16,10 +21,6 @@ export default class Inverted extends Match {
     }
 
     public endTurn(io: SocketIO.Server): void {
-        throw new Error("Method not implemented.");
-    }
-    
-    public draw(): void {
         throw new Error("Method not implemented.");
     }
 
