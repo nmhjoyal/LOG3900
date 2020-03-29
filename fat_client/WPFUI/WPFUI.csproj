@@ -131,6 +131,7 @@
     <Compile Include="EventModels\createMatchEvent.cs" />
     <Compile Include="EventModels\createTheRoomEvent.cs" />
     <Compile Include="EventModels\DisconnectEvent.cs" />
+    <Compile Include="EventModels\endTurnRoutineEvent.cs" />
     <Compile Include="EventModels\freeDrawEvent.cs" />
     <Compile Include="EventModels\fullScreenChatEvent.cs" />
     <Compile Include="EventModels\gameEvent.cs" />
@@ -157,7 +158,6 @@
     <Compile Include="EventModels\userNameTakenEvent.cs" />
     <Compile Include="EventModels\viewProfileEvent.cs" />
     <Compile Include="EventModels\waitingRoomEvent.cs" />
-    <Compile Include="EventModels\windowChatEvent.cs" />
     <Compile Include="Models\CreateGame.cs" />
     <Compile Include="Models\ISocketHandler.cs" />
     <Compile Include="Models\IUserData.cs" />

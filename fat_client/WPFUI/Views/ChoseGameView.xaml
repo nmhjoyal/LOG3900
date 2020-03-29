@@ -73,7 +73,13 @@
                     <Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
                 </StackPanel>
             </Button>
-            <ItemsControl ItemsSource="{Binding Matches}" Grid.Column="2" Grid.Row="8">
+
+			<Button  x:Name="gameViewTesting"  Grid.ColumnSpan="2" Grid.Column="10" Grid.Row="0" MaxWidth="100" HorizontalAlignment="Right"  Background="#FF60B82E" BorderBrush="#FFBF0B0B">
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Foreground="White">gameView</TextBlock>
+				</StackPanel>
+			</Button>
+			<ItemsControl ItemsSource="{Binding Matches}" Grid.Column="2" Grid.Row="8">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Vertical">

@@ -28,12 +28,19 @@ namespace WPFUI.ViewModels
         public ChoseGameViewModel(IEventAggregator events, ISocketHandler socketHandler)
         {
             _events = events;
+            _events.Subscribe(this);
             _socketHandler = socketHandler;
             this.matches = new BindableCollection<Match>();
             // this._socketHandler.onLobby(this.matches);
             this._socketHandler.onLobby(this.matches);
             this._socketHandler.socket.Emit("get_matches");
         }
+
+        public void gameViewTesting()
+        {
+            _events.PublishOnUIThread(new gameEvent());
+        }
+
         public void goBack()
         {
             this._socketHandler.socket.Off("update_matches");

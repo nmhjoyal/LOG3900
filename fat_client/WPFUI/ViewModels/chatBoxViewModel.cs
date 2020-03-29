@@ -134,11 +134,6 @@ namespace WPFUI.ViewModels
             _events.PublishOnUIThread(new DisconnectEvent());
         }
 
-        public void windowMode()
-        {
-            _events.PublishOnUIThread(new windowChatEvent());
-        }
-
         public void getPublicChannels()
         {
             _socketHandler.getPublicChannels();

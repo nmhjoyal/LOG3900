@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Caliburn.Micro;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,9 +10,11 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WPFUI.EventModels;
 using WPFUI.ViewModels;
 
 namespace WPFUI.Views
@@ -19,9 +22,10 @@ namespace WPFUI.Views
     /// <summary>
     /// Logique d'interaction pour partieJeuView.xaml
     /// </summary>
-    public partial class partieJeuView : UserControl
+    public partial class partieJeuView : UserControl, IHandle<endTurnRoutineEvent>
     {
         partieJeuViewModel _viewModel;
+        
         public partieJeuView()
         {
             InitializeComponent();
@@ -34,6 +38,7 @@ namespace WPFUI.Views
         private void OnLoad(object sender, RoutedEventArgs e)
         {
             _viewModel = DataContext as partieJeuViewModel;
+            (DataContext as partieJeuViewModel).events.Subscribe(this);
         }
 
         private void currentMessage_KeyDown(object sender, KeyEventArgs e)
@@ -42,7 +47,16 @@ namespace WPFUI.Views
             {
                 //  _viewModel.sendMessage(currentMessage.Text);
             }
-
         }
+
+        public async void Handle(endTurnRoutineEvent message)
+        {
+            roundFinishedMessage.Text = "Round " + ((dynamic)message.EndTurnFeedBack).currentRound + " finished !";
+            nextPlayerMessage.Text = "Next player to chose is " + ((dynamic)message.EndTurnFeedBack).drawer;
+            endTurnBox.Visibility = Visibility.Visible;
+            await Task.Delay(4000);
+            endTurnBox.Visibility = Visibility.Hidden;
+        }
+
     }
 }

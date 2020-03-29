@@ -29,6 +29,12 @@ namespace WPFUI.ViewModels
             fillAvatars();
 
         }
+
+        public IEventAggregator events
+        {
+            get { return _events; }
+        }
+
         public string currentMessage
         {
             get { return _currentMessage; }
@@ -108,6 +114,16 @@ namespace WPFUI.ViewModels
             }
 
         }
+
+        public void mockEndTurn()
+        {
+            dynamic endTurn = new System.Dynamic.ExpandoObject();
+            endTurn.currentRound = 1;
+            endTurn.drawer = "Karima";
+
+            _events.PublishOnUIThread(new endTurnRoutineEvent(endTurn));
+        }
+
         public void Handle(refreshMessagesEvent message)
         {
             this._messages = message._messages;
