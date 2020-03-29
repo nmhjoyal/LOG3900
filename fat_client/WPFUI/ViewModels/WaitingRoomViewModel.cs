@@ -99,12 +99,18 @@ namespace WPFUI.ViewModels
         }
         public void start()
         {
-            _events.PublishOnUIThread(new gameEvent());
+            this._socketHandler.socket.Emit("start_match");
+            // _events.PublishOnUIThread(new gameEvent());
         }
 
         public void addVirtualPlayer()
         {
             this._socketHandler.socket.Emit("add_vp");
+        }
+
+        public void removeVirtualPlayer()
+        {
+            this._socketHandler.socket.Emit("remove_vp");
         }
         public void Handle(refreshMessagesEvent message)
         {

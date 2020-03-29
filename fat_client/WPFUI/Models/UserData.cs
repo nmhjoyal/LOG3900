@@ -20,6 +20,7 @@ namespace WPFUI.Models
         private BindableCollection<SelectableRoom> _selectablePublicRooms;
         private BindableCollection<SelectableRoom> _selectableJoinedRooms;
         private string _matchId;
+        private int _nbRounds;
         private IEventAggregator _events;
 
         public string avatarName
@@ -80,6 +81,12 @@ namespace WPFUI.Models
         {
             get { return _matchId; }
             set { _matchId = value; }
+        }
+
+        public int nbRounds
+        {
+            get { return _nbRounds; }
+            set { _nbRounds = value; }
         }
         public UserData(IEventAggregator events)
         {
