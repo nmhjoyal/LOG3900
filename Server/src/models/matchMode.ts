@@ -52,7 +52,7 @@ export const sprintSoloSettings: MatchSettings = {
     MAX_NB_PLAYERS : 2, // 1 human player + 1 virtual player.
     MIN_NB_VP : 1,  
     MAX_NB_VP : 1, 
-    MIN_NB_HP : 1,      // otherwise it is a sprintSolo 
+    MIN_NB_HP : 1,
     MAX_NB_HP : 1 
 }
 export const sprintCoopSettings: MatchSettings = {

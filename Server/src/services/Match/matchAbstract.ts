@@ -76,7 +76,6 @@ export default abstract class Match {
         return joinRoomFeedback;
     }
 
-    // boolean : true -> delete match
     public async leaveMatch(io: SocketIO.Server, socket: SocketIO.Socket, user: PrivateProfile): Promise<boolean> {
         const player: Player | undefined = this.getPlayer(user.username);
         let deleteMatch: boolean = false;
@@ -169,12 +168,6 @@ export default abstract class Match {
         return feedback;
     }
 
-    /**
-     * 
-     * From the moment start match is called the server takes over the conversation with the players.
-     * The match routine starts. The routine varies depending on the match mode.
-     *
-     */
     public startMatch(username: string, io: SocketIO.Server): StartMatchFeedback {
         const player: Player | undefined = this.getPlayer(username);
         let startMatchFeedback: StartMatchFeedback = { feedback : { status: false, log_message: "" }, nbRounds : 0 };
