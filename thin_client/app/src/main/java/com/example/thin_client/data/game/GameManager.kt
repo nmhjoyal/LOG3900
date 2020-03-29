@@ -14,4 +14,6 @@ object GameManager {
     var oneVsOneMatchList = ArrayList<MatchInfos>()
     var freeForAllMatchList = ArrayList<MatchInfos>()
 
+    var players = ArrayList<Player>()
+
 }

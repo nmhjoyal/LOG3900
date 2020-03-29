@@ -47,4 +47,5 @@ object SocketEvent {
     const val MATCH_STARTED = "match_started"
     const val GET_MATCHES = "get_matches"
     const val UPDATE_MATCHES = "update_matches"
+    const val UPDATE_PLAYERS = "update_players"
 }

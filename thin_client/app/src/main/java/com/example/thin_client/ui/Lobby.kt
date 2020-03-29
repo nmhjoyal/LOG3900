@@ -174,8 +174,8 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
     }
 
     private fun setupSocketEvents() {
-        SocketHandler.socket!!
-            .on(SocketEvent.UPDATE_MATCHES, ({data ->
+        SocketHandler.socket
+        ?.on(SocketEvent.UPDATE_MATCHES, ({data ->
                 val gson = Gson()
                 val matchInfosFeedback=
                     gson.fromJson(data.first().toString(), Array<MatchInfos>::class.java)
@@ -201,7 +201,7 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
                     }
                 }
             }))
-            .on(SocketEvent.USER_SIGNED_IN, ({ data ->
+            ?.on(SocketEvent.USER_SIGNED_IN, ({ data ->
                 val gson = Gson()
                 val signInFeedback =
                     gson.fromJson(data.first().toString(), SignInFeedback::class.java)
@@ -217,7 +217,7 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
                     SocketHandler.disconnect()
                 }
             }))
-            .on(Socket.EVENT_CONNECT_ERROR, ({
+            ?.on(Socket.EVENT_CONNECT_ERROR, ({
                 Handler(Looper.getMainLooper()).post(Runnable {
                     val alertDialog = AlertDialog.Builder(this)
                     alertDialog.setTitle(R.string.error_connect_title)
@@ -231,7 +231,7 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
                 })
                 SocketHandler.disconnect()
             }))
-            .on(SocketEvent.USER_SIGNED_OUT, ({ data ->
+            ?.on(SocketEvent.USER_SIGNED_OUT, ({ data ->
                 val feedback = Gson().fromJson(data.first().toString(),Feedback::class.java)
                     PreferenceHandler(this).resetUserPrefs()
                     val intent = Intent(applicationContext, LoginActivity::class.java)
@@ -245,7 +245,7 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
                         ).show()
                     })
             }))
-            .on(SocketEvent.USER_JOINED_ROOM, ({ data ->
+            ?.on(SocketEvent.USER_JOINED_ROOM, ({ data ->
                 val feedback = Gson().fromJson(data.first().toString(), JoinRoomFeedback::class.java)
                 if (feedback.feedback.status) {
                     RoomManager.addRoom(feedback.room_joined!!)
@@ -264,7 +264,7 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
                 })
 
             }))
-            .on(Socket.EVENT_DISCONNECT, ({
+            ?.on(Socket.EVENT_DISCONNECT, ({
                 SocketHandler.socket = null
                 SocketHandler.isLoggedIn = false
             }))
