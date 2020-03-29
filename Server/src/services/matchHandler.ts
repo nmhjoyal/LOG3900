@@ -61,13 +61,13 @@ export default class MatchHandler {
     }
 
     public async joinMatch(io: SocketIO.Server, socket: SocketIO.Socket, matchId: string, user: PrivateProfile | undefined): Promise<JoinRoomFeedback> {
+        const match: Match | undefined = this.currentMatches.get(matchId);
         let joinRoomFeedback: JoinRoomFeedback = { feedback: { status: false, log_message: "" }, room_joined: null, isPrivate: true };
 
         if (user) {
-            const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
                 joinRoomFeedback = await match.joinMatch(io, socket, user);
-                socket.broadcast.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
+                io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
             } else {
                 joinRoomFeedback.feedback.log_message = "This match does not exist anymore.";
             }
@@ -86,7 +86,7 @@ export default class MatchHandler {
             if (match) {
                 const deleteMatch: boolean = await match.leaveMatch(io, socket, user);
                 if (deleteMatch) this.currentMatches.delete(match.matchId);
-                socket.broadcast.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
+                io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
                 feedback.status = true;
                 feedback.log_message = "You left the match.";
             } else {
@@ -141,7 +141,8 @@ export default class MatchHandler {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
                 startMatchFeedback = match.startMatch(socket.id, io);
-                if (startMatchFeedback.feedback.status) 
+                startMatchFeedback.feedback.status ?
+                    socket.emit("match_started", JSON.stringify(startMatchFeedback)) :
                     io.in(match.matchId).emit("match_started", JSON.stringify(startMatchFeedback));
             } else {
                 startMatchFeedback.feedback.log_message = "This match does not exist anymore.";
