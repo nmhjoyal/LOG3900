@@ -20,9 +20,11 @@ namespace WPFUI.ViewModels
         private BindableCollection<Models.Message> _messages;
         private string _currentMessage;
         public BindableCollection<dynamic> _wordChoices;
+        public BindableCollection<dynamic> _turnScores;
         public int _currentRound;
         public int _timerContent;
         public DispatcherTimer _timer;
+        private int _roundDuration;
 
         public partieJeuViewModel(IEventAggregator events, ISocketHandler socketHandler, IUserData userdata)
         {
@@ -32,10 +34,12 @@ namespace WPFUI.ViewModels
             _userData = userdata;
             messages = userdata.messages;
             _timer = new DispatcherTimer();
-            _currentRound = 1;
-            _timerContent = 30;
-            fillAvatars();
             _wordChoices = new BindableCollection<dynamic>();
+            _turnScores = new BindableCollection<dynamic>();
+            _currentRound = 1;
+            _roundDuration = 30;
+            _timerContent = _roundDuration;
+            fillAvatars();
             startTimer();
         }
 
@@ -53,6 +57,9 @@ namespace WPFUI.ViewModels
             if (timerContent != 0)
             {
                 timerContent = _timerContent - 1;
+            } else
+            {
+                _timer.Stop();
             }
         }
 
@@ -72,6 +79,11 @@ namespace WPFUI.ViewModels
         public BindableCollection<dynamic> wordChoices
         {
             get { return _wordChoices; }
+        }
+
+        public BindableCollection<dynamic> turnScores
+        {
+            get { return _turnScores; }
         }
 
         public IEventAggregator events
@@ -141,7 +153,6 @@ namespace WPFUI.ViewModels
 
         public void sendMessage(string content = null)
         {
-            Console.WriteLine("message sending attempted");
             if (content != null)
             {
                 _userData.currentMessage = content;
@@ -166,6 +177,7 @@ namespace WPFUI.ViewModels
             endTurn.drawer = "Karima";
             endTurn.nextIsYou = true;
             newWords();
+            newScores();
             _events.PublishOnUIThread(new endTurnRoutineEvent(endTurn));
         }
 
@@ -184,6 +196,31 @@ namespace WPFUI.ViewModels
             wordChoices.Refresh();
         }
 
+        public void newScores()
+        {
+            _turnScores.Clear();
+            dynamic score1 = new System.Dynamic.ExpandoObject();
+            score1.position = 1;
+            score1.name = "Karima";
+            score1.score = 200;
+            dynamic score2 = new System.Dynamic.ExpandoObject();
+            score2.position = 2;
+            score2.name = "Seb";
+            score2.score = 150;
+
+            dynamic score3 = new System.Dynamic.ExpandoObject();
+            score3.position = 2;
+            score3.name = "Nicowle";
+            score3.score = 140;
+
+            _turnScores.Add(score1);
+            _turnScores.Add(score2);
+            _turnScores.Add(score3);
+            turnScores.Refresh();
+        }
+
+
+
         public void Handle(refreshMessagesEvent message)
         {
             this._messages = message._messages;
@@ -192,7 +229,6 @@ namespace WPFUI.ViewModels
 
         public void Handle(addMessageEvent message)
         {
-            Console.WriteLine("hello");
             this._messages.Add(message.message);
             NotifyOfPropertyChange(() => messages);
         }

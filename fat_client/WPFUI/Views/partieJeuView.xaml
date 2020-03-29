@@ -13,7 +13,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50"/>
                 <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="3*" />
                 <ColumnDefinition Width="10" />
@@ -58,7 +58,7 @@
         <TextBlock FontSize="14" Grid.Row="5" TextAlignment="Center" Grid.Column="7" Text="{Binding currentRound}"/>
         <TextBlock FontSize="14" Grid.ColumnSpan="3" Grid.Row="3" TextAlignment="Center" Grid.Column="9" Text="Mot à deviner"/>
         <TextBlock FontSize="14" Grid.Row="5" TextAlignment="Center" Grid.Column="9" Name="word"/>
-        <InkCanvas Grid.Column="7" Grid.Row="8" Grid.RowSpan="7" Background="White" Grid.ColumnSpan="3"/>
+        <InkCanvas Grid.Column="7" Grid.Row="8" Grid.RowSpan="4" Background="White" Grid.ColumnSpan="3"/>
 		<Border  BorderBrush="Black" Grid.ColumnSpan="2" BorderThickness="1" Grid.Column="11" Grid.Row="8"/>
 		<Border  BorderBrush="Black" BorderThickness="1" Grid.Column="7" Grid.Row="8" Grid.RowSpan="4" Grid.ColumnSpan="3"/>
 
@@ -135,7 +135,7 @@
 			</Grid.ColumnDefinitions>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="*"/>
-				<RowDefinition Height="4*"/>
+				<RowDefinition Height="auto"/>
 				<RowDefinition Height="*"/>
 			</Grid.RowDefinitions>
 
@@ -143,7 +143,7 @@
 				<Grid>
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="*"/>
-						<ColumnDefinition Width="2*"/>
+						<ColumnDefinition Width="auto"/>
 						<ColumnDefinition Width="*" />
 					</Grid.ColumnDefinitions>
 					<Grid.RowDefinitions>
@@ -152,14 +152,18 @@
 						<RowDefinition Height="*"/>
 					</Grid.RowDefinitions>
 					<TextBlock Grid.Column="1" Grid.Row="0" Text="Round terminé !" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="22"
-							   Name="roundFinishedMessage"/>
+							   Name="roundFinishedMessage" Margin="0,0,0,20"/>
 					<TextBlock Grid.Column="0" Grid.Row="2" Text="Le prochain joueur à choisir est Karima" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"
 							   Grid.ColumnSpan="3" Name="nextPlayerMessage"/>
-					<ScrollViewer VerticalScrollBarVisibility="Hidden" Grid.Row="1" Grid.Column="1">
-						<ItemsControl>
+					<ScrollViewer VerticalScrollBarVisibility="Visible" Grid.Row="1" Grid.Column="1" FontSize="30" MaxHeight="300" Margin="0,0,0,20">
+						<ItemsControl ItemsSource="{Binding turnScores}">
 							<ItemsControl.ItemTemplate>
 								<DataTemplate>
-									
+									<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
+										<TextBlock Text="{Binding position}"></TextBlock>
+										<TextBlock Text="{Binding name}" Margin="5,0,0,0"></TextBlock>
+										<TextBlock Text="{Binding score}" Margin="5,0,0,0"></TextBlock>
+									</StackPanel>
 								</DataTemplate>
 							</ItemsControl.ItemTemplate>
 						</ItemsControl>
@@ -176,7 +180,7 @@
 			</Grid.ColumnDefinitions>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="*"/>
-				<RowDefinition Height="4*"/>
+				<RowDefinition Height="auto"/>
 				<RowDefinition Height="*"/>
 			</Grid.RowDefinitions>
 
@@ -189,14 +193,14 @@
 					</Grid.ColumnDefinitions>
 					<Grid.RowDefinitions>
 						<RowDefinition Height="*"/>
-						<RowDefinition Height="7*"/>
+						<RowDefinition Height="auto"/>
 						<RowDefinition Height="*"/>
 					</Grid.RowDefinitions>
 					<TextBlock Grid.Column="1" Grid.Row="0" Text="Its your turn to chose !" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="22"
-							   Name="x"/>
+							   Name="x" Margin="0,0,0,20"/>
 					<TextBlock Grid.Column="0" Grid.Row="2" Text="Quick, players are waiting !" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"
 							   Grid.ColumnSpan="3" Name="y"/>
-					<ScrollViewer VerticalScrollBarVisibility="Hidden" Grid.Row="1" Grid.Column="1">
+					<ScrollViewer VerticalScrollBarVisibility="Hidden" Grid.Row="1" Grid.Column="1" Margin="0,0,0,20">
 						<ItemsControl ItemsSource="{Binding wordChoices}" VerticalAlignment="Center">
 							<ItemsControl.ItemTemplate>
 								<DataTemplate>
