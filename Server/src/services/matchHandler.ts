@@ -154,7 +154,7 @@ export default class MatchHandler {
         return startMatchFeedback;
     }
 
-    public startTurn(io: SocketIO.Server, socket: SocketIO.Socket, word: string, user: PrivateProfile | undefined): void {
+    public startTurn(io: SocketIO.Server, word: string, user: PrivateProfile | undefined): void {
         if (user) {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if(match) {
@@ -167,7 +167,7 @@ export default class MatchHandler {
         }
     }
 
-    public sendMessage(io: SocketIO.Server, socket: SocketIO.Socket, message: ClientMessage, user: PrivateProfile | undefined): void {
+    public sendMessage(io: SocketIO.Server, message: ClientMessage, user: PrivateProfile | undefined): void {
         if (user) {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
@@ -180,7 +180,7 @@ export default class MatchHandler {
         }
     }
 
-    public guess(io: SocketIO.Server, socket: SocketIO.Socket, guess: string, user: PrivateProfile | undefined): Feedback {
+    public guess(io: SocketIO.Server, guess: string, user: PrivateProfile | undefined): Feedback {
         let feedback: Feedback = { status: false, log_message: "" };
 
         if (user) {
