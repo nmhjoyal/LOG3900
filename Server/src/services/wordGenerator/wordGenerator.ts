@@ -30,7 +30,7 @@ export default class RandomWordGenerator {
             liner.next();
         }
         const word: string = liner.next().toString();
-        return word.substr(0, word.length - 1);
+        return word.substr(0, word.length - 1);     // removing \r
     }
 }
 
