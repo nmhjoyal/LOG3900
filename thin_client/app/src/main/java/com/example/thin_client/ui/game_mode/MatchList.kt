@@ -67,6 +67,7 @@ class MatchList : Fragment() {
                 tab.customView!!.setBackgroundResource(R.drawable.tab_background)
             }
         })
+
         setupSocketEvents()
     }
 
@@ -88,7 +89,7 @@ class MatchList : Fragment() {
 
     }
 
-    private fun setupTabs() {
+   private fun setupTabs() {
         for (i in 0 until tabLayout.tabCount) {
             val customView = View.inflate(context,R.layout.tab_layout, null)
             val tabName = customView.findViewById(R.id.tab_name) as TextView

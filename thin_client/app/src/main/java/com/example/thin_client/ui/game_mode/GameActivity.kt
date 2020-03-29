@@ -63,8 +63,6 @@ class GameActivity : AppCompatActivity(), ChatFragment.IWordGuessing {
         manager = supportFragmentManager
         setupSocket()
         when (GameManager.currentGameMode) {
-            MatchMode.SOLO -> {
-            }
             MatchMode.COLLABORATIVE-> {}
             MatchMode.FREE_FOR_ALL -> {}
             MatchMode.ONE_ON_ONE -> {}

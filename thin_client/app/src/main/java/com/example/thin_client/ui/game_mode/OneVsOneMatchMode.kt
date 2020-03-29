@@ -7,14 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.thin_client.R
 import com.example.thin_client.data.game.GameManager
-import com.example.thin_client.data.model.MatchInfos
-import com.example.thin_client.data.rooms.RoomManager
-import com.example.thin_client.server.SocketHandler
-import com.example.thin_client.ui.chatrooms.ChatRoomItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import kotlinx.android.synthetic.main.chatrooms_fragment.*
-import kotlinx.android.synthetic.main.games_list.*
+import kotlinx.android.synthetic.main.onevsone_gameslist.*
 
 class OneVsOneMatchMode: Fragment() {
 
@@ -22,7 +17,8 @@ class OneVsOneMatchMode: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        availablegames_rc.adapter = adapter
+        adapter.add(MatchItem("Allllo", 4 ,5))
+        available_onevsone.adapter = adapter
     }
 
 
@@ -31,7 +27,7 @@ class OneVsOneMatchMode: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.games_list, container, false)
+        return inflater.inflate(R.layout.onevsone_gameslist, container, false)
 
     }
 
@@ -42,7 +38,6 @@ class OneVsOneMatchMode: Fragment() {
     }
 
     private fun refreshMatchesAdapter() {
-        adapter.clear()
         var oneVsOneMatchList = GameManager.oneVsOneMatchList
         for (match in oneVsOneMatchList) {
             adapter.add(MatchItem(match.host,match.nbRounds, match.players.size))

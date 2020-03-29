@@ -72,7 +72,7 @@ class ChatFragment : Fragment() {
             }
         }
 
-        editText_chat.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+        editText_chat.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
             if(editText_chat.text.isNotBlank()) {
                 send_button_chat.isEnabled = true
                 if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
@@ -212,7 +212,7 @@ class ChatFragment : Fragment() {
         val addUsername = dialogView.findViewById<EditText>(R.id.add_user_username)
         val inviteListAdapter = GroupAdapter<GroupieViewHolder>()
         var inviteList = arrayListOf<String>()
-        inviteListAdapter.setOnItemClickListener(({ item, view ->
+        inviteListAdapter.setOnItemClickListener(({ item, _ ->
             inviteListAdapter.remove(item)
             inviteListAdapter.notifyDataSetChanged()
             inviteList.remove((item as InviteUserRow).user)

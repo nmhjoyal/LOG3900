@@ -14,7 +14,8 @@ import com.example.thin_client.ui.chatrooms.ChatRoomItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.chatrooms_fragment.*
-import kotlinx.android.synthetic.main.games_list.*
+import kotlinx.android.synthetic.main.collab_gameslist.*
+import kotlinx.android.synthetic.main.onevsone_gameslist.*
 
 class CollabMatchMode: Fragment() {
 
@@ -22,7 +23,8 @@ class CollabMatchMode: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        availablegames_rc.adapter = adapter
+        adapter.add(MatchItem("Allllo", 4 ,5))
+        available_collab.adapter = adapter
     }
 
 
@@ -31,7 +33,7 @@ class CollabMatchMode: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.games_list, container, false)
+        return inflater.inflate(R.layout.collab_gameslist, container, false)
 
     }
 
@@ -42,7 +44,6 @@ class CollabMatchMode: Fragment() {
     }
 
     private fun refreshMatchesAdapter() {
-        adapter.clear()
         var collabMatchList = GameManager.collabModeMatchList
         for (match in collabMatchList) {
             adapter.add(MatchItem(match.host,match.nbRounds, match.players.size))

@@ -181,10 +181,6 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
                     gson.fromJson(data.first().toString(), Array<MatchInfos>::class.java)
                 for(match in matchInfosFeedback) {
                     when(match.matchMode){
-                            MatchMode.SOLO.ordinal ->
-                                if (!GameManager.soloModeMatchList.contains(match)) {
-                                    GameManager.soloModeMatchList.add(match)
-                                }
                             MatchMode.COLLABORATIVE.ordinal ->
                                 if (!GameManager.collabModeMatchList.contains(match)) {
                                     GameManager.collabModeMatchList.add(match)
