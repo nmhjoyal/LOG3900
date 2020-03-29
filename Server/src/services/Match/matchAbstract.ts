@@ -178,12 +178,7 @@ export default abstract class Match {
                 if (nbHumanPlayers > this.ms.MIN_NB_HP || nbHumanPlayers < this.ms.MAX_NB_HP) {
                     const nbVirtualPlayers: number = this.getNbVirtualPlayers();
                     if (nbVirtualPlayers > this.ms.MIN_NB_VP || nbVirtualPlayers < this.ms.MAX_NB_VP) {
-                        this.isStarted = true;
-                        this.drawing = new Drawing(this.matchId);
-                        this.virtualDrawing = new VirtualDrawing(this.matchId, this.timeLimit);
-                        this.currentPlayer = this.players[0].user.username;
-                        this.round = 1;
-                        this.initScores();
+                        this.initMatch();
                         this.endTurn(io);
                         startMatchFeedback.nbRounds = this.nbRounds;
                         startMatchFeedback.feedback.status = true;
@@ -239,6 +234,15 @@ export default abstract class Match {
                 this.scores.set(player.user.username, { scoreTotal: 0, scoreTurn: 0 });
             }
         }
+    }
+
+    protected initMatch(): void {
+        this.isStarted = true;
+        this.drawing = new Drawing(this.matchId);
+        this.virtualDrawing = new VirtualDrawing(this.matchId, this.timeLimit);
+        this.currentPlayer = this.players[0].user.username;
+        this.round = 1;
+        this.initScores();
     }
 
     protected resetScoresTurn(): void {
