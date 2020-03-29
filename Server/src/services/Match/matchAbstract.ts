@@ -90,13 +90,7 @@ export default abstract class Match {
                     }
                 } else {
                     if (player.isHost) {
-                        for(let player of this.players) {
-                            if (!player.isHost && !player.isVirtual) {
-                                player.isHost = true;
-                                io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
-                                break;
-                            }
-                        }
+                        this.assignNewHost(io);
                     } 
                 }
             } else {
@@ -115,11 +109,7 @@ export default abstract class Match {
             if (player.isHost) {
                 if (this.players.length < this.ms.MAX_NB_PLAYERS) {
                     if (this.getNbVirtualPlayers() < this.ms.MAX_NB_VP) {
-                        /* EVENTUALLY, GENERATE RANDOM VP, also need to check if it is already in the players array (so we dont have two identical VP)*/ 
-                        const randomVP: PublicProfile = { username: "Mr Avocado", avatar: "AVOCADO" };
-                        this.players.push(this.createPlayer(randomVP, false, true));
-                        this.chatHandler.findPrivateRoom(this.matchId)?.avatars.set(randomVP.username, randomVP.avatar);
-                        this.chatHandler.notifyAvatarUpdate(io, randomVP, this.matchId);
+                        this.addVP(io);
                         io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
                         feedback.status = true;
                         feedback.log_message = "A virtual player was added.";
@@ -146,12 +136,7 @@ export default abstract class Match {
         if (player) {
             if (player.isHost) {
                 if (this.getNbVirtualPlayers() > this.ms.MIN_NB_VP) {
-                    for(let i: number = this.players.length - 1; i > -1; i--) {
-                        if(this.players[i].isVirtual) {
-                            this.players.splice(i, 1);
-                            break;
-                        }
-                    }
+                    this.removeVP();
                     io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
                     feedback.status = true;
                     feedback.log_message = "A virtual player was removed."
@@ -203,6 +188,17 @@ export default abstract class Match {
         return startMatchFeedback;
     }
 
+    protected endMatch(): void {
+
+    }
+
+    /**
+     * 
+     * 
+     * Drawing in real time.
+     * 
+     * 
+     */
     protected stroke(socket: SocketIO.Socket, stroke: Stroke): void {
         this.drawing.stroke(socket, stroke);
     }
@@ -221,10 +217,6 @@ export default abstract class Match {
 
     protected clear(socket: SocketIO.Socket): void {
         this.drawing.clear(socket);
-    }
-    
-    protected endMatch(): void {
-
     }
 
     protected initScores(): void {
@@ -273,6 +265,33 @@ export default abstract class Match {
             this.scores.set(username, updatedScore);
         } else {
             console.log("error while updating score of : " + username);       
+        }
+    }
+
+    protected assignNewHost(io: SocketIO.Server): void {
+        for(let player of this.players) {
+            if (!player.isHost && !player.isVirtual) {
+                player.isHost = true;
+                io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
+                break;
+            }
+        }
+    }
+
+    protected addVP(io: SocketIO.Server): void {   
+        /* EVENTUALLY, GENERATE RANDOM VP, also need to check if it is already in the players array (so we dont have two identical VP)*/ 
+        const randomVP: PublicProfile = { username: "Mr Avocado", avatar: "AVOCADO" };
+        this.players.push(this.createPlayer(randomVP, false, true));
+        this.chatHandler.findPrivateRoom(this.matchId)?.avatars.set(randomVP.username, randomVP.avatar);
+        this.chatHandler.notifyAvatarUpdate(io, randomVP, this.matchId);
+    }
+
+    protected removeVP(): void {
+        for(let i: number = this.players.length - 1; i >= 0; i--) {
+            if(this.players[i].isVirtual) {
+                this.players.splice(i, 1);
+                break;
+            }
         }
     }
 
