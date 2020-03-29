@@ -166,6 +166,19 @@
             app:srcCompat="@drawable/ic_delete_24px"/>
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/word_to_draw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="true"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="18sp"
+        android:layout_margin="8dp"
+        android:padding="8dp"
+        android:background="@drawable/chat_border"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <LinearLayout
         android:id="@+id/colour_options"
         android:layout_width="match_parent"

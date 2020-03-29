@@ -9,11 +9,12 @@ object GameManager {
     val tabNames = arrayListOf("Collaborative", "Solo" ,"Free-for-all", "One-on-one")
 
 
-    var soloModeMatchList =  ArrayList<MatchInfos>()
-    var collabModeMatchList =  ArrayList<MatchInfos>()
-    var oneVsOneMatchList = ArrayList<MatchInfos>()
-    var freeForAllMatchList = ArrayList<MatchInfos>()
+//    var soloModeMatchList =  ArrayList<MatchInfos>()
+//    var collabModeMatchList =  ArrayList<MatchInfos>()
+//    var oneVsOneMatchList = ArrayList<MatchInfos>()
+//    var freeForAllMatchList = ArrayList<MatchInfos>()
 
+    var tempFullMatchList = ArrayList<MatchInfos>()
     var players = ArrayList<Player>()
 
 }

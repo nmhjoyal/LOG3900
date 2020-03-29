@@ -43,9 +43,9 @@ class FreeForAllMatchMode: Fragment() {
 
     private fun refreshMatchesAdapter() {
         adapter.clear()
-        var freeForAllMatchList = GameManager.freeForAllMatchList
-        for (match in freeForAllMatchList) {
-            adapter.add(MatchItem(match.host,match.nbRounds, match.players.size))
-        }
+//        var freeForAllMatchList = GameManager.freeForAllMatchList
+//        for (match in freeForAllMatchList) {
+//            adapter.add(MatchItem(match.host,match.nbRounds, match.players.size))
+//        }
     }
 }

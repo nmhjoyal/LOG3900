@@ -26,8 +26,6 @@ object SocketEvent {
     const val UPDATE_PROFILE = "update_profile"
     const val PROFILE_UPDATED = "profile_updated"
 
-    const val DRAWER = "drawer"
-    const val OBSERVER = "observer"
     const val NEW_POINT = "new_point"
     const val NEW_STROKE = "new_stroke"
     const val STROKE = "stroke"
@@ -47,5 +45,14 @@ object SocketEvent {
     const val MATCH_STARTED = "match_started"
     const val GET_MATCHES = "get_matches"
     const val UPDATE_MATCHES = "update_matches"
+    const val JOIN_MATCH = "join_match"
+    const val MATCH_JOINED = "match_joined"
+    const val LEAVE_MATCH = "leave_match"
+    const val MATCH_LEFT = "match_left"
+    const val START_TURN = "start_turn"
+    const val TURN_STARTED = "turn_started"
+    const val TURN_ENDED = "turn_ended"
+    const val GUESS = "guess"
+    const val GUESS_RESULT = "guess_res"
     const val UPDATE_PLAYERS = "update_players"
 }

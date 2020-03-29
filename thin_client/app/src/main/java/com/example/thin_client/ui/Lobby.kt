@@ -179,27 +179,28 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
                 val gson = Gson()
                 val matchInfosFeedback=
                     gson.fromJson(data.first().toString(), Array<MatchInfos>::class.java)
-                for(match in matchInfosFeedback) {
-                    when(match.matchMode){
-                            MatchMode.SOLO.ordinal ->
-                                if (!GameManager.soloModeMatchList.contains(match)) {
-                                    GameManager.soloModeMatchList.add(match)
-                                }
-                            MatchMode.COLLABORATIVE.ordinal ->
-                                if (!GameManager.collabModeMatchList.contains(match)) {
-                                    GameManager.collabModeMatchList.add(match)
-                                }
-                            MatchMode.FREE_FOR_ALL.ordinal ->
-                                if (!GameManager.freeForAllMatchList.contains(match)) {
-                                    GameManager.freeForAllMatchList.add(match)
-                                }
-                            else -> {
-                                if (!GameManager.oneVsOneMatchList.contains(match)) {
-                                    GameManager.oneVsOneMatchList.add(match)
-                                }
-                        }
-                    }
-                }
+            GameManager.tempFullMatchList = matchInfosFeedback.toCollection(ArrayList<MatchInfos>())
+//                for(match in matchInfosFeedback) {
+//                    when(match.matchMode){
+//                            MatchMode.SOLO.ordinal ->
+//                                if (!GameManager.soloModeMatchList.contains(match)) {
+//                                    GameManager.soloModeMatchList.add(match)
+//                                }
+//                            MatchMode.COLLABORATIVE.ordinal ->
+//                                if (!GameManager.collabModeMatchList.contains(match)) {
+//                                    GameManager.collabModeMatchList.add(match)
+//                                }
+//                            MatchMode.FREE_FOR_ALL.ordinal ->
+//                                if (!GameManager.freeForAllMatchList.contains(match)) {
+//                                    GameManager.freeForAllMatchList.add(match)
+//                                }
+//                            else -> {
+//                                if (!GameManager.oneVsOneMatchList.contains(match)) {
+//                                    GameManager.oneVsOneMatchList.add(match)
+//                                }
+//                        }
+//                    }
+//                }
             }))
             ?.on(SocketEvent.USER_SIGNED_IN, ({ data ->
                 val gson = Gson()

@@ -43,9 +43,9 @@ class OneVsOneMatchMode: Fragment() {
 
     private fun refreshMatchesAdapter() {
         adapter.clear()
-        var oneVsOneMatchList = GameManager.oneVsOneMatchList
-        for (match in oneVsOneMatchList) {
-            adapter.add(MatchItem(match.host,match.nbRounds, match.players.size))
-        }
+//        var oneVsOneMatchList = GameManager.oneVsOneMatchList
+//        for (match in oneVsOneMatchList) {
+//            adapter.add(MatchItem(match.host,match.nbRounds, match.players.size))
+//        }
     }
 }

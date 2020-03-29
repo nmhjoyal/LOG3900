@@ -7,6 +7,7 @@ import android.widget.SeekBar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.thin_client.R
+import com.example.thin_client.data.game.GameArgs
 import kotlinx.android.synthetic.main.free_draw_fragment.*
 
 private const val PERCENT = 100f
@@ -19,6 +20,15 @@ class DrawerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        val word = arguments!!.getString(GameArgs.CHOSEN_WORD)
+        if (word != null) {
+            word_to_draw.text = word
+            word_to_draw.bringToFront()
+        } else {
+            word_to_draw.visibility = View.GONE
+        }
 
         trash.setOnClickListener(({
             draw_view.clearCanvas()

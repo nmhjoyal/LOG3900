@@ -43,9 +43,9 @@ class SoloMatchMode: Fragment() {
 
     private fun refreshMatchesAdapter() {
         adapter.clear()
-        var soloMatchList = GameManager.soloModeMatchList
-        for (match in soloMatchList) {
-            adapter.add(MatchItem(match.host,match.nbRounds, match.players.size))
-        }
+//        var soloMatchList = GameManager.soloModeMatchList
+//        for (match in soloMatchList) {
+//            adapter.add(MatchItem(match.host,match.nbRounds, match.players.size))
+//        }
     }
 }

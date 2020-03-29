@@ -75,6 +75,7 @@ class WaitingRoom : Fragment() {
             ?.on(SocketEvent.UPDATE_PLAYERS, ({ data ->
                 val playerUpdate =
                     Gson().fromJson(data.first().toString(), Array<Player>::class.java)
+                GameManager.players = playerUpdate.toCollection(ArrayList())
             }))
     }
 }

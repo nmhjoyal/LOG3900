@@ -96,8 +96,20 @@
         android:layout_margin="8dp"
         android:text="@string/send_button"
         android:textColor="@color/color_white"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/send_guess"
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@drawable/button_primary_selector"/>
+    <Button
+        android:id="@+id/send_guess"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:enabled="false"
+        android:layout_margin="8dp"
+        android:text="@string/send_guess"
+        android:textColor="@color/color_white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/button_guess_selector"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

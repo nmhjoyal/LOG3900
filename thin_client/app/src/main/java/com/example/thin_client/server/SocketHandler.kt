@@ -145,9 +145,8 @@ object SocketHandler {
         socket!!.emit(SocketEvent.CREATE_MATCH, args)
     }
 
-    fun startMatch(matchParams: StartMatch) {
-        val args = Gson().toJson(matchParams)
-        socket!!.emit(SocketEvent.START_MATCH, args)
+    fun startMatch() {
+        socket!!.emit(SocketEvent.START_MATCH)
     }
 
     fun getDrawing() {
@@ -164,5 +163,23 @@ object SocketHandler {
         socket!!.emit(SocketEvent.GET_MATCHES)
     }
 
+    fun joinMatch(matchId: String) {
+        val args = Gson().toJson(matchId)
+        socket!!.emit(SocketEvent.JOIN_MATCH, args)
+    }
+
+    fun leaveMatch() {
+        socket!!.emit(SocketEvent.LEAVE_MATCH)
+    }
+
+    fun startTurn(word: String) {
+        val args = Gson().toJson(word)
+        socket!!.emit(SocketEvent.START_TURN, args)
+    }
+
+    fun sendGuess(guess: String) {
+        val args = Gson().toJson(guess)
+        socket!!.emit(SocketEvent.GUESS, args)
+    }
 
 }

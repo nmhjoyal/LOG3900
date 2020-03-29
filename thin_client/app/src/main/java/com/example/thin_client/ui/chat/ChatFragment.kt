@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.thin_client.R
 import com.example.thin_client.data.AvatarID
+import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.Message
 import com.example.thin_client.data.app_preferences.PreferenceHandler
 import com.example.thin_client.data.game.GameArgs
@@ -35,11 +36,7 @@ class ChatFragment : Fragment() {
     private var roomID : String ?= ""
     private val admin : String ="Admin"
     private lateinit var userAvatarID: AvatarID
-    var wordGuessingListener: IWordGuessing? = null
 
-    interface IWordGuessing {
-        fun sendGuess(word: String)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -55,6 +52,8 @@ class ChatFragment : Fragment() {
             back_button.visibility = View.GONE
             leave_button.visibility = View.GONE
             invite_user_button.visibility = View.GONE
+        } else {
+            send_guess.visibility = View.GONE
         }
 
         retreiveExistingMessages()
@@ -67,7 +66,17 @@ class ChatFragment : Fragment() {
         send_button_chat.setOnClickListener {
             if (editText_chat.text.isNotBlank()) {
                 send_button_chat.isEnabled = true
+                send_guess.isEnabled = true
                 SocketHandler.sendMessage(editText_chat.text.toString(), roomID!!)
+                editText_chat.setText("")
+            }
+        }
+
+        send_guess.setOnClickListener {
+            if (editText_chat.text.isNotBlank()) {
+                send_button_chat.isEnabled = true
+                send_guess.isEnabled = true
+                SocketHandler.sendGuess(editText_chat.text.toString())
                 editText_chat.setText("")
             }
         }
@@ -75,6 +84,7 @@ class ChatFragment : Fragment() {
         editText_chat.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
             if(editText_chat.text.isNotBlank()) {
                 send_button_chat.isEnabled = true
+                send_guess.isEnabled = true
                 if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
                     SocketHandler.sendMessage(editText_chat.text.replace("\\n".toRegex(), ""), roomID!!)
                     editText_chat.setText("")
@@ -93,19 +103,12 @@ class ChatFragment : Fragment() {
 
         editText_chat.afterTextChanged {
             send_button_chat.isEnabled = editText_chat.text.isNotBlank()
+            send_guess.isEnabled = editText_chat.text.isNotBlank()
         }
 
         invite_user_button.setOnClickListener(({
             showInviteDialog()
         }))
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        wordGuessingListener = context as? IWordGuessing
-        if (wordGuessingListener == null) {
-            Toast.makeText(context, "Cannot start a new game at this time.", Toast.LENGTH_LONG).show()
-        }
     }
 
     override fun onCreateView(
@@ -171,6 +174,17 @@ class ChatFragment : Fragment() {
                     }
                 })
             }))
+            ?.on(SocketEvent.GUESS_RESULT, ({ data ->
+                val response = Gson().fromJson(data.first().toString(), Feedback::class.java)
+                Handler(Looper.getMainLooper()).post(Runnable {
+                    if (response.status) {
+                        send_guess.isEnabled = false
+                    } else {
+                        showAdminMessage(response.log_message)
+                    }
+                })
+
+            }))
     }
 
     private fun showToMessage(text: String, date: Long){
@@ -179,7 +193,6 @@ class ChatFragment : Fragment() {
         if (recyclerview_chat != null){
             recyclerview_chat.scrollToPosition(adapter.itemCount - 1)
         }
-        wordGuessingListener?.sendGuess(trimmedText)
     }
 
     private fun showFromMessage(text: String, avatarID: AvatarID, author:String, date: Long) {
@@ -187,7 +200,6 @@ class ChatFragment : Fragment() {
         if (recyclerview_chat != null){
             recyclerview_chat.scrollToPosition(adapter.itemCount - 1)
         }
-        wordGuessingListener?.sendGuess(text)
     }
 
     private fun showAdminMessage(text:String){

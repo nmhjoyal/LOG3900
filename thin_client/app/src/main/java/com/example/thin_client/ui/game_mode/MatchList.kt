@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,20 +13,20 @@ import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.thin_client.R
-import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.game.CreateMatch
 import com.example.thin_client.data.game.CreateMatchFeedback
 import com.example.thin_client.data.game.GameManager
 import com.example.thin_client.data.game.GameManager.tabNames
 import com.example.thin_client.data.game.MatchMode
-import com.example.thin_client.data.model.MatchInfos
+import com.example.thin_client.data.rooms.JoinRoomFeedback
 import com.example.thin_client.data.rooms.RoomManager
 import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.activity_games_list.*
-import kotlinx.android.synthetic.main.chatrooms_fragment.*
 import java.util.*
 
 
@@ -39,6 +38,8 @@ class MatchList : Fragment() {
 
     var gameStartedListener: IGameStarter? = null
 
+    private val adapter = GroupAdapter<GroupieViewHolder>()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -48,6 +49,17 @@ class MatchList : Fragment() {
                 showCreateMatchDialog(context)
             }
         }
+
+        adapter.setOnItemClickListener { item, v ->
+            val matchId = (item as MatchItem).matchId
+            SocketHandler.joinMatch(matchId)
+        }
+
+        for (match in GameManager.tempFullMatchList) {
+            adapter.add(MatchItem(match.matchId, match.host, match.nbRounds, match.players.size))
+        }
+        match_list.adapter = adapter
+
         setupTabs()
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -150,6 +162,17 @@ class MatchList : Fragment() {
                 val feedback = Gson().fromJson(data.first().toString(), CreateMatchFeedback::class.java)
                 if (feedback.feedback.status) {
                     RoomManager.currentRoom = feedback.matchId
+                    gameStartedListener?.startGame()
+                } else {
+                    Handler(Looper.getMainLooper()).post(({
+                        Toast.makeText(context, feedback.feedback.log_message, Toast.LENGTH_LONG).show()
+                    }))
+                }
+            }))
+            .on(SocketEvent.MATCH_JOINED, ({ data ->
+                val feedback = Gson().fromJson(data.first().toString(), JoinRoomFeedback::class.java)
+                if (feedback.feedback.status) {
+                    RoomManager.currentRoom = feedback.room_joined!!.id
                     gameStartedListener?.startGame()
                 } else {
                     Handler(Looper.getMainLooper()).post(({
