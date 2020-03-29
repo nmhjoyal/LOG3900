@@ -447,12 +447,39 @@ namespace WPFUI.Models
                     this.offWaitingRoom();
                 }
             });
+
+            this.socket.On("vp_added", (feedback) =>
+            {
+                Console.WriteLine(JsonConvert.DeserializeObject(feedback.ToString()));
+            });
+
+            this.socket.On("vp_removed", (feedback) =>
+            {
+                Console.WriteLine(JsonConvert.DeserializeObject(feedback.ToString()));
+            });
+
+            this.socket.On("match_started", (startMatchFeedback) =>
+            {
+                dynamic json = JsonConvert.DeserializeObject(startMatchFeedback.ToString());
+                if((Boolean)json.feedback.status)
+                {
+                    this._userdata.nbRounds = (int)json.nbRounds;
+                    _events.PublishOnUIThread(new gameEvent());
+                    this.offWaitingRoom();
+                } else
+                {
+                    Console.WriteLine((string)json.feedback.log_message);
+                }
+            });
         }
 
         public void offWaitingRoom()
         {
             this.socket.Off("update_players");
             this.socket.Off("match_left");
+            this.socket.Off("vp_added");
+            this.socket.Off("vp_removed");
+            this.socket.Off("match_started");
         }
     }
 
