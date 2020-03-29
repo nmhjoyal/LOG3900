@@ -58,7 +58,7 @@ export default abstract class Match {
         let joinRoomFeedback: JoinRoomFeedback = { feedback: { status: false, log_message: "" }, room_joined: null, isPrivate: true };
 
         if (!this.isStarted) {
-            if (this.players.length > this.ms.MAX_NB_PLAYERS) {
+            if (this.players.length < this.ms.MAX_NB_PLAYERS) {
                 if (this.getNbHumanPlayers() < this.ms.MAX_NB_HP) {
                     joinRoomFeedback = await this.chatHandler.joinChatRoom(io, socket, this.matchId, user);
                     this.players.push(this.createPlayer(user, false, false));
@@ -113,7 +113,7 @@ export default abstract class Match {
 
         if (player) {
             if (player.isHost) {
-                if (this.players.length > this.ms.MAX_NB_PLAYERS) {
+                if (this.players.length < this.ms.MAX_NB_PLAYERS) {
                     if (this.getNbVirtualPlayers() < this.ms.MAX_NB_VP) {
                         /* EVENTUALLY, GENERATE RANDOM VP, also need to check if it is already in the players array (so we dont have two identical VP)*/ 
                         const randomVP: PublicProfile = { username: "Mr Avocado", avatar: "AVOCADO" };
