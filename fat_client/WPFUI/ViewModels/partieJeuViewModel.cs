@@ -18,7 +18,8 @@ namespace WPFUI.ViewModels
         private IUserData _userData;
         private BindableCollection<Models.Message> _messages;
         private string _currentMessage;
-       
+        public BindableCollection<dynamic> _wordChoices;
+
         public partieJeuViewModel(IEventAggregator events, ISocketHandler socketHandler, IUserData userdata)
         {
             _events = events;
@@ -27,7 +28,13 @@ namespace WPFUI.ViewModels
             _userData = userdata;
             messages = userdata.messages;
             fillAvatars();
+            _wordChoices = new BindableCollection<dynamic>();
 
+        }
+
+        public BindableCollection<dynamic> wordChoices
+        {
+            get { return _wordChoices; }
         }
 
         public IEventAggregator events
@@ -121,8 +128,23 @@ namespace WPFUI.ViewModels
             endTurn.currentRound = 1;
             endTurn.drawer = "Karima";
             endTurn.nextIsYou = true;
-
+            newWords();
             _events.PublishOnUIThread(new endTurnRoutineEvent(endTurn));
+        }
+
+        public void newWords()
+        {
+            _wordChoices.Clear();
+            dynamic word1 = new System.Dynamic.ExpandoObject();
+            word1.word = "Corona";
+            dynamic word2 = new System.Dynamic.ExpandoObject();
+            word2.word = "Coors Lite";
+            dynamic word3 = new System.Dynamic.ExpandoObject();
+            word3.word = "Molson Ex";
+            _wordChoices.Add(word1);
+            _wordChoices.Add(word2);
+            _wordChoices.Add(word3);
+            wordChoices.Refresh();
         }
 
         public void Handle(refreshMessagesEvent message)

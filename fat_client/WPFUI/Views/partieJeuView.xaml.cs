@@ -24,12 +24,14 @@ namespace WPFUI.Views
     /// </summary>
     public partial class partieJeuView : UserControl, IHandle<endTurnRoutineEvent>
     {
-        partieJeuViewModel _viewModel;
+        private partieJeuViewModel _viewModel;
         
         public partieJeuView()
         {
             InitializeComponent();
         }
+
+        
         private void refocus(object sender, RoutedEventArgs e)
         {
             currentMessage.Focus();

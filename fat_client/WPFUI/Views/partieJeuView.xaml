@@ -197,10 +197,10 @@
 					<TextBlock Grid.Column="0" Grid.Row="2" Text="Quick, players are waiting !" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"
 							   Grid.ColumnSpan="3" Name="y"/>
 					<ScrollViewer VerticalScrollBarVisibility="Hidden" Grid.Row="1" Grid.Column="1">
-						<ItemsControl>
+						<ItemsControl ItemsSource="{Binding wordChoices}" VerticalAlignment="Center">
 							<ItemsControl.ItemTemplate>
 								<DataTemplate>
-
+									<TextBlock Text="{Binding word}" HorizontalAlignment="Center" FontSize="30"></TextBlock>
 								</DataTemplate>
 							</ItemsControl.ItemTemplate>
 						</ItemsControl>
