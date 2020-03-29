@@ -120,6 +120,7 @@ namespace WPFUI.ViewModels
             dynamic endTurn = new System.Dynamic.ExpandoObject();
             endTurn.currentRound = 1;
             endTurn.drawer = "Karima";
+            endTurn.nextIsYou = true;
 
             _events.PublishOnUIThread(new endTurnRoutineEvent(endTurn));
         }
