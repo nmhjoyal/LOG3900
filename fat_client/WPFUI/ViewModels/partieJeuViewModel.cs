@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Threading;
 using Caliburn.Micro;
 using WPFUI.EventModels;
 using WPFUI.Models;
@@ -19,6 +20,9 @@ namespace WPFUI.ViewModels
         private BindableCollection<Models.Message> _messages;
         private string _currentMessage;
         public BindableCollection<dynamic> _wordChoices;
+        public int _currentRound;
+        public int _timerContent;
+        public DispatcherTimer _timer;
 
         public partieJeuViewModel(IEventAggregator events, ISocketHandler socketHandler, IUserData userdata)
         {
@@ -27,9 +31,42 @@ namespace WPFUI.ViewModels
             _socketHandler = socketHandler;
             _userData = userdata;
             messages = userdata.messages;
+            _timer = new DispatcherTimer();
+            _currentRound = 1;
+            _timerContent = 30;
             fillAvatars();
             _wordChoices = new BindableCollection<dynamic>();
+            startTimer();
+        }
 
+        public void startTimer()
+        {
+            _timer.Interval = TimeSpan.FromSeconds(1);
+            _timer.Tick += timer_Tick;
+            _timer.Start();
+
+        }
+
+        void timer_Tick(object sender, EventArgs e)
+        {
+         
+            if (timerContent != 0)
+            {
+                timerContent = _timerContent - 1;
+            }
+        }
+
+        public int timerContent
+        {
+            get { return _timerContent; }
+            set { _timerContent = value;
+                  NotifyOfPropertyChange(() => timerContent);
+                }   
+        }
+
+        public int currentRound
+        {
+            get { return _currentRound; }
         }
 
         public BindableCollection<dynamic> wordChoices

@@ -53,9 +53,9 @@
         <Border BorderBrush="Black" BorderThickness="1" Grid.Column="9" Grid.Row="2" Grid.ColumnSpan="4" Grid.RowSpan="5"/>
         <Image Source="/Resources/alarmclock.png" Grid.Column="2" Grid.Row="3" Grid.RowSpan="3"/>
         <TextBlock FontSize="14" Grid.Row="3" TextAlignment="Center" Grid.Column="4" Text="Temps Restant"/>
-        <TextBlock FontSize="14" Grid.Row="5" TextAlignment="Center" Grid.Column="4" Name="tempsRestant"/>
+		<TextBlock FontSize="14" Grid.Row="5" TextAlignment="Center" Grid.Column="4" Text="{Binding timerContent}"/>
         <TextBlock FontSize="14" Grid.Row="3" TextAlignment="Center" Grid.Column="7" Text="Round"/>
-        <TextBlock FontSize="14" Grid.Row="5" TextAlignment="Center" Grid.Column="7" Name="nbRound"/>
+        <TextBlock FontSize="14" Grid.Row="5" TextAlignment="Center" Grid.Column="7" Text="{Binding currentRound}"/>
         <TextBlock FontSize="14" Grid.ColumnSpan="3" Grid.Row="3" TextAlignment="Center" Grid.Column="9" Text="Mot à deviner"/>
         <TextBlock FontSize="14" Grid.Row="5" TextAlignment="Center" Grid.Column="9" Name="word"/>
         <InkCanvas Grid.Column="7" Grid.Row="8" Grid.RowSpan="7" Background="White" Grid.ColumnSpan="3"/>
