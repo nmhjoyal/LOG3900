@@ -17,7 +17,7 @@ class FreeForAllMatchMode : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter.add(MatchItem("Allllo", 4 ,5))
+        adapter.add(MatchItem("A","Allllo", 4 ,5))
         availablefree_for_all.adapter = adapter
 
     }
@@ -39,9 +39,10 @@ class FreeForAllMatchMode : Fragment() {
     }
 
     private fun refreshMatchesAdapter() {
+        adapter.clear()
         var freeForAllMatchList = GameManager.freeForAllMatchList
         for (match in freeForAllMatchList) {
-            adapter.add(MatchItem(match.host, match.nbRounds, match.players.size))
+            adapter.add(MatchItem(match.matchId, match.host, match.nbRounds, match.players.size))
         }
     }
 }

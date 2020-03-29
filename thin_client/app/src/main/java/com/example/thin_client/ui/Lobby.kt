@@ -35,6 +35,7 @@ import com.example.thin_client.ui.chat.ChatFragment
 import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
 import com.example.thin_client.ui.game_mode.GameActivity
 import com.example.thin_client.ui.game_mode.MatchList
+import com.example.thin_client.ui.game_mode.WaitingRoom
 import com.example.thin_client.ui.game_mode.free_draw.FreeDrawActivity
 import com.example.thin_client.ui.leaderboard.LeaderboardActivity
 import com.example.thin_client.ui.login.LoginActivity
@@ -126,6 +127,14 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
         transaction.commit()
     }
 
+    override fun startWaitingRoom() {
+        val transaction = manager.beginTransaction()
+        val waitingRoom = WaitingRoom()
+        transaction.replace(R.id.lobby_menu_container, waitingRoom)
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
+
     private fun showChatRoomsFragment() {
         val transaction = manager.beginTransaction()
         val chatroomsFragment = ChatRoomsFragment()
@@ -133,6 +142,7 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
         transaction.addToBackStack(null)
         transaction.commitAllowingStateLoss()
     }
+
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -189,7 +199,7 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
                                 if (!GameManager.freeForAllMatchList.contains(match)) {
                                     GameManager.freeForAllMatchList.add(match)
                                 }
-                            else -> {
+                            MatchMode.ONE_ON_ONE.ordinal-> {
                                 if (!GameManager.oneVsOneMatchList.contains(match)) {
                                     GameManager.oneVsOneMatchList.add(match)
                                 }

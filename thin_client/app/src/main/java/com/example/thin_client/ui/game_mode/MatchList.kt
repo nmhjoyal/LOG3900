@@ -24,6 +24,7 @@ import com.example.thin_client.data.model.MatchInfos
 import com.example.thin_client.data.rooms.RoomManager
 import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
+import com.example.thin_client.ui.chatrooms.ChatRoomItem
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_games_list.*
@@ -41,8 +42,8 @@ class MatchList : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewpager.adapter = MyPagerAdapter(childFragmentManager)
+
         create_match.setOnClickListener {
             context?.let {context ->
                 showCreateMatchDialog(context)

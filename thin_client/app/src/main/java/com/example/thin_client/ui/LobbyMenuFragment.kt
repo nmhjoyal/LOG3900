@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.example.thin_client.R
+import com.example.thin_client.ui.game_mode.CollabMatchMode
 import kotlinx.android.synthetic.main.lobby_menu_fragment.*
 
 class LobbyMenuFragment : Fragment() {
@@ -15,6 +16,7 @@ class LobbyMenuFragment : Fragment() {
     interface IStartNewFragment {
         fun startGameList()
         fun startFreeDraw()
+        fun startWaitingRoom()
     }
 
     private var startNewFragment: IStartNewFragment? = null

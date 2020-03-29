@@ -11,6 +11,7 @@ class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         return when (position) {
             0 -> CollabMatchMode()
             1 -> FreeForAllMatchMode()
+            2 -> OneVsOneMatchMode()
             else -> {
                 return OneVsOneMatchMode()
             }

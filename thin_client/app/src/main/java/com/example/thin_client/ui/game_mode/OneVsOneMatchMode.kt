@@ -5,19 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.example.thin_client.R
 import com.example.thin_client.data.game.GameManager
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.onevsone_gameslist.*
 
-class OneVsOneMatchMode: Fragment() {
+class OneVsOneMatchMode : Fragment() {
 
     private val adapter = GroupAdapter<GroupieViewHolder>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter.add(MatchItem("Allllo", 4 ,5))
+        adapter.add(MatchItem("C", "Allllo", 4, 5))
+
         available_onevsone.adapter = adapter
     }
 
@@ -38,9 +40,10 @@ class OneVsOneMatchMode: Fragment() {
     }
 
     private fun refreshMatchesAdapter() {
+        adapter.clear()
         var oneVsOneMatchList = GameManager.oneVsOneMatchList
         for (match in oneVsOneMatchList) {
-            adapter.add(MatchItem(match.host,match.nbRounds, match.players.size))
+            adapter.add(MatchItem(match.matchId, match.host, match.nbRounds, match.players.size))
         }
     }
 }
