@@ -22,14 +22,15 @@ export default class RandomWordGenerator {
     }
 
     private static getRandomWord(difficulty: Difficulty): string {
-        const liner = new LineByLine('../../services/wordGenerator/wordList' + difficulty + '.txt');
+        const liner = new LineByLine(__dirname + '/wordList' + difficulty + '.txt');
         const numberOfLines = liner.next();
         const randomLine = Math.floor(Math.random() * numberOfLines);
 
         for (let i = 0; i < randomLine; i++) {
             liner.next();
         }
-        return liner.next();
+        const word: string = liner.next().toString();
+        return word.substr(0, word.length - 1);     // removing \r
     }
 }
 

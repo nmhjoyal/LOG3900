@@ -3,14 +3,14 @@ import PublicProfile from "../../models/publicProfile";
 import ChatHandler from "../chatHandler";
 import { CreateMatch } from "../../models/match";
 import { Feedback } from "../../models/feedback";
+import { sprintCoopSettings } from "../../models/matchMode";
 
 export default class SprintCoop extends Match {
     
     public constructor(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler) {
-        super(matchId, user, createMatch, chatHandler);
+        super(matchId, user, createMatch, chatHandler, sprintCoopSettings);
         // add virtual player 
         // io.in(this.matchId).emit("update_players", JSON.stringify(this.getPlayersPublicProfile()));
-        this.maxNbVP = 0;
     }
 
     public startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): void {
@@ -18,10 +18,6 @@ export default class SprintCoop extends Match {
     }
 
     public endTurn(io: SocketIO.Server): void {
-        throw new Error("Method not implemented.");
-    }
-    
-    public draw(): void {
         throw new Error("Method not implemented.");
     }
 

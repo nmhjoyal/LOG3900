@@ -224,7 +224,7 @@ class ServerHandler {
         const user: PrivateProfile | undefined = this.getUser(socket.id);
         if (user) {
             if (message.roomId.startsWith(RandomMatchIdGenerator.prefix)) {
-                this.matchHandler.sendMessage(io, socket, message, user);
+                this.matchHandler.sendMessage(io, message, user);
             } else {
                 // Send the message
                 this.chatHandler.sendMessage(io, message, user);
@@ -259,11 +259,11 @@ class ServerHandler {
     }
 
     public startTurn(io: SocketIO.Server, socket: SocketIO.Socket, word: string): void {
-        this.matchHandler.startTurn(io, socket, word, this.getUser(socket.id));
+        this.matchHandler.startTurn(io, word, this.getUser(socket.id));
     }
     
     public guess(io: SocketIO.Server, socket: SocketIO.Socket, guess: string): Feedback {
-        return this.matchHandler.guess(io, socket, guess, this.getUser(socket.id));
+        return this.matchHandler.guess(io, guess, this.getUser(socket.id));
     }
 }
 
