@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace WPFUI.EventModels
 {
-    class startTurnRoutineEvent
+    public class startTurnRoutineEvent
     {
+        public startTurnRoutineEvent()
+        {
+
+        }
     }
 }
+

@@ -155,6 +155,7 @@
     <Compile Include="EventModels\roomsRetrievedEvent.cs" />
     <Compile Include="EventModels\sendMessageEvent.cs" />
     <Compile Include="EventModels\signUpEvent.cs" />
+    <Compile Include="EventModels\startTurnRoutineEvent.cs" />
     <Compile Include="EventModels\userNameTakenEvent.cs" />
     <Compile Include="EventModels\viewProfileEvent.cs" />
     <Compile Include="EventModels\waitingRoomEvent.cs" />

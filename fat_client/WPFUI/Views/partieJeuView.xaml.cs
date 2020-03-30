@@ -22,7 +22,7 @@ namespace WPFUI.Views
     /// <summary>
     /// Logique d'interaction pour partieJeuView.xaml
     /// </summary>
-    public partial class partieJeuView : UserControl, IHandle<endTurnRoutineEvent>
+    public partial class partieJeuView : UserControl, IHandle<endTurnRoutineEvent>, IHandle<startTurnRoutineEvent>
     {
         private partieJeuViewModel _viewModel;
         
@@ -74,5 +74,10 @@ namespace WPFUI.Views
 
         }
 
+        public void Handle(startTurnRoutineEvent message)
+        {
+            selectNextDrawingBox.Visibility = Visibility.Hidden;
+            endTurnBox.Visibility = Visibility.Hidden;
+        }
     }
 }
