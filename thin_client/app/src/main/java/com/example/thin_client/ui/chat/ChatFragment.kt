@@ -144,53 +144,55 @@ class ChatFragment : Fragment() {
     }
 
     private fun setupSocketEvents() {
-        SocketHandler.socket
-            ?.on(SocketEvent.NEW_MESSAGE, ({ data ->
-                val jsonData = Gson().fromJson(data.first().toString(), Message::class.java)
-                val username = jsonData.username
-                val timestamp = jsonData.date
-                Handler(Looper.getMainLooper()).post(Runnable {
-                    if (jsonData.roomId == RoomManager.currentRoom) {
-                        when (username) {
-                            admin -> showAdminMessage(jsonData.content)
-                            SocketHandler.user!!.username -> showToMessage(
-                                jsonData.content,
-                                timestamp
-                            )
-                            else -> {
-                                var userAvatar: AvatarID = AvatarID.AVOCADO
-                                val avatarList = RoomManager.roomAvatars[roomID]
-                                if (avatarList !== null) {
-                                    userAvatar =
-                                        getAvatar(RoomManager.roomAvatars[roomID]!![username])
-                                }
-                                showFromMessage(
+        if (SocketHandler.socket != null) {
+            SocketHandler.socket
+                ?.on(SocketEvent.NEW_MESSAGE, ({ data ->
+                    val jsonData = Gson().fromJson(data.first().toString(), Message::class.java)
+                    val username = jsonData.username
+                    val timestamp = jsonData.date
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        if (jsonData.roomId == RoomManager.currentRoom) {
+                            when (username) {
+                                admin -> showAdminMessage(jsonData.content)
+                                SocketHandler.user!!.username -> showToMessage(
                                     jsonData.content,
-                                    userAvatar,
-                                    username,
                                     timestamp
                                 )
+                                else -> {
+                                    var userAvatar: AvatarID = AvatarID.AVOCADO
+                                    val avatarList = RoomManager.roomAvatars[roomID]
+                                    if (avatarList !== null) {
+                                        userAvatar =
+                                            getAvatar(RoomManager.roomAvatars[roomID]!![username])
+                                    }
+                                    showFromMessage(
+                                        jsonData.content,
+                                        userAvatar,
+                                        username,
+                                        timestamp
+                                    )
+                                }
                             }
                         }
-                    }
-                    if (RoomManager.roomsJoined.containsKey(roomID)) {
-                        if (!RoomManager.roomsJoined.get(roomID)!!.contains(jsonData)) {
-                            RoomManager.roomsJoined.get(roomID)!!.add(jsonData)
+                        if (RoomManager.roomsJoined.containsKey(roomID)) {
+                            if (!RoomManager.roomsJoined.get(roomID)!!.contains(jsonData)) {
+                                RoomManager.roomsJoined.get(roomID)!!.add(jsonData)
+                            }
                         }
-                    }
-                })
-            }))
-            ?.on(SocketEvent.GUESS_RESULT, ({ data ->
-                val response = Gson().fromJson(data.first().toString(), Feedback::class.java)
-                Handler(Looper.getMainLooper()).post(Runnable {
-                    if (response.status) {
-                        send_guess.isEnabled = false
-                    } else {
-                        showAdminMessage(response.log_message)
-                    }
-                })
+                    })
+                }))
+                ?.on(SocketEvent.GUESS_RESULT, ({ data ->
+                    val response = Gson().fromJson(data.first().toString(), Feedback::class.java)
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        if (response.status) {
+                            send_guess.isEnabled = false
+                        } else {
+                            showAdminMessage(response.log_message)
+                        }
+                    })
 
-            }))
+                }))
+        }
     }
 
     private fun showToMessage(text: String, date: Long){

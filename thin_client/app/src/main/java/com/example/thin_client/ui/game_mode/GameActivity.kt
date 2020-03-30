@@ -211,49 +211,53 @@ class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch {
     }
 
     private fun setupSocketEvents() {
-        SocketHandler.socket!!
-            .on(SocketEvent.TURN_ENDED, ({ data ->
-                val turnParams = Gson().fromJson(data.first().toString(), EndTurn::class.java)
-                Handler(Looper.getMainLooper()).post(Runnable {
-                    user_block.bringToFront()
-                    if (timer != null) {
-                        timer?.cancel()
-                        timer?.onFinish()
-                    }
-                    lettersAdapter.clear()
-                    wordToGuess = ""
-                    message.text = ""
-                    isHost = turnParams.drawer.equals(currentUser)
-                    currentDrawer = turnParams.drawer
-                    if (isHost) {
-                        showWordsSelection(turnParams.choices)
-                    } else {
-                        showObserverFragment()
-                    }
-                })
-
-            }))
-            .on(SocketEvent.TURN_STARTED, ({ data ->
-                Handler(Looper.getMainLooper()).post(Runnable {
-                    draw_view_container.bringToFront()
-                    val time = Gson().fromJson(data.first().toString(), Number::class.java)
-                    startCountdown(time.toLong() * SECOND_INTERVAL)
-                    setupWordHolder()
-                })
-            }))
-            .on(SocketEvent.MATCH_STARTED, ({ data ->
-                val feedback = Gson().fromJson(data.first().toString(), StartMatchFeedback::class.java)
-                isGameStarted = true
-                if (feedback.feedback.status) {
+        if (SocketHandler.socket != null) {
+            SocketHandler.socket!!
+                .on(SocketEvent.TURN_ENDED, ({ data ->
+                    val turnParams = Gson().fromJson(data.first().toString(), EndTurn::class.java)
                     Handler(Looper.getMainLooper()).post(Runnable {
                         user_block.bringToFront()
+                        if (timer != null) {
+                            timer?.cancel()
+                            timer?.onFinish()
+                        }
+                        lettersAdapter.clear()
+                        wordToGuess = ""
+                        message.text = ""
+                        isHost = turnParams.drawer.equals(currentUser)
+                        currentDrawer = turnParams.drawer
+                        if (isHost) {
+                            showWordsSelection(turnParams.choices)
+                        } else {
+                            showObserverFragment()
+                        }
                     })
-                } else {
+
+                }))
+                .on(SocketEvent.TURN_STARTED, ({ data ->
                     Handler(Looper.getMainLooper()).post(Runnable {
-                        Toast.makeText(this, feedback.feedback.log_message, Toast.LENGTH_LONG).show()
+                        draw_view_container.bringToFront()
+                        val time = Gson().fromJson(data.first().toString(), Number::class.java)
+                        startCountdown(time.toLong() * SECOND_INTERVAL)
+                        setupWordHolder()
                     })
-                }
-            }))
+                }))
+                .on(SocketEvent.MATCH_STARTED, ({ data ->
+                    val feedback =
+                        Gson().fromJson(data.first().toString(), StartMatchFeedback::class.java)
+                    isGameStarted = true
+                    if (feedback.feedback.status) {
+                        Handler(Looper.getMainLooper()).post(Runnable {
+                            user_block.bringToFront()
+                        })
+                    } else {
+                        Handler(Looper.getMainLooper()).post(Runnable {
+                            Toast.makeText(this, feedback.feedback.log_message, Toast.LENGTH_LONG)
+                                .show()
+                        })
+                    }
+                }))
+        }
     }
 
 

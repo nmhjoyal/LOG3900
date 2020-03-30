@@ -71,11 +71,13 @@ class WaitingRoom : Fragment() {
     }
 
     private fun setupSocketEvents() {
-        SocketHandler.socket
-            ?.on(SocketEvent.UPDATE_PLAYERS, ({ data ->
-                val playerUpdate =
-                    Gson().fromJson(data.first().toString(), Array<Player>::class.java)
-                GameManager.players = playerUpdate.toCollection(ArrayList())
-            }))
+        if (SocketHandler.socket != null) {
+            SocketHandler.socket
+                ?.on(SocketEvent.UPDATE_PLAYERS, ({ data ->
+                    val playerUpdate =
+                        Gson().fromJson(data.first().toString(), Array<Player>::class.java)
+                    GameManager.players = playerUpdate.toCollection(ArrayList())
+                }))
+        }
     }
 }

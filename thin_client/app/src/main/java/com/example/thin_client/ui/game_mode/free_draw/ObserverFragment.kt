@@ -69,53 +69,57 @@ class ObserverFragment : Fragment() {
     }
 
     private fun setupSocketEvents() {
-        SocketHandler.socket!!
-            .on(SocketEvent.NEW_POINT, ({ data ->
-                Handler(Looper.getMainLooper()).post(Runnable {
-                    val drawPoint =
-                        Gson().fromJson(data.first().toString(), StylusPoint::class.java)
-                    observer_draw_view.addPath(drawPoint)
-                })
-            }))
-            .on(SocketEvent.NEW_STROKE, ({ data ->
-                Handler(Looper.getMainLooper()).post(Runnable {
-                    observer_draw_view.toggleEraser(false)
-                    observer_draw_view.stopTrace()
-                    val drawPoint = Gson().fromJson(data.first().toString(), Stroke::class.java)
-                    observer_draw_view.startTrace(drawPoint)
-                })
-            }))
-            .on(SocketEvent.NEW_ERASE_STROKE, ({
-                Handler(Looper.getMainLooper()).post(Runnable {
-                    observer_draw_view.toggleEraser(true)
-                    observer_draw_view.stopTrace()
-                })
-            }))
-            .on(SocketEvent.NEW_ERASE_POINT, ({
-                Handler(Looper.getMainLooper()).post(Runnable {
-                    observer_draw_view.toggleEraser(false)
-                    observer_draw_view.stopTrace()
-                    observer_draw_view.setColor(
-                        ContextCompat.getColor(
-                            context!!,
-                            R.color.default_background
+        if (SocketHandler.socket != null) {
+            SocketHandler.socket!!
+                .on(SocketEvent.NEW_POINT, ({ data ->
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        val drawPoint =
+                            Gson().fromJson(data.first().toString(), StylusPoint::class.java)
+                        observer_draw_view.addPath(drawPoint)
+                    })
+                }))
+                .on(SocketEvent.NEW_STROKE, ({ data ->
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        observer_draw_view.toggleEraser(false)
+                        observer_draw_view.stopTrace()
+                        val drawPoint = Gson().fromJson(data.first().toString(), Stroke::class.java)
+                        observer_draw_view.startTrace(drawPoint)
+                    })
+                }))
+                .on(SocketEvent.NEW_ERASE_STROKE, ({
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        observer_draw_view.toggleEraser(true)
+                        observer_draw_view.stopTrace()
+                    })
+                }))
+                .on(SocketEvent.NEW_ERASE_POINT, ({
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        observer_draw_view.toggleEraser(false)
+                        observer_draw_view.stopTrace()
+                        observer_draw_view.setColor(
+                            ContextCompat.getColor(
+                                context!!,
+                                R.color.default_background
+                            )
                         )
-                    )
-                })
-            }))
-            .on(SocketEvent.NEW_CLEAR, ({
-                Handler(Looper.getMainLooper()).post(Runnable {
-                    observer_draw_view.clearCanvas()
-                })
-            }))
+                    })
+                }))
+                .on(SocketEvent.NEW_CLEAR, ({
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        observer_draw_view.clearCanvas()
+                    })
+                }))
+        }
     }
 
     private fun turnOffSocketEvents() {
-        SocketHandler.socket!!
-            .off(SocketEvent.NEW_POINT)
-            .off(SocketEvent.NEW_STROKE)
-            .off(SocketEvent.NEW_ERASE_STROKE)
-            .off(SocketEvent.NEW_ERASE_POINT)
-            .off(SocketEvent.NEW_CLEAR)
+        if (SocketHandler.socket != null) {
+            SocketHandler.socket!!
+                .off(SocketEvent.NEW_POINT)
+                .off(SocketEvent.NEW_STROKE)
+                .off(SocketEvent.NEW_ERASE_STROKE)
+                .off(SocketEvent.NEW_ERASE_POINT)
+                .off(SocketEvent.NEW_CLEAR)
+        }
     }
 }

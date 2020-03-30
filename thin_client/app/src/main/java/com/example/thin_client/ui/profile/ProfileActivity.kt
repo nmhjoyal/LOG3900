@@ -341,27 +341,33 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun setupSocketEvents() {
-        SocketHandler.socket!!.on(SocketEvent.PROFILE_UPDATED, ({ data ->
-            val feedback = Gson().fromJson(data.first().toString(),Feedback::class.java)
-            Handler(Looper.getMainLooper()).post(Runnable {
-                loading.visibility = View.GONE
-                if (feedback.status) {
-                    privateProfile = PrivateProfile(username.text.toString(),
-                        firstName.text.toString(), lastName.text.toString(),
-                        password.text.toString(), selectedAvatar.name,
-                        ArrayList(RoomManager.roomsJoined.keys))
-                    PreferenceHandler(applicationContext).setUser(privateProfile)
-                }
-                Toast.makeText(
-                    applicationContext,
-                    feedback.log_message,
-                    Toast.LENGTH_SHORT
-                ).show()
-            })
-        }))
+        if (SocketHandler.socket != null) {
+            SocketHandler.socket!!.on(SocketEvent.PROFILE_UPDATED, ({ data ->
+                val feedback = Gson().fromJson(data.first().toString(), Feedback::class.java)
+                Handler(Looper.getMainLooper()).post(Runnable {
+                    loading.visibility = View.GONE
+                    if (feedback.status) {
+                        privateProfile = PrivateProfile(
+                            username.text.toString(),
+                            firstName.text.toString(), lastName.text.toString(),
+                            password.text.toString(), selectedAvatar.name,
+                            ArrayList(RoomManager.roomsJoined.keys)
+                        )
+                        PreferenceHandler(applicationContext).setUser(privateProfile)
+                    }
+                    Toast.makeText(
+                        applicationContext,
+                        feedback.log_message,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                })
+            }))
+        }
     }
 
     private fun turnOffSocketEvents() {
-        SocketHandler.socket!!.off(SocketEvent.PROFILE_UPDATED)
+        if (SocketHandler.socket != null) {
+            SocketHandler.socket!!.off(SocketEvent.PROFILE_UPDATED)
+        }
     }
 }

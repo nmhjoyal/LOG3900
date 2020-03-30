@@ -78,50 +78,57 @@ class SplashScreen: AppCompatActivity() {
     }
 
     private fun setupSocketEvents() {
-        SocketHandler.socket!!
-            .on(SocketEvent.USER_SIGNED_IN, ({ data ->
-                val signInFeedback = Gson().fromJson(data.first().toString(), SignInFeedback::class.java)
-                if (signInFeedback.feedback.status) {
-                    RoomManager.createRoomList(signInFeedback.rooms_joined)
-                    startLobby()
-                } else {
-                    runOnUiThread(({
-                        Toast.makeText(applicationContext, signInFeedback.feedback.log_message, Toast.LENGTH_LONG).show()
-                    }))
-                    startLogin()
-                }
-            }))
-            .on(Socket.EVENT_CONNECT, ({
-                runOnUiThread(({
-                    when (SocketHandler.getLoginState(prefs)) {
-                        LoginState.FIRST_LOGIN -> {
-                            startLogin()
-                        }
-                        LoginState.LOGIN_WITH_EXISTING -> {
-                            val user = PreferenceHandler(applicationContext).getUser()
-                            SocketHandler.login(User(user.username, user.password))
-                            SocketHandler.isLoggedIn = true
-                        }
-                        LoginState.LOGGED_IN -> {
-                            startLobby()
-                        }
+        if (SocketHandler.socket != null) {
+            SocketHandler.socket!!
+                .on(SocketEvent.USER_SIGNED_IN, ({ data ->
+                    val signInFeedback =
+                        Gson().fromJson(data.first().toString(), SignInFeedback::class.java)
+                    if (signInFeedback.feedback.status) {
+                        RoomManager.createRoomList(signInFeedback.rooms_joined)
+                        startLobby()
+                    } else {
+                        runOnUiThread(({
+                            Toast.makeText(
+                                applicationContext,
+                                signInFeedback.feedback.log_message,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }))
+                        startLogin()
                     }
                 }))
-            }))
-            .on(Socket.EVENT_CONNECT_ERROR, ({
-                runOnUiThread(({
-                    loading.visibility = View.GONE
-                    val alertDialog = AlertDialog.Builder(this)
-                    alertDialog.setTitle(R.string.error_connect_title)
-                        .setCancelable(false)
-                        .setMessage(R.string.error_connect)
-                        .setPositiveButton(R.string.ok) { _, _ -> finishAffinity() }
-
-                    val dialog = alertDialog.create()
-                    dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-                    dialog.show()
+                .on(Socket.EVENT_CONNECT, ({
+                    runOnUiThread(({
+                        when (SocketHandler.getLoginState(prefs)) {
+                            LoginState.FIRST_LOGIN -> {
+                                startLogin()
+                            }
+                            LoginState.LOGIN_WITH_EXISTING -> {
+                                val user = PreferenceHandler(applicationContext).getUser()
+                                SocketHandler.login(User(user.username, user.password))
+                                SocketHandler.isLoggedIn = true
+                            }
+                            LoginState.LOGGED_IN -> {
+                                startLobby()
+                            }
+                        }
+                    }))
                 }))
-                SocketHandler.disconnect()
-            }))
+                .on(Socket.EVENT_CONNECT_ERROR, ({
+                    runOnUiThread(({
+                        loading.visibility = View.GONE
+                        val alertDialog = AlertDialog.Builder(this)
+                        alertDialog.setTitle(R.string.error_connect_title)
+                            .setCancelable(false)
+                            .setMessage(R.string.error_connect)
+                            .setPositiveButton(R.string.ok) { _, _ -> finishAffinity() }
+
+                        val dialog = alertDialog.create()
+                        dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+                        dialog.show()
+                    }))
+                    SocketHandler.disconnect()
+                }))
+        }
     }
 }

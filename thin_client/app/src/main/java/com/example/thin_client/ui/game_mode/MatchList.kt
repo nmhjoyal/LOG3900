@@ -157,8 +157,8 @@ class MatchList : Fragment() {
     }
 
     private fun setupSocketEvents() {
-        SocketHandler.socket!!
-            .on(SocketEvent.MATCH_CREATED, ({ data ->
+        SocketHandler.socket
+            ?.on(SocketEvent.MATCH_CREATED, ({ data ->
                 val feedback = Gson().fromJson(data.first().toString(), CreateMatchFeedback::class.java)
                 if (feedback.feedback.status) {
                     RoomManager.currentRoom = feedback.matchId
@@ -169,7 +169,7 @@ class MatchList : Fragment() {
                     }))
                 }
             }))
-            .on(SocketEvent.MATCH_JOINED, ({ data ->
+            ?.on(SocketEvent.MATCH_JOINED, ({ data ->
                 val feedback = Gson().fromJson(data.first().toString(), JoinRoomFeedback::class.java)
                 if (feedback.feedback.status) {
                     RoomManager.currentRoom = feedback.room_joined!!.id

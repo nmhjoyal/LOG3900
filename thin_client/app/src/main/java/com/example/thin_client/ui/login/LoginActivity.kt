@@ -84,7 +84,7 @@ class LoginActivity : AppCompatActivity() {
                                         val intent = Intent(applicationContext, Lobby::class.java)
                                         startActivity(intent)
                                         SocketHandler.isLoggedIn = true
-                                        SocketHandler.socket!!.off(SocketEvent.USER_SIGNED_IN)
+                                        SocketHandler.socket?.off(SocketEvent.USER_SIGNED_IN)
                                         finish()
                                     }))
                                 }
@@ -126,9 +126,11 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun turnOffSocketEvents() {
-        SocketHandler.socket!!.off(SocketEvent.USER_SIGNED_IN)
-            .off(Socket.EVENT_CONNECT)
-            .off(Socket.EVENT_CONNECT_ERROR)
+        if (SocketHandler.socket != null) {
+            SocketHandler.socket!!.off(SocketEvent.USER_SIGNED_IN)
+                .off(Socket.EVENT_CONNECT)
+                .off(Socket.EVENT_CONNECT_ERROR)
+        }
     }
 }
 

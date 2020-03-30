@@ -177,12 +177,14 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
     }
 
     private fun setupSocketEvents() {
-        SocketHandler.socket
-        ?.on(SocketEvent.UPDATE_MATCHES, ({data ->
-                val gson = Gson()
-                val matchInfosFeedback=
-                    gson.fromJson(data.first().toString(), Array<MatchInfos>::class.java)
-            GameManager.tempFullMatchList = matchInfosFeedback.toCollection(ArrayList<MatchInfos>())
+        if (SocketHandler.socket != null) {
+            SocketHandler.socket
+                ?.on(SocketEvent.UPDATE_MATCHES, ({ data ->
+                    val gson = Gson()
+                    val matchInfosFeedback =
+                        gson.fromJson(data.first().toString(), Array<MatchInfos>::class.java)
+                    GameManager.tempFullMatchList =
+                        matchInfosFeedback.toCollection(ArrayList<MatchInfos>())
 //                for(match in matchInfosFeedback) {
 //                    when(match.matchMode){
 //                            MatchMode.SOLO.ordinal ->
@@ -204,39 +206,43 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
 //                        }
 //                    }
 //                }
-            }))
-            ?.on(SocketEvent.USER_SIGNED_IN, ({ data ->
-                val gson = Gson()
-                val signInFeedback =
-                    gson.fromJson(data.first().toString(), SignInFeedback::class.java)
-                if (signInFeedback.feedback.status) {
-                    RoomManager.createRoomList(signInFeedback.rooms_joined)
-                    showChatRoomsFragment()
-                } else {
-                    runOnUiThread(({
-                        Toast.makeText(applicationContext, R.string.error_logging_in, Toast.LENGTH_LONG).show()
-                        val intent = Intent(applicationContext, LoginActivity::class.java)
-                        startActivity(intent)
-                    }))
-                    SocketHandler.disconnect()
-                }
-            }))
-            ?.on(Socket.EVENT_CONNECT_ERROR, ({
-                Handler(Looper.getMainLooper()).post(Runnable {
-                    val alertDialog = AlertDialog.Builder(this)
-                    alertDialog.setTitle(R.string.error_connect_title)
-                        .setCancelable(false)
-                        .setMessage(R.string.error_connect)
-                        .setPositiveButton(R.string.ok) { _, _ -> finishAffinity() }
+                }))
+                ?.on(SocketEvent.USER_SIGNED_IN, ({ data ->
+                    val gson = Gson()
+                    val signInFeedback =
+                        gson.fromJson(data.first().toString(), SignInFeedback::class.java)
+                    if (signInFeedback.feedback.status) {
+                        RoomManager.createRoomList(signInFeedback.rooms_joined)
+                        showChatRoomsFragment()
+                    } else {
+                        runOnUiThread(({
+                            Toast.makeText(
+                                applicationContext,
+                                R.string.error_logging_in,
+                                Toast.LENGTH_LONG
+                            ).show()
+                            val intent = Intent(applicationContext, LoginActivity::class.java)
+                            startActivity(intent)
+                        }))
+                        SocketHandler.disconnect()
+                    }
+                }))
+                ?.on(Socket.EVENT_CONNECT_ERROR, ({
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        val alertDialog = AlertDialog.Builder(this)
+                        alertDialog.setTitle(R.string.error_connect_title)
+                            .setCancelable(false)
+                            .setMessage(R.string.error_connect)
+                            .setPositiveButton(R.string.ok) { _, _ -> finishAffinity() }
 
-                    val dialog = alertDialog.create()
-                    dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-                    dialog.show()
-                })
-                SocketHandler.disconnect()
-            }))
-            ?.on(SocketEvent.USER_SIGNED_OUT, ({ data ->
-                val feedback = Gson().fromJson(data.first().toString(),Feedback::class.java)
+                        val dialog = alertDialog.create()
+                        dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+                        dialog.show()
+                    })
+                    SocketHandler.disconnect()
+                }))
+                ?.on(SocketEvent.USER_SIGNED_OUT, ({ data ->
+                    val feedback = Gson().fromJson(data.first().toString(), Feedback::class.java)
                     PreferenceHandler(this).resetUserPrefs()
                     val intent = Intent(applicationContext, LoginActivity::class.java)
                     startActivity(intent)
@@ -248,37 +254,42 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
                             Toast.LENGTH_SHORT
                         ).show()
                     })
-            }))
-            ?.on(SocketEvent.USER_JOINED_ROOM, ({ data ->
-                val feedback = Gson().fromJson(data.first().toString(), JoinRoomFeedback::class.java)
-                if (feedback.feedback.status) {
-                    RoomManager.addRoom(feedback.room_joined!!)
-                }
-                val roomID = if (RoomManager.currentRoom == "") "General" else RoomManager.currentRoom
-                Handler(Looper.getMainLooper()).post(Runnable {
-                    val bundle = Bundle()
-                    bundle.putString(RoomArgs.ROOM_ID, roomID)
-                    bundle.putBoolean(GameArgs.IS_GAME_CHAT, false)
-                    val transaction = manager.beginTransaction()
-                    val chatFragment = ChatFragment()
-                    chatFragment.arguments = bundle
-                    transaction.replace(R.id.chatrooms_container, chatFragment)
-                    transaction.addToBackStack(null)
-                    transaction.commitAllowingStateLoss()
-                })
+                }))
+                ?.on(SocketEvent.USER_JOINED_ROOM, ({ data ->
+                    val feedback =
+                        Gson().fromJson(data.first().toString(), JoinRoomFeedback::class.java)
+                    if (feedback.feedback.status) {
+                        RoomManager.addRoom(feedback.room_joined!!)
+                    }
+                    val roomID =
+                        if (RoomManager.currentRoom == "") "General" else RoomManager.currentRoom
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        val bundle = Bundle()
+                        bundle.putString(RoomArgs.ROOM_ID, roomID)
+                        bundle.putBoolean(GameArgs.IS_GAME_CHAT, false)
+                        val transaction = manager.beginTransaction()
+                        val chatFragment = ChatFragment()
+                        chatFragment.arguments = bundle
+                        transaction.replace(R.id.chatrooms_container, chatFragment)
+                        transaction.addToBackStack(null)
+                        transaction.commitAllowingStateLoss()
+                    })
 
-            }))
-            ?.on(SocketEvent.AVATAR_UPDATED, ({ data ->
-                val update = Gson().fromJson(data.first().toString(), AvatarUpdate::class.java)
-                if (RoomManager.roomAvatars[update.roomId] != null) {
-                    RoomManager.roomAvatars[update.roomId]!!.put(update.profile.username,
-                        update.profile.avatar)
-                }
-            }))
-            ?.on(Socket.EVENT_DISCONNECT, ({
-                SocketHandler.socket = null
-                SocketHandler.isLoggedIn = false
-            }))
+                }))
+                ?.on(SocketEvent.AVATAR_UPDATED, ({ data ->
+                    val update = Gson().fromJson(data.first().toString(), AvatarUpdate::class.java)
+                    if (RoomManager.roomAvatars[update.roomId] != null) {
+                        RoomManager.roomAvatars[update.roomId]!!.put(
+                            update.profile.username,
+                            update.profile.avatar
+                        )
+                    }
+                }))
+                ?.on(Socket.EVENT_DISCONNECT, ({
+                    SocketHandler.socket = null
+                    SocketHandler.isLoggedIn = false
+                }))
+        }
     }
 
 
