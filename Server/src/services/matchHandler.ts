@@ -61,7 +61,9 @@ export default class MatchHandler {
     }
 
     public async joinMatch(io: SocketIO.Server, socket: SocketIO.Socket, matchId: string, user: PrivateProfile | undefined): Promise<JoinRoomFeedback> {
-        const match: Match | undefined = this.currentMatches.get(matchId);
+        const trimmedMatchId = matchId.replace(new RegExp('\"', 'g'), "")
+        const match: Match | undefined = this.currentMatches.get(trimmedMatchId);
+        console.log(trimmedMatchId)
         let joinRoomFeedback: JoinRoomFeedback = { feedback: { status: false, log_message: "" }, room_joined: null, isPrivate: true };
 
         if (user) {
@@ -140,7 +142,7 @@ export default class MatchHandler {
         if (user) {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
-                startMatchFeedback = match.startMatch(socket.id, io);
+                startMatchFeedback = match.startMatch(user.username, io);
                 startMatchFeedback.feedback.status ?
                     io.in(match.matchId).emit("match_started", JSON.stringify(startMatchFeedback)) :
                     socket.emit("match_started", JSON.stringify(startMatchFeedback));
@@ -286,13 +288,8 @@ export default class MatchHandler {
      *  
      */ 
     public enterFreeDrawTestRoom(socket: SocketIO.Socket): void {
-        if (this.drawer) {
-            this.observers.push(socket.id);
-            socket.emit("observer");
-        } else {
-            this.drawer = socket.id;
-            socket.emit("drawer");
-        }
+        this.observers.push(socket.id);
+        socket.emit("observer");
         socket.join("freeDrawRoomTest");
     }
 
