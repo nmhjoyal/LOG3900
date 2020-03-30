@@ -109,6 +109,7 @@ export default class MatchHandler {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
                 feedback = match.addVirtualPlayer(socket.id, io);
+                io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
             } else {
                 feedback.log_message = "This match does not exist anymore.";
             }
@@ -126,6 +127,7 @@ export default class MatchHandler {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
                 feedback = match.removeVirtualPlayer(socket.id, io);
+                io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
             } else {
                 feedback.log_message = "This match does not exist anymore.";
             }
