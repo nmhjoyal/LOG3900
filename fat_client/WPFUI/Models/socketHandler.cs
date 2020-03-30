@@ -73,6 +73,8 @@ namespace WPFUI.Models
                 SignInFeedback feedback = JsonConvert.DeserializeObject<SignInFeedback>(signInFeedback.ToString());
                 if (feedback.feedback.status)
                 {
+                    Console.WriteLine("wudup");
+                    Console.WriteLine(JsonConvert.SerializeObject(feedback.rooms_joined[0].avatars).ToString());
                     _events.PublishOnUIThread(new joinedRoomReceived(feedback.rooms_joined));
                     _userdata.avatarName = feedback.rooms_joined.Single(i => i.roomName == "General").avatars[_userdata.userName];
                     Console.WriteLine("fruit:");
@@ -475,8 +477,9 @@ namespace WPFUI.Models
                 EndTurn json = JsonConvert.DeserializeObject<EndTurn>(endTurn.ToString());
                 Console.WriteLine(endTurn.ToString());
                 this._userdata.firstRound = json;
-                _events.PublishOnUIThread(new gameEvent());
                 this.offWaitingRoom();
+                onMatch();
+                _events.PublishOnUIThread(new gameEvent());
             });
         }
 
@@ -484,6 +487,7 @@ namespace WPFUI.Models
         {
             this.socket.On("turn_ended", (endTurn) =>
             {
+                Console.WriteLine("onMatch turn_ended");
                 /* TODO: Find why the emit is not catched here */
                 EndTurn json = JsonConvert.DeserializeObject<EndTurn>(endTurn.ToString());
                 Console.WriteLine(endTurn.ToString());
@@ -493,9 +497,18 @@ namespace WPFUI.Models
 
             this.socket.On("turn_started", (time) =>
             {
+                Console.WriteLine("onMatch turn_started");
                 /* TODO: transmit the turn time to the viewmodel */
                 dynamic json = JsonConvert.DeserializeObject(time.ToString());
                 _events.PublishOnUIThread(new startTurnRoutineEvent((int)json));
+            });
+
+            this.socket.On("guess_res", (Feedback) =>
+            {
+                dynamic json = JsonConvert.DeserializeObject(Feedback.ToString());
+                Console.WriteLine("onMatch guess_res");
+                Console.WriteLine(json.status);
+                Console.WriteLine(json.log_message);
             });
         }
 

@@ -27,6 +27,7 @@ namespace WPFUI.ViewModels
         public int _timerContent;
         public DispatcherTimer _timer;
         private int _roundDuration;
+        private string _guessBox;
         public IselectWordCommand _selectWordCommand { get; set; }
 
         public partieJeuViewModel(IEventAggregator events, ISocketHandler socketHandler, IUserData userdata)
@@ -44,7 +45,7 @@ namespace WPFUI.ViewModels
             _selectWordCommand = new selectWordCommand(events);
             fillAvatars();
             startTimer();
-            this._socketHandler.onMatch();
+            //this._socketHandler.onMatch();
         }
 
         public void startTimer()
@@ -78,6 +79,14 @@ namespace WPFUI.ViewModels
         public int currentRound
         {
             get { return _currentRound; }
+        }
+
+        public string guessBox
+        {
+            get { return _guessBox; }
+            set { _guessBox = value;
+                NotifyOfPropertyChange(() => guessBox);
+            }
         }
 
         public BindableCollection<dynamic> wordChoices
@@ -203,6 +212,15 @@ namespace WPFUI.ViewModels
             newWords(this._userData.firstRound.choices);
             newScores(this._userData.firstRound.scores);
             _events.PublishOnUIThread(new endTurnRoutineEvent(endTurn));
+        }
+
+        public void sendGuess()
+        {
+            if (guessBox != null & guessBox != "")
+            {
+                _socketHandler.socket.Emit("guess", guessBox);
+            }
+            guessBox = "";
         }
 
 
