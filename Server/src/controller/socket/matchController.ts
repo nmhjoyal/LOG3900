@@ -24,28 +24,28 @@ export default class MatchController {
     }
 
     @OnMessage("stroke")
-    public start_trace(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() stroke: Stroke) {
-        serverHandler.matchHandler.stroke(io, socket, stroke);
+    public start_trace(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() stroke: Stroke) {
+        serverHandler.stroke(socket, stroke);
     }
 
     @OnMessage("point")
-    public drawTest(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() point: StylusPoint) {
-        serverHandler.matchHandler.point(io, socket, point);
+    public drawTest(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() point: StylusPoint) {
+        serverHandler.point(socket, point);
     }
 
     @OnMessage("erase_stroke")
-    public erase_stroke(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
-        serverHandler.matchHandler.eraseStroke(io, socket);
+    public erase_stroke(@ConnectedSocket() socket: SocketIO.Socket) {
+        serverHandler.eraseStroke(socket);
     }
 
     @OnMessage("erase_point")
-    public erase_point(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
-        serverHandler.matchHandler.erasePoint(io, socket);
+    public erase_point(@ConnectedSocket() socket: SocketIO.Socket) {
+        serverHandler.erasePoint(socket);
     }
 
     @OnMessage("clear")
-    public clear(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
-        serverHandler.matchHandler.clear(io, socket);
+    public clear(@ConnectedSocket() socket: SocketIO.Socket) {
+        serverHandler.clear(socket);
     }
 
     @OnMessage("get_drawing")

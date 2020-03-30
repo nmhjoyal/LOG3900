@@ -197,7 +197,66 @@ export default class MatchHandler {
         }
 
         return feedback;
+    }
 
+    public stroke(socket: SocketIO.Socket, stroke: Stroke, user: PrivateProfile | undefined): void {
+        if (user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
+            if (match) {
+                match.stroke(socket, stroke);
+            } else {
+                stroke.DrawingAttributes.Top = this.top++;
+                socket.to("freeDrawRoomTest").emit("new_stroke", JSON.stringify(stroke));
+            }
+        }
+    }
+    
+    public point(socket: SocketIO.Socket, point: StylusPoint, user: PrivateProfile | undefined): void {
+        if (user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
+            if (match) {
+                match.point(socket, point);
+            } else {
+                socket.to("freeDrawRoomTest").emit("new_point", JSON.stringify(point));
+            }
+        }
+    }
+
+    public eraseStroke(socket: SocketIO.Socket, user: PrivateProfile | undefined): void {
+        if (user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
+            if (match) {
+                match.eraseStroke(socket);
+            } else {
+                socket.to("freeDrawRoomTest").emit("new_erase_stroke");
+            }
+        }
+    }
+
+    public erasePoint(socket: SocketIO.Socket, user: PrivateProfile | undefined): void {
+        if (user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
+            if (match) {
+                match.erasePoint(socket);
+            } else {
+                socket.to("freeDrawRoomTest").emit("new_erase_point");
+            }
+        }
+    }
+
+    public clear(socket: SocketIO.Socket, user: PrivateProfile | undefined): void {
+        if (user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
+            if (match) {
+                match.clear(socket);
+            } else {
+                let virtualDrawing: VirtualDrawing | undefined = this.previews.get(socket.id);
+                if(virtualDrawing) {
+                    console.log("clear");
+                    virtualDrawing.clear(socket);
+                };
+            }
+        }
     }
 
     private getMatchFromPlayer(username: string): Match | undefined {
@@ -245,36 +304,6 @@ export default class MatchHandler {
             this.observers.splice(this.observers.indexOf(socket.id), 1);
         }
         socket.leave("freeDrawRoomTest");
-    }
-
-    public stroke(io: SocketIO.Server, socket: SocketIO.Socket, stroke: Stroke): void {
-        // if (socket.id == this.drawer) {
-            stroke.DrawingAttributes.Top = this.top++;
-            socket.to("freeDrawRoomTest").emit("new_stroke", JSON.stringify(stroke));
-        // }
-    }
-
-    public eraseStroke(io: SocketIO.Server, socket: SocketIO.Socket): void {
-        socket.to("freeDrawRoomTest").emit("new_erase_stroke");
-    }
-
-    public erasePoint(io: SocketIO.Server, socket: SocketIO.Socket): void {
-        socket.to("freeDrawRoomTest").emit("new_erase_point");
-    }
-
-    public point(io: SocketIO.Server, socket: SocketIO.Socket, point: StylusPoint): void {
-        // if (socket.id == this.drawer) {
-        socket.to("freeDrawRoomTest").emit("new_point", JSON.stringify(point));
-        // }
-    }
-
-    public clear(io: SocketIO.Server, socket: SocketIO.Socket): void {
-        // Pour preview seulement
-        let virtualDrawing: VirtualDrawing | undefined = this.previews.get(socket.id);
-        if(virtualDrawing) {
-            console.log("clear");
-            virtualDrawing.clear(socket);
-        };
     }
 
     public async getDrawing(io: SocketIO.Server): Promise<void> {
