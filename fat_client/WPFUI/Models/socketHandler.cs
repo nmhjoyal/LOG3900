@@ -487,6 +487,13 @@ namespace WPFUI.Models
                 dynamic json = JsonConvert.DeserializeObject(endTurn.ToString());
                 Console.WriteLine("turn_ended");
             });
+
+            this.socket.On("turn_started", (time) =>
+            {
+                /* TODO: transmit the turn time to the viewmodel */
+                dynamic json = JsonConvert.DeserializeObject(time.ToString());
+                _events.PublishOnUIThread(new startTurnRoutineEvent());
+            });
         }
 
         public void offWaitingRoom()

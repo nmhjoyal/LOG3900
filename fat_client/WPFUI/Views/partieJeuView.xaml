@@ -90,16 +90,16 @@
 			</StackPanel>
 		</Button>
 
-		<ScrollViewer Grid.Column="11" Grid.Row="8" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Hidden" Name="messagesUI" Background="White">
+		<ScrollViewer Grid.Column="11" Grid.Row="8" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Visible" Name="messagesUI" Background="White" FontSize="18">
             <ItemsControl x:Name="messages">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Vertical" Margin="20,0,0,0">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="account_circle_grey_72x72.png" MaxHeight="25" VerticalAlignment="Center"></Image>
-                                <TextBlock Text="{Binding senderName}" Foreground="DarkSlateGray"/>
+                                <TextBlock Text="{Binding senderName}" Foreground="DarkSlateGray" VerticalAlignment="Center"/>
                             </StackPanel>
-                            <TextBlock Text="{Binding content}" Foreground="Black" TextWrapping="Wrap" Margin="10,0,0,0"/>
+                            <TextBlock Text="{Binding content}" Foreground="Black" TextWrapping="Wrap" Margin="0,0,0,0"/>
                             <TextBlock Text="{Binding formattedTimeStamp}" Foreground="DarkSlateGray" HorizontalAlignment="Left" FontSize="12" Margin="10,0,0,10"/>
                         </StackPanel>
                     </DataTemplate>
@@ -152,17 +152,17 @@
 						<RowDefinition Height="*"/>
 					</Grid.RowDefinitions>
 					<TextBlock Grid.Column="1" Grid.Row="0" Text="Round terminé !" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="22"
-							   Name="roundFinishedMessage" Margin="0,0,0,20"/>
+							   Name="roundFinishedMessage" Margin="0,10,0,20"/>
 					<TextBlock Grid.Column="0" Grid.Row="2" Text="Le prochain joueur à choisir est Karima" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"
-							   Grid.ColumnSpan="3" Name="nextPlayerMessage"/>
+							   Grid.ColumnSpan="3" Name="nextPlayerMessage" Margin="0,0,0,10"/>
 					<ScrollViewer VerticalScrollBarVisibility="Visible" Grid.Row="1" Grid.Column="1" FontSize="30" MaxHeight="300" Margin="0,0,0,20">
 						<ItemsControl ItemsSource="{Binding turnScores}">
 							<ItemsControl.ItemTemplate>
 								<DataTemplate>
 									<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
 										<TextBlock Text="{Binding position}"></TextBlock>
-										<TextBlock Text="{Binding name}" Margin="5,0,0,0"></TextBlock>
-										<TextBlock Text="{Binding score}" Margin="5,0,0,0"></TextBlock>
+										<TextBlock Text="{Binding name}" Margin="15,0,0,0"></TextBlock>
+										<TextBlock Text="{Binding score}" Margin="10,0,0,0"></TextBlock>
 									</StackPanel>
 								</DataTemplate>
 							</ItemsControl.ItemTemplate>
@@ -197,14 +197,20 @@
 						<RowDefinition Height="*"/>
 					</Grid.RowDefinitions>
 					<TextBlock Grid.Column="1" Grid.Row="0" Text="Its your turn to chose !" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="22"
-							   Name="x" Margin="0,0,0,20"/>
+							   Name="x" Margin="0,10,0,20"/>
 					<TextBlock Grid.Column="0" Grid.Row="2" Text="Quick, players are waiting !" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"
-							   Grid.ColumnSpan="3" Name="y"/>
+							   Grid.ColumnSpan="3" Name="y" Margin="0,0,0,10"/>
 					<ScrollViewer VerticalScrollBarVisibility="Hidden" Grid.Row="1" Grid.Column="1" Margin="0,0,0,20">
 						<ItemsControl ItemsSource="{Binding wordChoices}" VerticalAlignment="Center">
 							<ItemsControl.ItemTemplate>
 								<DataTemplate>
-									<TextBlock Text="{Binding word}" HorizontalAlignment="Center" FontSize="30"></TextBlock>
+									<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+										<StackPanel.InputBindings>
+											<MouseBinding Gesture="LeftClick" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext._selectWordCommand}" 
+													      CommandParameter="{Binding word}" />
+										</StackPanel.InputBindings>
+										<TextBlock Text="{Binding word}" HorizontalAlignment="Center" FontSize="30"></TextBlock>
+									</StackPanel>
 								</DataTemplate>
 							</ItemsControl.ItemTemplate>
 						</ItemsControl>

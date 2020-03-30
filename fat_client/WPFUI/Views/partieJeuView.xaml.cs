@@ -42,6 +42,7 @@ namespace WPFUI.Views
             _viewModel = DataContext as partieJeuViewModel;
             (DataContext as partieJeuViewModel).events.Subscribe(this);
             (DataContext as partieJeuViewModel).HandleFirstRound();
+            messagesUI.ScrollToEnd();
         }
 
         private void currentMessage_KeyDown(object sender, KeyEventArgs e)
@@ -62,14 +63,12 @@ namespace WPFUI.Views
                 await Task.Delay(3000);
                 endTurnBox.Visibility = Visibility.Hidden;
                 selectNextDrawingBox.Visibility = Visibility.Visible;
-                await Task.Delay(4000);
-                selectNextDrawingBox.Visibility = Visibility.Hidden;
 
             } else
             {
+                roundFinishedMessage.Text = "Round " + ((dynamic)message.EndTurnFeedBack).currentRound + " finished !";
+                nextPlayerMessage.Text = "Next player to chose is " + ((dynamic)message.EndTurnFeedBack).drawer;
                 endTurnBox.Visibility = Visibility.Visible;
-                await Task.Delay(7000);
-                endTurnBox.Visibility = Visibility.Hidden;
             }
 
         }

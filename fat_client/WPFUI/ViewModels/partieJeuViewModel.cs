@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
 using Caliburn.Micro;
+using WPFUI.Commands;
 using WPFUI.EventModels;
 using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    class partieJeuViewModel: Screen, IHandle<refreshMessagesEvent>, IHandle<addMessageEvent>
+    class partieJeuViewModel: Screen, IHandle<refreshMessagesEvent>, IHandle<addMessageEvent>, IHandle<wordSelectedEvent>
     {
         private IEventAggregator _events;
         private ISocketHandler _socketHandler;
@@ -25,6 +26,7 @@ namespace WPFUI.ViewModels
         public int _timerContent;
         public DispatcherTimer _timer;
         private int _roundDuration;
+        public IselectWordCommand _selectWordCommand { get; set; }
 
         public partieJeuViewModel(IEventAggregator events, ISocketHandler socketHandler, IUserData userdata)
         {
@@ -38,10 +40,10 @@ namespace WPFUI.ViewModels
             _turnScores = new BindableCollection<dynamic>();
             _roundDuration = 30;
             _timerContent = _roundDuration;
+            _selectWordCommand = new selectWordCommand(events);
             fillAvatars();
             startTimer();
             this._socketHandler.onMatch();
-            // this.HandleFirstRound();
         }
 
         public void startTimer()
@@ -152,37 +154,22 @@ namespace WPFUI.ViewModels
             get { return _avatars.Single(i => i.name == _userData.avatarName).source; }
         }
 
-        public void sendMessage(string content = null)
+        public void sendMessage()
         {
-            if (content != null)
-            {
-                _userData.currentMessage = content;
-                _socketHandler.sendMessage();
-                currentMessage = "";
-                _userData.currentMessage = "";
-            }
-            else if (currentMessage != null & currentMessage != "")
-            {
-                //messages.Add(new MessageModel(currentMessage, _userData.userName, DateTime.Now));
-                _socketHandler.sendMessage();
-                currentMessage = "";
-                _userData.currentMessage = "";
-            }
-
+            _socketHandler.sendMessage();
+            currentMessage = "";
+            _userData.currentMessage = "";
         }
 
-        public void newWords()
+        public void newWords( List<string> choices)
         {
             _wordChoices.Clear();
-            dynamic word1 = new System.Dynamic.ExpandoObject();
-            word1.word = "Corona";
-            dynamic word2 = new System.Dynamic.ExpandoObject();
-            word2.word = "Coors Lite";
-            dynamic word3 = new System.Dynamic.ExpandoObject();
-            word3.word = "Molson Ex";
-            _wordChoices.Add(word1);
-            _wordChoices.Add(word2);
-            _wordChoices.Add(word3);
+            foreach (string word in choices)
+            {
+                dynamic w = new System.Dynamic.ExpandoObject();
+                w.word = word;
+                _wordChoices.Add(w);
+            }
             wordChoices.Refresh();
         }
 
@@ -199,25 +186,6 @@ namespace WPFUI.ViewModels
                 _turnScores.Add(dynamicScore);
             }
             turnScores.Refresh();
-            /*
-            dynamic score1 = new System.Dynamic.ExpandoObject();
-            score1.position = 1;
-            score1.name = "Karima";
-            score1.score = 200;
-            dynamic score2 = new System.Dynamic.ExpandoObject();
-            score2.position = 2;
-            score2.name = "Seb";
-            score2.score = 150;
-
-            dynamic score3 = new System.Dynamic.ExpandoObject();
-            score3.position = 2;
-            score3.name = "Nicowle";
-            score3.score = 140;
-
-            _turnScores.Add(score1);
-            _turnScores.Add(score2);
-            _turnScores.Add(score3);
-            */
         }
 
         public void HandleFirstRound()
@@ -237,7 +205,7 @@ namespace WPFUI.ViewModels
             endTurn.currentRound = this._userData.firstRound.currentRound;
             endTurn.drawer = this._userData.firstRound.drawer;
             endTurn.nextIsYou = this._userData.firstRound.drawer == this._userData.userName;
-            newWords();
+            newWords(this._userData.firstRound.choices);
             newScores(this._userData.firstRound.scores);
             _events.PublishOnUIThread(new endTurnRoutineEvent(endTurn));
         }
@@ -253,6 +221,13 @@ namespace WPFUI.ViewModels
         {
             this._messages.Add(message.message);
             NotifyOfPropertyChange(() => messages);
+        }
+
+        public void Handle(wordSelectedEvent message)
+        {
+            Console.WriteLine("!" + message.word);
+            /* TODO envoyer le mot au serveur */
+            _socketHandler.socket.Emit("start_turn", message.word);
         }
     }
 }
