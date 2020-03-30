@@ -37,29 +37,34 @@ export default class FreeForAll extends Match {
 
     protected async endTurn(io: SocketIO.Server): Promise<void> {
         clearTimeout(this.timeout);
-        let currentPlayer: Player | undefined = this.getPlayer(this.currentPlayer);
+        let currentPlayer: Player | undefined = this.getPlayer(this.drawer);
         if (currentPlayer) {
             const currentIndex: number = this.players.indexOf(currentPlayer);
             if (currentIndex == this.players.length - 1) {
-                this.currentPlayer = this.players[0].user.username;
+                this.drawer = this.players[0].user.username;
                 this.round++;
             } else {
-                this.currentPlayer = this.players[currentIndex + 1].user.username;
+                this.drawer = this.players[currentIndex + 1].user.username;
             }
     
             const endTurn: EndTurn = {
                 currentRound: this.round,
                 choices: RandomWordGenerator.generateChoices(),
-                drawer: currentPlayer.user.username,
+                drawer: this.drawer,
                 scores: this.scores
             };
-            const message: Message = Admin.createAdminMessage("The word was " + this.currentWord, this.matchId);
-            io.in(this.matchId).emit("new_message", JSON.stringify(message));
+
+            if (this.currentWord != "") {
+                const message: Message = Admin.createAdminMessage("The word was " + this.currentWord, this.matchId);
+                io.in(this.matchId).emit("new_message", JSON.stringify(message));
+            }
+
             io.in(this.matchId).emit("turn_ended", JSON.stringify(endTurn));
+            
             this.resetScoresTurn();
             this.currentWord = "";
             
-            if (currentPlayer.isVirtual) {
+            if (this.getPlayer(this.drawer)?.isVirtual) {
                 let word: string;
                 setTimeout(() => {
                     this.startTurn(io, word, true);
@@ -73,14 +78,14 @@ export default class FreeForAll extends Match {
         let feedback: Feedback = { status: false, log_message: "" };
 
         if (this.currentWord != "") {
-            if (this.currentPlayer != username) {
+            if (this.drawer != username) {
                 if(guess == this.currentWord) {
                     const message: Message = Admin.createAdminMessage(username + " guessed the word.", this.matchId);
                     io.in(this.matchId).emit("new_message", JSON.stringify(message));
         
                     const score: number = Math.round((Date.now() - this.timer) / 1000) * 10;
                     this.updateScore(username, score);
-                    this.updateScore(this.currentPlayer, Math.round(score / this.players.length));
+                    this.updateScore(this.drawer, Math.round(score / this.players.length));
         
                     if(this.everyoneHasGuessed()) {
                         this.endTurn(io);

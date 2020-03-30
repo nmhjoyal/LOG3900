@@ -29,7 +29,7 @@ export default abstract class Match {
                                                 // if there is an unexpected leave of a room or stoppage of a turn
     protected scores: Map<string, UpdateScore>  // Key: username, Value: score
     protected round: number;                    // In one round each player will draw one time
-    protected currentPlayer: string ;           // Username 
+    protected drawer: string ;                  // Username 
     protected drawing: Drawing;
     protected virtualDrawing: VirtualDrawing;
 
@@ -85,7 +85,7 @@ export default abstract class Match {
             if (this.getNbHumanPlayers() > 1) {
                 this.players.splice(this.players.indexOf(player), 1);
                 if (this.isStarted) {
-                    if (player.user.username == this.currentPlayer) {
+                    if (player.user.username == this.drawer) {
                         this.endTurn(io);
                     }
                 } else {
@@ -232,8 +232,11 @@ export default abstract class Match {
         this.isStarted = true;
         this.drawing = new Drawing(this.matchId);
         this.virtualDrawing = new VirtualDrawing(this.matchId, this.timeLimit);
-        this.currentPlayer = this.players[0].user.username;
-        this.round = 1;
+
+        // Init to the last player on round 0 so it resets in endTurn for round 1 with first player.
+        this.drawer = this.players[this.players.length - 1].user.username;
+        this.round = 0;
+        
         this.initScores();
     }
 
@@ -247,7 +250,7 @@ export default abstract class Match {
         let everyoneHasGuessed: boolean = true;
 
         this.scores.forEach((score: UpdateScore, username: string) => {
-            if (score.scoreTurn == 0 && username != this.currentPlayer) everyoneHasGuessed = false;
+            if (score.scoreTurn == 0 && username != this.drawer) everyoneHasGuessed = false;
         });
 
         return everyoneHasGuessed;
