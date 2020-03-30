@@ -176,7 +176,13 @@ class MatchList : Fragment() {
                     gameStartedListener?.startGame()
                 } else {
                     Handler(Looper.getMainLooper()).post(({
-                        Toast.makeText(context, feedback.feedback.log_message, Toast.LENGTH_LONG).show()
+                        if (context != null) {
+                            Toast.makeText(
+                                context,
+                                feedback.feedback.log_message,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                     }))
                 }
             }))

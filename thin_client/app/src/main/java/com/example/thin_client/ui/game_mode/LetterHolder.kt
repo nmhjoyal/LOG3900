@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.word_letter.view.*
 
 class LetterHolder(val letter: String, val isVisible: Boolean): Item<GroupieViewHolder>(){
 
-    private val ORANGE = 16753920
+    private val ORANGE: Long = 4294944000
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         if (letter.isBlank()) {
@@ -16,7 +16,7 @@ class LetterHolder(val letter: String, val isVisible: Boolean): Item<GroupieView
         }
         viewHolder.itemView.letter.text = letter
         if (isVisible) {
-            viewHolder.itemView.letter.setTextColor(ORANGE)
+            viewHolder.itemView.letter.setTextColor(ORANGE.toInt())
         }
     }
 

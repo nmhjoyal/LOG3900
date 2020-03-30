@@ -1,7 +1,6 @@
 package com.example.thin_client.ui.chat
 
 import android.app.AlertDialog
-import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -151,20 +150,26 @@ class ChatFragment : Fragment() {
                 val username = jsonData.username
                 val timestamp = jsonData.date
                 Handler(Looper.getMainLooper()).post(Runnable {
-                    when (username) {
-                        admin -> showAdminMessage(jsonData.content)
-                        SocketHandler.user!!.username -> showToMessage(jsonData.content, timestamp)
-                        else -> {
-                            var userAvatar: AvatarID = AvatarID.AVOCADO
-                            if (RoomManager.roomAvatars[roomID] !== null) {
-                                userAvatar = getAvatar(RoomManager.roomAvatars[roomID]!![username])
-                            }
-                            showFromMessage(
+                    if (jsonData.roomId == RoomManager.currentRoom) {
+                        when (username) {
+                            admin -> showAdminMessage(jsonData.content)
+                            SocketHandler.user!!.username -> showToMessage(
                                 jsonData.content,
-                                userAvatar,
-                                username,
                                 timestamp
                             )
+                            else -> {
+                                var userAvatar: AvatarID = AvatarID.AVOCADO
+                                if (RoomManager.roomAvatars[roomID] !== null) {
+                                    userAvatar =
+                                        getAvatar(RoomManager.roomAvatars[roomID]!![username])
+                                }
+                                showFromMessage(
+                                    jsonData.content,
+                                    userAvatar,
+                                    username,
+                                    timestamp
+                                )
+                            }
                         }
                     }
                     if (RoomManager.roomsJoined.containsKey(roomID)) {

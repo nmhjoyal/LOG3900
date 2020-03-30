@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
-import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -50,13 +49,6 @@ class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch {
         prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
 
         currentUser = PreferenceHandler(this).getUser().username
-
-        toolbar.visibility = View.GONE
-        val transaction = manager.beginTransaction()
-        val waitingRoom = WaitingRoom()
-        transaction.replace(R.id.draw_view_container, waitingRoom)
-        transaction.addToBackStack(null)
-        transaction.commitAllowingStateLoss()
     }
 
     override fun onStart() {
@@ -67,7 +59,13 @@ class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch {
             MatchMode.SOLO -> {
             }
             MatchMode.COLLABORATIVE-> {}
-            MatchMode.FREE_FOR_ALL -> {}
+            MatchMode.FREE_FOR_ALL -> {
+                val transaction = manager.beginTransaction()
+                val waitingRoom = WaitingRoom()
+                transaction.replace(R.id.draw_view_container, waitingRoom)
+                transaction.addToBackStack(null)
+                transaction.commitAllowingStateLoss()
+            }
             MatchMode.ONE_ON_ONE -> {}
 
         }
@@ -104,10 +102,6 @@ class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch {
         val transaction = manager.beginTransaction()
         val chatFragment = ChatFragment()
         val bundle = Bundle()
-        if (!RoomManager.roomsJoined.containsKey(RoomManager.currentRoom)) {
-            RoomManager.roomsJoined.put(RoomManager.currentRoom, arrayListOf())
-            RoomManager.roomAvatars.put(RoomManager.currentRoom, mapOf())
-        }
         bundle.putString(RoomArgs.ROOM_ID, RoomManager.currentRoom)
         bundle.putBoolean(GameArgs.IS_GAME_CHAT, true)
         chatFragment.arguments = bundle
@@ -153,6 +147,7 @@ class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch {
     }
 
     private fun setupWordHolder() {
+        lettersAdapter.clear()
         for (letter in wordToGuess) {
             lettersAdapter.add(LetterHolder(letter.toString(), isHost))
         }
@@ -164,7 +159,6 @@ class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch {
         val dialog = Dialog(this)
         dialog.setCancelable(false)
         dialog.setContentView(R.layout.dialog_choose_word)
-        dialog.setTitle(R.string.prompt_choose_word)
         val adapter = GroupAdapter<GroupieViewHolder>()
         val wordRecycler = dialog.findViewById<RecyclerView>(R.id.word_choices)
         for (word in words) {
@@ -176,6 +170,7 @@ class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch {
             wordToGuess = selectedWord
             SocketHandler.startTurn(selectedWord)
             showDrawerFragment(selectedWord)
+            dialog.dismiss()
         }))
         wordRecycler.adapter = adapter
         dialog.show()
@@ -188,6 +183,7 @@ class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch {
             .setMessage(R.string.leave_match_ask)
             .setPositiveButton(R.string.yes) { _, _ ->
                 SocketHandler.leaveMatch()
+                finish()
             }
             .setNegativeButton(R.string.cancel) { _, _ -> }
 
@@ -222,10 +218,13 @@ class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch {
 
             }))
             .on(SocketEvent.TURN_STARTED, ({ data ->
-                draw_view_container.bringToFront()
-                val time = Gson().fromJson(data.first().toString(), Number::class.java)
-                startCountdown(time.toLong() * SECOND_INTERVAL)
-                setupWordHolder()
+                Handler(Looper.getMainLooper()).post(Runnable {
+                    draw_view_container.bringToFront()
+                    val time = Gson().fromJson(data.first().toString(), Number::class.java)
+                    wordToGuess = ""
+                    startCountdown(time.toLong() * SECOND_INTERVAL)
+                    setupWordHolder()
+                })
             }))
             .on(SocketEvent.MATCH_STARTED, ({ data ->
                 val feedback = Gson().fromJson(data.first().toString(), StartMatchFeedback::class.java)
@@ -238,9 +237,6 @@ class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch {
                         Toast.makeText(this, feedback.feedback.log_message, Toast.LENGTH_LONG).show()
                     })
                 }
-            }))
-            .on(SocketEvent.MATCH_LEFT, ({
-                finish()
             }))
     }
 

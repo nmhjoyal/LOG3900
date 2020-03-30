@@ -21,15 +21,6 @@ class DrawerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        val word = arguments!!.getString(GameArgs.CHOSEN_WORD)
-        if (word != null) {
-            word_to_draw.text = word
-            word_to_draw.bringToFront()
-        } else {
-            word_to_draw.visibility = View.GONE
-        }
-
         trash.setOnClickListener(({
             draw_view.clearCanvas()
         }))
