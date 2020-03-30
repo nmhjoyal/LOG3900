@@ -166,7 +166,7 @@ class ChatRoomsFragment : Fragment() {
                     if (roomCreateFeedback.status) {
                         SocketHandler.searchRooms()
                         if (newRoomName.isNotBlank() && !RoomManager.roomsJoined.containsKey(newRoomName)) {
-                            RoomManager.addRoom(Room(newRoomName, arrayListOf(), mapOf()))
+                            RoomManager.addRoom(Room(newRoomName, arrayListOf(), mutableMapOf()))
                             adapter.add(ChatRoomItem(newRoomName))
                             for (invite in inviteList) {
                                 SocketHandler.sendInvite(Invitation(newRoomName, invite))

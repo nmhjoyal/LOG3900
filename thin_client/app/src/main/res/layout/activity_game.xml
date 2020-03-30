@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/color_white">
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -16,23 +16,27 @@
             android:id="@+id/draw_view_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-        <RelativeLayout
+        <androidx.cardview.widget.CardView
             android:id="@+id/user_block"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clickable="false"
-            android:focusable="false"
-            android:background="@color/dark_gray">
-            <TextView
-                android:id="@+id/message"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/color_white"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:layout_centerInParent="true"/>
-        </RelativeLayout>
-    </RelativeLayout>
+            android:focusable="false">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/light_gray">
+                <TextView
+                    android:id="@+id/message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold"
+                    android:layout_centerInParent="true"
+                    android:textSize="18sp"/>
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+    </FrameLayout>
 
 
 

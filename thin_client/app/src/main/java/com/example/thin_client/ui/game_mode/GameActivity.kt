@@ -37,11 +37,16 @@ import java.util.*
 class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch {
     private lateinit var manager: FragmentManager
     private lateinit var prefs: SharedPreferences
-    private val SECOND_INTERVAL: Long = 1000
     private var wordToGuess: String = ""
     private var currentUser = ""
     private var isHost = false
     private val lettersAdapter = GroupAdapter<GroupieViewHolder>()
+    private var timer: CountDownTimer? = null
+    private var isGameStarted = false
+    private var currentDrawer = ""
+
+    private val SECOND_INTERVAL: Long = 1000
+    private val TIME_PATTERN = "mm:ss"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +54,7 @@ class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch {
         prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
 
         currentUser = PreferenceHandler(this).getUser().username
+        draw_view_container.bringToFront()
     }
 
     override fun onStart() {
@@ -60,11 +66,13 @@ class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch {
             }
             MatchMode.COLLABORATIVE-> {}
             MatchMode.FREE_FOR_ALL -> {
-                val transaction = manager.beginTransaction()
-                val waitingRoom = WaitingRoom()
-                transaction.replace(R.id.draw_view_container, waitingRoom)
-                transaction.addToBackStack(null)
-                transaction.commitAllowingStateLoss()
+                if (!isGameStarted) {
+                    val transaction = manager.beginTransaction()
+                    val waitingRoom = WaitingRoom()
+                    transaction.replace(R.id.draw_view_container, waitingRoom)
+                    transaction.addToBackStack(null)
+                    transaction.commitAllowingStateLoss()
+                }
             }
             MatchMode.ONE_ON_ONE -> {}
 
@@ -127,14 +135,15 @@ class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch {
         transaction.replace(R.id.draw_view_container, observerFragment)
         transaction.addToBackStack(null)
         transaction.commitAllowingStateLoss()
-        message.text = "User is choosing a word"
+        message.text = String.format(resources.getString(R.string.user_choosing_word), currentDrawer)
+        user_block.bringToFront()
     }
 
     private fun startCountdown(totalTime: Long) {
-        val timePattern = "mm:ss"
+        val timePattern = TIME_PATTERN
         val simpleDateFormat = SimpleDateFormat(timePattern, Locale.US)
         time_text.text = simpleDateFormat.format(Date(totalTime))
-        val timer = object : CountDownTimer(totalTime, SECOND_INTERVAL) {
+        timer = object : CountDownTimer(totalTime, SECOND_INTERVAL) {
             override fun onTick(millisUntilFinished: Long) {
                 time_text.text = simpleDateFormat.format(Date(millisUntilFinished))
             }
@@ -143,11 +152,10 @@ class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch {
                 time_text.text = simpleDateFormat.format(Date(0))
             }
         }
-        timer.start()
+        timer?.start()
     }
 
     private fun setupWordHolder() {
-        lettersAdapter.clear()
         for (letter in wordToGuess) {
             lettersAdapter.add(LetterHolder(letter.toString(), isHost))
         }
@@ -208,7 +216,15 @@ class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch {
                 val turnParams = Gson().fromJson(data.first().toString(), EndTurn::class.java)
                 Handler(Looper.getMainLooper()).post(Runnable {
                     user_block.bringToFront()
+                    if (timer != null) {
+                        timer?.cancel()
+                        timer?.onFinish()
+                    }
+                    lettersAdapter.clear()
+                    wordToGuess = ""
+                    message.text = ""
                     isHost = turnParams.drawer.equals(currentUser)
+                    currentDrawer = turnParams.drawer
                     if (isHost) {
                         showWordsSelection(turnParams.choices)
                     } else {
@@ -221,13 +237,13 @@ class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch {
                 Handler(Looper.getMainLooper()).post(Runnable {
                     draw_view_container.bringToFront()
                     val time = Gson().fromJson(data.first().toString(), Number::class.java)
-                    wordToGuess = ""
                     startCountdown(time.toLong() * SECOND_INTERVAL)
                     setupWordHolder()
                 })
             }))
             .on(SocketEvent.MATCH_STARTED, ({ data ->
                 val feedback = Gson().fromJson(data.first().toString(), StartMatchFeedback::class.java)
+                isGameStarted = true
                 if (feedback.feedback.status) {
                     Handler(Looper.getMainLooper()).post(Runnable {
                         user_block.bringToFront()

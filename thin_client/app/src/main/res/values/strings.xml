@@ -142,6 +142,7 @@
     <string name="leave_match_ask">Are you sure you want to leave the game ?</string>
     <string name="prompt_choose_word">Choose a word to draw</string>
     <string name="send_guess">Guess</string>
+    <string name="user_choosing_word">%1$s is choosing a word!</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hostname">Hostname</string>

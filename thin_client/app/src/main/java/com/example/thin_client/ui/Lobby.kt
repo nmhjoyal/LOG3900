@@ -170,8 +170,9 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
     private fun turnOffSocketEvents() {
         if (SocketHandler.socket != null) {
             SocketHandler.socket!!
+                .off(SocketEvent.USER_SIGNED_IN)
                 .off(SocketEvent.USER_SIGNED_OUT)
-                .off(Socket.EVENT_ERROR)
+                .off(SocketEvent.USER_JOINED_ROOM)
         }
     }
 
