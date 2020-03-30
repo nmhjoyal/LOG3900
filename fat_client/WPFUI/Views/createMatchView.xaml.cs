@@ -34,5 +34,6 @@ namespace WPFUI.Views
             int timeLimit = int.Parse(this.timecomboBox.Text.Substring(0, this.timecomboBox.Text.Length - 8));
             (this.DataContext as createMatchViewModel).createMatch(matchMode, nbRounds, timeLimit);
         }
+
     }
 }

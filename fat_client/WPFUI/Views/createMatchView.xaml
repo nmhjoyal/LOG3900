@@ -5,45 +5,45 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WPFUI.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="600"
+             d:DesignHeight="800" d:DesignWidth="800"
               FontFamily="Microsoft JhengHei UI Light">
     <Grid Background="White">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="50"/>
-            <ColumnDefinition Width="250" />
-            <ColumnDefinition Width="250" />
-            <ColumnDefinition Width="50" />
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
-            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="10"/>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="10"/>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="10"/>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="10"/>
-            <RowDefinition Height="50"/>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
 
-        <Border Background="#FF66CC00" BorderThickness="5" Grid.ColumnSpan="1" Grid.Column="1" Grid.Row="3" CornerRadius="10">
+        <Border Background="#FF66CC00" BorderThickness="5" Grid.ColumnSpan="1" Grid.Column="1" Grid.Row="3" CornerRadius="10" Height="40">
             <TextBlock FontSize="14" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Choisi le mode:" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="3"/>
         </Border>
-        <ComboBox Width="200" Grid.Column="2" Grid.Row="3"  Name="modecomboBox" >
+        <ComboBox Width="auto" Grid.Column="2" Grid.Row="3"  Name="modecomboBox" Margin="10,0,10,0">
             <ComboBoxItem Content="Mêlée générale"/>
             <ComboBoxItem Content="Sprint solo"/>
             <ComboBoxItem Content="Sprint coopératif"/>
             <ComboBoxItem Content="1 vs 1"/>
             <ComboBoxItem Content="Mode inversé"/>
         </ComboBox>
-        
-        <Border Background="#FF66CC00" BorderThickness="5" Grid.ColumnSpan="1" Grid.Column="1" Grid.Row="5" CornerRadius="10">
+
+		<Border Background="#FF66CC00" BorderThickness="5" Grid.ColumnSpan="1" Grid.Column="1" Grid.Row="5" CornerRadius="10" Height="40">
             <TextBlock FontSize="14" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Choisi le nombre de rounds:" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="5"/>
         </Border>
-        <ComboBox Width="200" Grid.Column="2" Grid.Row="5"  Name="roundcomboBox" >
+		<ComboBox Width="auto" Grid.Column="2" Grid.Row="5"  Name="roundcomboBox" Margin="10,0,10,0">
             <ComboBoxItem Content="3"/>
             <ComboBoxItem Content="4"/>
             <ComboBoxItem Content="5"/>
@@ -51,10 +51,10 @@
             <ComboBoxItem Content="7"/>
             <ComboBoxItem Content="8"/>
         </ComboBox>
-        <Border Background="#FF66CC00" BorderThickness="5" Grid.ColumnSpan="1" Grid.Column="1" Grid.Row="7" CornerRadius="10">
+		<Border Background="#FF66CC00" BorderThickness="5" Grid.ColumnSpan="1" Grid.Column="1" Grid.Row="7" CornerRadius="10" Height="40">
             <TextBlock FontSize="14" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Choisi la durée de chaque round:" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="5"/>
         </Border>
-        <ComboBox Width="200" Grid.Column="2" Grid.Row="7"  Name="timecomboBox">
+		<ComboBox Width="auto" Grid.Column="2" Grid.Row="7"  Name="timecomboBox" Margin="10,0,10,0">
             <ComboBoxItem Content="30 secondes"/>
             <ComboBoxItem Content="60 secondes"/>
             <ComboBoxItem Content="90 secondes"/>
@@ -73,6 +73,6 @@
                 <Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
             </StackPanel>
         </Button>
-        <TextBlock FontSize="40"  Foreground="#FF66CC00" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2">Paramètres de ton jeu!</TextBlock>
+        <TextBlock FontSize="40"  Foreground="#FF66CC00" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">Paramètres de ton jeu!</TextBlock>
     </Grid>
 </UserControl>
