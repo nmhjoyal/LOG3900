@@ -37,7 +37,6 @@ export default class FreeForAll extends Match {
 
     protected async endTurn(io: SocketIO.Server): Promise<void> {
         clearTimeout(this.timeout);
-        this.currentWord = "";
         let currentPlayer: Player | undefined = this.getPlayer(this.currentPlayer);
         if (currentPlayer) {
             const currentIndex: number = this.players.indexOf(currentPlayer);
@@ -58,6 +57,7 @@ export default class FreeForAll extends Match {
             io.in(this.matchId).emit("new_message", JSON.stringify(message));
             io.in(this.matchId).emit("turn_ended", JSON.stringify(endTurn));
             this.resetScoresTurn();
+            this.currentWord = "";
             
             if (currentPlayer.isVirtual) {
                 let word: string;

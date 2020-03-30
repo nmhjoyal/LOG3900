@@ -199,23 +199,23 @@ export default abstract class Match {
      * 
      * 
      */
-    protected stroke(socket: SocketIO.Socket, stroke: Stroke): void {
+    public stroke(socket: SocketIO.Socket, stroke: Stroke): void {
         this.drawing.stroke(socket, stroke);
     }
     
-    protected point(socket: SocketIO.Socket, point: StylusPoint): void {
+    public point(socket: SocketIO.Socket, point: StylusPoint): void {
         this.drawing.point(socket, point);
     }
 
-    protected eraseStroke(socket: SocketIO.Socket): void {
+    public eraseStroke(socket: SocketIO.Socket): void {
         this.drawing.eraseStroke(socket);
     }
 
-    protected erasePoint(socket: SocketIO.Socket): void {
+    public erasePoint(socket: SocketIO.Socket): void {
         this.drawing.erasePoint(socket);
     }
 
-    protected clear(socket: SocketIO.Socket): void {
+    public clear(socket: SocketIO.Socket): void {
         this.drawing.clear(socket);
     }
 
