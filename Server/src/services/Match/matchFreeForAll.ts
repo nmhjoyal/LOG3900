@@ -1,7 +1,7 @@
 import Match from "./matchAbstract";
 import PublicProfile from "../../models/publicProfile";
 import ChatHandler from "../chatHandler";
-import { EndTurn, CreateMatch } from "../../models/match";
+import { EndTurn, CreateMatch, UsernameUpdateScore, UpdateScore } from "../../models/match";
 import RandomWordGenerator from "../wordGenerator/wordGenerator";
 import Player from "../../models/player";
 import { gameDB } from "../Database/gameDB";
@@ -46,15 +46,26 @@ export default class FreeForAll extends Match {
             } else {
                 this.currentPlayer = this.players[currentIndex + 1].user.username;
             }
+
+            const scores: UsernameUpdateScore[] = [];
+            this.scores.forEach((updateScore: UpdateScore, username: string) => {
+                const usernameUpdateScore: UsernameUpdateScore = {
+                    username: username,
+                    scoreTotal: updateScore.scoreTotal,
+                    scoreTurn: updateScore.scoreTurn,
+                }
+                scores.push(usernameUpdateScore);
+            })
     
             const endTurn: EndTurn = {
                 currentRound: this.round,
                 choices: RandomWordGenerator.generateChoices(),
                 drawer: currentPlayer.user.username,
-                scores: this.scores
+                scores: scores
             };
             const message: Message = Admin.createAdminMessage("The word was " + this.currentWord, this.matchId);
             io.in(this.matchId).emit("new_message", JSON.stringify(message));
+            console.log("turn_ended emitted");
             io.in(this.matchId).emit("turn_ended", JSON.stringify(endTurn));
             this.resetScoresTurn();
             

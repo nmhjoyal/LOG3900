@@ -464,12 +464,28 @@ namespace WPFUI.Models
                 if((Boolean)json.feedback.status)
                 {
                     this._userdata.nbRounds = (int)json.nbRounds;
-                    _events.PublishOnUIThread(new gameEvent());
-                    this.offWaitingRoom();
                 } else
                 {
                     Console.WriteLine((string)json.feedback.log_message);
                 }
+            });
+
+            this.socket.On("turn_ended", (endTurn) =>
+            {
+                EndTurn json = JsonConvert.DeserializeObject<EndTurn>(endTurn.ToString());
+                Console.WriteLine(endTurn.ToString());
+                this._userdata.firstRound = json;
+                _events.PublishOnUIThread(new gameEvent());
+                this.offWaitingRoom();
+            });
+        }
+
+        public void onMatch()
+        {
+            this.socket.On("turn_ended", (endTurn) =>
+            {
+                dynamic json = JsonConvert.DeserializeObject(endTurn.ToString());
+                Console.WriteLine("turn_ended");
             });
         }
 
@@ -480,6 +496,7 @@ namespace WPFUI.Models
             this.socket.Off("vp_added");
             this.socket.Off("vp_removed");
             this.socket.Off("match_started");
+            this.socket.Off("turn_ended");
         }
     }
 

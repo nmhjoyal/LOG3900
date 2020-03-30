@@ -36,11 +36,12 @@ namespace WPFUI.ViewModels
             _timer = new DispatcherTimer();
             _wordChoices = new BindableCollection<dynamic>();
             _turnScores = new BindableCollection<dynamic>();
-            _currentRound = 1;
             _roundDuration = 30;
             _timerContent = _roundDuration;
             fillAvatars();
             startTimer();
+            this._socketHandler.onMatch();
+            // this.HandleFirstRound();
         }
 
         public void startTimer()
@@ -170,17 +171,6 @@ namespace WPFUI.ViewModels
 
         }
 
-        public void mockEndTurn()
-        {
-            dynamic endTurn = new System.Dynamic.ExpandoObject();
-            endTurn.currentRound = 1;
-            endTurn.drawer = "Karima";
-            endTurn.nextIsYou = true;
-            newWords();
-            newScores();
-            _events.PublishOnUIThread(new endTurnRoutineEvent(endTurn));
-        }
-
         public void newWords()
         {
             _wordChoices.Clear();
@@ -196,9 +186,20 @@ namespace WPFUI.ViewModels
             wordChoices.Refresh();
         }
 
-        public void newScores()
+        public void newScores(List<UsernameUpdateScore> scores)
         {
             _turnScores.Clear();
+            Console.WriteLine("!" + scores.Count);
+            foreach (UsernameUpdateScore score in scores)
+            {
+                dynamic dynamicScore = new System.Dynamic.ExpandoObject();
+                dynamicScore.position = 0;
+                dynamicScore.name = score.username;
+                dynamicScore.score = score.scoreTotal;
+                _turnScores.Add(dynamicScore);
+            }
+            turnScores.Refresh();
+            /*
             dynamic score1 = new System.Dynamic.ExpandoObject();
             score1.position = 1;
             score1.name = "Karima";
@@ -216,9 +217,30 @@ namespace WPFUI.ViewModels
             _turnScores.Add(score1);
             _turnScores.Add(score2);
             _turnScores.Add(score3);
-            turnScores.Refresh();
+            */
         }
 
+        public void HandleFirstRound()
+        {
+            _currentRound = this._userData.firstRound.currentRound;
+            List<UsernameUpdateScore> scores = new List<UsernameUpdateScore>(this._userData.firstRound.scores);
+            Console.WriteLine(scores.Count);
+            this.newScores(scores);
+            if ((string)this._userData.firstRound.drawer == this._userData.userName)
+            {
+                // afficher les 3 mots
+            } else
+            {
+                // drawe is choosing a word
+            }
+            dynamic endTurn = new System.Dynamic.ExpandoObject();
+            endTurn.currentRound = this._userData.firstRound.currentRound;
+            endTurn.drawer = this._userData.firstRound.drawer;
+            endTurn.nextIsYou = this._userData.firstRound.drawer == this._userData.userName;
+            newWords();
+            newScores(this._userData.firstRound.scores);
+            _events.PublishOnUIThread(new endTurnRoutineEvent(endTurn));
+        }
 
 
         public void Handle(refreshMessagesEvent message)

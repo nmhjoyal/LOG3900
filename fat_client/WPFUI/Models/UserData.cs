@@ -22,6 +22,7 @@ namespace WPFUI.Models
         private string _matchId;
         private int _nbRounds;
         private IEventAggregator _events;
+        private EndTurn _firstRound;
 
         public string avatarName
         {
@@ -87,6 +88,12 @@ namespace WPFUI.Models
         {
             get { return _nbRounds; }
             set { _nbRounds = value; }
+        }
+
+        public EndTurn firstRound
+        {
+            get { return _firstRound; }
+            set { _firstRound = value; }
         }
         public UserData(IEventAggregator events)
         {

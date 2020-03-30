@@ -220,7 +220,11 @@ export default abstract class Match {
         this.scores = new Map<string, UpdateScore>();
         for (let player of this.players) {
             if(!player.isVirtual) {
-                this.scores.set(player.user.username, { scoreTotal: 0, scoreTurn: 0 });
+                const updateScore: UpdateScore = {
+                    scoreTotal: 0,
+                    scoreTurn: 0
+                }
+                this.scores.set(player.user.username, updateScore);
             }
         }
     }

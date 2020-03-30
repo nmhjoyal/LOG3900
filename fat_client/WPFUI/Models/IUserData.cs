@@ -15,8 +15,8 @@ namespace WPFUI.Models
         BindableCollection<SelectableRoom> selectablePublicRooms { get; set; }
         string userName { get; set; } 
         string matchId { get; set; }
-
         int nbRounds { get; set; }
+        EndTurn firstRound { get; set; }
         void addJoinedRoom(Room room);
         void addMessage(Message message);
         void addPublicRoom(Room room);

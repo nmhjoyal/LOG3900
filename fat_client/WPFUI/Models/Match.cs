@@ -163,4 +163,33 @@ namespace WPFUI.Models
             this.matchMode = matchMode;
         }
     }
+
+    public class EndTurn
+    {
+        public int currentRound;
+        public List<string> choices;
+        public string drawer;
+        public List<UsernameUpdateScore> scores;
+
+        public EndTurn(int currentRound, List<string> choices, string drawer, List<UsernameUpdateScore> scores)
+        {
+            this.currentRound = currentRound;
+            this.choices = new List<string>(choices);
+            this.drawer = drawer;
+            this.scores = new List<UsernameUpdateScore>(scores);
+        }
+    }
+    public class UsernameUpdateScore
+    {
+        public string username;
+        public int scoreTotal;
+        public int scoreTurn;
+
+        public UsernameUpdateScore(string username, int scoreTotal, int scoreTurn)
+        {
+            this.username = username;
+            this.scoreTotal = scoreTotal;
+            this.scoreTurn = scoreTurn;
+        }
+    }
 }

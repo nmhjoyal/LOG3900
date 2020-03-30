@@ -84,7 +84,7 @@
             </StackPanel>
         </Button>
 
-		<Button  x:Name="mockEndTurn"  Grid.Column="12" Grid.Row="0" MaxWidth="100" HorizontalAlignment="Right"  Background="#FF24A035" BorderBrush="Black">
+        <Button  x:Name="HandleFirstRound"  Grid.Column="12" Grid.Row="0" MaxWidth="100" HorizontalAlignment="Right"  Background="#FF24A035" BorderBrush="Black">
 			<StackPanel Orientation="Horizontal">
 				<TextBlock Foreground="White">EndTurn</TextBlock>
 			</StackPanel>

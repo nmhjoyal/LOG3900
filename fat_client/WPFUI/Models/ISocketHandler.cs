@@ -28,6 +28,8 @@ namespace WPFUI.Models
         void offCreateMatch();
         void onWaitingRoom(BindableCollection<Player> players);
         void offWaitingRoom();
+
+        void onMatch();
         void sendMessage();
         void SignOut();
         void TestGETWebRequest(string request);

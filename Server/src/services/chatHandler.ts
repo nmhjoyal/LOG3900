@@ -55,7 +55,6 @@ export default class ChatHandler {
             status: status,
             log_message: log_message
         }
-        console.log(feedback.log_message);
         return feedback;
     }
 
