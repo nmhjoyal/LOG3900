@@ -159,7 +159,8 @@ class ChatFragment : Fragment() {
                             )
                             else -> {
                                 var userAvatar: AvatarID = AvatarID.AVOCADO
-                                if (RoomManager.roomAvatars[roomID] !== null) {
+                                val avatarList = RoomManager.roomAvatars[roomID]
+                                if (avatarList !== null) {
                                     userAvatar =
                                         getAvatar(RoomManager.roomAvatars[roomID]!![username])
                                 }

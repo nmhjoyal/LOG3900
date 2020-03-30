@@ -26,6 +26,7 @@ import com.example.thin_client.data.game.MatchMode
 import com.example.thin_client.data.lifecycle.LoginState
 import com.example.thin_client.data.model.MatchInfos
 import com.example.thin_client.data.model.User
+import com.example.thin_client.data.rooms.AvatarUpdate
 import com.example.thin_client.data.rooms.JoinRoomFeedback
 import com.example.thin_client.data.rooms.RoomArgs
 import com.example.thin_client.data.rooms.RoomManager
@@ -42,6 +43,7 @@ import com.example.thin_client.ui.profile.ProfileActivity
 import com.github.nkzawa.socketio.client.Socket
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_lobby.*
+import kotlinx.android.synthetic.main.waiting_room_fragment.*
 
 class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.IStartNewFragment {
     private lateinit var manager: FragmentManager
@@ -264,6 +266,13 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
                     transaction.commitAllowingStateLoss()
                 })
 
+            }))
+            ?.on(SocketEvent.AVATAR_UPDATED, ({ data ->
+                val update = Gson().fromJson(data.first().toString(), AvatarUpdate::class.java)
+                if (RoomManager.roomAvatars[update.roomId] != null) {
+                    RoomManager.roomAvatars[update.roomId]!!.put(update.profile.username,
+                        update.profile.avatar)
+                }
             }))
             ?.on(Socket.EVENT_DISCONNECT, ({
                 SocketHandler.socket = null

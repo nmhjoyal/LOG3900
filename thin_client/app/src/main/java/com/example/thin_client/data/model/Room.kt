@@ -5,5 +5,5 @@ import com.example.thin_client.data.Message
 data class Room (
     val id: String,
     val messages: ArrayList<Message>,
-    val avatars: Map<String,String>
+    val avatars: MutableMap<String,String>
 )

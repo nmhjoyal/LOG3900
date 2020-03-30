@@ -22,6 +22,7 @@ object SocketEvent {
     const val USER_SENT_INVITE = "user_sent_invite"
     const val RECEIVE_INVITE = "receive_invite"
     const val LOAD_HISTORY = "load_history"
+    const val AVATAR_UPDATED = "avatar_updated"
 
     const val UPDATE_PROFILE = "update_profile"
     const val PROFILE_UPDATED = "profile_updated"
@@ -35,9 +36,9 @@ object SocketEvent {
     const val ERASE_STROKE = "erase_stroke"
     const val ERASE_POINT = "erase_point"
     const val CLEAR = "clear"
+    const val NEW_CLEAR = "new_clear"
     const val CONNECT_FREE_DRAW = "connect_free_draw"
     const val DISCONNECT_FREE_DRAW = "disconnect_free_draw"
-    const val GET_DRAWING = "get_drawing"
 
     const val CREATE_MATCH = "create_match"
     const val MATCH_CREATED = "match_created"

@@ -149,8 +149,8 @@ object SocketHandler {
         socket!!.emit(SocketEvent.START_MATCH)
     }
 
-    fun getDrawing() {
-        socket!!.emit(SocketEvent.GET_DRAWING)
+    fun clearDrawing() {
+        socket!!.emit(SocketEvent.CLEAR)
     }
 
     fun updateMatches(matchInfos:ArrayList<MatchInfos>) {

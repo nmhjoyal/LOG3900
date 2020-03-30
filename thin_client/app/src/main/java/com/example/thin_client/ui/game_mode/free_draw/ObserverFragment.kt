@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import com.example.thin_client.R
 import com.example.thin_client.data.app_preferences.PreferenceHandler
 import com.example.thin_client.data.app_preferences.Preferences
-import com.example.thin_client.data.drawing.DrawingAttributes
 import com.example.thin_client.data.drawing.Stroke
 import com.example.thin_client.data.drawing.StylusPoint
 import com.example.thin_client.data.lifecycle.LoginState
@@ -104,7 +103,7 @@ class ObserverFragment : Fragment() {
                     )
                 })
             }))
-            .on(SocketEvent.CLEAR, ({
+            .on(SocketEvent.NEW_CLEAR, ({
                 Handler(Looper.getMainLooper()).post(Runnable {
                     observer_draw_view.clearCanvas()
                 })
@@ -117,5 +116,6 @@ class ObserverFragment : Fragment() {
             .off(SocketEvent.NEW_STROKE)
             .off(SocketEvent.NEW_ERASE_STROKE)
             .off(SocketEvent.NEW_ERASE_POINT)
+            .off(SocketEvent.NEW_CLEAR)
     }
 }
