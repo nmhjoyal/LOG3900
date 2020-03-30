@@ -484,15 +484,18 @@ namespace WPFUI.Models
         {
             this.socket.On("turn_ended", (endTurn) =>
             {
-                dynamic json = JsonConvert.DeserializeObject(endTurn.ToString());
-                Console.WriteLine("turn_ended");
+                /* TODO: Find why the emit is not catched here */
+                EndTurn json = JsonConvert.DeserializeObject<EndTurn>(endTurn.ToString());
+                Console.WriteLine(endTurn.ToString());
+                this._userdata.firstRound = json;
+                _events.PublishOnUIThread(new endTurnRoutineVMEvent());
             });
 
             this.socket.On("turn_started", (time) =>
             {
                 /* TODO: transmit the turn time to the viewmodel */
                 dynamic json = JsonConvert.DeserializeObject(time.ToString());
-                _events.PublishOnUIThread(new startTurnRoutineEvent());
+                _events.PublishOnUIThread(new startTurnRoutineEvent((int)json));
             });
         }
 

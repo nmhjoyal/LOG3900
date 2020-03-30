@@ -12,7 +12,8 @@ using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    class partieJeuViewModel: Screen, IHandle<refreshMessagesEvent>, IHandle<addMessageEvent>, IHandle<wordSelectedEvent>
+    class partieJeuViewModel: Screen, IHandle<refreshMessagesEvent>, IHandle<addMessageEvent>,
+                              IHandle<wordSelectedEvent>, IHandle<startTurnRoutineEvent>, IHandle<endTurnRoutineVMEvent>
     {
         private IEventAggregator _events;
         private ISocketHandler _socketHandler;
@@ -194,13 +195,7 @@ namespace WPFUI.ViewModels
             List<UsernameUpdateScore> scores = new List<UsernameUpdateScore>(this._userData.firstRound.scores);
             Console.WriteLine(scores.Count);
             this.newScores(scores);
-            if ((string)this._userData.firstRound.drawer == this._userData.userName)
-            {
-                // afficher les 3 mots
-            } else
-            {
-                // drawe is choosing a word
-            }
+
             dynamic endTurn = new System.Dynamic.ExpandoObject();
             endTurn.currentRound = this._userData.firstRound.currentRound;
             endTurn.drawer = this._userData.firstRound.drawer;
@@ -228,6 +223,17 @@ namespace WPFUI.ViewModels
             Console.WriteLine("!" + message.word);
             /* TODO envoyer le mot au serveur */
             _socketHandler.socket.Emit("start_turn", message.word);
+        }
+
+        public void Handle(startTurnRoutineEvent message)
+        {
+            _timerContent = message.turnTime;
+            _timer.Start();
+        }
+
+        public void Handle(endTurnRoutineVMEvent message)
+        {
+            this.HandleFirstRound();
         }
     }
 }

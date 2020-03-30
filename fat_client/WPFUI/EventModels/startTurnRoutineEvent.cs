@@ -8,10 +8,17 @@ namespace WPFUI.EventModels
 {
     public class startTurnRoutineEvent
     {
-        public startTurnRoutineEvent()
+        private int _turnTime;
+        public startTurnRoutineEvent(int time)
         {
-
+            _turnTime = time;
         }
+
+        public int turnTime
+        {
+            get { return _turnTime; }
+        }
+        
     }
 }
 
