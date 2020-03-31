@@ -35,7 +35,7 @@ import com.example.thin_client.ui.chat.ChatFragment
 import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
 import com.example.thin_client.ui.game_mode.GameActivity
 import com.example.thin_client.ui.game_mode.MatchList
-import com.example.thin_client.ui.game_mode.WaitingRoom
+import com.example.thin_client.ui.waitingroom.WaitingRoom
 import com.example.thin_client.ui.game_mode.free_draw.FreeDrawActivity
 import com.example.thin_client.ui.leaderboard.LeaderboardActivity
 import com.example.thin_client.ui.login.LoginActivity

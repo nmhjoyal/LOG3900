@@ -6,35 +6,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import com.example.thin_client.R
 import com.example.thin_client.data.game.GameManager
+import com.example.thin_client.ui.LobbyMenuFragment
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.collab_gameslist.*
-import kotlinx.android.synthetic.main.game_item.*
-import kotlinx.android.synthetic.main.lobby_menu_fragment.*
+import java.util.logging.SocketHandler
 
 class CollabMatchMode : Fragment() {
 
-    interface IStartNewFragment {
-        fun startWaitingRoom()
-    }
 
-    private var startNewFragment: IStartNewFragment? = null
+    private var startNewFragment: LobbyMenuFragment.IStartNewFragment? = null
 
     private val adapter = GroupAdapter<GroupieViewHolder>()
-    private lateinit var manager: FragmentManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-        manager = childFragmentManager
-
         super.onViewCreated(view, savedInstanceState)
 
-        adapter.add(MatchItem("B", "Allllo", 4, 5))
-
-        adapter.setOnItemClickListener(({ _, _->
+        adapter.add(MatchItem("A","Allllo", 4 ,5))
+        //faire la verification du matchID
+        adapter.setOnItemClickListener(({ _, _ ->
             startNewFragment?.startWaitingRoom()
         }))
 
@@ -63,9 +55,10 @@ class CollabMatchMode : Fragment() {
             adapter.add(MatchItem(match.matchId, match.host, match.nbRounds, match.players.size))
         }
     }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        startNewFragment = context as? IStartNewFragment
+        startNewFragment = context as? LobbyMenuFragment.IStartNewFragment
         if (startNewFragment == null) {
         }
     }

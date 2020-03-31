@@ -44,6 +44,10 @@ class MatchList : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewpager.adapter = MyPagerAdapter(childFragmentManager)
 
+        refresh_matches.setOnClickListener{
+            SocketHandler.searchMatches()
+        }
+
         create_match.setOnClickListener {
             context?.let {context ->
                 showCreateMatchDialog(context)

@@ -125,6 +125,7 @@
     <string name="title_game_mode">Game mode</string>
     <string name="join_game">Join existing game</string>
     <string name="create_match">Start new game</string>
+    <string name="players_in_game">Players in game </string>
     <string name="solo_mode">Solo</string>
     <string name="collab_mode">Collaborative</string>
     <string name="free_for_all_mode">Free-for-All</string>
@@ -138,9 +139,9 @@
     <string name="time_placeholder">00</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hostname">Hostname</string>
-    <string name="matchId">MatchId</string>
-    <string name="rounds">Rounds</string>
-    <string name="numberplayers">Number of players</string>
+    <string name="hostname">Hostname:</string>
+    <string name="matchId">MatchId:</string>
+    <string name="rounds">Rounds:</string>
+    <string name="numberplayers">Number of players: </string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
