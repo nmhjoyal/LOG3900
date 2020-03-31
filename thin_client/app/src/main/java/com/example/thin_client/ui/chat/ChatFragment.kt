@@ -38,12 +38,14 @@ class ChatFragment : Fragment() {
     private var roomID : String ?= ""
     private val admin : String ="Admin"
     private lateinit var userAvatarID: AvatarID
+    private val WORD_GUESSED_FILTER = "The word was"
 
     private var guessWordListener: IGuessWord? = null
 
 
     interface IGuessWord {
         fun guessSent()
+        fun sendWord(text: String)
     }
 
 
@@ -233,6 +235,9 @@ class ChatFragment : Fragment() {
         adapter.add(ChatUserJoined(text))
         if (recyclerview_chat != null){
             recyclerview_chat.scrollToPosition(adapter.itemCount - 1)
+        }
+        if (text.contains(WORD_GUESSED_FILTER)) {
+            guessWordListener?.sendWord(text)
         }
     }
 

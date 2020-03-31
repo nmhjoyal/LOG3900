@@ -41,7 +41,7 @@ import java.util.*
 class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
     private lateinit var manager: FragmentManager
     private lateinit var prefs: SharedPreferences
-    private var wordToGuess: String = ""
+    private var wordBeingDrawn: String = ""
     private var currentUser = ""
     private var isHost = false
     private val lettersAdapter = GroupAdapter<GroupieViewHolder>()
@@ -51,6 +51,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
     private var nbTries = 0
     private var firstTurnStarted = false
     private var currentRound = 1
+    private var wordWasString = ""
 
     private val SECOND_INTERVAL: Long = 1000
     private val TIME_PATTERN = "mm:ss"
@@ -76,6 +77,8 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
             MatchMode.COLLABORATIVE-> {}
             MatchMode.FREE_FOR_ALL -> {
                 if (!isGameStarted) {
+                    toolbar.visibility = View.GONE
+                    points_view.visibility = View.GONE
                     val transaction = manager.beginTransaction()
                     val waitingRoom = WaitingRoom()
                     transaction.replace(R.id.draw_view_container, waitingRoom)
@@ -99,6 +102,10 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         if (nbTries == 0) {
             GameManager.canGuess = false
         }
+    }
+
+    override fun sendWord(text: String) {
+        wordWasString = text
     }
 
     private fun setupSocket() {
@@ -168,7 +175,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
     }
 
     private fun setupWordHolder() {
-        for (letter in wordToGuess) {
+        for (letter in wordBeingDrawn) {
             lettersAdapter.add(LetterHolder(letter.toString(), isHost))
         }
         word_letters.adapter = lettersAdapter
@@ -187,7 +194,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
 
         adapter.setOnItemClickListener(({ item, v ->
             val selectedWord = (item as WordHolder).text
-            wordToGuess = selectedWord
+            wordBeingDrawn = selectedWord
             SocketHandler.startTurn(selectedWord)
             showDrawerFragment()
             dialog.dismiss()
@@ -202,7 +209,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
             timer?.onFinish()
         }
         lettersAdapter.clear()
-        wordToGuess = ""
+        wordBeingDrawn = ""
         message.text = ""
         nbTries = 3
         GameManager.canGuess = true
@@ -262,7 +269,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                         } else if (turnParams.currentRound.toInt() != currentRound) {
                             currentRound = turnParams.currentRound.toInt()
                             val pointsAdapter = GroupAdapter<GroupieViewHolder>()
-                            message.text = String.format(resources.getString(R.string.word_was), wordToGuess)
+                            message.text = wordWasString
                             for (score in turnParams.scores) {
                                 pointsAdapter.add(PlayerPointHolder(score.key, score.value.scoreTurn.toInt()))
                             }
@@ -279,7 +286,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                                 }, ROUND_SCREEN_TIMEOUT)
                             }, POINT_SCREEN_TIMEOUT)
                         } else {
-                            message.text = String.format(resources.getString(R.string.word_was), wordToGuess)
+                            message.text = wordWasString
                             user_points.visibility = View.GONE
                             Handler().postDelayed({
                                 delegateViews(turnParams.choices)
@@ -291,8 +298,11 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                     Handler(Looper.getMainLooper()).post(Runnable {
                         firstTurnStarted = true
                         draw_view_container.bringToFront()
-                        val time = Gson().fromJson(data.first().toString(), Number::class.java)
-                        startCountdown(time.toLong() * SECOND_INTERVAL)
+                        val turnStart = Gson().fromJson(data.first().toString(), StartTurn::class.java)
+                        startCountdown(turnStart.timeLimit.toLong() * SECOND_INTERVAL)
+                        if (!isHost) {
+                            wordBeingDrawn = turnStart.word.replace("\"", "")
+                        }
                         setupWordHolder()
                     })
                 }))
@@ -302,6 +312,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                     if (feedback.feedback.status) {
                         isGameStarted = true
                         Handler(Looper.getMainLooper()).post(Runnable {
+                            toolbar.visibility = View.VISIBLE
                             user_block.bringToFront()
                         })
                     } else {

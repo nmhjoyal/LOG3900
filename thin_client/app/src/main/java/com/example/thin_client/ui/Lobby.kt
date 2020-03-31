@@ -182,6 +182,7 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
                 val gson = Gson()
                 val matchInfosFeedback=
                     gson.fromJson(data.first().toString(), Array<MatchInfos>::class.java)
+                GameManager.resetMatchLists()
                 for(match in matchInfosFeedback) {
                     when(match.matchMode){
                             MatchMode.COLLABORATIVE.ordinal ->

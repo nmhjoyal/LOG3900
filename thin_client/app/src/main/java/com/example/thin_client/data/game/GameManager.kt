@@ -15,4 +15,10 @@ object GameManager {
     var freeForAllMatchList = ArrayList<MatchInfos>()
 
     var playersList = ArrayList<Player>()
+
+    fun resetMatchLists() {
+        collabModeMatchList.clear()
+        oneVsOneMatchList.clear()
+        freeForAllMatchList.clear()
+    }
 }
