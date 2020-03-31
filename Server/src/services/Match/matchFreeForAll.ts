@@ -36,21 +36,24 @@ export default class FreeForAll extends Match {
 
     protected async endTurn(io: SocketIO.Server, drawerLeft: boolean): Promise<void> {
         clearTimeout(this.timeout);
+        let matchIsEnded: boolean = false;
+
         if (!drawerLeft){
             let oldDrawer: Player | undefined = this.getPlayer(this.drawer);
             if (oldDrawer) {
                 this.assignDrawer(oldDrawer);
 
                 if (this.round == this.nbRounds) {
-                    this.endMatch(io);
+                    matchIsEnded = true;
                 }
             }
-        } else { // the drawer left the match during the round.
-            if (this.getNbHumanPlayers() < this.ms.MIN_NB_HP) {
-                this.endMatch(io);
-            }
         }
-        this.endTurnGeneral(io);
+
+        if (matchIsEnded) {
+            this.endMatch(io);
+        } else {
+            this.endTurnGeneral(io);
+        }
     }
 
     public guess(io: SocketIO.Server, guess: string, username: string): Feedback {
