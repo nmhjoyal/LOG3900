@@ -17,7 +17,6 @@ import com.example.thin_client.ui.game_mode.Player
 import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import kotlinx.android.synthetic.main.collab_gameslist.*
 import kotlinx.android.synthetic.main.fragment_waiting_room.*
 
 
@@ -54,7 +53,7 @@ class WaitingRoom : Fragment() {
         if(context is IStartMatch){
             listener = context
         } else {
-            throw RuntimeException()
+            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
         }
     }
 
