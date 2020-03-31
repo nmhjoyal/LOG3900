@@ -154,15 +154,23 @@ object SocketHandler {
         socket!!.emit(SocketEvent.GET_DRAWING)
     }
 
-    fun updateMatches(matchInfos:ArrayList<MatchInfos>) {
+    /*fun updateMatches(matchInfos:ArrayList<MatchInfos>) {
         val gson = Gson()
         val args = gson.toJson(matchInfos)
         socket!!.emit(SocketEvent.UPDATE_MATCHES, args)
-    }
+    }*/
 
     fun searchMatches() {
         socket!!.emit(SocketEvent.GET_MATCHES)
     }
 
+    fun searchPlayers() {
+        socket!!.emit(SocketEvent.GET_PLAYERS)
+    }
+
+    fun joinMatch(matchId:String){
+        val args = Gson().toJson(matchId)
+        socket!!.emit(SocketEvent.JOIN_MATCH,args)
+    }
 
 }

@@ -43,8 +43,12 @@ object SocketEvent {
 
     const val CREATE_MATCH = "create_match"
     const val MATCH_CREATED = "match_created"
+    const val MATCH_JOINED = "match_joined"
     const val START_MATCH = "start_match"
     const val MATCH_STARTED = "match_started"
     const val GET_MATCHES = "get_matches"
     const val UPDATE_MATCHES = "update_matches"
+    const val JOIN_MATCH = "join_match"
+    const val GET_PLAYERS = "get_players"
+    const val UPDATE_PLAYERS ="update_players"
 }

@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.player_in_game_item.view.*
 
 class WaitingRoomItem(val username: String,
                       val avatarID: AvatarID
-                      ): Item<GroupieViewHolder>(){
+): Item<GroupieViewHolder>(){
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.text_view_username.text = username
@@ -40,5 +40,4 @@ class WaitingRoomItem(val username: String,
 
 
 }
-
 

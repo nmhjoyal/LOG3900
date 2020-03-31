@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
+import com.example.thin_client.server.*
 import com.example.thin_client.R
 import com.example.thin_client.data.game.GameManager
 import com.example.thin_client.ui.LobbyMenuFragment
@@ -22,11 +22,12 @@ class OneVsOneMatchMode : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        //faire la verification du matchID
-        adapter.setOnItemClickListener(({ _, _ ->
+        adapter.setOnItemClickListener{ item, _ ->
+            val matchId = (item as MatchItem).matchId
+            SocketHandler.joinMatch(matchId)
             startNewFragment?.startWaitingRoom()
-        }))
+        }
+        refreshMatchesAdapter()
         available_onevsone.adapter = adapter
     }
 

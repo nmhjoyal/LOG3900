@@ -11,6 +11,7 @@ import com.example.thin_client.data.game.GameManager
 import com.example.thin_client.ui.LobbyMenuFragment
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
+import com.example.thin_client.server.*
 import kotlinx.android.synthetic.main.freeforall_gameslist.*
 
 class FreeForAllMatchMode : Fragment() {
@@ -21,11 +22,12 @@ class FreeForAllMatchMode : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //faire la verification du matchID
-        adapter.setOnItemClickListener(({ _, _ ->
+        adapter.setOnItemClickListener{ item, _ ->
+            val matchId = (item as MatchItem).matchId
+            SocketHandler.joinMatch(matchId)
             startNewFragment?.startWaitingRoom()
-        }))
-
+        }
+        refreshMatchesAdapter()
         availablefree_for_all.adapter = adapter
 
     }

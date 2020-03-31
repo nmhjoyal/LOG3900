@@ -1,4 +1,7 @@
-package com.example.thin_client.ui.waitingroom
+package com.example.thin_client.ui.game_mode.waitingroom
+
+
+
 
 
 import android.os.Bundle

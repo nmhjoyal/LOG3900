@@ -8,11 +8,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.thin_client.R
 import com.example.thin_client.data.game.GameManager
+import com.example.thin_client.server.*
 import com.example.thin_client.ui.LobbyMenuFragment
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.collab_gameslist.*
-import java.util.logging.SocketHandler
 
 class CollabMatchMode : Fragment() {
 
@@ -26,10 +26,12 @@ class CollabMatchMode : Fragment() {
 
         adapter.add(MatchItem("A","Allllo", 4 ,5))
         //faire la verification du matchID
-        adapter.setOnItemClickListener(({ _, _ ->
+        adapter.setOnItemClickListener{ item, _ ->
+            val matchId = (item as MatchItem).matchId
+            SocketHandler.joinMatch(matchId)
             startNewFragment?.startWaitingRoom()
-        }))
-
+        }
+        refreshMatchesAdapter()
         available_collab.adapter = adapter
     }
 

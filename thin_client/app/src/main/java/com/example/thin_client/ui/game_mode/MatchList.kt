@@ -21,12 +21,15 @@ import com.example.thin_client.data.game.GameManager
 import com.example.thin_client.data.game.GameManager.tabNames
 import com.example.thin_client.data.game.MatchMode
 import com.example.thin_client.data.model.MatchInfos
+import com.example.thin_client.data.rooms.JoinRoomFeedback
 import com.example.thin_client.data.rooms.RoomManager
 import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.chatrooms.ChatRoomItem
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.activity_games_list.*
 import kotlinx.android.synthetic.main.chatrooms_fragment.*
 import java.util.*
@@ -39,11 +42,16 @@ class MatchList : Fragment() {
     }
 
     var gameStartedListener: IGameStarter? = null
+    private val adapter = GroupAdapter<GroupieViewHolder>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewpager.adapter = MyPagerAdapter(childFragmentManager)
 
+        adapter.setOnItemClickListener{ item, v ->
+            val matchId = (item as MatchItem).matchId
+            SocketHandler.joinMatch(matchId)
+        }
         refresh_matches.setOnClickListener{
             SocketHandler.searchMatches()
         }
@@ -156,6 +164,17 @@ class MatchList : Fragment() {
                 val feedback = Gson().fromJson(data.first().toString(), CreateMatchFeedback::class.java)
                 if (feedback.feedback.status) {
                     RoomManager.currentRoom = feedback.matchId
+                    gameStartedListener?.startGame()
+                } else {
+                    Handler(Looper.getMainLooper()).post(({
+                        Toast.makeText(context, feedback.feedback.log_message, Toast.LENGTH_LONG).show()
+                    }))
+                }
+            }))
+            .on(SocketEvent.MATCH_JOINED, ({ data ->
+                val feedback = Gson().fromJson(data.first().toString(), JoinRoomFeedback::class.java)
+                if (feedback.feedback.status) {
+                    RoomManager.currentRoom = feedback.room_joined!!.id
                     gameStartedListener?.startGame()
                 } else {
                     Handler(Looper.getMainLooper()).post(({
