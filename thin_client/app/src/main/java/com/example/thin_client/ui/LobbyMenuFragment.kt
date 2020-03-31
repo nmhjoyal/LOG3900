@@ -6,9 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 
 import com.example.thin_client.R
-import com.example.thin_client.ui.game_mode.CollabMatchMode
+
+import com.example.thin_client.server.SocketHandler
+import com.example.thin_client.ui.game_mode.MatchList
 import kotlinx.android.synthetic.main.lobby_menu_fragment.*
 
 class LobbyMenuFragment : Fragment() {
@@ -26,7 +29,21 @@ class LobbyMenuFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.lobby_menu_fragment, container, false)
+        val view:View = inflater.inflate(R.layout.lobby_menu_fragment, container, false)
+        view.isFocusableInTouchMode = true
+        view.requestFocus()
+        val joinMatch = view.findViewById<LinearLayout>(R.id.join_match)
+
+        joinMatch.setOnClickListener(object : View.OnClickListener{
+            override fun onClick(v: View?) {
+                val transaction = fragmentManager!!.beginTransaction()
+                val gamesList = MatchList()
+                transaction.replace(R.id.lobby_menu_container, gamesList)
+                transaction.addToBackStack(null)
+                transaction.commit()
+                SocketHandler.searchMatches()
+            }})
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
