@@ -145,9 +145,8 @@ object SocketHandler {
         socket!!.emit(SocketEvent.CREATE_MATCH, args)
     }
 
-    fun startMatch(matchParams: StartMatch) {
-        val args = Gson().toJson(matchParams)
-        socket!!.emit(SocketEvent.START_MATCH, args)
+    fun startMatch() {
+        socket!!.emit(SocketEvent.START_MATCH)
     }
 
     fun getDrawing() {

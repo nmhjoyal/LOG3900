@@ -2,12 +2,12 @@ package com.example.thin_client.ui.game_mode
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import com.example.thin_client.R
 import com.example.thin_client.data.Feedback
@@ -15,7 +15,6 @@ import com.example.thin_client.data.app_preferences.Preferences
 import com.example.thin_client.data.game.GameArgs
 import com.example.thin_client.data.game.GameManager
 import com.example.thin_client.data.game.MatchMode
-import com.example.thin_client.data.game.StartMatch
 import com.example.thin_client.data.lifecycle.LoginState
 import com.example.thin_client.data.rooms.RoomArgs
 import com.example.thin_client.data.rooms.RoomManager
@@ -24,7 +23,7 @@ import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.chat.ChatFragment
 import com.example.thin_client.ui.game_mode.free_draw.DrawerFragment
 import com.example.thin_client.ui.game_mode.free_draw.ObserverFragment
-import com.github.nkzawa.socketio.client.Socket
+import com.example.thin_client.ui.game_mode.waitingroom.WaitingRoom
 import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -33,7 +32,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class GameActivity : AppCompatActivity(), ChatFragment.IWordGuessing {
+class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch, ChatFragment.IWordGuessing {
     private lateinit var manager: FragmentManager
     private lateinit var prefs: SharedPreferences
     private val SECOND_INTERVAL: Long = 1000
@@ -63,9 +62,12 @@ class GameActivity : AppCompatActivity(), ChatFragment.IWordGuessing {
         manager = supportFragmentManager
         setupSocket()
         when (GameManager.currentGameMode) {
-            MatchMode.COLLABORATIVE-> {}
-            MatchMode.FREE_FOR_ALL -> {}
-            MatchMode.ONE_ON_ONE -> {}
+            MatchMode.COLLABORATIVE -> {
+            }
+            MatchMode.FREE_FOR_ALL -> {
+            }
+            MatchMode.ONE_ON_ONE -> {
+            }
 
         }
 //        startGame()
@@ -85,6 +87,10 @@ class GameActivity : AppCompatActivity(), ChatFragment.IWordGuessing {
     override fun sendGuess(word: String) {
     }
 
+    override fun startMatch() {
+        SocketHandler.startMatch()
+    }
+
     private fun startGame() {
         for (letter in words[currentWordIndex]) {
             lettersAdapter.add(LetterHolder(letter.toString()))
@@ -101,7 +107,8 @@ class GameActivity : AppCompatActivity(), ChatFragment.IWordGuessing {
         setupSocketEvents()
 
         when (SocketHandler.getLoginState(prefs)) {
-            LoginState.FIRST_LOGIN -> {}
+            LoginState.FIRST_LOGIN -> {
+            }
             LoginState.LOGIN_WITH_EXISTING -> {
                 finish()
             }

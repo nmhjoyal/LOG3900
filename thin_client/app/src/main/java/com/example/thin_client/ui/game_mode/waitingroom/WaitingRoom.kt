@@ -42,18 +42,16 @@ class WaitingRoom : Fragment() {
     ): View? {
         when(GameManager.currentGameMode){
             MatchMode.SOLO -> {}
-
         }
+        start_match.setOnClickListener((({listener?.startMatch()})))
 
         return inflater.inflate(R.layout.fragment_waiting_room, container, false)
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if(context is IStartMatch){
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+        listener = context as? IStartMatch
+        if (listener == null) {
         }
     }
 
