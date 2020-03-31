@@ -8,10 +8,11 @@ import PrivateProfile from "../../models/privateProfile";
 import { VirtualDrawing } from "../Drawing/virtualDrawing";
 import { Drawing } from "../Drawing/drawing";
 import { Stroke, StylusPoint } from "../../models/drawPoint";
-import RandomWordGenerator from "../wordGenerator/wordGenerator";
+import RandomWordGenerator from "../WordGenerator/wordGenerator";
 import Admin from "../../models/admin";
 import { Message } from "../../models/message";
 import { gameDB } from "../Database/gameDB";
+import VirtualPlayer from "../VirtualPlayer/virtualPlayer";
 
 export default abstract class Match {
     // Settings
@@ -37,6 +38,7 @@ export default abstract class Match {
     protected drawer: string;                   // Username 
     protected drawing: Drawing;
     protected virtualDrawing: VirtualDrawing;
+    protected virtualPlayer: VirtualPlayer;
 
     // Match methods
     public abstract startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): void;
@@ -44,7 +46,7 @@ export default abstract class Match {
     public abstract guess(io: SocketIO.Server, guess: string, username: string): Feedback;
 
     protected constructor(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler, matchSettings: MatchSettings) {
-        this.players = [this.createPlayer(user, true, false)];
+        this.players = [this.createPlayer(user)];
         this.isStarted = false;
         this.isEnded = false;
         this.nbRounds = createMatch.nbRounds;
@@ -67,7 +69,7 @@ export default abstract class Match {
             if (this.players.length < this.ms.MAX_NB_PLAYERS) {
                 if (this.getNbHumanPlayers() < this.ms.MAX_NB_HP) {
                     joinRoomFeedback = await this.chatHandler.joinChatRoom(io, socket, this.matchId, user);
-                    this.players.push(this.createPlayer(user, false, false));
+                    this.players.push(this.createPlayer(user));
                     io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
                     joinRoomFeedback.feedback.log_message = "You joined the match.";
                 } else {
@@ -89,27 +91,31 @@ export default abstract class Match {
 
         if (player) {
             await this.chatHandler.leaveChatRoom(io, socket, this.matchId, user);
-            if (this.getNbHumanPlayers() > this.ms.MIN_NB_HP) {
                 if (this.isStarted) {
-                    // after the match is started the host is not important.
-                    if (player.user.username == this.drawer) {
-                        let oldDrawer: Player | undefined = this.getPlayer(this.drawer);
-                        if (oldDrawer) {
-                            this.assignDrawer(oldDrawer);
-                            this.endTurn(io, true);
+                    if (this.getNbHumanPlayers() - 1 > this.ms.MIN_NB_HP) {
+                        // after the match is started the host is not important.
+                        if (player.user.username == this.drawer) {
+                            let oldDrawer: Player | undefined = this.getPlayer(this.drawer);
+                            if (oldDrawer) {
+                                this.assignDrawer(oldDrawer);
+                                this.endTurn(io, true);
+                            }
                         }
+                    } else {
+                        this.endMatch(io);
+                        deleteMatch = true;
                     }
                 } else {
-                    if (player.isHost) {
-                        this.assignHost();
-                    } 
+                    if (this.getNbHumanPlayers() > 1) { // otherwise assignHost wouldnt work.
+                        if (this.isHost(player)) {
+                            this.assignHost();
+                        }
+                    } else {
+                        deleteMatch = true;
+                    }
                 }
                 this.players.splice(this.players.indexOf(player), 1);
                 io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
-            } else {
-                this.endTurn(io, false);
-                deleteMatch = true;
-            }
         }
 
         return deleteMatch;
@@ -120,7 +126,7 @@ export default abstract class Match {
         let feedback: Feedback = { status: false, log_message: "" };
 
         if (player) {
-            if (player.isHost) {
+            if (this.isHost(player)) {
                 if (this.players.length < this.ms.MAX_NB_PLAYERS) {
                     if (this.getNbVirtualPlayers() < this.ms.MAX_NB_VP) {
                         this.addVP(io);
@@ -148,7 +154,7 @@ export default abstract class Match {
         let feedback: Feedback = { status: false, log_message: "" };
 
         if (player) {
-            if (player.isHost) {
+            if (this.isHost(player)) {
                 if (this.getNbVirtualPlayers() > this.ms.MIN_NB_VP) {
                     this.removeVP();
                     io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
@@ -172,7 +178,7 @@ export default abstract class Match {
         let startMatchFeedback: StartMatchFeedback = { feedback : { status: false, log_message: "" }, nbRounds : 0 };
 
         if (player) {
-            if (player.isHost) {
+            if (this.isHost(player)) {
                 const nbHumanPlayers: number = this.getNbHumanPlayers();
                 if (nbHumanPlayers > this.ms.MIN_NB_HP || nbHumanPlayers < this.ms.MAX_NB_HP) {
                     const nbVirtualPlayers: number = this.getNbVirtualPlayers();
@@ -258,6 +264,10 @@ export default abstract class Match {
         this.drawing.clear(socket);
     }
 
+    protected isHost(player: Player): boolean {
+        return this.players.indexOf(player) == 0;
+    }
+
     protected initScores(): void {
         this.scores = new Map<string, UpdateScore>();
         for (let player of this.players) {
@@ -321,25 +331,26 @@ export default abstract class Match {
     }
 
     protected assignHost(): void {
-        for(let player of this.players) {
-            if (!player.isHost && !player.isVirtual) {
-                player.isHost = true;
-                break;
-            }
-        }
+        // Place the new host at the beginning of the array.
+        this.players.splice(0, 0, this.players.splice(this.findNewHostIndex(), 1)[0])
+    }
+
+    protected findNewHostIndex(): number {
+        return this.players.findIndex(player => !player.isVirtual);
     }
 
     protected addVP(io: SocketIO.Server): void {   
         /* EVENTUALLY, GENERATE RANDOM VP, also need to check if it is already in the players array (so we dont have two identical VP)*/ 
-        const randomVP: PublicProfile = { username: "Mr Avocado", avatar: "AVOCADO" };
-        this.players.push(this.createPlayer(randomVP, false, true));
-        this.chatHandler.findPrivateRoom(this.matchId)?.avatars.set(randomVP.username, randomVP.avatar);
-        this.chatHandler.notifyAvatarUpdate(io, randomVP, this.matchId);
+        const randomVP: Player = {user: {username: "welfj", avatar: "asef"}, isVirtual: true } /*this.virtualPlayer.create()*/;
+        this.players.push(randomVP);
+        this.chatHandler.findPrivateRoom(this.matchId)?.avatars.set(randomVP.user.username, randomVP.user.avatar);
+        this.chatHandler.notifyAvatarUpdate(io, randomVP.user, this.matchId);
     }
 
     protected removeVP(): void {
         for(let i: number = this.players.length - 1; i >= 0; i--) {
             if(this.players[i].isVirtual) {
+                // this.virtualPlayer.newAvailableVP();
                 this.players.splice(i, 1);
                 break;
             }
@@ -371,14 +382,12 @@ export default abstract class Match {
         
         if (!this.isStarted && this.mode !== MatchMode.sprintSolo) { // maybe this.players.length < this.maxPlayers?    
             let userInfos: PublicProfile[] = [];
-            let host: string = "";
 
             for (let player of this.players) {
-                if (player.isHost) host = player.user.username; 
                 userInfos.push(player.user);
             }
 
-            matchInfos = this.createMatchInfos(host, userInfos);
+            matchInfos = this.createMatchInfos(this.players[0].user.username, userInfos);
         }
 
         return matchInfos;
@@ -399,11 +408,10 @@ export default abstract class Match {
         };
     }
 
-    protected createPlayer(user: PublicProfile, isHost: boolean, isVirtual: boolean): Player {
+    protected createPlayer(user: PublicProfile): Player {
         return {
             user: user,
-            isHost: isHost,
-            isVirtual: isVirtual
+            isVirtual: false
         };
     }
 
