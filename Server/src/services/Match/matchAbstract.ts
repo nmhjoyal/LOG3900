@@ -8,7 +8,7 @@ import PrivateProfile from "../../models/privateProfile";
 import { VirtualDrawing } from "../Drawing/virtualDrawing";
 import { Drawing } from "../Drawing/drawing";
 import { Stroke, StylusPoint } from "../../models/drawPoint";
-import RandomWordGenerator from "../WordGeneratorRENAMECOMMIT/wordGenerator";
+import RandomWordGenerator from "../WordGenerator/wordGenerator";
 import Admin from "../../models/admin";
 import { Message } from "../../models/message";
 import { gameDB } from "../Database/gameDB";
