@@ -10,8 +10,8 @@ class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     override fun getItem(position: Int): Fragment {
         return when (position) {
             0 -> CollabMatchMode()
-            1 -> SoloMatchMode()
-            2 -> FreeForAllMatchMode()
+            1 -> FreeForAllMatchMode()
+            2 -> OneVsOneMatchMode()
             else -> {
                 return OneVsOneMatchMode()
             }
@@ -19,7 +19,7 @@ class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     }
 
     override fun getCount(): Int {
-        return 4
+        return 3
     }
 
     override fun getPageTitle(position: Int): CharSequence {

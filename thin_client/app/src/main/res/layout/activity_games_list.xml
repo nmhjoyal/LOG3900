@@ -20,7 +20,6 @@
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpager"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/matches_background"
@@ -44,16 +43,6 @@
             app:tabMode="fixed" />
     </androidx.viewpager.widget.ViewPager>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/match_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_view_pager"
-        app:layout_constraintEnd_toStartOf="@+id/end_view_pager"
-        app:layout_constraintStart_toStartOf="@+id/start_view_pager"
-        app:layout_constraintTop_toTopOf="@id/top_view_pager"
-        />
     <Button
         android:id="@+id/create_match"
         android:layout_width="wrap_content"
@@ -68,7 +57,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/match_list"
+        app:layout_constraintTop_toBottomOf="@+id/viewpager"
         app:layout_constraintVertical_bias="0.0" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -95,5 +84,18 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.9" />
+
+    <ImageButton
+        android:id="@+id/refresh_matches"
+        android:layout_width="47dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_primary_selector"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/end_view_pager"
+        app:layout_constraintStart_toEndOf="@+id/create_match"
+        app:layout_constraintTop_toBottomOf="@+id/viewpager"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/ic_refresh_24px" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

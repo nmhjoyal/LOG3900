@@ -7,15 +7,12 @@ object GameManager {
     var nbRounds: Int = 0
     var timeLimit: Int = 0
     var canGuess = true
-    val tabNames = arrayListOf("Collaborative", "Solo" ,"Free-for-all", "One-on-one")
+    val tabNames = arrayListOf("Collaborative" ,"Free-for-all", "One-on-one")
 
 
-//    var soloModeMatchList =  ArrayList<MatchInfos>()
-//    var collabModeMatchList =  ArrayList<MatchInfos>()
-//    var oneVsOneMatchList = ArrayList<MatchInfos>()
-//    var freeForAllMatchList = ArrayList<MatchInfos>()
+    var collabModeMatchList =  ArrayList<MatchInfos>()
+    var oneVsOneMatchList = ArrayList<MatchInfos>()
+    var freeForAllMatchList = ArrayList<MatchInfos>()
 
-    var tempFullMatchList = ArrayList<MatchInfos>()
-    var players = ArrayList<Player>()
-
+    var playersList = ArrayList<Player>()
 }

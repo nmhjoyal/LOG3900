@@ -3,7 +3,6 @@ package com.example.thin_client.ui.game_mode
 import android.app.Dialog
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
@@ -12,12 +11,16 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.thin_client.R
 import com.example.thin_client.data.app_preferences.PreferenceHandler
 import com.example.thin_client.data.app_preferences.Preferences
 import com.example.thin_client.data.game.*
+import com.example.thin_client.data.game.GameArgs
+import com.example.thin_client.data.game.GameManager
+import com.example.thin_client.data.game.MatchMode
 import com.example.thin_client.data.lifecycle.LoginState
 import com.example.thin_client.data.rooms.RoomArgs
 import com.example.thin_client.data.rooms.RoomManager
@@ -27,6 +30,7 @@ import com.example.thin_client.ui.chat.ChatFragment
 import com.example.thin_client.ui.game_mode.free_draw.DrawerFragment
 import com.example.thin_client.ui.game_mode.free_draw.ObserverFragment
 import com.example.thin_client.ui.game_mode.free_draw.WordHolder
+import com.example.thin_client.ui.game_mode.waitingroom.WaitingRoom
 import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -72,11 +76,11 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
             MatchMode.COLLABORATIVE-> {}
             MatchMode.FREE_FOR_ALL -> {
                 if (!isGameStarted) {
-//                    val transaction = manager.beginTransaction()
-//                    val waitingRoom = WaitingRoom()
-//                    transaction.replace(R.id.draw_view_container, waitingRoom)
-//                    transaction.addToBackStack(null)
-//                    transaction.commitAllowingStateLoss()
+                    val transaction = manager.beginTransaction()
+                    val waitingRoom = WaitingRoom()
+                    transaction.replace(R.id.draw_view_container, waitingRoom)
+                    transaction.addToBackStack(null)
+                    transaction.commitAllowingStateLoss()
                 }
             }
             MatchMode.ONE_ON_ONE -> {}
@@ -295,8 +299,8 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                 .on(SocketEvent.MATCH_STARTED, ({ data ->
                     val feedback =
                         Gson().fromJson(data.first().toString(), StartMatchFeedback::class.java)
-                    isGameStarted = true
                     if (feedback.feedback.status) {
+                        isGameStarted = true
                         Handler(Looper.getMainLooper()).post(Runnable {
                             user_block.bringToFront()
                         })
@@ -315,6 +319,4 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         user_points.visibility = View.GONE
         user_block.bringToFront()
     }
-
-
 }

@@ -68,7 +68,6 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
                 show_rooms_button.setImageResource(R.drawable.hide)
             }
         }))
-
     }
 
     override fun startGame() {
@@ -79,8 +78,8 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
     override fun onStart() {
         super.onStart()
         manager = supportFragmentManager
-        SocketHandler.searchMatches()
         setupSocket()
+        SocketHandler.searchMatches()
     }
 
     override fun onStop() {
@@ -136,6 +135,7 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
     }
 
 
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.menu_sign_out -> {
@@ -177,62 +177,52 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
 
     private fun setupSocketEvents() {
         if (SocketHandler.socket != null) {
-            SocketHandler.socket
-                ?.on(SocketEvent.UPDATE_MATCHES, ({ data ->
-                    val gson = Gson()
-                    val matchInfosFeedback =
-                        gson.fromJson(data.first().toString(), Array<MatchInfos>::class.java)
-                    GameManager.tempFullMatchList =
-                        matchInfosFeedback.toCollection(ArrayList<MatchInfos>())
-//                for(match in matchInfosFeedback) {
-//                    when(match.matchMode){
-//                            MatchMode.SOLO.ordinal ->
-//                                if (!GameManager.soloModeMatchList.contains(match)) {
-//                                    GameManager.soloModeMatchList.add(match)
-//                                }
-//                            MatchMode.COLLABORATIVE.ordinal ->
-//                                if (!GameManager.collabModeMatchList.contains(match)) {
-//                                    GameManager.collabModeMatchList.add(match)
-//                                }
-//                            MatchMode.FREE_FOR_ALL.ordinal ->
-//                                if (!GameManager.freeForAllMatchList.contains(match)) {
-//                                    GameManager.freeForAllMatchList.add(match)
-//                                }
-//                            else -> {
-//                                if (!GameManager.oneVsOneMatchList.contains(match)) {
-//                                    GameManager.oneVsOneMatchList.add(match)
-//                                }
-//                        }
-//                    }
-//                }
-                }))
-                ?.on(SocketEvent.USER_SIGNED_IN, ({ data ->
-                    val gson = Gson()
-                    val signInFeedback =
-                        gson.fromJson(data.first().toString(), SignInFeedback::class.java)
-                    if (signInFeedback.feedback.status) {
-                        RoomManager.createRoomList(signInFeedback.rooms_joined)
-                        showChatRoomsFragment()
-                    } else {
-                        runOnUiThread(({
-                            Toast.makeText(
-                                applicationContext,
-                                R.string.error_logging_in,
-                                Toast.LENGTH_LONG
-                            ).show()
-                            val intent = Intent(applicationContext, LoginActivity::class.java)
-                            startActivity(intent)
-                        }))
-                        SocketHandler.disconnect()
+        SocketHandler.socket!!
+            .on(SocketEvent.UPDATE_MATCHES, ({data ->
+                val gson = Gson()
+                val matchInfosFeedback=
+                    gson.fromJson(data.first().toString(), Array<MatchInfos>::class.java)
+                for(match in matchInfosFeedback) {
+                    when(match.matchMode){
+                            MatchMode.COLLABORATIVE.ordinal ->
+                                if (!GameManager.collabModeMatchList.contains(match)) {
+                                    GameManager.collabModeMatchList.add(match)
+                                }
+                            MatchMode.FREE_FOR_ALL.ordinal ->
+                                if (!GameManager.freeForAllMatchList.contains(match)) {
+                                    GameManager.freeForAllMatchList.add(match)
+                                }
+                            MatchMode.ONE_ON_ONE.ordinal-> {
+                                if (!GameManager.oneVsOneMatchList.contains(match)) {
+                                    GameManager.oneVsOneMatchList.add(match)
+                                }
+                        }
                     }
-                }))
-                ?.on(Socket.EVENT_CONNECT_ERROR, ({
-                    Handler(Looper.getMainLooper()).post(Runnable {
-                        val alertDialog = AlertDialog.Builder(this)
-                        alertDialog.setTitle(R.string.error_connect_title)
-                            .setCancelable(false)
-                            .setMessage(R.string.error_connect)
-                            .setPositiveButton(R.string.ok) { _, _ -> finishAffinity() }
+                }
+            }))
+            .on(SocketEvent.USER_SIGNED_IN, ({ data ->
+                val gson = Gson()
+                val signInFeedback =
+                    gson.fromJson(data.first().toString(), SignInFeedback::class.java)
+                if (signInFeedback.feedback.status) {
+                    RoomManager.createRoomList(signInFeedback.rooms_joined)
+                    showChatRoomsFragment()
+                } else {
+                    runOnUiThread(({
+                        Toast.makeText(applicationContext, R.string.error_logging_in, Toast.LENGTH_LONG).show()
+                        val intent = Intent(applicationContext, LoginActivity::class.java)
+                        startActivity(intent)
+                    }))
+                    SocketHandler.disconnect()
+                }
+            }))
+            .on(Socket.EVENT_CONNECT_ERROR, ({
+                Handler(Looper.getMainLooper()).post(Runnable {
+                    val alertDialog = AlertDialog.Builder(this)
+                    alertDialog.setTitle(R.string.error_connect_title)
+                        .setCancelable(false)
+                        .setMessage(R.string.error_connect)
+                        .setPositiveButton(R.string.ok) { _, _ -> finishAffinity() }
 
                         val dialog = alertDialog.create()
                         dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)

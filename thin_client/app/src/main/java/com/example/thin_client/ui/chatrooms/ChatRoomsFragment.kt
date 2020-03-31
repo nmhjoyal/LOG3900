@@ -37,7 +37,7 @@ class ChatRoomsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter.setOnItemClickListener { item, v ->
+        adapter.setOnItemClickListener { item, _ ->
             RoomManager.currentRoom = (item as ChatRoomItem).roomname
             SocketHandler.joinChatRoom(RoomManager.currentRoom)
         }
@@ -295,7 +295,7 @@ class ChatRoomsFragment : Fragment() {
         val addUsername = dialogView.findViewById<EditText>(R.id.add_user_username)
         val inviteListAdapter = GroupAdapter<GroupieViewHolder>()
         inviteList = arrayListOf()
-        inviteListAdapter.setOnItemClickListener(({ item, view ->
+        inviteListAdapter.setOnItemClickListener(({ item, _ ->
             inviteListAdapter.remove(item)
             inviteListAdapter.notifyDataSetChanged()
             inviteList.remove((item as InviteUserRow).user)

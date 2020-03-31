@@ -24,8 +24,6 @@ import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
-import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.activity_games_list.*
 import java.util.*
 
@@ -38,28 +36,19 @@ class MatchList : Fragment() {
 
     var gameStartedListener: IGameStarter? = null
 
-    private val adapter = GroupAdapter<GroupieViewHolder>()
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewpager.adapter = MyPagerAdapter(childFragmentManager)
+
+        refresh_matches.setOnClickListener{
+            SocketHandler.searchMatches()
+        }
+
         create_match.setOnClickListener {
             context?.let {context ->
                 showCreateMatchDialog(context)
             }
         }
-
-        adapter.setOnItemClickListener { item, v ->
-            val matchId = (item as MatchItem).matchId
-            SocketHandler.joinMatch(matchId)
-        }
-
-        for (match in GameManager.tempFullMatchList) {
-            adapter.add(MatchItem(match.matchId, match.host, match.nbRounds, match.players.size))
-        }
-        match_list.adapter = adapter
-
         setupTabs()
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -79,6 +68,7 @@ class MatchList : Fragment() {
                 tab.customView!!.setBackgroundResource(R.drawable.tab_background)
             }
         })
+
         setupSocketEvents()
     }
 
@@ -100,7 +90,7 @@ class MatchList : Fragment() {
 
     }
 
-    private fun setupTabs() {
+   private fun setupTabs() {
         for (i in 0 until tabLayout.tabCount) {
             val customView = View.inflate(context,R.layout.tab_layout, null)
             val tabName = customView.findViewById(R.id.tab_name) as TextView
@@ -157,34 +147,40 @@ class MatchList : Fragment() {
     }
 
     private fun setupSocketEvents() {
-        SocketHandler.socket
-            ?.on(SocketEvent.MATCH_CREATED, ({ data ->
-                val feedback = Gson().fromJson(data.first().toString(), CreateMatchFeedback::class.java)
-                if (feedback.feedback.status) {
-                    RoomManager.currentRoom = feedback.matchId
-                    gameStartedListener?.startGame()
-                } else {
-                    Handler(Looper.getMainLooper()).post(({
-                        Toast.makeText(context, feedback.feedback.log_message, Toast.LENGTH_LONG).show()
-                    }))
-                }
-            }))
-            ?.on(SocketEvent.MATCH_JOINED, ({ data ->
-                val feedback = Gson().fromJson(data.first().toString(), JoinRoomFeedback::class.java)
-                if (feedback.feedback.status) {
-                    RoomManager.currentRoom = feedback.room_joined!!.id
-                    gameStartedListener?.startGame()
-                } else {
-                    Handler(Looper.getMainLooper()).post(({
-                        if (context != null) {
+        if (SocketHandler.socket != null) {
+            SocketHandler.socket!!
+                .on(SocketEvent.MATCH_CREATED, ({ data ->
+                    val feedback =
+                        Gson().fromJson(data.first().toString(), CreateMatchFeedback::class.java)
+                    if (feedback.feedback.status) {
+                        RoomManager.currentRoom = feedback.matchId
+                        gameStartedListener?.startGame()
+                    } else {
+                        Handler(Looper.getMainLooper()).post(({
                             Toast.makeText(
                                 context,
                                 feedback.feedback.log_message,
                                 Toast.LENGTH_LONG
                             ).show()
-                        }
-                    }))
-                }
-            }))
+                        }))
+                    }
+                }))
+                .on(SocketEvent.MATCH_JOINED, ({ data ->
+                    val feedback =
+                        Gson().fromJson(data.first().toString(), JoinRoomFeedback::class.java)
+                    if (feedback.feedback.status) {
+                        RoomManager.currentRoom = feedback.room_joined!!.id
+                        gameStartedListener?.startGame()
+                    } else {
+                        Handler(Looper.getMainLooper()).post(({
+                            Toast.makeText(
+                                context,
+                                feedback.feedback.log_message,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }))
+                    }
+                }))
+        }
     }
 }

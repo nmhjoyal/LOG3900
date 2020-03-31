@@ -6,9 +6,7 @@ import com.example.thin_client.data.app_preferences.Preferences
 import com.example.thin_client.data.drawing.Stroke
 import com.example.thin_client.data.drawing.StylusPoint
 import com.example.thin_client.data.game.CreateMatch
-import com.example.thin_client.data.game.StartMatch
 import com.example.thin_client.data.lifecycle.LoginState
-import com.example.thin_client.data.model.MatchInfos
 import com.example.thin_client.data.model.PrivateProfile
 import com.example.thin_client.data.model.User
 import com.example.thin_client.data.rooms.CreateRoom
@@ -104,14 +102,6 @@ object SocketHandler {
         socket!!.emit(SocketEvent.UPDATE_PROFILE, args)
     }
 
-    fun connectOnlineDraw() {
-        socket!!.emit(SocketEvent.CONNECT_FREE_DRAW)
-    }
-
-    fun disconnectOnlineDraw() {
-        socket!!.emit(SocketEvent.DISCONNECT_FREE_DRAW)
-    }
-
     fun startStroke(drawPoint: Stroke) {
         val args = Gson().toJson(drawPoint)
         socket!!.emit(SocketEvent.STROKE, args)
@@ -153,19 +143,23 @@ object SocketHandler {
         socket!!.emit(SocketEvent.CLEAR)
     }
 
-    fun updateMatches(matchInfos:ArrayList<MatchInfos>) {
+    /*fun updateMatches(matchInfos:ArrayList<MatchInfos>) {
         val gson = Gson()
         val args = gson.toJson(matchInfos)
         socket!!.emit(SocketEvent.UPDATE_MATCHES, args)
-    }
+    }*/
 
     fun searchMatches() {
         socket!!.emit(SocketEvent.GET_MATCHES)
     }
 
-    fun joinMatch(matchId: String) {
+    fun searchPlayers() {
+        socket!!.emit(SocketEvent.GET_PLAYERS)
+    }
+
+    fun joinMatch(matchId:String){
         val args = Gson().toJson(matchId)
-        socket!!.emit(SocketEvent.JOIN_MATCH, args)
+        socket!!.emit(SocketEvent.JOIN_MATCH,args)
     }
 
     fun leaveMatch() {

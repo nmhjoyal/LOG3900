@@ -5,17 +5,16 @@ import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.game_item.view.*
 
 
-class MatchItem(
-    val matchId: String,
-    val hostName: String,
+class MatchItem(val matchId: String, val hostname: String,
                 val rounds : Number,
                 val numberplayers: Number): Item<GroupieViewHolder>(){
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.matchId_textview.text = matchId
-        viewHolder.itemView.text_view_hostname.text = hostName
+        viewHolder.itemView.match_id.text = matchId
+        viewHolder.itemView.text_view_hostname.text = hostname
         viewHolder.itemView.text_view_rounds.text = rounds.toString()
         viewHolder.itemView.text_view_numberplayers.text = numberplayers.toString()
+
     }
 
     override fun getLayout(): Int {
