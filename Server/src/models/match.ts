@@ -20,6 +20,11 @@ export interface MatchInfos {
     players: PublicProfile[] /* username, avatar */
 }
 
+export interface StartTurn {
+    timeLimit: number
+    word: string
+}
+
 export interface EndTurn {
     currentRound: number
     scores: Map<string, UpdateScore>/* username, score */

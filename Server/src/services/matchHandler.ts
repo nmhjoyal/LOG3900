@@ -61,9 +61,8 @@ export default class MatchHandler {
     }
 
     public async joinMatch(io: SocketIO.Server, socket: SocketIO.Socket, matchId: string, user: PrivateProfile | undefined): Promise<JoinRoomFeedback> {
-        const trimmedMatchId = matchId.replace(new RegExp('\"', 'g'), "")
+        const trimmedMatchId = matchId.replace(new RegExp('\"', 'g'), "");
         const match: Match | undefined = this.currentMatches.get(trimmedMatchId);
-        console.log(trimmedMatchId)
         let joinRoomFeedback: JoinRoomFeedback = { feedback: { status: false, log_message: "" }, room_joined: null, isPrivate: true };
 
         if (user) {
@@ -277,9 +276,13 @@ export default class MatchHandler {
 
     public getAvailableMatches(): MatchInfos[] {
         let availableMatches: MatchInfos[] = [];
-        this.currentMatches.forEach((match: Match) => {
-            let matchInfos: MatchInfos | undefined = match.getMatchInfos();
-            if (matchInfos) availableMatches.push(matchInfos);
+        this.currentMatches.forEach((match: Match, matchId: string) => {
+            if (match.isEnded) {
+                this.currentMatches.delete(matchId);
+            } else {
+                let matchInfos: MatchInfos | undefined = match.getMatchInfos();
+                if (matchInfos) availableMatches.push(matchInfos);
+            }
         });
         return availableMatches;
     }
