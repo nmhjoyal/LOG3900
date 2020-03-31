@@ -1,6 +1,7 @@
 package com.example.thin_client.ui.chat
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -14,6 +15,7 @@ import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.Message
 import com.example.thin_client.data.app_preferences.PreferenceHandler
 import com.example.thin_client.data.game.GameArgs
+import com.example.thin_client.data.game.GameManager
 import com.example.thin_client.data.getAvatar
 import com.example.thin_client.data.rooms.Invitation
 import com.example.thin_client.data.rooms.RoomArgs
@@ -22,6 +24,7 @@ import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
 import com.example.thin_client.ui.chatrooms.InviteUserRow
+import com.example.thin_client.ui.game_mode.GameActivity
 import com.example.thin_client.ui.login.afterTextChanged
 import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
@@ -35,6 +38,13 @@ class ChatFragment : Fragment() {
     private var roomID : String ?= ""
     private val admin : String ="Admin"
     private lateinit var userAvatarID: AvatarID
+
+    private var guessWordListener: IGuessWord? = null
+
+
+    interface IGuessWord {
+        fun guessSent()
+    }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,10 +82,11 @@ class ChatFragment : Fragment() {
         }
 
         send_guess.setOnClickListener {
-            if (editText_chat.text.isNotBlank()) {
+            if (editText_chat.text.isNotBlank() && GameManager.canGuess) {
                 send_button_chat.isEnabled = true
                 send_guess.isEnabled = true
                 SocketHandler.sendGuess(editText_chat.text.toString())
+                guessWordListener?.guessSent()
                 editText_chat.setText("")
             }
         }
@@ -102,7 +113,7 @@ class ChatFragment : Fragment() {
 
         editText_chat.afterTextChanged {
             send_button_chat.isEnabled = editText_chat.text.isNotBlank()
-            send_guess.isEnabled = editText_chat.text.isNotBlank()
+            send_guess.isEnabled = (editText_chat.text.isNotBlank() && GameManager.canGuess)
         }
 
         invite_user_button.setOnClickListener(({
@@ -117,6 +128,14 @@ class ChatFragment : Fragment() {
     ): View {
         return inflater.inflate(R.layout.activity_chat, container, false)
     }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        guessWordListener = context as? IGuessWord
+        if (guessWordListener == null) {
+        }
+    }
+
 
     private fun retreiveExistingMessages() {
         val roomsJoined = RoomManager.roomsJoined
@@ -212,6 +231,9 @@ class ChatFragment : Fragment() {
 
     private fun showAdminMessage(text:String){
         adapter.add(ChatUserJoined(text))
+        if (recyclerview_chat != null){
+            recyclerview_chat.scrollToPosition(adapter.itemCount - 1)
+        }
     }
 
     private fun goBackToRooms() {

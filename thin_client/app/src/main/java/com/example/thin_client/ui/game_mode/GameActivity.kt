@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -34,7 +35,7 @@ import kotlinx.android.synthetic.main.activity_game.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch {
+class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch, ChatFragment.IGuessWord {
     private lateinit var manager: FragmentManager
     private lateinit var prefs: SharedPreferences
     private var wordToGuess: String = ""
@@ -44,9 +45,14 @@ class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch {
     private var timer: CountDownTimer? = null
     private var isGameStarted = false
     private var currentDrawer = ""
+    private var nbTries = 0
+    private var firstTurnStarted = false
+    private var currentRound = 1
 
     private val SECOND_INTERVAL: Long = 1000
     private val TIME_PATTERN = "mm:ss"
+    private val POINT_SCREEN_TIMEOUT: Long = 5000
+    private val ROUND_SCREEN_TIMEOUT: Long = 2000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,6 +94,14 @@ class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch {
         SocketHandler.startMatch()
     }
 
+    override fun guessSent() {
+        nbTries--
+        nb_guesses.text = nbTries.toString()
+        if (nbTries == 0) {
+            GameManager.canGuess = false
+        }
+    }
+
     private fun setupSocket() {
         if (!SocketHandler.isConnected()) {
             SocketHandler.connect()
@@ -118,15 +132,14 @@ class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch {
         transaction.commitAllowingStateLoss()
     }
 
-    private fun showDrawerFragment(word: String) {
+    private fun showDrawerFragment() {
         val transaction = manager.beginTransaction()
         val drawerFragment = DrawerFragment()
-        val bundle = Bundle()
-        bundle.putString(GameArgs.CHOSEN_WORD, word)
-        drawerFragment.arguments = bundle
         transaction.replace(R.id.draw_view_container, drawerFragment)
         transaction.addToBackStack(null)
         transaction.commitAllowingStateLoss()
+        points_view.visibility = View.GONE
+        draw_view_container.bringToFront()
     }
 
     private fun showObserverFragment() {
@@ -135,8 +148,8 @@ class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch {
         transaction.replace(R.id.draw_view_container, observerFragment)
         transaction.addToBackStack(null)
         transaction.commitAllowingStateLoss()
-        message.text = String.format(resources.getString(R.string.user_choosing_word), currentDrawer)
-        user_block.bringToFront()
+        points_view.visibility = View.VISIBLE
+        showUserChoosingWord()
     }
 
     private fun startCountdown(totalTime: Long) {
@@ -177,11 +190,34 @@ class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch {
             val selectedWord = (item as WordHolder).text
             wordToGuess = selectedWord
             SocketHandler.startTurn(selectedWord)
-            showDrawerFragment(selectedWord)
+            showDrawerFragment()
             dialog.dismiss()
         }))
         wordRecycler.adapter = adapter
         dialog.show()
+    }
+
+    private fun resetTurn(drawer: String, currentUserPoints: Number?) {
+        if (timer != null) {
+            timer?.cancel()
+            timer?.onFinish()
+        }
+        lettersAdapter.clear()
+        wordToGuess = ""
+        message.text = ""
+        nbTries = 3
+        GameManager.canGuess = true
+        isHost = drawer.equals(currentUser)
+        total_points.text = if (currentUserPoints != null) currentUserPoints.toString() else "0"
+        currentDrawer = drawer
+    }
+
+    private fun delegateViews(choices: Array<String>) {
+        if (isHost) {
+            showWordsSelection(choices)
+        } else {
+            showObserverFragment()
+        }
     }
 
 
@@ -215,27 +251,46 @@ class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch {
             SocketHandler.socket!!
                 .on(SocketEvent.TURN_ENDED, ({ data ->
                     val turnParams = Gson().fromJson(data.first().toString(), EndTurn::class.java)
-                    Handler(Looper.getMainLooper()).post(Runnable {
+                    Handler(Looper.getMainLooper()).post(({
+                        resetTurn(turnParams.drawer, turnParams.scores[currentUser]?.scoreTotal)
                         user_block.bringToFront()
-                        if (timer != null) {
-                            timer?.cancel()
-                            timer?.onFinish()
-                        }
-                        lettersAdapter.clear()
-                        wordToGuess = ""
-                        message.text = ""
-                        isHost = turnParams.drawer.equals(currentUser)
-                        currentDrawer = turnParams.drawer
-                        if (isHost) {
-                            showWordsSelection(turnParams.choices)
+                        if (!firstTurnStarted) {
+                            message.text = String.format(resources.getString(R.string.round), turnParams.currentRound.toInt())
+                            user_points.visibility = View.GONE
+                            Handler().postDelayed({
+                                delegateViews(turnParams.choices)
+                            }, ROUND_SCREEN_TIMEOUT)
+                        } else if (turnParams.currentRound.toInt() != currentRound) {
+                            currentRound = turnParams.currentRound.toInt()
+                            val pointsAdapter = GroupAdapter<GroupieViewHolder>()
+                            message.text = String.format(resources.getString(R.string.word_was), wordToGuess)
+                            for (score in turnParams.scores) {
+                                pointsAdapter.add(PlayerPointHolder(score.key, score.value.scoreTurn.toInt()))
+                            }
+                            pointsAdapter.add(PlayerPointHolder("user", 20))
+                            pointsAdapter.add(PlayerPointHolder("user", 10))
+                            pointsAdapter.add(PlayerPointHolder("user", 0))
+                            user_points.adapter = pointsAdapter
+                            user_points.visibility = View.VISIBLE
+                            Handler().postDelayed({
+                                user_points.visibility = View.GONE
+                                message.text = String.format(resources.getString(R.string.round), turnParams.currentRound.toInt())
+                                Handler().postDelayed({
+                                    delegateViews(turnParams.choices)
+                                }, ROUND_SCREEN_TIMEOUT)
+                            }, POINT_SCREEN_TIMEOUT)
                         } else {
-                            showObserverFragment()
+                            message.text = String.format(resources.getString(R.string.word_was), wordToGuess)
+                            user_points.visibility = View.GONE
+                            Handler().postDelayed({
+                                delegateViews(turnParams.choices)
+                            }, POINT_SCREEN_TIMEOUT)
                         }
-                    })
-
+                    }))
                 }))
                 .on(SocketEvent.TURN_STARTED, ({ data ->
                     Handler(Looper.getMainLooper()).post(Runnable {
+                        firstTurnStarted = true
                         draw_view_container.bringToFront()
                         val time = Gson().fromJson(data.first().toString(), Number::class.java)
                         startCountdown(time.toLong() * SECOND_INTERVAL)
@@ -258,6 +313,12 @@ class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch {
                     }
                 }))
         }
+    }
+
+    private fun showUserChoosingWord() {
+        message.text = String.format(resources.getString(R.string.user_choosing_word), currentDrawer)
+        user_points.visibility = View.GONE
+        user_block.bringToFront()
     }
 
 
