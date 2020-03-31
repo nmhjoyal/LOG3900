@@ -1,5 +1,5 @@
 import { Feedback, StartMatchFeedback, JoinRoomFeedback } from "../../models/feedback";
-import { MatchInfos, UpdateScore, CreateMatch } from "../../models/match";
+import { MatchInfos, UpdateScore, CreateMatch, EndTurn, StartTurn } from "../../models/match";
 import Player from "../../models/player";
 import PublicProfile from "../../models/publicProfile";
 import { MatchMode, MatchSettings } from "../../models/matchMode";
@@ -8,12 +8,17 @@ import PrivateProfile from "../../models/privateProfile";
 import { VirtualDrawing } from "../Drawing/virtualDrawing";
 import { Drawing } from "../Drawing/drawing";
 import { Stroke, StylusPoint } from "../../models/drawPoint";
+import RandomWordGenerator from "../wordGenerator/wordGenerator";
+import Admin from "../../models/admin";
+import { Message } from "../../models/message";
+import { gameDB } from "../Database/gameDB";
 
 export default abstract class Match {
     // Settings
     public matchId: string;
-    protected mode: number;
+    public isEnded: boolean;
     public players: Player[]; /* socketid, Player */
+    protected mode: number;
     protected nbRounds: number;
     protected timeLimit: number;
     protected currentWord: string;
@@ -29,18 +34,19 @@ export default abstract class Match {
                                                 // if there is an unexpected leave of a room or stoppage of a turn
     protected scores: Map<string, UpdateScore>  // Key: username, Value: score
     protected round: number;                    // In one round each player will draw one time
-    protected drawer: string ;                  // Username 
+    protected drawer: string;                   // Username 
     protected drawing: Drawing;
     protected virtualDrawing: VirtualDrawing;
 
     // Match methods
     public abstract startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): void;
-    protected abstract endTurn(io: SocketIO.Server): void;
+    protected abstract endTurn(io: SocketIO.Server, drawerLeft: boolean): void;
     public abstract guess(io: SocketIO.Server, guess: string, username: string): Feedback;
 
     protected constructor(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler, matchSettings: MatchSettings) {
         this.players = [this.createPlayer(user, true, false)];
         this.isStarted = false;
+        this.isEnded = false;
         this.nbRounds = createMatch.nbRounds;
         this.matchId = matchId;
         this.mode = createMatch.matchMode;
@@ -62,6 +68,7 @@ export default abstract class Match {
                 if (this.getNbHumanPlayers() < this.ms.MAX_NB_HP) {
                     joinRoomFeedback = await this.chatHandler.joinChatRoom(io, socket, this.matchId, user);
                     this.players.push(this.createPlayer(user, false, false));
+                    io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
                     joinRoomFeedback.feedback.log_message = "You joined the match.";
                 } else {
                     joinRoomFeedback.feedback.log_message = "You can not have more than" + this.ms.MAX_NB_HP + "human players in this mode.";
@@ -82,18 +89,25 @@ export default abstract class Match {
 
         if (player) {
             await this.chatHandler.leaveChatRoom(io, socket, this.matchId, user);
-            if (this.getNbHumanPlayers() > 1) {
-                this.players.splice(this.players.indexOf(player), 1);
+            if (this.getNbHumanPlayers() > this.ms.MIN_NB_HP) {
                 if (this.isStarted) {
+                    // after the match is started the host is not important.
                     if (player.user.username == this.drawer) {
-                        this.endTurn(io);
+                        let oldDrawer: Player | undefined = this.getPlayer(this.drawer);
+                        if (oldDrawer) {
+                            this.assignDrawer(oldDrawer);
+                            this.endTurn(io, true);
+                        }
                     }
                 } else {
                     if (player.isHost) {
-                        this.assignNewHost(io);
+                        this.assignHost();
                     } 
                 }
+                this.players.splice(this.players.indexOf(player), 1);
+                io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
             } else {
+                this.endTurn(io, false);
                 deleteMatch = true;
             }
         }
@@ -164,7 +178,7 @@ export default abstract class Match {
                     const nbVirtualPlayers: number = this.getNbVirtualPlayers();
                     if (nbVirtualPlayers > this.ms.MIN_NB_VP || nbVirtualPlayers < this.ms.MAX_NB_VP) {
                         this.initMatch();
-                        this.endTurn(io);
+                        this.endTurn(io, false);
                         startMatchFeedback.nbRounds = this.nbRounds;
                         startMatchFeedback.feedback.status = true;
                         startMatchFeedback.feedback.log_message = "Match is starting...";
@@ -188,8 +202,33 @@ export default abstract class Match {
         return startMatchFeedback;
     }
 
-    protected endMatch(): void {
+    protected async endTurnGeneral(io: SocketIO.Server): Promise<void> {
+        const endTurn: EndTurn = this.createEndTurn();
 
+        if (this.currentWord != "") {
+            const message: Message = Admin.createAdminMessage("The word was " + this.currentWord, this.matchId);
+            io.in(this.matchId).emit("new_message", JSON.stringify(message));
+        }
+
+        io.in(this.matchId).emit("turn_ended", JSON.stringify(endTurn));
+        
+        this.resetScoresTurn();
+        this.currentWord = "";
+        
+        if (this.getPlayer(this.drawer)?.isVirtual) {
+            let word: string;
+            setTimeout(() => {
+                this.startTurn(io, word, true);
+            }, 5000);
+            word = await gameDB.getRandomWord();
+        }
+    }
+
+    protected endMatch(io: SocketIO.Server): void {
+        // compile game stats for the players and the standings.
+        // notify everyone that the game is ended.
+         
+        this.isEnded = true;
     }
 
     /**
@@ -271,11 +310,20 @@ export default abstract class Match {
         }
     }
 
-    protected assignNewHost(io: SocketIO.Server): void {
+    protected assignDrawer(oldDrawer: Player) {
+        const currentIndex: number = this.players.indexOf(oldDrawer);
+        if (currentIndex == this.players.length - 1) {
+            this.drawer = this.players[0].user.username;
+            this.round++;
+        } else {
+            this.drawer = this.players[currentIndex + 1].user.username;
+        }
+    }
+
+    protected assignHost(): void {
         for(let player of this.players) {
             if (!player.isHost && !player.isVirtual) {
                 player.isHost = true;
-                io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
                 break;
             }
         }
@@ -330,21 +378,25 @@ export default abstract class Match {
                 userInfos.push(player.user);
             }
 
-            matchInfos = {
-                matchId: this.matchId,
-                host: host,
-                matchMode: this.mode,
-                nbRounds: this.nbRounds,
-                timeLimit: this.timeLimit,
-                players: userInfos
-            };
+            matchInfos = this.createMatchInfos(host, userInfos);
         }
 
         return matchInfos;
     }
 
     public getPlayer(username: string): Player | undefined {
-        return this.players.find(player => username == player.user.username)
+        return this.players.find(player => username == player.user.username);
+    }
+
+    protected createMatchInfos(host: string, userInfos: PublicProfile[]): MatchInfos {
+        return {
+            matchId: this.matchId,
+            host: host,
+            matchMode: this.mode,
+            nbRounds: this.nbRounds,
+            timeLimit: this.timeLimit,
+            players: userInfos
+        };
     }
 
     protected createPlayer(user: PublicProfile, isHost: boolean, isVirtual: boolean): Player {
@@ -352,6 +404,22 @@ export default abstract class Match {
             user: user,
             isHost: isHost,
             isVirtual: isVirtual
+        };
+    }
+
+    protected createStartTurn(word: string): StartTurn {
+        return { 
+            timeLimit: this.timeLimit,
+            word: word.replace(/[a-z]/gi, '_')
+        };
+    }
+
+    protected createEndTurn(): EndTurn {
+        return {
+            currentRound: this.round,
+            choices: RandomWordGenerator.generateChoices(),
+            drawer: this.drawer,
+            scores: this.scores
         };
     }
 }

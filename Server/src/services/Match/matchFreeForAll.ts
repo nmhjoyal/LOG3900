@@ -1,8 +1,7 @@
 import Match from "./matchAbstract";
 import PublicProfile from "../../models/publicProfile";
 import ChatHandler from "../chatHandler";
-import { EndTurn, CreateMatch } from "../../models/match";
-import RandomWordGenerator from "../wordGenerator/wordGenerator";
+import { CreateMatch } from "../../models/match";
 import Player from "../../models/player";
 import { gameDB } from "../Database/gameDB";
 import { Game } from "../../models/drawPoint";
@@ -19,7 +18,7 @@ export default class FreeForAll extends Match {
 
     public async startTurn(io: SocketIO.Server, word: string, isVirtual: boolean): Promise<void> {
         this.currentWord = word;
-        io.in(this.matchId).emit("turn_started", this.timeLimit);
+        io.in(this.matchId).emit("turn_started", this.createStartTurn(this.currentWord));
         
         if (isVirtual) {
             const game: Game = await gameDB.getGame(word);
@@ -31,47 +30,27 @@ export default class FreeForAll extends Match {
             if(isVirtual) {
                 this.virtualDrawing.clear(io);
             }
-            this.endTurn(io);
+            this.endTurn(io, false);
         }, this.timeLimit * 1000);
     }
 
-    protected async endTurn(io: SocketIO.Server): Promise<void> {
+    protected async endTurn(io: SocketIO.Server, drawerLeft: boolean): Promise<void> {
         clearTimeout(this.timeout);
-        let currentPlayer: Player | undefined = this.getPlayer(this.drawer);
-        if (currentPlayer) {
-            const currentIndex: number = this.players.indexOf(currentPlayer);
-            if (currentIndex == this.players.length - 1) {
-                this.drawer = this.players[0].user.username;
-                this.round++;
-            } else {
-                this.drawer = this.players[currentIndex + 1].user.username;
-            }
-    
-            const endTurn: EndTurn = {
-                currentRound: this.round,
-                choices: RandomWordGenerator.generateChoices(),
-                drawer: this.drawer,
-                scores: this.scores
-            };
+        if (!drawerLeft){
+            let oldDrawer: Player | undefined = this.getPlayer(this.drawer);
+            if (oldDrawer) {
+                this.assignDrawer(oldDrawer);
 
-            if (this.currentWord != "") {
-                const message: Message = Admin.createAdminMessage("The word was " + this.currentWord, this.matchId);
-                io.in(this.matchId).emit("new_message", JSON.stringify(message));
+                if (this.round == this.nbRounds) {
+                    this.endMatch(io);
+                }
             }
-
-            io.in(this.matchId).emit("turn_ended", JSON.stringify(endTurn));
-            
-            this.resetScoresTurn();
-            this.currentWord = "";
-            
-            if (this.getPlayer(this.drawer)?.isVirtual) {
-                let word: string;
-                setTimeout(() => {
-                    this.startTurn(io, word, true);
-                }, 5000);
-                word = await gameDB.getRandomWord();
+        } else { // the drawer left the match during the round.
+            if (this.getNbHumanPlayers() < this.ms.MIN_NB_HP) {
+                this.endMatch(io);
             }
         }
+        this.endTurnGeneral(io);
     }
 
     public guess(io: SocketIO.Server, guess: string, username: string): Feedback {
@@ -88,7 +67,7 @@ export default class FreeForAll extends Match {
                     this.updateScore(this.drawer, Math.round(score / this.players.length));
         
                     if(this.everyoneHasGuessed()) {
-                        this.endTurn(io);
+                        this.endTurn(io, false);
                     }
                 } else {
                     feedback.log_message = "Your guess is wrong.";
