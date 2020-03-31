@@ -9,11 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.example.thin_client.R
+import com.example.thin_client.data.AvatarID
 import com.example.thin_client.data.game.GameManager
 import com.example.thin_client.data.game.MatchMode
 import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.game_mode.Player
+import com.example.thin_client.ui.waitingroom.WaitingRoomItem
 import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -29,8 +31,10 @@ class WaitingRoom : Fragment() {
     }
     private val adapter = GroupAdapter<GroupieViewHolder>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
+        super.onViewCreated(view, savedInstanceState)
+        adapter.add(WaitingRoomItem("amar", AvatarID.PEAR))
+        start_match.setOnClickListener((({listener?.startMatch()})))
         recyclerview_available_players.adapter = adapter
         setUpSocketEvents()
 
@@ -43,7 +47,6 @@ class WaitingRoom : Fragment() {
         when(GameManager.currentGameMode){
             MatchMode.SOLO -> {}
         }
-        start_match.setOnClickListener((({listener?.startMatch()})))
 
         return inflater.inflate(R.layout.fragment_waiting_room, container, false)
     }
