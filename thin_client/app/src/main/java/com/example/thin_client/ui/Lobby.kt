@@ -43,7 +43,6 @@ import com.example.thin_client.ui.profile.ProfileActivity
 import com.github.nkzawa.socketio.client.Socket
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_lobby.*
-import kotlinx.android.synthetic.main.waiting_room_fragment.*
 
 class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.IStartNewFragment {
     private lateinit var manager: FragmentManager

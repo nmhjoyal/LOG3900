@@ -27,7 +27,6 @@ import com.example.thin_client.ui.chat.ChatFragment
 import com.example.thin_client.ui.game_mode.free_draw.DrawerFragment
 import com.example.thin_client.ui.game_mode.free_draw.ObserverFragment
 import com.example.thin_client.ui.game_mode.free_draw.WordHolder
-import com.example.thin_client.ui.game_mode.waiting_room.WaitingRoom
 import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -35,7 +34,7 @@ import kotlinx.android.synthetic.main.activity_game.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch, ChatFragment.IGuessWord {
+class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
     private lateinit var manager: FragmentManager
     private lateinit var prefs: SharedPreferences
     private var wordToGuess: String = ""
@@ -73,11 +72,11 @@ class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch, ChatFragment.
             MatchMode.COLLABORATIVE-> {}
             MatchMode.FREE_FOR_ALL -> {
                 if (!isGameStarted) {
-                    val transaction = manager.beginTransaction()
-                    val waitingRoom = WaitingRoom()
-                    transaction.replace(R.id.draw_view_container, waitingRoom)
-                    transaction.addToBackStack(null)
-                    transaction.commitAllowingStateLoss()
+//                    val transaction = manager.beginTransaction()
+//                    val waitingRoom = WaitingRoom()
+//                    transaction.replace(R.id.draw_view_container, waitingRoom)
+//                    transaction.addToBackStack(null)
+//                    transaction.commitAllowingStateLoss()
                 }
             }
             MatchMode.ONE_ON_ONE -> {}
@@ -88,10 +87,6 @@ class GameActivity : AppCompatActivity(), WaitingRoom.IStartMatch, ChatFragment.
     override fun onStop() {
         super.onStop()
         turnOffSocketEvents()
-    }
-
-    override fun startMatch() {
-        SocketHandler.startMatch()
     }
 
     override fun guessSent() {
