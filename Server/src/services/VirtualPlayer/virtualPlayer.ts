@@ -1,5 +1,6 @@
 import Player from "../../models/player";
 import { VPS, messages, CustomMessage, INSERT_HINT, ERROR } from "../../models/vp"
+import { Message } from "../../models/message";
 
 export default class VirtualPlayer {
     private vps: Player[];
@@ -19,19 +20,35 @@ export default class VirtualPlayer {
         }
     }
 
-    public getStartMatchMessage(username: string): string {
+    public getStartMatchMessage(username: string, roomId: string): Message {
         const cMsg: CustomMessage | undefined = messages.get(username);
-        return (cMsg) ? cMsg.startMatch : ERROR.startMatch;
+        const content: string = (cMsg) ? cMsg.startMatch : ERROR.startMatch;
+       
+        return this.createMessageObj(username, content, roomId);
     }
 
-    public getEndTurnMessage(username: string): string {
+    public getEndTurnMessage(username: string, roomId: string): Message {
         const cMsg: CustomMessage | undefined = messages.get(username);
-        return (cMsg) ? cMsg.endTurn : ERROR.endTurn;
+        const content: string = (cMsg) ? cMsg.endTurn : ERROR.endTurn;
+
+        return this.createMessageObj(username, content, roomId);
     }
 
-    public getHintMessage(username: string, hint: string): string {
+    public getHintMessage(username: string, hint: string, roomId: string): Message {
         const cMsg: CustomMessage | undefined = messages.get(username);
-        return (cMsg) ? cMsg.hint.replace(new RegExp(INSERT_HINT), hint) : ERROR.hint;
+        const content: string = (cMsg) ? cMsg.hint.replace(new RegExp(INSERT_HINT), hint) : 
+                                         ERROR.hint;
+        
+        return this.createMessageObj(username, content, roomId);
+    }
+    
+    private createMessageObj(username: string, content: string, roomId: string): Message {
+        return {
+            username: username,
+            content: content,
+            date: Date.now(),
+            roomId: roomId
+        }
     }
 
     private getVPByUsername(username: string): Player | undefined{
