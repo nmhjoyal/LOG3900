@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,29 +10,26 @@ using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    class MenuSelectionModeCreationViewModel : Screen
+    class createMatchViewModel: Screen
     {
+
         private IEventAggregator _events;
         private ISocketHandler _socketHandler;
 
-        public MenuSelectionModeCreationViewModel(IEventAggregator events, ISocketHandler socketHandler)
+        public createMatchViewModel(IEventAggregator events, ISocketHandler socketHandler)
         {
             _events = events;
             _socketHandler = socketHandler;
-        }
-
-        public void manuel2()
-        {
-            _events.PublishOnUIThread(new ManuelleIIEvent());
-        }
-
-        public void assiste1()
-        {
-            _events.PublishOnUIThread(new AssisteIEvent());
+            this._socketHandler.onCreateMatch();
         }
         public void goBack()
         {
             _events.PublishOnUIThread(new goBackMainEvent());
+        }
+        public void createMatch(MatchMode matchMode, int nbRounds, int timeLimit)
+        {
+             CreateMatch createMatch = new CreateMatch(nbRounds, timeLimit, matchMode);
+             this._socketHandler.socket.Emit("create_match", JsonConvert.SerializeObject(createMatch));
         }
     }
 }

@@ -185,6 +185,9 @@ namespace WPFUI.ViewModels
                 Console.WriteLine("This file provided is invalid (bmp, jpg, png)");
             }
         }
+        public void preventDrawing(Stroke stroke)
+        {
+            this.Traits.Remove(stroke);
+        }
     }
-
 }

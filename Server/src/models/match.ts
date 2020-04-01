@@ -27,12 +27,18 @@ export interface StartTurn {
 
 export interface EndTurn {
     currentRound: number
-    scores: Map<string, UpdateScore>/* username, score */
+    scores: UsernameUpdateScore[]/* username, score */
     choices: string[]
     drawer: string  // indicates if he is the drawer in FreeForAll and OneVsOne.
                     // not used in SprintCoop and SprintSolo because the players are always guessing
 }
 export interface UpdateScore {
+    scoreTotal: number
+    scoreTurn: number
+}
+
+export interface UsernameUpdateScore {
+    username: string,
     scoreTotal: number
     scoreTurn: number
 }

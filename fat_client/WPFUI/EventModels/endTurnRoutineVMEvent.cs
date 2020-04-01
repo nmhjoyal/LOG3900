@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace WPFUI.EventModels
 {
-    class windowChatEvent
+    public class endTurnRoutineVMEvent
     {
-
+        public endTurnRoutineVMEvent()
+        {
+        }
     }
 }

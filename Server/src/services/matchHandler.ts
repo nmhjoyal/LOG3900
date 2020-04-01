@@ -39,6 +39,7 @@ export default class MatchHandler {
             createMatchFeedback.feedback = await this.chatHandler.createChatRoom(io, socket, matchRoom, user);
             if (createMatchFeedback.feedback.status) {
                 createMatchFeedback.feedback.status = false
+                console.log(JSON.stringify(createMatch));
                 if (createMatch.timeLimit >= TIME_LIMIT_MIN && createMatch.timeLimit <= TIME_LIMIT_MAX) {
                     if (createMatch.nbRounds >= NB_ROUNDS_MIN && createMatch.nbRounds <= NB_ROUNDS_MAX) {
                         this.currentMatches.set(matchId, MatchInstance.createMatch(matchId, user, createMatch, this.chatHandler));
@@ -107,7 +108,7 @@ export default class MatchHandler {
         if (user) {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
-                feedback = match.addVirtualPlayer(socket.id, io);
+                feedback = match.addVirtualPlayer(user.username, io);
                 io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
             } else {
                 feedback.log_message = "This match does not exist anymore.";
@@ -125,7 +126,7 @@ export default class MatchHandler {
         if (user) {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
-                feedback = match.removeVirtualPlayer(socket.id, io);
+                feedback = match.removeVirtualPlayer(user.username, io);
                 io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
             } else {
                 feedback.log_message = "This match does not exist anymore.";
@@ -144,9 +145,12 @@ export default class MatchHandler {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
                 startMatchFeedback = match.startMatch(user.username, io);
-                startMatchFeedback.feedback.status ?
-                    io.in(match.matchId).emit("match_started", JSON.stringify(startMatchFeedback)) :
+                if (startMatchFeedback.feedback.status) {
+                    io.in(match.matchId).emit("match_started", JSON.stringify(startMatchFeedback));
+                    io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
+                } else {
                     socket.emit("match_started", JSON.stringify(startMatchFeedback));
+                }
             } else {
                 startMatchFeedback.feedback.log_message = "This match does not exist anymore.";
             }

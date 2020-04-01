@@ -18,6 +18,7 @@ export enum MatchMode {
 
 export class MatchInstance {
     public static createMatch(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler): Match {
+        console.log(createMatch.matchMode);
         switch (createMatch.matchMode) {
             case MatchMode.freeForAll:
                 return new FreeForAll(matchId, user, createMatch, chatHandler);

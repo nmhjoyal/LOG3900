@@ -5,37 +5,34 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WPFUI.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+              FontFamily="Microsoft JhengHei UI Light">
     <Grid Background="White">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="20"/>
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="50"/>
+            <ColumnDefinition Width="700" />
+            <ColumnDefinition Width="50" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="4*"/>
-            <RowDefinition Height="11*"/>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="50"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
 
-        <Button x:Name="manuel1" Content="Manuel I" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="5" MaxWidth="200"/>
-        <Button x:Name="manuel2" Content="Manuel II" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="5" MaxWidth="200"/>
-        <Button x:Name="assiste1" Content="Assiste" Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="5" MaxWidth="200"/>
-        <Button x:Name="goBack" Content="Go Back" Grid.Column="1" Grid.Row="7" Grid.ColumnSpan="5" MaxWidth="200" HorizontalAlignment="Right"/>
+
+        <Button  Background="#FF00CCCC"  BorderBrush="{x:Null}" x:Name="manuel2" Content="Manuelle" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="5" MaxWidth="200"/>
+        <Button  Background="#FF00CCCC"  BorderBrush="{x:Null}" x:Name="assiste1" Content="Assiste" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="5" MaxWidth="200"/>
+        
+        <Button  x:Name="goBack"  Grid.Column="1" Grid.Row="0" MaxWidth="100" HorizontalAlignment="Right"  Background="#FFBF0B0B" BorderBrush="#FFBF0B0B">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Foreground="White">Retour</TextBlock>
+                <Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
+            </StackPanel>
+        </Button>
+        <TextBlock FontSize="40"  Foreground="#FF66CC00" Grid.Column="1" Grid.Row="1"> Choisi ton mode de création de jeu! </TextBlock>
     </Grid>
 </UserControl>

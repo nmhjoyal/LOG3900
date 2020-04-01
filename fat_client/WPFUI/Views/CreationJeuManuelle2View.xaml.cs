@@ -63,8 +63,6 @@ namespace WPFUI.Views
             (this.DataContext as CreationJeuManuelle2ViewModel).createGame(this.Word.Text, clues, this.Level.SelectedIndex, this.Mode.SelectedIndex, option);
             
             Console.WriteLine(JsonConvert.SerializeObject(clues));
-
-
         }
 
         private void preview(object sender, RoutedEventArgs e)
