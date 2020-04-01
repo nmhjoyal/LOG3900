@@ -1,5 +1,5 @@
 import { Feedback, StartMatchFeedback, JoinRoomFeedback } from "../../models/feedback";
-import { MatchInfos, UpdateScore, CreateMatch, EndTurn, StartTurn } from "../../models/match";
+import { MatchInfos, UpdateScore, CreateMatch, EndTurn, StartTurn, Score } from "../../models/match";
 import Player from "../../models/player";
 import PublicProfile from "../../models/publicProfile";
 import { MatchMode, MatchSettings } from "../../models/matchMode";
@@ -401,6 +401,17 @@ export default abstract class Match {
         return this.players.find(player => username == player.user.username);
     }
 
+    private getScores() : Score[] {
+        let scores: Score[] = []; 
+        this.scores.forEach((updateScore: UpdateScore, username: string) => {
+            scores.push({
+                username: username,
+                updateScore: updateScore
+            })
+        });
+        return scores;
+    }
+
     protected createMatchInfos(host: string, userInfos: PublicProfile[]): MatchInfos {
         return {
             matchId: this.matchId,
@@ -431,7 +442,7 @@ export default abstract class Match {
             currentRound: this.round,
             choices: RandomWordGenerator.generateChoices(),
             drawer: this.drawer,
-            scores: this.scores
+            scores: this.getScores()
         };
     }
 }
