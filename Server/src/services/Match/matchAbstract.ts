@@ -339,9 +339,8 @@ export default abstract class Match {
         return this.players.findIndex(player => !player.isVirtual);
     }
 
-    protected addVP(io: SocketIO.Server): void {   
-        /* EVENTUALLY, GENERATE RANDOM VP, also need to check if it is already in the players array (so we dont have two identical VP)*/ 
-        const randomVP: Player = {user: {username: "welfj", avatar: "asef"}, isVirtual: true } /*this.virtualPlayer.create()*/;
+    protected addVP(io: SocketIO.Server): void {
+        const randomVP: Player = this.virtualPlayer.create();
         this.players.push(randomVP);
         this.chatHandler.findPrivateRoom(this.matchId)?.avatars.set(randomVP.user.username, randomVP.user.avatar);
         this.chatHandler.notifyAvatarUpdate(io, randomVP.user, this.matchId);
@@ -349,8 +348,9 @@ export default abstract class Match {
 
     protected removeVP(): void {
         for(let i: number = this.players.length - 1; i >= 0; i--) {
-            if(this.players[i].isVirtual) {
-                // this.virtualPlayer.newAvailableVP();
+            let player: Player = this.players[i];
+            if(player.isVirtual) {
+                this.virtualPlayer.newAvailableVP(player.user.username);
                 this.players.splice(i, 1);
                 break;
             }
