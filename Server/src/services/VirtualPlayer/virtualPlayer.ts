@@ -37,7 +37,7 @@ export default class VirtualPlayer {
     public getHintMessage(username: string, hint: string, roomId: string): Message {
         const cMsg: CustomMessage | undefined = messages.get(username);
         const content: string = (cMsg) ? cMsg.hint.replace(new RegExp(INSERT_HINT), hint) : 
-                                         ERROR.hint;
+                                         ERROR.hint.replace(new RegExp(INSERT_HINT), hint);
         
         return this.createMessageObj(username, content, roomId);
     }

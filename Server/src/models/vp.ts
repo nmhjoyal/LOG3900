@@ -109,7 +109,7 @@ export interface CustomMessage {
     hint: string
 }
 
-//
+// Used to insert hint (str.replace("_")) in the function creating the message content.
 export const INSERT_HINT: string = "_";
 
 // Used for unexpected error of not finding messages of a username in the map, should not happen.
