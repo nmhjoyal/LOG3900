@@ -92,7 +92,7 @@ export default abstract class Match {
         if (player) {
             await this.chatHandler.leaveChatRoom(io, socket, this.matchId, user);
                 if (this.isStarted) {
-                    if (this.getNbHumanPlayers() - 1 > this.ms.MIN_NB_HP) {
+                    if (this.getNbHumanPlayers() > this.ms.MIN_NB_HP) {
                         // after the match is started the host is not important.
                         if (player.user.username == this.drawer) {
                             let oldDrawer: Player | undefined = this.getPlayer(this.drawer);
