@@ -24,28 +24,28 @@ export default class MatchController {
     }
 
     @OnMessage("stroke")
-    public start_trace(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() stroke: Stroke) {
-        serverHandler.stroke(io, socket, stroke);
+    public stroke(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() stroke: Stroke) {
+        serverHandler.stroke(socket, stroke);
     }
 
     @OnMessage("point")
-    public drawTest(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() point: StylusPoint) {
-        serverHandler.point(io, socket, point);
+    public point(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() point: StylusPoint) {
+        serverHandler.point(socket, point);
     }
 
     @OnMessage("erase_stroke")
-    public erase_stroke(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
-        serverHandler.eraseStroke(io, socket);
+    public erase_stroke(@ConnectedSocket() socket: SocketIO.Socket) {
+        serverHandler.eraseStroke(socket);
     }
 
     @OnMessage("erase_point")
-    public erase_point(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
-        serverHandler.erasePoint(io, socket);
+    public erase_point(@ConnectedSocket() socket: SocketIO.Socket) {
+        serverHandler.erasePoint(socket);
     }
 
     @OnMessage("clear")
-    public clear(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
-        serverHandler.clear(io, socket);
+    public clear(@ConnectedSocket() socket: SocketIO.Socket) {
+        serverHandler.clear(socket);
     }
 
     @OnMessage("get_drawing")
@@ -105,7 +105,7 @@ export default class MatchController {
 
     @OnMessage("guess")
     public guess(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() guess: string) {
-        serverHandler.guess(io, socket, guess);
+        socket.emit("guess_res", JSON.stringify(serverHandler.guess(io, socket, guess)));
     }
 
     /**

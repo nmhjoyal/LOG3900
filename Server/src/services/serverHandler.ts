@@ -11,7 +11,7 @@ import ChatHandler from "./chatHandler";
 import MatchHandler from "./matchHandler";
 import RandomMatchIdGenerator from "./IdGenerator/idGenerator";
 import { CreateMatch } from "../models/match";
-import { Stroke, StylusPoint } from "../models/drawPoint";
+import { StylusPoint, Stroke } from "../models/drawPoint";
 
 class ServerHandler {
     public users: Map<string, PrivateProfile>;
@@ -225,7 +225,7 @@ class ServerHandler {
         const user: PrivateProfile | undefined = this.getUser(socket.id);
         if (user) {
             if (message.roomId.startsWith(RandomMatchIdGenerator.prefix)) {
-                this.matchHandler.sendMessage(io, socket, message, user);
+                this.matchHandler.sendMessage(io, message, user);
             } else {
                 // Send the message
                 this.chatHandler.sendMessage(io, message, user);
@@ -260,31 +260,31 @@ class ServerHandler {
     }
 
     public startTurn(io: SocketIO.Server, socket: SocketIO.Socket, word: string): void {
-        return this.matchHandler.startTurn(io, socket, word, this.getUser(socket.id));
+        this.matchHandler.startTurn(io, word, this.getUser(socket.id));
+    }
+    
+    public guess(io: SocketIO.Server, socket: SocketIO.Socket, guess: string): Feedback {
+        return this.matchHandler.guess(io, guess, this.getUser(socket.id));
     }
 
-    public stroke(io: SocketIO.Server, socket: SocketIO.Socket, stroke: Stroke): void {
-        this.matchHandler.stroke(io, socket, stroke, this.getUser(socket.id));
+    public stroke(socket: SocketIO.Socket, stroke: Stroke): void {
+        this.matchHandler.stroke(socket, stroke, this.getUser(socket.id));
+    }
+    
+    public point(socket: SocketIO.Socket, point: StylusPoint): void {
+        this.matchHandler.point(socket, point, this.getUser(socket.id));
     }
 
-    public point(io: SocketIO.Server, socket: SocketIO.Socket, point: StylusPoint): void {
-        this.matchHandler.point(io, socket, point, this.getUser(socket.id));
+    public eraseStroke(socket: SocketIO.Socket): void {
+        this.matchHandler.eraseStroke(socket, this.getUser(socket.id));
     }
 
-    public eraseStroke(io: SocketIO.Server, socket: SocketIO.Socket): void {
-        this.matchHandler.eraseStroke(io, socket, this.getUser(socket.id));
+    public erasePoint(socket: SocketIO.Socket): void {
+        this.matchHandler.erasePoint(socket, this.getUser(socket.id));
     }
 
-    public erasePoint(io: SocketIO.Server, socket: SocketIO.Socket): void {
-        this.matchHandler.erasePoint(io, socket, this.getUser(socket.id));
-    }
-
-    public clear(io: SocketIO.Server, socket: SocketIO.Socket): void {
-        this.matchHandler.clear(io, socket, this.getUser(socket.id));
-    }
-
-    public guess(io: SocketIO.Server, socket: SocketIO.Socket, guess: string): void {
-        this.matchHandler.guess(io, socket, guess, this.getUser(socket.id));
+    public clear(socket: SocketIO.Socket): void {
+        this.matchHandler.clear(socket, this.getUser(socket.id));
     }
 }
 

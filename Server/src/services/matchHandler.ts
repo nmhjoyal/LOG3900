@@ -19,12 +19,14 @@ export default class MatchHandler {
     private drawer: string;         // Socket id
     private observers: string[];    // Socket ids
     private previews: Map<string, VirtualDrawing>; // Key : socket.id or roomId, Value : virtual drawing
+    private top: number;
 
     public constructor() {
         this.currentMatches = new Map<string, Match>();
         this.observers = [];
         this.chatHandler = new ChatHandler();
         this.previews = new Map<string, VirtualDrawing>();
+        this.top = 0;
     }
     
     public async createMatch(io: SocketIO.Server, socket: SocketIO.Socket, 
@@ -60,13 +62,14 @@ export default class MatchHandler {
     }
 
     public async joinMatch(io: SocketIO.Server, socket: SocketIO.Socket, matchId: string, user: PrivateProfile | undefined): Promise<JoinRoomFeedback> {
+        const trimmedMatchId = matchId.replace(new RegExp('\"', 'g'), "");
+        const match: Match | undefined = this.currentMatches.get(trimmedMatchId);
         let joinRoomFeedback: JoinRoomFeedback = { feedback: { status: false, log_message: "" }, room_joined: null, isPrivate: true };
 
         if (user) {
-            const match: Match | undefined = this.currentMatches.get(matchId);
             if (match) {
                 joinRoomFeedback = await match.joinMatch(io, socket, user);
-                socket.broadcast.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
+                io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
             } else {
                 joinRoomFeedback.feedback.log_message = "This match does not exist anymore.";
             }
@@ -85,7 +88,7 @@ export default class MatchHandler {
             if (match) {
                 const deleteMatch: boolean = await match.leaveMatch(io, socket, user);
                 if (deleteMatch) this.currentMatches.delete(match.matchId);
-                socket.broadcast.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
+                io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
                 feedback.status = true;
                 feedback.log_message = "You left the match.";
             } else {
@@ -106,6 +109,7 @@ export default class MatchHandler {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
                 feedback = match.addVirtualPlayer(user.username, io);
+                io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
             } else {
                 feedback.log_message = "This match does not exist anymore.";
             }
@@ -123,6 +127,7 @@ export default class MatchHandler {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
                 feedback = match.removeVirtualPlayer(user.username, io);
+                io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
             } else {
                 feedback.log_message = "This match does not exist anymore.";
             }
@@ -140,9 +145,9 @@ export default class MatchHandler {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
                 startMatchFeedback = match.startMatch(user.username, io);
-                if (startMatchFeedback.feedback.status) 
-                    io.in(match.matchId).emit("match_started", JSON.stringify(startMatchFeedback));
-                    io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
+                startMatchFeedback.feedback.status ?
+                    io.in(match.matchId).emit("match_started", JSON.stringify(startMatchFeedback)) :
+                    socket.emit("match_started", JSON.stringify(startMatchFeedback));
             } else {
                 startMatchFeedback.feedback.log_message = "This match does not exist anymore.";
             }
@@ -153,7 +158,7 @@ export default class MatchHandler {
         return startMatchFeedback;
     }
 
-    public startTurn(io: SocketIO.Server, socket: SocketIO.Socket, word: string, user: PrivateProfile | undefined) {
+    public startTurn(io: SocketIO.Server, word: string, user: PrivateProfile | undefined): void {
         if (user) {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if(match) {
@@ -166,7 +171,7 @@ export default class MatchHandler {
         }
     }
 
-    public sendMessage(io: SocketIO.Server, socket: SocketIO.Socket, message: ClientMessage, user: PrivateProfile | undefined): void {
+    public sendMessage(io: SocketIO.Server, message: ClientMessage, user: PrivateProfile | undefined): void {
         if (user) {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
@@ -177,7 +182,83 @@ export default class MatchHandler {
         } else {
             console.log("You are not signed in.");
         }
+    }
 
+    public guess(io: SocketIO.Server, guess: string, user: PrivateProfile | undefined): Feedback {
+        let feedback: Feedback = { status: false, log_message: "" };
+
+        if (user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
+            if (match) {
+                feedback = match.guess(io, guess, user.username);
+            } else {
+                console.log("This match does not exist anymore.");
+            }
+        } else {
+            console.log("You are not signed in.");
+        }
+
+        return feedback;
+    }
+
+    public stroke(socket: SocketIO.Socket, stroke: Stroke, user: PrivateProfile | undefined): void {
+        if (user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
+            if (match) {
+                match.stroke(socket, stroke);
+            } else {
+                stroke.DrawingAttributes.Top = this.top++;
+                socket.to("freeDrawRoomTest").emit("new_stroke", JSON.stringify(stroke));
+            }
+        }
+    }
+    
+    public point(socket: SocketIO.Socket, point: StylusPoint, user: PrivateProfile | undefined): void {
+        if (user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
+            if (match) {
+                match.point(socket, point);
+            } else {
+                socket.to("freeDrawRoomTest").emit("new_point", JSON.stringify(point));
+            }
+        }
+    }
+
+    public eraseStroke(socket: SocketIO.Socket, user: PrivateProfile | undefined): void {
+        if (user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
+            if (match) {
+                match.eraseStroke(socket);
+            } else {
+                socket.to("freeDrawRoomTest").emit("new_erase_stroke");
+            }
+        }
+    }
+
+    public erasePoint(socket: SocketIO.Socket, user: PrivateProfile | undefined): void {
+        if (user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
+            if (match) {
+                match.erasePoint(socket);
+            } else {
+                socket.to("freeDrawRoomTest").emit("new_erase_point");
+            }
+        }
+    }
+
+    public clear(socket: SocketIO.Socket, user: PrivateProfile | undefined): void {
+        if (user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
+            if (match) {
+                match.clear(socket);
+            } else {
+                let virtualDrawing: VirtualDrawing | undefined = this.previews.get(socket.id);
+                if(virtualDrawing) {
+                    console.log("clear");
+                    virtualDrawing.clear(socket);
+                };
+            }
+        }
     }
 
     private getMatchFromPlayer(username: string): Match | undefined {
@@ -196,9 +277,13 @@ export default class MatchHandler {
 
     public getAvailableMatches(): MatchInfos[] {
         let availableMatches: MatchInfos[] = [];
-        this.currentMatches.forEach((match: Match) => {
-            let matchInfos: MatchInfos | undefined = match.getMatchInfos();
-            if (matchInfos) availableMatches.push(matchInfos);
+        this.currentMatches.forEach((match: Match, matchId: string) => {
+            if (match.isEnded) {
+                this.currentMatches.delete(matchId);
+            } else {
+                let matchInfos: MatchInfos | undefined = match.getMatchInfos();
+                if (matchInfos) availableMatches.push(matchInfos);
+            }
         });
         return availableMatches;
     }
@@ -209,13 +294,8 @@ export default class MatchHandler {
      *  
      */ 
     public enterFreeDrawTestRoom(socket: SocketIO.Socket): void {
-        if (this.drawer) {
-            this.observers.push(socket.id);
-            socket.emit("observer");
-        } else {
-            this.drawer = socket.id;
-            socket.emit("drawer");
-        }
+        this.observers.push(socket.id);
+        socket.emit("observer");
         socket.join("freeDrawRoomTest");
     }
 
@@ -230,68 +310,6 @@ export default class MatchHandler {
             this.observers.splice(this.observers.indexOf(socket.id), 1);
         }
         socket.leave("freeDrawRoomTest");
-    }
-
-    public stroke(io: SocketIO.Server, socket: SocketIO.Socket, stroke: Stroke, user: PrivateProfile | undefined): void {
-        if(user) {
-            const match: Match | undefined = this.getMatchFromPlayer(user.username);
-            if(match) {
-                match.stroke(socket, stroke);
-            }
-        }
-    }
-
-    public point(io: SocketIO.Server, socket: SocketIO.Socket, point: StylusPoint, user: PrivateProfile | undefined): void {
-        if(user) {
-            const match: Match | undefined = this.getMatchFromPlayer(user.username);
-            if(match) {
-                match.point(socket, point);
-            }
-        }
-    }
-
-    public eraseStroke(io: SocketIO.Server, socket: SocketIO.Socket, user: PrivateProfile | undefined): void {
-        if(user) {
-            const match: Match | undefined = this.getMatchFromPlayer(user.username);
-            if(match) {
-                match.eraseStroke(socket);
-            }
-        }
-    }
-
-    public erasePoint(io: SocketIO.Server, socket: SocketIO.Socket, user: PrivateProfile | undefined): void {
-        if(user) {
-            const match: Match | undefined = this.getMatchFromPlayer(user.username);
-            if(match) {
-                match.erasePoint(socket);
-            }
-        }
-    }
-
-    public clear(io: SocketIO.Server, socket: SocketIO.Socket, user: PrivateProfile | undefined): void {
-        // Pour preview seulement
-        /*
-        let virtualDrawing: VirtualDrawing | undefined = this.previews.get(socket.id);
-        if(virtualDrawing) {
-            console.log("clear");
-            virtualDrawing.clear(socket);
-        };
-        */
-        if(user) {
-            const match: Match | undefined = this.getMatchFromPlayer(user.username);
-            if(match) {
-                match.clear(socket);
-            }
-        }
-    }
-
-    public guess(io: SocketIO.Server, socket: SocketIO.Socket, guess: string, user: PrivateProfile | undefined) {
-        if(user) {
-            const match: Match | undefined = this.getMatchFromPlayer(user.username);
-            if(match) {
-                match.guess(io, guess, user.username);
-            }
-        }
     }
 
     public async getDrawing(io: SocketIO.Server): Promise<void> {
