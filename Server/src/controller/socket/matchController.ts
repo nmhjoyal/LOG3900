@@ -25,27 +25,27 @@ export default class MatchController {
 
     @OnMessage("stroke")
     public start_trace(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() stroke: Stroke) {
-        serverHandler.matchHandler.stroke(io, socket, stroke);
+        serverHandler.stroke(io, socket, stroke);
     }
 
     @OnMessage("point")
     public drawTest(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() point: StylusPoint) {
-        serverHandler.matchHandler.point(io, socket, point);
+        serverHandler.point(io, socket, point);
     }
 
     @OnMessage("erase_stroke")
     public erase_stroke(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
-        serverHandler.matchHandler.eraseStroke(io, socket);
+        serverHandler.eraseStroke(io, socket);
     }
 
     @OnMessage("erase_point")
     public erase_point(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
-        serverHandler.matchHandler.erasePoint(io, socket);
+        serverHandler.erasePoint(io, socket);
     }
 
     @OnMessage("clear")
     public clear(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
-        serverHandler.matchHandler.clear(io, socket);
+        serverHandler.clear(io, socket);
     }
 
     @OnMessage("get_drawing")
@@ -101,6 +101,11 @@ export default class MatchController {
     @OnMessage("start_turn")
     public start_turn(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() word: string) {
         serverHandler.startTurn(io, socket, word);
+    }
+
+    @OnMessage("guess")
+    public guess(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() guess: string) {
+        serverHandler.guess(io, socket, guess);
     }
 
     /**

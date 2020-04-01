@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Ink;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using Caliburn.Micro;
+using Newtonsoft.Json;
 using WPFUI.Commands;
 using WPFUI.EventModels;
 using WPFUI.Models;
@@ -15,6 +20,35 @@ namespace WPFUI.ViewModels
     class partieJeuViewModel: Screen, IHandle<refreshMessagesEvent>, IHandle<addMessageEvent>,
                               IHandle<wordSelectedEvent>, IHandle<startTurnRoutineEvent>, IHandle<endTurnRoutineVMEvent>
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        private Editeur editeur = new Editeur();
+
+        public DrawingAttributes AttributsDessin { get; set; } = new DrawingAttributes();
+
+        public string OutilSelectionne
+        {
+            get { return editeur.OutilSelectionne; }
+            set { ProprieteModifiee(); }
+        }
+
+        public string CouleurSelectionnee
+        {
+            get { return editeur.CouleurSelectionnee; }
+            set { editeur.CouleurSelectionnee = value; }
+        }
+
+        public string PointeSelectionnee
+        {
+            get { return editeur.PointeSelectionnee; }
+            set { ProprieteModifiee(); }
+        }
+
+        public int TailleTrait
+        {
+            get { return editeur.TailleTrait; }
+            set { editeur.TailleTrait = value; }
+        }
+
         private IEventAggregator _events;
         private ISocketHandler _socketHandler;
         private BindableCollection<Avatar> _avatars;
@@ -28,10 +62,16 @@ namespace WPFUI.ViewModels
         public DispatcherTimer _timer;
         private int _roundDuration;
         private string _guessBox;
+        private bool canDraw;
+
+        public StrokeCollection Traits { get; set; }
+
+        public Dictionary<Stroke, int> strokes { get; set; }
         public IselectWordCommand _selectWordCommand { get; set; }
 
         public partieJeuViewModel(IEventAggregator events, ISocketHandler socketHandler, IUserData userdata)
         {
+            editeur.PropertyChanged += new PropertyChangedEventHandler(EditeurProprieteModifiee);
             _events = events;
             _events.Subscribe(this);
             _socketHandler = socketHandler;
@@ -40,12 +80,16 @@ namespace WPFUI.ViewModels
             _timer = new DispatcherTimer();
             _wordChoices = new BindableCollection<dynamic>();
             _turnScores = new BindableCollection<dynamic>();
-            _roundDuration = 30;
+            this.canDraw = false;
+            // _roundDuration = 30;
+            this.Traits = editeur.traits;
+            this.strokes = new Dictionary<Stroke, int>();
             _timerContent = _roundDuration;
             _selectWordCommand = new selectWordCommand(events);
             fillAvatars();
             startTimer();
-            //this._socketHandler.onMatch();
+            this._socketHandler.onMatch();
+            this._socketHandler.onDrawing(this.Traits, this.strokes);
         }
 
         public void startTimer()
@@ -92,6 +136,14 @@ namespace WPFUI.ViewModels
         public BindableCollection<dynamic> wordChoices
         {
             get { return _wordChoices; }
+        }
+
+        internal void strokeCollected(Stroke stroke)
+        {
+            if(!this.canDraw)
+            {
+                this.Traits.Remove(stroke);
+            }
         }
 
         public BindableCollection<dynamic> turnScores
@@ -208,6 +260,7 @@ namespace WPFUI.ViewModels
             dynamic endTurn = new System.Dynamic.ExpandoObject();
             endTurn.currentRound = this._userData.firstRound.currentRound;
             endTurn.drawer = this._userData.firstRound.drawer;
+            this.canDraw = false;
             endTurn.nextIsYou = this._userData.firstRound.drawer == this._userData.userName;
             newWords(this._userData.firstRound.choices);
             newScores(this._userData.firstRound.scores);
@@ -218,11 +271,47 @@ namespace WPFUI.ViewModels
         {
             if (guessBox != null & guessBox != "")
             {
+                Console.WriteLine(guessBox);
                 _socketHandler.socket.Emit("guess", guessBox);
             }
             guessBox = "";
         }
 
+        public void sendPoint(int x, int y)
+        {
+            if(this.canDraw)
+            {
+                StylusPoint stylusPoint = new StylusPoint(x, y);
+                this._socketHandler.socket.Emit("point", JsonConvert.SerializeObject(stylusPoint));
+            }
+        }
+
+        public void sendStroke(int x, int y)
+        {
+            if(this.canDraw)
+            {
+                Console.WriteLine(this.OutilSelectionne);
+                if (this.OutilSelectionne == "crayon")
+                {
+                    StylusPointCollection stylusPoint = new StylusPointCollection();
+                    stylusPoint.Add(new StylusPoint(x, y));
+                    Stroke stroke = new Stroke(stylusPoint);
+                    stroke.DrawingAttributes.Width = this.AttributsDessin.Width;
+                    stroke.DrawingAttributes.Height = this.AttributsDessin.Height;
+                    stroke.DrawingAttributes.Color = this.AttributsDessin.Color;
+                    Console.WriteLine("should emit");
+                    this._socketHandler.socket.Emit("stroke", JsonConvert.SerializeObject(stroke));
+                }
+                else if (this.OutilSelectionne == "efface_trait")
+                {
+                    this._socketHandler.socket.Emit("erase_stroke");
+                }
+                else if (this.OutilSelectionne == "efface_segment")
+                {
+                    this._socketHandler.socket.Emit("erase_point");
+                }
+            }
+        }
 
         public void Handle(refreshMessagesEvent message)
         {
@@ -239,6 +328,7 @@ namespace WPFUI.ViewModels
         public void Handle(wordSelectedEvent message)
         {
             Console.WriteLine("!" + message.word);
+            this.canDraw = true;
             /* TODO envoyer le mot au serveur */
             _socketHandler.socket.Emit("start_turn", message.word);
         }
@@ -252,6 +342,38 @@ namespace WPFUI.ViewModels
         public void Handle(endTurnRoutineVMEvent message)
         {
             this.HandleFirstRound();
+        }
+
+        protected virtual void ProprieteModifiee([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        private void EditeurProprieteModifiee(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "CouleurSelectionnee")
+            {
+                AttributsDessin.Color = (System.Windows.Media.Color)ColorConverter.ConvertFromString(editeur.CouleurSelectionnee);
+            }
+            else if (e.PropertyName == "OutilSelectionne")
+            {
+                OutilSelectionne = editeur.OutilSelectionne;
+            }
+            else if (e.PropertyName == "PointeSelectionnee")
+            {
+                PointeSelectionnee = editeur.PointeSelectionnee;
+                AjusterPointe();
+            }
+            else // e.PropertyName == "TailleTrait"
+            {
+                AjusterPointe();
+            }
+        }
+
+        private void AjusterPointe()
+        {
+            AttributsDessin.StylusTip = (editeur.PointeSelectionnee == "ronde") ? StylusTip.Ellipse : StylusTip.Rectangle;
+            AttributsDessin.Width = (editeur.PointeSelectionnee == "verticale") ? 1 : editeur.TailleTrait;
+            AttributsDessin.Height = (editeur.PointeSelectionnee == "horizontale") ? 1 : editeur.TailleTrait;
         }
     }
 }

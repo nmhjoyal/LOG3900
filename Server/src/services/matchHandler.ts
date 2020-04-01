@@ -18,14 +18,12 @@ export default class MatchHandler {
     // Used for free draw testing.
     private drawer: string;         // Socket id
     private observers: string[];    // Socket ids
-    private top: number;
     private previews: Map<string, VirtualDrawing>; // Key : socket.id or roomId, Value : virtual drawing
 
     public constructor() {
         this.currentMatches = new Map<string, Match>();
         this.observers = [];
         this.chatHandler = new ChatHandler();
-        this.top = 0;
         this.previews = new Map<string, VirtualDrawing>();
     }
     
@@ -234,34 +232,66 @@ export default class MatchHandler {
         socket.leave("freeDrawRoomTest");
     }
 
-    public stroke(io: SocketIO.Server, socket: SocketIO.Socket, stroke: Stroke): void {
-        // if (socket.id == this.drawer) {
-            stroke.DrawingAttributes.Top = this.top++;
-            socket.to("freeDrawRoomTest").emit("new_stroke", JSON.stringify(stroke));
-        // }
+    public stroke(io: SocketIO.Server, socket: SocketIO.Socket, stroke: Stroke, user: PrivateProfile | undefined): void {
+        if(user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
+            if(match) {
+                match.stroke(socket, stroke);
+            }
+        }
     }
 
-    public eraseStroke(io: SocketIO.Server, socket: SocketIO.Socket): void {
-        socket.to("freeDrawRoomTest").emit("new_erase_stroke");
+    public point(io: SocketIO.Server, socket: SocketIO.Socket, point: StylusPoint, user: PrivateProfile | undefined): void {
+        if(user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
+            if(match) {
+                match.point(socket, point);
+            }
+        }
     }
 
-    public erasePoint(io: SocketIO.Server, socket: SocketIO.Socket): void {
-        socket.to("freeDrawRoomTest").emit("new_erase_point");
+    public eraseStroke(io: SocketIO.Server, socket: SocketIO.Socket, user: PrivateProfile | undefined): void {
+        if(user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
+            if(match) {
+                match.eraseStroke(socket);
+            }
+        }
     }
 
-    public point(io: SocketIO.Server, socket: SocketIO.Socket, point: StylusPoint): void {
-        // if (socket.id == this.drawer) {
-        socket.to("freeDrawRoomTest").emit("new_point", JSON.stringify(point));
-        // }
+    public erasePoint(io: SocketIO.Server, socket: SocketIO.Socket, user: PrivateProfile | undefined): void {
+        if(user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
+            if(match) {
+                match.erasePoint(socket);
+            }
+        }
     }
 
-    public clear(io: SocketIO.Server, socket: SocketIO.Socket): void {
+    public clear(io: SocketIO.Server, socket: SocketIO.Socket, user: PrivateProfile | undefined): void {
         // Pour preview seulement
+        /*
         let virtualDrawing: VirtualDrawing | undefined = this.previews.get(socket.id);
         if(virtualDrawing) {
             console.log("clear");
             virtualDrawing.clear(socket);
         };
+        */
+        if(user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
+            if(match) {
+                match.clear(socket);
+            }
+        }
+    }
+
+    public guess(io: SocketIO.Server, socket: SocketIO.Socket, guess: string, user: PrivateProfile | undefined) {
+        if(user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
+            if(match) {
+                match.guess(io, guess, user.username);
+            }
+        }
     }
 
     public async getDrawing(io: SocketIO.Server): Promise<void> {

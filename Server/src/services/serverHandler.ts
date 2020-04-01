@@ -11,6 +11,7 @@ import ChatHandler from "./chatHandler";
 import MatchHandler from "./matchHandler";
 import RandomMatchIdGenerator from "./IdGenerator/idGenerator";
 import { CreateMatch } from "../models/match";
+import { Stroke, StylusPoint } from "../models/drawPoint";
 
 class ServerHandler {
     public users: Map<string, PrivateProfile>;
@@ -260,6 +261,30 @@ class ServerHandler {
 
     public startTurn(io: SocketIO.Server, socket: SocketIO.Socket, word: string): void {
         return this.matchHandler.startTurn(io, socket, word, this.getUser(socket.id));
+    }
+
+    public stroke(io: SocketIO.Server, socket: SocketIO.Socket, stroke: Stroke): void {
+        this.matchHandler.stroke(io, socket, stroke, this.getUser(socket.id));
+    }
+
+    public point(io: SocketIO.Server, socket: SocketIO.Socket, point: StylusPoint): void {
+        this.matchHandler.point(io, socket, point, this.getUser(socket.id));
+    }
+
+    public eraseStroke(io: SocketIO.Server, socket: SocketIO.Socket): void {
+        this.matchHandler.eraseStroke(io, socket, this.getUser(socket.id));
+    }
+
+    public erasePoint(io: SocketIO.Server, socket: SocketIO.Socket): void {
+        this.matchHandler.erasePoint(io, socket, this.getUser(socket.id));
+    }
+
+    public clear(io: SocketIO.Server, socket: SocketIO.Socket): void {
+        this.matchHandler.clear(io, socket, this.getUser(socket.id));
+    }
+
+    public guess(io: SocketIO.Server, socket: SocketIO.Socket, guess: string): void {
+        this.matchHandler.guess(io, socket, guess, this.getUser(socket.id));
     }
 }
 

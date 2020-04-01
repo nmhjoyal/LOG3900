@@ -25,7 +25,7 @@ namespace WPFUI.Views
     public partial class partieJeuView : UserControl, IHandle<endTurnRoutineEvent>, IHandle<startTurnRoutineEvent>
     {
         private partieJeuViewModel _viewModel;
-        
+        private Boolean isMouseDown = false;
         public partieJeuView()
         {
             InitializeComponent();
@@ -77,6 +77,39 @@ namespace WPFUI.Views
         {
             selectNextDrawingBox.Visibility = Visibility.Hidden;
             endTurnBox.Visibility = Visibility.Hidden;
+        }
+
+        private void surfaceDessin_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (this.isMouseDown)
+            {
+                System.Windows.Point p = e.GetPosition(surfaceDessin);
+                (this.DataContext as partieJeuViewModel).sendPoint((int)p.X, (int)p.Y);
+            }
+            //textBlockPosition.Text = Math.Round(p.X) + ", " + Math.Round(p.Y) + "px";
+        }
+
+        private void surfaceDessin_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (this.isMouseDown)
+            {
+                // (this.DataContext as FenetreDessinViewModel).sendStrokeAction();
+            }
+            this.isMouseDown = false;
+            // Console.WriteLine(this.isMouseDown);
+        }
+
+        private void surfaceDessin_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            this.isMouseDown = true;
+            System.Windows.Point p = e.GetPosition(surfaceDessin); ;
+            (this.DataContext as partieJeuViewModel).sendStroke((int)p.X, (int)p.Y);
+            // Console.WriteLine(this.isMouseDown);
+        }
+
+        private void surfaceDessin_StrokeCollected(object sender, InkCanvasStrokeCollectedEventArgs e)
+        {
+            (this.DataContext as partieJeuViewModel).strokeCollected(e.Stroke);
         }
     }
 }

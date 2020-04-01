@@ -12,6 +12,7 @@ export class Drawing {
 
     public stroke(socket: SocketIO.Socket, stroke: Stroke): void {
         stroke.DrawingAttributes.Top = this.top++;
+        console.log("on stroke");
         socket.to(this.roomId).emit("new_stroke", JSON.stringify(stroke));
     }
 
@@ -29,5 +30,10 @@ export class Drawing {
 
     public clear(socket: SocketIO.Socket): void {
         socket.in(this.roomId).emit("new_clear");
+        this.top = 0;
+    }
+
+    public reset(io: SocketIO.Server): void {
+        io.in(this.roomId).emit("new_clear");
     }
 }
