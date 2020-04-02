@@ -13,7 +13,7 @@ export default class OneVsOne extends Match {
         // io.in(this.matchId).emit("update_players", JSON.stringify(this.getPlayersPublicProfile()));
     }
 
-    public startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): void {
+    public startTurn(io: SocketIO.Server, socket: SocketIO.Socket, chosenWord: string, isVirtual: boolean): void {
         throw new Error("Method not implemented.");
     }
 

@@ -16,7 +16,7 @@ export default class Inverted extends Match {
         super(matchId, user, createMatch, chatHandler, freeForAllSettings); 
     }
 
-    public startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): void {
+    public startTurn(io: SocketIO.Server, socket: SocketIO.Socket, chosenWord: string, isVirtual: boolean): void {
         throw new Error("Method not implemented.");
     }
 

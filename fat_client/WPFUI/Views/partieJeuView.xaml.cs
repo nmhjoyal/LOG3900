@@ -77,6 +77,7 @@ namespace WPFUI.Views
         {
             selectNextDrawingBox.Visibility = Visibility.Hidden;
             endTurnBox.Visibility = Visibility.Hidden;
+            (this.DataContext as partieJeuViewModel).updateRoundInfos();
         }
 
         private void surfaceDessin_MouseMove(object sender, MouseEventArgs e)

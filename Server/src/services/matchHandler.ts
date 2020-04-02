@@ -158,11 +158,11 @@ export default class MatchHandler {
         return startMatchFeedback;
     }
 
-    public startTurn(io: SocketIO.Server, word: string, user: PrivateProfile | undefined): void {
+    public startTurn(io: SocketIO.Server, socket: SocketIO.Socket, word: string, user: PrivateProfile | undefined): void {
         if (user) {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if(match) {
-                match.startTurn(io, word, false);
+                match.startTurn(io, socket, word, false);
             } else {
                 console.log("This match does not exist anymore");
             }

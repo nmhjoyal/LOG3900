@@ -57,15 +57,13 @@ namespace WPFUI.ViewModels
         private string _currentMessage;
         public BindableCollection<dynamic> _wordChoices;
         public BindableCollection<dynamic> _turnScores;
-        public int _currentRound;
         public int _timerContent;
         public DispatcherTimer _timer;
         private int _roundDuration;
         private string _guessBox;
         private bool canDraw;
-
+        public RoundInfos roundInfos { get; set; }
         public StrokeCollection Traits { get; set; }
-
         public Dictionary<Stroke, int> strokes { get; set; }
         public IselectWordCommand _selectWordCommand { get; set; }
 
@@ -88,7 +86,8 @@ namespace WPFUI.ViewModels
             _selectWordCommand = new selectWordCommand(events);
             fillAvatars();
             startTimer();
-            this._socketHandler.onMatch();
+            this.roundInfos = new RoundInfos("", 0);
+            this._socketHandler.onMatch(this.roundInfos);
             this._socketHandler.onDrawing(this.Traits, this.strokes);
         }
 
@@ -122,7 +121,12 @@ namespace WPFUI.ViewModels
 
         public int currentRound
         {
-            get { return _currentRound; }
+            get { return this.roundInfos.round; }
+        }
+
+        public string currentWord
+        {
+            get { return this.roundInfos.word; }
         }
 
         public string guessBox
@@ -140,6 +144,7 @@ namespace WPFUI.ViewModels
 
         internal void strokeCollected(Stroke stroke)
         {
+            this.roundInfos.word = "stroke collected";
             if(!this.canDraw)
             {
                 this.Traits.Remove(stroke);
@@ -223,7 +228,7 @@ namespace WPFUI.ViewModels
             _userData.currentMessage = "";
         }
 
-        public void newWords( List<string> choices)
+        public void newWords(List<string> choices)
         {
             _wordChoices.Clear();
             foreach (string word in choices)
@@ -235,16 +240,16 @@ namespace WPFUI.ViewModels
             wordChoices.Refresh();
         }
 
-        public void newScores(List<UsernameUpdateScore> scores)
+        public void newScores(List<Score> scores)
         {
             _turnScores.Clear();
             Console.WriteLine("!" + scores.Count);
-            foreach (UsernameUpdateScore score in scores)
+            foreach (Score score in scores)
             {
                 dynamic dynamicScore = new System.Dynamic.ExpandoObject();
                 dynamicScore.position = 0;
                 dynamicScore.name = score.username;
-                dynamicScore.score = score.scoreTotal;
+                dynamicScore.score = score.updateScore.scoreTotal;
                 _turnScores.Add(dynamicScore);
             }
             turnScores.Refresh();
@@ -252,8 +257,8 @@ namespace WPFUI.ViewModels
 
         public void HandleFirstRound()
         {
-            _currentRound = this._userData.firstRound.currentRound;
-            List<UsernameUpdateScore> scores = new List<UsernameUpdateScore>(this._userData.firstRound.scores);
+            this.roundInfos.round = this._userData.firstRound.currentRound;
+            List<Score> scores = new List<Score>(this._userData.firstRound.scores);
             Console.WriteLine(scores.Count);
             this.newScores(scores);
 
@@ -330,6 +335,7 @@ namespace WPFUI.ViewModels
             Console.WriteLine("!" + message.word);
             this.canDraw = true;
             /* TODO envoyer le mot au serveur */
+            this.roundInfos.word = message.word;
             _socketHandler.socket.Emit("start_turn", message.word);
         }
 
@@ -374,6 +380,11 @@ namespace WPFUI.ViewModels
             AttributsDessin.StylusTip = (editeur.PointeSelectionnee == "ronde") ? StylusTip.Ellipse : StylusTip.Rectangle;
             AttributsDessin.Width = (editeur.PointeSelectionnee == "verticale") ? 1 : editeur.TailleTrait;
             AttributsDessin.Height = (editeur.PointeSelectionnee == "horizontale") ? 1 : editeur.TailleTrait;
+        }
+
+        public void updateRoundInfos()
+        {
+            NotifyOfPropertyChange(null);
         }
     }
 }

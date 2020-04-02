@@ -16,9 +16,15 @@ export default class FreeForAll extends Match {
         super(matchId, user, createMatch, chatHandler, freeForAllSettings);
     }
 
-    public async startTurn(io: SocketIO.Server, word: string, isVirtual: boolean): Promise<void> {
+    public async startTurn(io: SocketIO.Server, socket: SocketIO.Socket | null, word: string, isVirtual: boolean): Promise<void> {
         this.currentWord = word;
-        io.in(this.matchId).emit("turn_started", this.createStartTurn(this.currentWord));
+        if(socket) {
+            socket.emit("turn_started", this.createStartTurn(this.currentWord, true));
+            socket.to(this.matchId).emit("turn_started", this.createStartTurn(this.currentWord, false));
+        } else {
+            io.in(this.matchId).emit("turn_started", this.createStartTurn(this.currentWord, false));
+        }
+        this.drawing.reset(io);
         
         if (isVirtual) {
             const game: Game = await gameDB.getGame(word);

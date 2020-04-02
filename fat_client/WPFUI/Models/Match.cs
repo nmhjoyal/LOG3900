@@ -169,27 +169,49 @@ namespace WPFUI.Models
         public int currentRound;
         public List<string> choices;
         public string drawer;
-        public List<UsernameUpdateScore> scores;
+        public List<Score> scores;
 
-        public EndTurn(int currentRound, List<string> choices, string drawer, List<UsernameUpdateScore> scores)
+        public EndTurn(int currentRound, List<string> choices, string drawer, List<Score> scores)
         {
             this.currentRound = currentRound;
             this.choices = new List<string>(choices);
             this.drawer = drawer;
-            this.scores = new List<UsernameUpdateScore>(scores);
+            this.scores = new List<Score>(scores);
         }
     }
-    public class UsernameUpdateScore
+    public class Score
     {
         public string username;
+        public UpdateScore updateScore;
+
+        public Score(string username, int scoreTotal, int scoreTurn)
+        {
+            this.username = username;
+            this.updateScore = new UpdateScore(scoreTotal, scoreTurn);
+        }
+    }
+
+    public class UpdateScore
+    {
         public int scoreTotal;
         public int scoreTurn;
 
-        public UsernameUpdateScore(string username, int scoreTotal, int scoreTurn)
+        public UpdateScore(int scoreTotal, int scoreTurn)
         {
-            this.username = username;
             this.scoreTotal = scoreTotal;
             this.scoreTurn = scoreTurn;
+        }
+    }
+
+    public class RoundInfos
+    {
+        public string word;
+        public int round;
+
+        public RoundInfos(string word, int round)
+        {
+            this.word = word;
+            this.round = round;
         }
     }
 }

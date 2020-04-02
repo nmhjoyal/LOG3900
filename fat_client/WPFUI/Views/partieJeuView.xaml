@@ -57,7 +57,7 @@
         <TextBlock FontSize="14" Grid.Row="3" TextAlignment="Center" Grid.Column="7" Text="Round"/>
         <TextBlock FontSize="14" Grid.Row="5" TextAlignment="Center" Grid.Column="7" Text="{Binding currentRound}"/>
         <TextBlock FontSize="14" Grid.ColumnSpan="3" Grid.Row="3" TextAlignment="Center" Grid.Column="9" Text="Mot à deviner"/>
-        <TextBlock FontSize="14" Grid.Row="5" TextAlignment="Center" Grid.Column="9" Name="word"/>
+        <TextBlock FontSize="14" Grid.Row="5" TextAlignment="Center" Grid.Column="9" Text="{Binding currentWord}"/>
         <InkCanvas  MouseMove="surfaceDessin_MouseMove" PreviewMouseDown="surfaceDessin_PreviewMouseDown" MouseUp="surfaceDessin_MouseUp" StrokeCollected="surfaceDessin_StrokeCollected" Strokes="{Binding Path=Traits, Mode=OneTime}" Name="surfaceDessin" Grid.Column="7" Grid.Row="8" Grid.RowSpan="4" Background="White" Grid.ColumnSpan="3"/>
 		<Border  BorderBrush="Black" Grid.ColumnSpan="2" BorderThickness="1" Grid.Column="11" Grid.Row="8"/>
 		<Border  BorderBrush="Black" BorderThickness="1" Grid.Column="7" Grid.Row="8" Grid.RowSpan="4" Grid.ColumnSpan="3"/>

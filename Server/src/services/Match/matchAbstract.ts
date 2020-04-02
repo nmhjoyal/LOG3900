@@ -41,7 +41,7 @@ export default abstract class Match {
     protected virtualPlayer: VirtualPlayer;
 
     // Match methods
-    public abstract startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): void;
+    public abstract startTurn(io: SocketIO.Server, socket: SocketIO.Socket | null, chosenWord: string, isVirtual: boolean): void;
     protected abstract endTurn(io: SocketIO.Server, drawerLeft: boolean): void;
     public abstract guess(io: SocketIO.Server, guess: string, username: string): Feedback;
 
@@ -55,6 +55,7 @@ export default abstract class Match {
         this.timeLimit = createMatch.timeLimit;
         this.chatHandler = chatHandler;
         this.ms = matchSettings;
+        this.virtualPlayer = new VirtualPlayer();
     }
 
     /**
@@ -124,7 +125,6 @@ export default abstract class Match {
     public addVirtualPlayer(username: string, io: SocketIO.Server): Feedback {
         const player: Player | undefined = this.getPlayer(username);
         let feedback: Feedback = { status: false, log_message: "" };
-
         if (player) {
             if (this.isHost(player)) {
                 if (this.players.length < this.ms.MAX_NB_PLAYERS) {
@@ -223,7 +223,7 @@ export default abstract class Match {
         if (this.getPlayer(this.drawer)?.isVirtual) {
             let word: string;
             setTimeout(() => {
-                this.startTurn(io, word, true);
+                this.startTurn(io, null, word, true);
             }, 5000);
             word = await gameDB.getRandomWord();
         }
@@ -418,10 +418,10 @@ export default abstract class Match {
         };
     }
 
-    protected createStartTurn(word: string): StartTurn {
+    protected createStartTurn(word: string, isDrawer: boolean): StartTurn {
         return { 
             timeLimit: this.timeLimit,
-            word: word.replace(/[a-z]/gi, '_')
+            word: isDrawer? word: word.replace(/[a-z]/gi, '_ ')
         };
     }
 

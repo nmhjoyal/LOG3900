@@ -478,12 +478,12 @@ namespace WPFUI.Models
                 Console.WriteLine(endTurn.ToString());
                 this._userdata.firstRound = json;
                 this.offWaitingRoom();
-                onMatch();
+                // onMatch();
                 _events.PublishOnUIThread(new gameEvent());
             });
         }
 
-        public void onMatch()
+        public void onMatch(RoundInfos roundInfos)
         {
             this.socket.On("turn_ended", (endTurn) =>
             {
@@ -500,7 +500,8 @@ namespace WPFUI.Models
                 Console.WriteLine("onMatch turn_started");
                 /* TODO: transmit the turn time to the viewmodel */
                 dynamic json = JsonConvert.DeserializeObject(time.ToString());
-                _events.PublishOnUIThread(new startTurnRoutineEvent((int)json));
+                roundInfos.word = (string)json.word;
+                _events.PublishOnUIThread(new startTurnRoutineEvent((int)json.timeLimit));
             });
 
             this.socket.On("guess_res", (Feedback) =>
