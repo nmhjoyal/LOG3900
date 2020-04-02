@@ -216,6 +216,7 @@ export default abstract class Match {
         }
 
         io.in(this.matchId).emit("turn_ended", JSON.stringify(endTurn));
+        console.log(JSON.stringify(endTurn));
         
         this.resetScoresTurn();
         this.currentWord = "";

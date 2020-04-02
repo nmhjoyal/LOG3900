@@ -462,7 +462,6 @@ namespace WPFUI.Models
 
             this.socket.On("match_started", (startMatchFeedback) =>
             {
-                Console.WriteLine("------------------------------2222---------------------------------------");
                 dynamic json = JsonConvert.DeserializeObject(startMatchFeedback.ToString());
                 Console.WriteLine(startMatchFeedback);
                 if((Boolean)json.feedback.status)
@@ -477,7 +476,6 @@ namespace WPFUI.Models
 
             this.socket.On("turn_ended", (endTurn) =>
             {
-                Console.WriteLine("------------------------------11111---------------------------------------");
                 EndTurn json = JsonConvert.DeserializeObject<EndTurn>(endTurn.ToString());
                 Console.WriteLine(endTurn.ToString());
                 this._userdata.firstRound = json;

@@ -63,12 +63,14 @@ namespace WPFUI.Views
                 await Task.Delay(3000);
                 endTurnBox.Visibility = Visibility.Hidden;
                 selectNextDrawingBox.Visibility = Visibility.Visible;
+                drawingEditingPanel.Visibility = Visibility.Visible;
 
             } else
             {
                 roundFinishedMessage.Text = "Round " + ((dynamic)message.EndTurnFeedBack).currentRound + " finished !";
                 nextPlayerMessage.Text = "Next player to chose is " + ((dynamic)message.EndTurnFeedBack).drawer;
                 endTurnBox.Visibility = Visibility.Visible;
+                drawingEditingPanel.Visibility = Visibility.Collapsed;
             }
 
         }

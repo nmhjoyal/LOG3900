@@ -21,7 +21,6 @@ namespace WPFUI.ViewModels
     class partieJeuViewModel: Screen, INotifyPropertyChanged, IHandle<refreshMessagesEvent>, IHandle<addMessageEvent>,
                               IHandle<wordSelectedEvent>, IHandle<startTurnRoutineEvent>, IHandle<endTurnRoutineVMEvent>
     {
-        //public event PropertyChangedEventHandler PropertyChanged;
         private Editeur editeur = new Editeur();
         private IEventAggregator _events;
         private ISocketHandler _socketHandler;
@@ -33,53 +32,9 @@ namespace WPFUI.ViewModels
         public BindableCollection<dynamic> _turnScores;
         public int _timerContent;
         public DispatcherTimer _timer;
-        private int _roundDuration;
         private string _guessBox;
         private bool canDraw;
         private BindableCollection<dynamic> _joueurs;
-
-        public RoundInfos roundInfos { get; set; }
-        public StrokeCollection Traits { get; set; }
-        public Dictionary<Stroke, int> strokes { get; set; }
-        public IselectWordCommand _selectWordCommand { get; set; }
-        public DrawingAttributes AttributsDessin { get; set; } = new DrawingAttributes();
-
-        public BindableCollection<dynamic> joueurs
-        {
-            get { return _joueurs; }
-            set { _joueurs = value;
-                NotifyOfPropertyChange(() => joueurs);
-            }
-        }
-
-        public string OutilSelectionne
-        {
-            get { return editeur.OutilSelectionne; }
-            set { //ProprieteModifiee(); 
-                NotifyOfPropertyChange(() => OutilSelectionne);
-                }
-        }
-
-        public string CouleurSelectionnee
-        {
-            get { return editeur.CouleurSelectionnee; }
-            set { editeur.CouleurSelectionnee = value; }
-        }
-
-        public string PointeSelectionnee
-        {
-            get { return editeur.PointeSelectionnee; }
-            set {
-                //ProprieteModifiee(); 
-                NotifyOfPropertyChange(() => OutilSelectionne);
-                }
-        }
-
-        public int TailleTrait
-        {
-            get { return editeur.TailleTrait; }
-            set { editeur.TailleTrait = value; }
-        }
 
         // Commandes sur lesquels la vue pourra se connecter.
         public RelayCommand<string> ChoisirPointe { get; set; }
@@ -101,7 +56,7 @@ namespace WPFUI.ViewModels
             // _roundDuration = 30;
             this.Traits = editeur.traits;
             this.strokes = new Dictionary<Stroke, int>();
-            _timerContent = _roundDuration;
+            _timerContent = 0;
             _selectWordCommand = new selectWordCommand(events);
             fillAvatars();
             startTimer();
@@ -129,31 +84,54 @@ namespace WPFUI.ViewModels
             this._socketHandler.onMatch(this.roundInfos);
         }
 
-        /// <summary>
-        /// Appelee lorsqu'une propriété de VueModele est modifiée.
-        /// Un évènement indiquant qu'une propriété a été modifiée est alors émis à partir de VueModèle.
-        /// L'évènement qui contient le nom de la propriété modifiée sera attrapé par la vue qui pourra
-        /// alors mettre à jour les composants concernés.
-        /// </summary>
-        /// <param name="propertyName">Nom de la propriété modifiée.</param>
-        protected virtual void ProprieteModifiee([CallerMemberName] string propertyName = null)
+        public RoundInfos roundInfos { get; set; }
+        public StrokeCollection Traits { get; set; }
+        public Dictionary<Stroke, int> strokes { get; set; }
+        public IselectWordCommand _selectWordCommand { get; set; }
+        public DrawingAttributes AttributsDessin { get; set; } = new DrawingAttributes();
+
+        public BindableCollection<dynamic> joueurs
         {
-            Console.WriteLine("PM de partieJeuVM");
-            Console.WriteLine("PM de partieJeuVM outil:");
-            Console.WriteLine(editeur.OutilSelectionne);
-            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            get { return _joueurs; }
+            set
+            {
+                _joueurs = value;
+                NotifyOfPropertyChange(() => joueurs);
+            }
         }
 
-        /// <summary>
-        /// Traite les évènements de modifications de propriétés qui ont été lancés à partir
-        /// du modèle.
-        /// </summary>
-        /// <param name="sender">L'émetteur de l'évènement (le modèle)</param>
-        /// <param name="e">Les paramètres de l'évènement. PropertyName est celui qui nous intéresse. 
-        /// Il indique quelle propriété a été modifiée dans le modèle.</param>
+        public string OutilSelectionne
+        {
+            get { return editeur.OutilSelectionne; }
+            set
+            { 
+                NotifyOfPropertyChange(() => OutilSelectionne);
+            }
+        }
+
+        public string CouleurSelectionnee
+        {
+            get { return editeur.CouleurSelectionnee; }
+            set { editeur.CouleurSelectionnee = value; }
+        }
+
+        public string PointeSelectionnee
+        {
+            get { return editeur.PointeSelectionnee; }
+            set
+            {
+                NotifyOfPropertyChange(() => OutilSelectionne);
+            }
+        }
+
+        public int TailleTrait
+        {
+            get { return editeur.TailleTrait; }
+            set { editeur.TailleTrait = value; }
+        }
+
         private void EditeurProprieteModifiee(object sender, PropertyChangedEventArgs e)
         {
-            Console.WriteLine(sender.ToString());
             if (e.PropertyName == "CouleurSelectionnee")
             {
                 AttributsDessin.Color = (System.Windows.Media.Color)ColorConverter.ConvertFromString(editeur.CouleurSelectionnee);
@@ -173,11 +151,6 @@ namespace WPFUI.ViewModels
             }
         }
 
-        /// <summary>
-        /// C'est ici qu'est défini la forme de la pointe, mais aussi sa taille (TailleTrait).
-        /// Pourquoi deux caractéristiques se retrouvent définies dans une même méthode? Parce que pour créer une pointe 
-        /// horizontale ou verticale, on utilise une pointe carrée et on joue avec les tailles pour avoir l'effet désiré.
-        /// </summary>
         private void AjusterPointe()
         {
             AttributsDessin.StylusTip = (editeur.PointeSelectionnee == "ronde") ? StylusTip.Ellipse : StylusTip.Rectangle;
@@ -320,6 +293,11 @@ namespace WPFUI.ViewModels
             get { return _avatars.Single(i => i.name == _userData.avatarName).source; }
         }
 
+        public string getAvatarSource( string avatarType)
+        {
+            return _avatars.Single(i => i.name == avatarType).source;
+        }
+
         public void sendMessage()
         {
             _socketHandler.sendMessage();
@@ -342,7 +320,6 @@ namespace WPFUI.ViewModels
         public void newScores(List<Score> scores)
         {
             _turnScores.Clear();
-            Console.WriteLine("!" + scores.Count);
             foreach (Score score in scores)
             {
                 dynamic dynamicScore = new System.Dynamic.ExpandoObject();
@@ -359,7 +336,6 @@ namespace WPFUI.ViewModels
             _timer.Stop();
             this.roundInfos.round = this._userData.firstRound.currentRound;
             List<Score> scores = new List<Score>(this._userData.firstRound.scores);
-            Console.WriteLine(scores.Count);
             this.newScores(scores);
             fillPlayers();
             dynamic endTurn = new System.Dynamic.ExpandoObject();
@@ -381,6 +357,7 @@ namespace WPFUI.ViewModels
                 dynamic player = new System.Dynamic.ExpandoObject();
                 player.username = score.username;
                 player.score = score.updateScore.scoreTotal;
+                player.avatarSource = getAvatarSource(score.avatar);
                 joueurs.Add(player);
             }
         }
@@ -389,7 +366,6 @@ namespace WPFUI.ViewModels
         {
             if (guessBox != null & guessBox != "")
             {
-                Console.WriteLine(guessBox);
                 _socketHandler.socket.Emit("guess", guessBox);
             }
             guessBox = "";
@@ -408,7 +384,6 @@ namespace WPFUI.ViewModels
         {
             if(this.canDraw)
             {
-                Console.WriteLine(this.OutilSelectionne);
                 if (this.OutilSelectionne == "crayon")
                 {
                     StylusPointCollection stylusPoint = new StylusPointCollection();
@@ -417,7 +392,6 @@ namespace WPFUI.ViewModels
                     stroke.DrawingAttributes.Width = this.AttributsDessin.Width;
                     stroke.DrawingAttributes.Height = this.AttributsDessin.Height;
                     stroke.DrawingAttributes.Color = this.AttributsDessin.Color;
-                    Console.WriteLine("should emit");
                     this._socketHandler.socket.Emit("stroke", JsonConvert.SerializeObject(stroke));
                 }
                 else if (this.OutilSelectionne == "efface_trait")
@@ -445,7 +419,6 @@ namespace WPFUI.ViewModels
 
         public void Handle(wordSelectedEvent message)
         {
-            Console.WriteLine("!" + message.word);
             this.canDraw = true;
             /* TODO envoyer le mot au serveur */
             this.roundInfos.word = message.word;
@@ -454,8 +427,6 @@ namespace WPFUI.ViewModels
 
         public void Handle(startTurnRoutineEvent message)
         {
-            Console.WriteLine("! start turn !");
-            Console.WriteLine(message.turnTime);
             timerContent = message.turnTime;
             _timer.Start();
         }

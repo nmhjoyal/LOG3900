@@ -14,6 +14,7 @@ export default class RandomWordGenerator {
         words.push(RandomWordGenerator.getRandomWord(Difficulty.Easy));
         words.push(RandomWordGenerator.getRandomWord(Difficulty.Medium));
         words.push(RandomWordGenerator.getRandomWord(Difficulty.Hard));
+        console.log(words);
         return words;
     }
     private static getRandomWord(difficulty: Difficulty): string {
@@ -24,7 +25,7 @@ export default class RandomWordGenerator {
             liner.next();
         }
         const word: string = liner.next().toString();
-        return word.substr(0, word.length - 1);     // removing \r
+        return word;
     }
 }
 
