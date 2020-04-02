@@ -46,7 +46,7 @@ export const freeForAllSettings: MatchSettings = {
     MAX_NB_PLAYERS : 8, // A combination of maximum 8 human and virtual players.
     MIN_NB_VP : 0, 
     MAX_NB_VP : 7,      // in the case that there is 1 human player.
-    MIN_NB_HP : 1,
+    MIN_NB_HP : 2,
     MAX_NB_HP : 8       // if there is no virtual players.
 }
 export const sprintSoloSettings: MatchSettings = {
