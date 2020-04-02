@@ -16,24 +16,20 @@ export default class FreeForAll extends Match {
         super(matchId, user, createMatch, chatHandler, freeForAllSettings);
     }
 
-    public async startTurn(io: SocketIO.Server, socket: SocketIO.Socket | null, word: string, isVirtual: boolean): Promise<void> {
+    public async startTurn(io: SocketIO.Server, socket: SocketIO.Socket, word: string, isVirtual: boolean): Promise<void> {
         this.currentWord = word;
-        if(socket) {
-            socket.emit("turn_started", this.createStartTurn(this.currentWord, true));
-            socket.to(this.matchId).emit("turn_started", this.createStartTurn(this.currentWord, false));
-        } else {
-            io.in(this.matchId).emit("turn_started", this.createStartTurn(this.currentWord, false));
-        }
         this.drawing.reset(io);
-        
-        if (isVirtual) {
+        if(isVirtual) {
             const game: Game = await gameDB.getGame(word);
             this.currentWord = game.word;
+            io.in(this.matchId).emit("turn_started", this.createStartTurn(this.currentWord, false));
             this.virtualDrawing.draw(io, game.drawing, game.level);
+        } else {
+            socket.emit("turn_started", this.createStartTurn(this.currentWord, true));
+            socket.to(this.matchId).emit("turn_started", this.createStartTurn(this.currentWord, false));
         }
         
         this.timer = Date.now();
-        console.log("before timeout");
         this.timeout = setTimeout(() => {
             if(isVirtual) {
                 this.virtualDrawing.clear(io);
@@ -44,6 +40,7 @@ export default class FreeForAll extends Match {
 
     protected async endTurn(io: SocketIO.Server, drawerLeft: boolean): Promise<void> {
         clearTimeout(this.timeout);
+        this.virtualDrawing.clear(io);
         let matchIsEnded: boolean = false;
 
         if (!drawerLeft){

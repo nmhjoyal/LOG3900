@@ -26,8 +26,8 @@ class GameDB {
     }
 
     public async getRandomGame(): Promise<Game> {
-        const gameDB: any = await this.mongoDB.db("Games").collection("games")
-            .aggregate([ { $sample: { size: 1 } } ]).toArray()[0];
+        const gameDB: any = (await this.mongoDB.db("Games").collection("games")
+            .aggregate([ { $sample: { size: 1 } } ]).toArray())[0];
         const game: Game = {
             word: gameDB.word,
             drawing: gameDB.drawing,
@@ -38,14 +38,16 @@ class GameDB {
     }
 
     public async getRandomWord(): Promise<string> {
-        const word: string = await this.mongoDB.db("Games").collection("games")
-            .aggregate([ { $sample: { size: 1 } } ]).project({ word: 1 }).toArray()[0];
-        return word;
+        const gameDB: any = (await this.mongoDB.db("Games").collection("games")
+            .aggregate([ { $sample: { size: 1 } } ]).project({ word: 1 }).toArray())[0];
+
+        return gameDB.word;
     }
 
     public async getGame(word: string): Promise<Game> {
+        console.log(word);
         const gameDB: any = await this.mongoDB.db("Games").collection("games")
-            .findOne({id: { $eq: word}});
+            .findOne({ word: { $eq: word } });
         const game: Game = {
             word: gameDB.word,
             drawing: gameDB.drawing,

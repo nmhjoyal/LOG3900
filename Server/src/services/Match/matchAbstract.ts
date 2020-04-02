@@ -221,11 +221,11 @@ export default abstract class Match {
         this.currentWord = "";
         
         if (this.getPlayer(this.drawer)?.isVirtual) {
-            let word: string;
+            let word: string = await gameDB.getRandomWord();
             setTimeout(() => {
                 this.startTurn(io, null, word, true);
             }, 5000);
-            word = await gameDB.getRandomWord();
+            // word = await gameDB.getRandomWord();
         }
     }
 
