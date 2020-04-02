@@ -14,41 +14,15 @@ using Newtonsoft.Json;
 using WPFUI.Commands;
 using WPFUI.EventModels;
 using WPFUI.Models;
+using WPFUI.Utilitaires;
 
 namespace WPFUI.ViewModels
 {
-    class partieJeuViewModel: Screen, IHandle<refreshMessagesEvent>, IHandle<addMessageEvent>,
+    class partieJeuViewModel: Screen, INotifyPropertyChanged, IHandle<refreshMessagesEvent>, IHandle<addMessageEvent>,
                               IHandle<wordSelectedEvent>, IHandle<startTurnRoutineEvent>, IHandle<endTurnRoutineVMEvent>
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        //public event PropertyChangedEventHandler PropertyChanged;
         private Editeur editeur = new Editeur();
-
-        public DrawingAttributes AttributsDessin { get; set; } = new DrawingAttributes();
-
-        public string OutilSelectionne
-        {
-            get { return editeur.OutilSelectionne; }
-            set { ProprieteModifiee(); }
-        }
-
-        public string CouleurSelectionnee
-        {
-            get { return editeur.CouleurSelectionnee; }
-            set { editeur.CouleurSelectionnee = value; }
-        }
-
-        public string PointeSelectionnee
-        {
-            get { return editeur.PointeSelectionnee; }
-            set { ProprieteModifiee(); }
-        }
-
-        public int TailleTrait
-        {
-            get { return editeur.TailleTrait; }
-            set { editeur.TailleTrait = value; }
-        }
-
         private IEventAggregator _events;
         private ISocketHandler _socketHandler;
         private BindableCollection<Avatar> _avatars;
@@ -62,10 +36,54 @@ namespace WPFUI.ViewModels
         private int _roundDuration;
         private string _guessBox;
         private bool canDraw;
+        private BindableCollection<dynamic> _joueurs;
+
         public RoundInfos roundInfos { get; set; }
         public StrokeCollection Traits { get; set; }
         public Dictionary<Stroke, int> strokes { get; set; }
         public IselectWordCommand _selectWordCommand { get; set; }
+        public DrawingAttributes AttributsDessin { get; set; } = new DrawingAttributes();
+
+        public BindableCollection<dynamic> joueurs
+        {
+            get { return _joueurs; }
+            set { _joueurs = value;
+                NotifyOfPropertyChange(() => joueurs);
+            }
+        }
+
+        public string OutilSelectionne
+        {
+            get { return editeur.OutilSelectionne; }
+            set { //ProprieteModifiee(); 
+                NotifyOfPropertyChange(() => OutilSelectionne);
+                }
+        }
+
+        public string CouleurSelectionnee
+        {
+            get { return editeur.CouleurSelectionnee; }
+            set { editeur.CouleurSelectionnee = value; }
+        }
+
+        public string PointeSelectionnee
+        {
+            get { return editeur.PointeSelectionnee; }
+            set {
+                //ProprieteModifiee(); 
+                NotifyOfPropertyChange(() => OutilSelectionne);
+                }
+        }
+
+        public int TailleTrait
+        {
+            get { return editeur.TailleTrait; }
+            set { editeur.TailleTrait = value; }
+        }
+
+        // Commandes sur lesquels la vue pourra se connecter.
+        public RelayCommand<string> ChoisirPointe { get; set; }
+        public RelayCommand<string> ChoisirOutil { get; set; }
 
         public partieJeuViewModel(IEventAggregator events, ISocketHandler socketHandler, IUserData userdata)
         {
@@ -78,6 +96,7 @@ namespace WPFUI.ViewModels
             _timer = new DispatcherTimer();
             _wordChoices = new BindableCollection<dynamic>();
             _turnScores = new BindableCollection<dynamic>();
+            _joueurs = new BindableCollection<dynamic>();
             this.canDraw = false;
             // _roundDuration = 30;
             this.Traits = editeur.traits;
@@ -86,9 +105,84 @@ namespace WPFUI.ViewModels
             _selectWordCommand = new selectWordCommand(events);
             fillAvatars();
             startTimer();
-            this.roundInfos = new RoundInfos("", 0);
-            this._socketHandler.onMatch(this.roundInfos);
+            _timer.Stop();
+            /* ----------------------------------- Drawing editor declarations -----------------------------------------------*/
+            // On écoute pour des changements sur le modèle. Lorsqu'il y en a, EditeurProprieteModifiee est appelée.
+            editeur.PropertyChanged += new PropertyChangedEventHandler(EditeurProprieteModifiee);
+
+            // On initialise les attributs de dessin avec les valeurs de départ du modèle.
+            AttributsDessin = new DrawingAttributes();
+            AttributsDessin.Color = (System.Windows.Media.Color)ColorConverter.ConvertFromString(editeur.CouleurSelectionnee);
+            AjusterPointe();
+
+            Traits = editeur.traits;
+            this.strokes = new Dictionary<Stroke, int>();
+
+            // Pour les commandes suivantes, il est toujours possible des les activer.
+            // Donc, aucune vérification de type Peut"Action" à faire.
+            ChoisirPointe = new RelayCommand<string>(editeur.ChoisirPointe);
+            ChoisirOutil = new RelayCommand<string>(editeur.ChoisirOutil);
+
             this._socketHandler.onDrawing(this.Traits, this.strokes);
+            this.roundInfos = new RoundInfos("", 0);
+            this._socketHandler.offWaitingRoom();
+            this._socketHandler.onMatch(this.roundInfos);
+        }
+
+        /// <summary>
+        /// Appelee lorsqu'une propriété de VueModele est modifiée.
+        /// Un évènement indiquant qu'une propriété a été modifiée est alors émis à partir de VueModèle.
+        /// L'évènement qui contient le nom de la propriété modifiée sera attrapé par la vue qui pourra
+        /// alors mettre à jour les composants concernés.
+        /// </summary>
+        /// <param name="propertyName">Nom de la propriété modifiée.</param>
+        protected virtual void ProprieteModifiee([CallerMemberName] string propertyName = null)
+        {
+            Console.WriteLine("PM de partieJeuVM");
+            Console.WriteLine("PM de partieJeuVM outil:");
+            Console.WriteLine(editeur.OutilSelectionne);
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        /// <summary>
+        /// Traite les évènements de modifications de propriétés qui ont été lancés à partir
+        /// du modèle.
+        /// </summary>
+        /// <param name="sender">L'émetteur de l'évènement (le modèle)</param>
+        /// <param name="e">Les paramètres de l'évènement. PropertyName est celui qui nous intéresse. 
+        /// Il indique quelle propriété a été modifiée dans le modèle.</param>
+        private void EditeurProprieteModifiee(object sender, PropertyChangedEventArgs e)
+        {
+            Console.WriteLine(sender.ToString());
+            if (e.PropertyName == "CouleurSelectionnee")
+            {
+                AttributsDessin.Color = (System.Windows.Media.Color)ColorConverter.ConvertFromString(editeur.CouleurSelectionnee);
+            }
+            else if (e.PropertyName == "OutilSelectionne")
+            {
+                OutilSelectionne = editeur.OutilSelectionne;
+            }
+            else if (e.PropertyName == "PointeSelectionnee")
+            {
+                PointeSelectionnee = editeur.PointeSelectionnee;
+                AjusterPointe();
+            }
+            else // e.PropertyName == "TailleTrait"
+            {
+                AjusterPointe();
+            }
+        }
+
+        /// <summary>
+        /// C'est ici qu'est défini la forme de la pointe, mais aussi sa taille (TailleTrait).
+        /// Pourquoi deux caractéristiques se retrouvent définies dans une même méthode? Parce que pour créer une pointe 
+        /// horizontale ou verticale, on utilise une pointe carrée et on joue avec les tailles pour avoir l'effet désiré.
+        /// </summary>
+        private void AjusterPointe()
+        {
+            AttributsDessin.StylusTip = (editeur.PointeSelectionnee == "ronde") ? StylusTip.Ellipse : StylusTip.Rectangle;
+            AttributsDessin.Width = (editeur.PointeSelectionnee == "verticale") ? 1 : editeur.TailleTrait;
+            AttributsDessin.Height = (editeur.PointeSelectionnee == "horizontale") ? 1 : editeur.TailleTrait;
         }
 
         public void startTimer()
@@ -101,12 +195,13 @@ namespace WPFUI.ViewModels
 
         void timer_Tick(object sender, EventArgs e)
         {
-         
-            if (timerContent != 0)
+
+            if (timerContent != 1)
             {
-                timerContent = _timerContent - 1;
+                timerContent = timerContent - 1;
             } else
             {
+                timerContent = 0;
                 _timer.Stop();
             }
         }
@@ -122,6 +217,11 @@ namespace WPFUI.ViewModels
         public int currentRound
         {
             get { return this.roundInfos.round; }
+        }
+
+        public string roundText
+        {
+            get { return currentRound + " of " + _userData.nbRounds; }
         }
 
         public string currentWord
@@ -144,7 +244,6 @@ namespace WPFUI.ViewModels
 
         internal void strokeCollected(Stroke stroke)
         {
-            this.roundInfos.word = "stroke collected";
             if(!this.canDraw)
             {
                 this.Traits.Remove(stroke);
@@ -257,11 +356,12 @@ namespace WPFUI.ViewModels
 
         public void HandleFirstRound()
         {
+            _timer.Stop();
             this.roundInfos.round = this._userData.firstRound.currentRound;
             List<Score> scores = new List<Score>(this._userData.firstRound.scores);
             Console.WriteLine(scores.Count);
             this.newScores(scores);
-
+            fillPlayers();
             dynamic endTurn = new System.Dynamic.ExpandoObject();
             endTurn.currentRound = this._userData.firstRound.currentRound;
             endTurn.drawer = this._userData.firstRound.drawer;
@@ -270,6 +370,19 @@ namespace WPFUI.ViewModels
             newWords(this._userData.firstRound.choices);
             newScores(this._userData.firstRound.scores);
             _events.PublishOnUIThread(new endTurnRoutineEvent(endTurn));
+        }
+
+        public void fillPlayers()
+        {
+            joueurs.Clear();
+            List<Score> scores = new List<Score>(this._userData.firstRound.scores);
+            foreach (Score score in scores)
+            {
+                dynamic player = new System.Dynamic.ExpandoObject();
+                player.username = score.username;
+                player.score = score.updateScore.scoreTotal;
+                joueurs.Add(player);
+            }
         }
 
         public void sendGuess()
@@ -341,45 +454,15 @@ namespace WPFUI.ViewModels
 
         public void Handle(startTurnRoutineEvent message)
         {
-            _timerContent = message.turnTime;
+            Console.WriteLine("! start turn !");
+            Console.WriteLine(message.turnTime);
+            timerContent = message.turnTime;
             _timer.Start();
         }
 
         public void Handle(endTurnRoutineVMEvent message)
         {
             this.HandleFirstRound();
-        }
-
-        protected virtual void ProprieteModifiee([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        private void EditeurProprieteModifiee(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "CouleurSelectionnee")
-            {
-                AttributsDessin.Color = (System.Windows.Media.Color)ColorConverter.ConvertFromString(editeur.CouleurSelectionnee);
-            }
-            else if (e.PropertyName == "OutilSelectionne")
-            {
-                OutilSelectionne = editeur.OutilSelectionne;
-            }
-            else if (e.PropertyName == "PointeSelectionnee")
-            {
-                PointeSelectionnee = editeur.PointeSelectionnee;
-                AjusterPointe();
-            }
-            else // e.PropertyName == "TailleTrait"
-            {
-                AjusterPointe();
-            }
-        }
-
-        private void AjusterPointe()
-        {
-            AttributsDessin.StylusTip = (editeur.PointeSelectionnee == "ronde") ? StylusTip.Ellipse : StylusTip.Rectangle;
-            AttributsDessin.Width = (editeur.PointeSelectionnee == "verticale") ? 1 : editeur.TailleTrait;
-            AttributsDessin.Height = (editeur.PointeSelectionnee == "horizontale") ? 1 : editeur.TailleTrait;
         }
 
         public void updateRoundInfos()

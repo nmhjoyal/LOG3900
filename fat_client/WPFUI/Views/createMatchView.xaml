@@ -30,7 +30,7 @@
 
 
         <Border Background="#FF66CC00" BorderThickness="5" Grid.ColumnSpan="1" Grid.Column="1" Grid.Row="3" CornerRadius="10" Height="40">
-            <TextBlock FontSize="14" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Choisi le mode:" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="3"/>
+            <TextBlock FontSize="14" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Game mode:" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="3"/>
         </Border>
         <ComboBox Width="auto" Grid.Column="2" Grid.Row="3"  Name="modecomboBox" Margin="10,0,10,0">
             <ComboBoxItem Content="Mêlée générale"/>
@@ -41,7 +41,7 @@
         </ComboBox>
 
 		<Border Background="#FF66CC00" BorderThickness="5" Grid.ColumnSpan="1" Grid.Column="1" Grid.Row="5" CornerRadius="10" Height="40">
-            <TextBlock FontSize="14" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Choisi le nombre de rounds:" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="5"/>
+            <TextBlock FontSize="14" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Number of rounds:" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="5"/>
         </Border>
 		<ComboBox Width="auto" Grid.Column="2" Grid.Row="5"  Name="roundcomboBox" Margin="10,0,10,0">
             <ComboBoxItem Content="3"/>
@@ -52,7 +52,7 @@
             <ComboBoxItem Content="8"/>
         </ComboBox>
 		<Border Background="#FF66CC00" BorderThickness="5" Grid.ColumnSpan="1" Grid.Column="1" Grid.Row="7" CornerRadius="10" Height="40">
-            <TextBlock FontSize="14" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Choisi la durée de chaque round:" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="5"/>
+            <TextBlock FontSize="14" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Round time limit:" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="5"/>
         </Border>
 		<ComboBox Width="auto" Grid.Column="2" Grid.Row="7"  Name="timecomboBox" Margin="10,0,10,0">
             <ComboBoxItem Content="30 secondes"/>
@@ -66,13 +66,13 @@
 
 
 
-        <Button HorizontalAlignment="Right" Click="createMatch" BorderBrush="{x:Null}" Background="#FC038C" Grid.Column="2" Grid.Row="9" Content="C'est parti! " Foreground="White"/>
-        <Button  x:Name="goBack"  Grid.Column="2" Grid.Row="0" MaxWidth="100" HorizontalAlignment="Right"  Background="#FFBF0B0B" BorderBrush="#FFBF0B0B">
+        <Button HorizontalAlignment="Right" Click="createMatch" BorderBrush="{x:Null}" Background="#FC038C" Grid.Column="2" Grid.Row="9" Content="Lets go! " Foreground="White"/>
+        <Button  x:Name="goBack"  Grid.Column="2" Grid.Row="0" MaxWidth="100" HorizontalAlignment="Right"  Background="#FFBF0B0B" BorderBrush="#FFBF0B0B" VerticalAlignment="Bottom">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Foreground="White">Retour</TextBlock>
+                <TextBlock Foreground="White">Go Back</TextBlock>
                 <Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
             </StackPanel>
         </Button>
-        <TextBlock FontSize="40"  Foreground="#FF66CC00" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">Paramètres de ton jeu!</TextBlock>
+		<TextBlock FontSize="40"  Foreground="#FF66CC00" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">Create your game!</TextBlock>
     </Grid>
 </UserControl>
