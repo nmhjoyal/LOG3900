@@ -21,7 +21,6 @@ class FreeForAllMatchMode : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         adapter.setOnItemClickListener{ item, _ ->
             val matchId = (item as MatchItem).matchId
             SocketHandler.joinMatch(matchId)
@@ -49,8 +48,7 @@ class FreeForAllMatchMode : Fragment() {
 
     private fun refreshMatchesAdapter() {
         adapter.clear()
-        var freeForAllMatchList = GameManager.freeForAllMatchList
-        for (match in freeForAllMatchList) {
+        for (match in GameManager.freeForAllMatchList) {
             adapter.add(MatchItem(match.matchId, match.host, match.nbRounds, match.players.size))
         }
     }

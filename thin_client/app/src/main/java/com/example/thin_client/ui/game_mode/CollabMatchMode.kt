@@ -51,9 +51,8 @@ class CollabMatchMode : Fragment() {
     }
 
     private fun refreshMatchesAdapter() {
-        adapter.clear()
-        var collabMatchList = GameManager.collabModeMatchList
-        for (match in collabMatchList) {
+      adapter.clear()
+        for (match in GameManager.collabModeMatchList) {
             adapter.add(MatchItem(match.matchId, match.host, match.nbRounds, match.players.size))
         }
     }

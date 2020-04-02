@@ -176,4 +176,13 @@ object SocketHandler {
         socket!!.emit(SocketEvent.GUESS, args)
     }
 
+    fun addVirtualPlayer() {
+        socket!!.emit(SocketEvent.ADD_VP)
+    }
+
+    fun removeVirtualPlayer() {
+        socket!!.emit(SocketEvent.REMOVE_VP)
+    }
+
+
 }
