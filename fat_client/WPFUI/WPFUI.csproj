@@ -495,6 +495,7 @@
     <Resource Include="Resources\ranking.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Views\SunflagPNG.png" />
     <Resource Include="Resources\apple.png" />
     <Resource Include="Potrace\Images\yao.bmp" />
     <Resource Include="Resources\alarmclock.png" />
@@ -538,6 +539,9 @@
     <Resource Include="Resources\watermelon.png" />
     <Resource Include="Resources\trophy.gif" />
     <Resource Include="Resources\trophy_cropped.gif" />
+    <Resource Include="Resources\Stripes.png" />
+    <Content Include="Resources\Sunflag.svg" />
+    <Resource Include="Resources\SunflagPNG.png" />
     <Content Include="Resources\watermelon.svg" />
   </ItemGroup>
   <ItemGroup>
