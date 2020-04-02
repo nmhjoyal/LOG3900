@@ -428,8 +428,11 @@ export default abstract class Match {
     protected getScores(): Score[] {
         let scores: Score[] = [];
         this.scores.forEach((updateScore: UpdateScore, username: string) => {
+            const avatar: string = this.getAvatar(username);
+            if(avatar) {}
             scores.push({
                 username: username,
+                avatar: this.getAvatar(username),
                 updateScore: updateScore
             })
         });
@@ -443,5 +446,15 @@ export default abstract class Match {
             drawer: this.drawer,
             scores: this.getScores()
         };
+    }
+
+    protected getAvatar(username: string): string {
+        for(let player of this.players) {
+            if(player.user.username == username) {
+                return player.user.avatar;
+            }
+        }
+
+        return "undefined";
     }
 }

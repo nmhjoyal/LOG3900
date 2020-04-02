@@ -39,5 +39,6 @@ export interface UpdateScore {
 
 export interface Score {
     username: string,
+    avatar: string,
     updateScore: UpdateScore
 }
