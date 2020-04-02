@@ -78,15 +78,11 @@ namespace WPFUI.Models
         /// alors prendre action en conséquence.
         /// </summary>
         /// <param name="propertyName">Nom de la propriété modifiée.</param>
-        protected void ProprieteModifiee([CallerMemberName] string propertyName = null)
+        public void ProprieteModifiee([CallerMemberName] string propertyName = null)
         {
+            Console.WriteLine("PM du modele");
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-
-
-
-
 
         // On assigne une nouvelle forme de pointe passée en paramètre.
         public void ChoisirPointe(string pointe) => PointeSelectionnee = pointe;
