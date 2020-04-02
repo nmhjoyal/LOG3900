@@ -183,11 +183,13 @@ namespace WPFUI.Models
     {
         public string username;
         public UpdateScore updateScore;
+        public string avatar;
 
-        public Score(string username, int scoreTotal, int scoreTurn)
+        public Score(string username, int scoreTotal, int scoreTurn, string avatar)
         {
             this.username = username;
             this.updateScore = new UpdateScore(scoreTotal, scoreTurn);
+            this.avatar = avatar;
         }
     }
 

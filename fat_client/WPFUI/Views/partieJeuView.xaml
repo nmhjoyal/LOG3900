@@ -8,7 +8,7 @@
 			 xmlns:convertisseurs="clr-namespace:WPFUI.Converters"  
 			 xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
 			 mc:Ignorable="d" 
-             d:DesignHeight="800" d:DesignWidth="1200"
+             d:DesignHeight="1000" d:DesignWidth="1200"
              FontFamily="Microsoft JhengHei UI Light"
 			 Loaded="OnLoad">
 
@@ -31,7 +31,7 @@
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="2*" />
                 <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="12*" />
+                <ColumnDefinition Width="550" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="5*" />
                 <ColumnDefinition Width="100" />
@@ -76,7 +76,7 @@
 				<RowDefinition Height="*"/>
 				<RowDefinition Height="6*"/>
 			</Grid.RowDefinitions>
-			<StackPanel Orientation="Horizontal" Background="#FF00CCCC" Grid.Row="0">
+			<StackPanel Orientation="Horizontal" Background="#FF00CCCC" Grid.Row="0" Name="drawingEditingPanel">
 
 				<Button Name="crayon" Width="40" Height="40" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="10,0,0,0"
                         BorderBrush="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurBordure}, ConverterParameter=crayon, UpdateSourceTrigger=PropertyChanged}" 
@@ -123,11 +123,11 @@
 				</Slider>
 			</StackPanel>
 			<Canvas Name ="canvas" Grid.Row="1">
-				<InkCanvas ClipToBounds="True" Name="surfaceDessin" 
+				<InkCanvas Name="surfaceDessin" ClipToBounds="True"
                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
 						   MouseMove="surfaceDessin_MouseMove" PreviewMouseDown="surfaceDessin_PreviewMouseDown" MouseUp="surfaceDessin_MouseUp" StrokeCollected="surfaceDessin_StrokeCollected"
                            Strokes="{Binding Path=Traits, Mode=OneTime}" EditingMode="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurModeEdition}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                           DefaultDrawingAttributes="{Binding Path=AttributsDessin, Mode=OneTime}" Grid.Row="1" />
+                           DefaultDrawingAttributes="{Binding Path=AttributsDessin, Mode=OneTime}" Grid.Row="1" Width="500" Height="500"/>
 			</Canvas>
 		</Grid>
 
@@ -135,30 +135,26 @@
 		<Border  BorderBrush="Black" Grid.ColumnSpan="2" BorderThickness="1" Grid.Column="11" Grid.Row="8"/>
 		<Border  BorderBrush="Black" BorderThickness="1" Grid.Column="7" Grid.Row="8" Grid.RowSpan="4" Grid.ColumnSpan="3"/>
 
-        <ScrollViewer Grid.Column="1" Grid.Row="8" Grid.RowSpan="4" Grid.ColumnSpan="5" VerticalScrollBarVisibility="Visible" Background="White">
+        <ScrollViewer Grid.Column="1" Grid.Row="8" Grid.RowSpan="4" Grid.ColumnSpan="5" 
+					  VerticalScrollBarVisibility="Visible" Background="White" FontSize="26">
             <ItemsControl x:Name="joueurs">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Vertical">
-							<StackPanel Orientation="Horizontal">
-								<TextBlock Text="{Binding username}" Foreground="DarkSlateGray"/>
-								<TextBlock Text="{Binding score}" Foreground="DarkSlateGray" Margin="10,0,0,0"/>
+							<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,20">
+								<Image Source="{Binding avatarSource}" Height="40" Margin="20,0,0,0" VerticalAlignment="Center"></Image>
+								<TextBlock Text="{Binding username}" Foreground="DarkSlateGray" Margin="10,0,0,0" VerticalAlignment="Center"/>
+								<TextBlock Text="{Binding score}" Foreground="#FF66CC37" Margin="10,0,0,0" VerticalAlignment="Center"/>
 							</StackPanel>
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        <Button  x:Name="goBack"  Grid.Column="12" Grid.Row="1" MaxWidth="100" HorizontalAlignment="Right"  Background="#FFBF0B0B" BorderBrush="Black">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Foreground="White">Retour</TextBlock>
-                <Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
-            </StackPanel>
-        </Button>
-
-        <Button  x:Name="HandleFirstRound"  Grid.Column="12" Grid.Row="0" MaxWidth="100" HorizontalAlignment="Right"  Background="#FF24A035" BorderBrush="Black">
+		<Button  x:Name="goBack"  Grid.Column="12" Grid.Row="1" MaxWidth="100" HorizontalAlignment="Right"  Background="#FFBF0B0B" BorderBrush="Black">
 			<StackPanel Orientation="Horizontal">
-				<TextBlock Foreground="White">EndTurn</TextBlock>
+				<TextBlock Foreground="White">Retour</TextBlock>
+				<Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
 			</StackPanel>
 		</Button>
 

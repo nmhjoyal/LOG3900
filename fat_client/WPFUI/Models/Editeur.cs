@@ -80,7 +80,6 @@ namespace WPFUI.Models
         /// <param name="propertyName">Nom de la propriété modifiée.</param>
         public void ProprieteModifiee([CallerMemberName] string propertyName = null)
         {
-            Console.WriteLine("PM du modele");
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
