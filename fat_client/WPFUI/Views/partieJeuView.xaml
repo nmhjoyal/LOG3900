@@ -8,7 +8,7 @@
 			 xmlns:convertisseurs="clr-namespace:WPFUI.Converters"  
 			 xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
 			 mc:Ignorable="d" 
-             d:DesignHeight="1000" d:DesignWidth="1200"
+             d:DesignHeight="800" d:DesignWidth="1200"
              FontFamily="Microsoft JhengHei UI Light"
 			 Loaded="OnLoad">
 
@@ -17,66 +17,73 @@
 		<convertisseurs:ConvertisseurCouleurFond x:Key="convertisseurCouleurFond" />
 		<convertisseurs:ConvertisseurModeEdition x:Key="convertisseurModeEdition" />
 	</UserControl.Resources>
-	
-	
-
-	<Grid Background="#FFF5F5F6" >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="50"/>
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="3*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="2*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="550" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="5*" />
-                <ColumnDefinition Width="100" />
-                <ColumnDefinition Width="50" />
 
 
-        </Grid.ColumnDefinitions>
+
+	<Grid Background="#FFF5F5F6">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="0.5*"/>
+			<ColumnDefinition Width="10"/>
+			<ColumnDefinition Width="20" />
+			<ColumnDefinition Width="10"/>
+			<ColumnDefinition Width="30" />
+			<ColumnDefinition Width="10" />
+			<ColumnDefinition Width="10"/>
+			<ColumnDefinition Width="60" />
+			<ColumnDefinition Width="10" />
+			<ColumnDefinition Width="600" />
+			<ColumnDefinition Width="10" />
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="0.5*" />
+
+
+		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="80"/>
-			<RowDefinition Height="60"/>
-			<RowDefinition Height="10"/>
-			<RowDefinition Height="20"/>
-			<RowDefinition Height="10"/>
-			<RowDefinition Height="20"/>
-			<RowDefinition Height="10"/>
-			<RowDefinition Height="10"/>
 			<RowDefinition Height="*"/>
-			<RowDefinition Height="40"/>
-			<RowDefinition Height="5"/>
-			<RowDefinition Height="40"/>
-			<RowDefinition Height="5"/>
-			<RowDefinition Height="40"/>
+			<RowDefinition Height="30"/>
+			<RowDefinition Height="10"/>
 			<RowDefinition Height="20"/>
+			<RowDefinition Height="10"/>
+			<RowDefinition Height="20"/>
+			<RowDefinition Height="10"/>
+			<RowDefinition Height="10"/>
+			<RowDefinition Height="496"/>
+			<RowDefinition Height="40"/>
+			<RowDefinition Height="5"/>
+			<RowDefinition Height="40"/>
+			<RowDefinition Height="5"/>
+			<RowDefinition Height="40"/>
+			<RowDefinition Height="*"/>
 
 		</Grid.RowDefinitions>
 
-		<TextBlock  FontSize="40"  Foreground="#FF66CC00" Text="Partie de jeu" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="14" TextAlignment="Center"/>
-		<Border  Background="#FF00CCCC" BorderThickness="1" Grid.Column="1" Grid.Row="2" Grid.RowSpan="5" Grid.ColumnSpan="12"/>
-        <Border BorderBrush="Black" BorderThickness="1" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="5" Grid.RowSpan="5"/>
-        <Border BorderBrush="Black" BorderThickness="1" Grid.Column="6" Grid.Row="2" Grid.ColumnSpan="3" Grid.RowSpan="5"/>
-        <Border BorderBrush="Black" BorderThickness="1" Grid.Column="9" Grid.Row="2" Grid.ColumnSpan="4" Grid.RowSpan="5"/>
-        <Image Source="/Resources/alarmclock.png" Grid.Column="2" Grid.Row="3" Grid.RowSpan="3"/>
-        <TextBlock FontSize="14" Grid.Row="3" TextAlignment="Center" Grid.Column="4" Text="Temps Restant"/>
-		<TextBlock FontSize="14" Grid.Row="5" TextAlignment="Center" Grid.Column="4" Text="{Binding timerContent}"/>
-        <TextBlock FontSize="14" Grid.Row="3" TextAlignment="Center" Grid.Column="7" Text="Round"/>
-		<TextBlock FontSize="14" Grid.Row="5" TextAlignment="Center" Grid.Column="7" Text="{Binding roundText}"/>
-        <TextBlock FontSize="14" Grid.ColumnSpan="3" Grid.Row="3" TextAlignment="Center" Grid.Column="9" Text="Mot à deviner"/>
-		<TextBlock FontSize="14" Grid.Row="5" TextAlignment="Center" Grid.Column="9" Text="{Binding currentWord}" Grid.ColumnSpan="4" HorizontalAlignment="Center"/>
+		<Border Grid.Column="1" Grid.ColumnSpan="13" Grid.Row="1" Grid.RowSpan="5" Background="#FF00CCCC" Margin="0.4,30,0.4,0.2">
+
+		</Border>
+
+
+
+		<TextBlock FontSize="12" Grid.Row="2" TextAlignment="Center" Grid.Column="2" 
+				   Text="Temps Restant" Grid.ColumnSpan="5" Grid.RowSpan="3" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,5.6,8.8,4.2"/>
+		<TextBlock FontSize="14" Grid.Row="5" TextAlignment="Center" Grid.Column="2" Text="{Binding timerContent}" Grid.ColumnSpan="5" VerticalAlignment="Center" Margin="0,0.8,8.8,1.2"/>
+		<TextBlock FontSize="14" Grid.Row="3" TextAlignment="Center" Grid.Column="7" Text="Round" Grid.ColumnSpan="2" Margin="0.2,0.2,9.4,10.2" Grid.RowSpan="2"/>
+		<TextBlock FontSize="14" Grid.Row="5" TextAlignment="Center" Grid.Column="7" Text="{Binding roundText}" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0.2,0.8,9.4,1.2"/>
+
+
+		<TextBlock FontSize="14" Grid.ColumnSpan="3" Grid.Row="3" TextAlignment="Center" Grid.Column="11" Text="Mot à deviner" Grid.RowSpan="2"/>
+		<TextBlock FontSize="14" Grid.Row="4" TextAlignment="Center" Grid.Column="11" Text="{Binding currentWord}" 
+				   HorizontalAlignment="Center" Grid.RowSpan="2" VerticalAlignment="Center" Grid.ColumnSpan="3"/>
+
+
 		<!-- Start of the xaml of the drawing section -->
-		<Grid Grid.Column="7" Grid.Row="8" Grid.RowSpan="4" Grid.ColumnSpan="3">
+		<Grid Grid.Column="8" Grid.Row="1" Grid.RowSpan="10" Grid.ColumnSpan="2" Margin="9.2,30,0.4,0.2" >
 			<Grid.RowDefinitions>
-				<RowDefinition Height="*"/>
+				<RowDefinition Height="61"/>
 				<RowDefinition Height="6*"/>
 			</Grid.RowDefinitions>
-			<StackPanel Orientation="Horizontal" Background="#FF00CCCC" Grid.Row="0" Name="drawingEditingPanel">
+			<StackPanel Orientation="Horizontal" Grid.Row="0" Name="drawingEditingPanel" HorizontalAlignment="Right" Margin="0,0,10,0">
 
 				<Button Name="crayon" Width="40" Height="40" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="10,0,0,0"
                         BorderBrush="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurBordure}, ConverterParameter=crayon, UpdateSourceTrigger=PropertyChanged}" 
@@ -107,7 +114,7 @@
                   ShowDropDownButton="False"
                   ShowRecentColors="True"
                   BorderBrush="#80000000"
-                  Margin="10,0,0,0" Width="39" Height="38"
+                  Margin="10,0,10,0" Width="39" Height="38"
                   SelectedColor="{Binding Path=CouleurSelectionnee, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                   AvailableColorsHeader="Palette"
                   StandardColorsHeader="Couleurs de base"
@@ -127,75 +134,67 @@
                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
 						   MouseMove="surfaceDessin_MouseMove" PreviewMouseDown="surfaceDessin_PreviewMouseDown" MouseUp="surfaceDessin_MouseUp" StrokeCollected="surfaceDessin_StrokeCollected"
                            Strokes="{Binding Path=Traits, Mode=OneTime}" EditingMode="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurModeEdition}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                           DefaultDrawingAttributes="{Binding Path=AttributsDessin, Mode=OneTime}" Grid.Row="1" Width="500" Height="500"/>
+                           DefaultDrawingAttributes="{Binding Path=AttributsDessin, Mode=OneTime}" Grid.Row="1" Width="600" Height="600"/>
 			</Canvas>
 		</Grid>
 
 		<!-- End of the xaml of the drawing section -->
-		<Border  BorderBrush="Black" Grid.ColumnSpan="2" BorderThickness="1" Grid.Column="11" Grid.Row="8"/>
-		<Border  BorderBrush="Black" BorderThickness="1" Grid.Column="7" Grid.Row="8" Grid.RowSpan="4" Grid.ColumnSpan="3"/>
 
-        <ScrollViewer Grid.Column="1" Grid.Row="8" Grid.RowSpan="4" Grid.ColumnSpan="5" 
-					  VerticalScrollBarVisibility="Visible" Background="White" FontSize="26">
-            <ItemsControl x:Name="joueurs">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Vertical">
+		<ScrollViewer Grid.Column="1" Grid.Row="5" Grid.RowSpan="7" Grid.ColumnSpan="8" 
+					  VerticalScrollBarVisibility="Visible" Background="White" FontSize="26" Margin="0.4,19.8,9.4,0.2">
+			<ItemsControl x:Name="joueurs">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<StackPanel Orientation="Vertical">
 							<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,20">
 								<Image Source="{Binding avatarSource}" Height="40" Margin="20,0,0,0" VerticalAlignment="Center"></Image>
 								<TextBlock Text="{Binding username}" Foreground="DarkSlateGray" Margin="10,0,0,0" VerticalAlignment="Center"/>
 								<TextBlock Text="{Binding score}" Foreground="#FF66CC37" Margin="10,0,0,0" VerticalAlignment="Center"/>
 							</StackPanel>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
-		<Button  x:Name="goBack"  Grid.Column="12" Grid.Row="1" MaxWidth="100" HorizontalAlignment="Right"  Background="#FFBF0B0B" BorderBrush="Black">
+						</StackPanel>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+		</ScrollViewer>
+		<Button  x:Name="goBack"  Grid.Column="4" Grid.Row="13" MaxWidth="100" HorizontalAlignment="Right"  
+				 Background="#FFBF0B0B"  Grid.ColumnSpan="5" Margin="0,4,9.4,4" BorderBrush="{x:Null}">
 			<StackPanel Orientation="Horizontal">
 				<TextBlock Foreground="White">Retour</TextBlock>
 				<Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
 			</StackPanel>
 		</Button>
 
-		<ScrollViewer Grid.Column="11" Grid.Row="8" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Visible" Name="messagesUI" Background="White" FontSize="18">
-            <ItemsControl x:Name="messages">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Vertical" Margin="20,0,0,0">
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="account_circle_grey_72x72.png" MaxHeight="25" VerticalAlignment="Center"></Image>
-                                <TextBlock Text="{Binding senderName}" Foreground="DarkSlateGray" VerticalAlignment="Center"/>
-                            </StackPanel>
-                            <TextBlock Text="{Binding content}" Foreground="Black" TextWrapping="Wrap" Margin="0,0,0,0"/>
-                            <TextBlock Text="{Binding formattedTimeStamp}" Foreground="DarkSlateGray" HorizontalAlignment="Left" FontSize="12" Margin="10,0,0,10"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
-        <TextBox x:Name ="currentMessage" Grid.Column="11" Grid.Row="9" Foreground="DarkSlateGray" BorderBrush="Black" BorderThickness="1" Background="White"/>
-        <Button x:Name ="sendMessage" BorderBrush="{x:Null}" Grid.Column="12" Grid.Row="9" Background="#FCBA03" Foreground="White" Click="refocus" 
-				HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.RowSpan="1" Height="auto">
-            Envoyer
-        </Button>
-        <TextBox x:Name ="guessBox" Grid.Column="11" Grid.Row="11" Foreground="DarkSlateGray" BorderBrush="Black" BorderThickness="1" Background="White"/>
-		<Button x:Name ="sendGuess"  Grid.Column="12" Grid.Row="11" BorderBrush="{x:Null}" Background="#FC038C" Foreground="White" Click="refocus" Height="auto" Width="auto">
+		<ScrollViewer Grid.Column="11" Grid.Row="5" Grid.ColumnSpan="3" VerticalScrollBarVisibility="Visible" 
+					  Name="messagesUI" Background="White" FontSize="18" Grid.RowSpan="4" Margin="0,19.8,0.4,0.4">
+			<ItemsControl x:Name="messages">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<StackPanel Orientation="Vertical" Margin="20,0,0,0">
+							<StackPanel Orientation="Horizontal">
+								<Image Source="account_circle_grey_72x72.png" MaxHeight="25" VerticalAlignment="Center"></Image>
+								<TextBlock Text="{Binding senderName}" Foreground="DarkSlateGray" VerticalAlignment="Center"/>
+							</StackPanel>
+							<TextBlock Text="{Binding content}" Foreground="Black" TextWrapping="Wrap" Margin="0,0,0,0"/>
+							<TextBlock Text="{Binding formattedTimeStamp}" Foreground="DarkSlateGray" HorizontalAlignment="Left" FontSize="12" Margin="10,0,0,10"/>
+						</StackPanel>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+		</ScrollViewer>
+
+		<TextBox x:Name ="currentMessage" Grid.Column="11" Grid.Row="9" Foreground="DarkSlateGray" BorderBrush="Black"  Background="White" Grid.ColumnSpan="2" Grid.RowSpan="1"/>
+		<Button x:Name ="sendMessage" BorderBrush="{x:Null}" Grid.Column="13" Grid.Row="9" Background="#FCBA03" Foreground="White" Click="refocus" 
+				HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="auto">
+			Envoyer
+		</Button>
+		<TextBox x:Name ="guessBox" Grid.Column="11" Grid.Row="11" Foreground="DarkSlateGray" BorderBrush="Black" Background="White" Grid.ColumnSpan="2"/>
+		<Button x:Name ="sendGuess"  Grid.Column="13" Grid.Row="11" BorderBrush="{x:Null}" Background="#FC038C" Foreground="White" Click="refocus" Height="auto" Width="auto" >
 			Deviner
 		</Button>
-		<Button Grid.Column="12" Grid.Row="13" Content="Indice" Foreground="White" BorderBrush="{x:Null}" Height="auto"/>
-		<StackPanel Grid.Row="13" Grid.Column="11" Orientation="Horizontal" Background="White">
-            <Image Width="40" gif:ImageBehavior.AnimatedSource="/Resources/questions.gif" Margin="3,3,3,3"/>
-            <TextBlock  VerticalAlignment="Center" TextAlignment="Center" Text="En manque d'inspiration?"/>
-        </StackPanel>
+		<Button Grid.Column="13" Grid.Row="13" Content="Indice" Foreground="White" BorderBrush="{x:Null}" Height="auto" Grid.ColumnSpan="1" />
 
-		<Border BorderBrush="Black" BorderThickness="1" Grid.ColumnSpan="2" Grid.Row="13" Grid.Column="11"/>
-		<Border  BorderBrush="Black" Grid.ColumnSpan="2" BorderThickness="1" Grid.Column="11" Grid.Row="9"/>
-		<Border  BorderBrush="Black" Grid.ColumnSpan="2" BorderThickness="1" Grid.Column="11" Grid.Row="11"/>
-		<Border BorderBrush="Black" BorderThickness="1" Grid.ColumnSpan="5" Grid.Row="8" Grid.Column="1" Grid.RowSpan="4"/>
-		<Border BorderBrush="Black" BorderThickness="1" Grid.ColumnSpan="2" Grid.Row="8" Grid.Column="11" Grid.RowSpan="1"/>
-		<Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="12" Grid.RowSpan="12" Name="mainUIFilter"></Canvas>
-		<Grid Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="12" Grid.RowSpan="12" Visibility="Hidden" Name="endTurnBox">
+		<Canvas Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="13" Grid.RowSpan="13" Name="mainUIFilter" Margin="0.4,30,0.4,0"></Canvas>
+		<Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="13" Grid.RowSpan="13" Visibility="Hidden" Name="endTurnBox" Margin="0.4,30,0.4,0">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="2*"/>
@@ -240,7 +239,7 @@
 				</Grid>
 			</Border>
 		</Grid>
-		<Grid Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="12" Grid.RowSpan="12" Visibility="Hidden" Name="selectNextDrawingBox">
+		<Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="13" Grid.RowSpan="13" Visibility="Hidden" Name="selectNextDrawingBox" Margin="0.4,30,0.4,0">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="2*"/>
