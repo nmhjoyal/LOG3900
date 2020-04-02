@@ -163,7 +163,8 @@
 		<!-- End of the xaml of the drawing section -->
 
 		<ScrollViewer Grid.Column="1" Grid.Row="5" Grid.RowSpan="7" Grid.ColumnSpan="8" 
-					  VerticalScrollBarVisibility="Visible" Background="White" FontSize="26" Margin="0.4,19.8,9.4,0.2">
+					  VerticalScrollBarVisibility="Visible" Background="#FFEBF3F3" FontSize="26" Margin="0.4,19.8,9.4,0.2"
+					  >
 			<ItemsControl x:Name="joueurs">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
@@ -187,7 +188,7 @@
 		</Button>
 
 		<ScrollViewer Grid.Column="11" Grid.Row="5" Grid.ColumnSpan="3" VerticalScrollBarVisibility="Visible" 
-					  Name="messagesUI" Background="White" FontSize="18" Grid.RowSpan="4" Margin="0,19.8,0.4,0.4">
+					  Name="messagesUI" Background="#FFEBF3F3" FontSize="18" Grid.RowSpan="4" Margin="0,19.8,0.4,0.4">
 			<ItemsControl x:Name="messages">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
@@ -228,7 +229,7 @@
 				<RowDefinition Height="*"/>
 			</Grid.RowDefinitions>
 
-			<Border Background="#FFE9F5F5" BorderThickness="2" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderBrush="Black">
+			<Border Background="#FFDF1317" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderBrush="Black" Opacity="0.9">
 				<Grid>
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="*"/>
@@ -241,10 +242,10 @@
 						<RowDefinition Height="*"/>
 					</Grid.RowDefinitions>
 					<TextBlock Grid.Column="1" Grid.Row="0" Text="Round terminé !" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="22"
-							   Name="roundFinishedMessage" Margin="0,10,0,20"/>
+							   Name="roundFinishedMessage" Margin="0,10,0,20" Foreground="White"/>
 					<TextBlock Grid.Column="0" Grid.Row="2" Text="Le prochain joueur à choisir est Karima" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"
-							   Grid.ColumnSpan="3" Name="nextPlayerMessage" Margin="0,0,0,10"/>
-					<ScrollViewer VerticalScrollBarVisibility="Visible" Grid.Row="1" Grid.Column="1" FontSize="30" MaxHeight="300" Margin="0,0,0,20">
+							   Grid.ColumnSpan="3" Name="nextPlayerMessage" Margin="0,0,0,10" Foreground="White"/>
+					<ScrollViewer Grid.Row="1" Grid.Column="1" FontSize="30" MaxHeight="300" Margin="0,0,0,20" Foreground="White">
 						<ItemsControl ItemsSource="{Binding turnScores}">
 							<ItemsControl.ItemTemplate>
 								<DataTemplate>
@@ -273,7 +274,7 @@
 				<RowDefinition Height="*"/>
 			</Grid.RowDefinitions>
 
-			<Border Background="#FFDAFDC2" BorderThickness="2" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderBrush="Black">
+			<Border Background="#FFE4934B" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderBrush="Black" Opacity="0.9">
 				<Grid>
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="*"/>
