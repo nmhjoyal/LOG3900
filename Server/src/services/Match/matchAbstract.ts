@@ -288,8 +288,11 @@ export default abstract class Match {
         this.drawing = new Drawing(this.matchId);
         this.virtualDrawing = new VirtualDrawing(this.matchId, this.timeLimit);
 
-        // Init to the last player on round 0 so it resets in endTurn for round 1 with first player.
-        this.drawer = this.players[this.players.length - 1].user.username;
+        // In the other modes the drawer is set to the virtual player int he constructor.
+        if (this.mode == MatchMode.freeForAll) { 
+            // Init to the last player on round 0 so it resets in endTurn for round 1 with first player.
+            this.drawer = this.players[this.players.length - 1].user.username;
+        }
         this.round = 0;
         
         this.initScores();
@@ -345,6 +348,13 @@ export default abstract class Match {
         return this.players.findIndex(player => !player.isVirtual);
     }
 
+    protected initVPDrawer(): void {
+        // Add the only virtual player in the mode 1vs1, sprint coop and solo
+        const player: Player = this.virtualPlayer.create();
+        this.players.push(player);
+        this.drawer = player.user.username;
+    }
+
     protected addVP(io: SocketIO.Server): void {
         const randomVP: Player = this.virtualPlayer.create();
         this.players.push(randomVP);
@@ -386,7 +396,7 @@ export default abstract class Match {
     public getMatchInfos(): MatchInfos | undefined {
         let matchInfos: MatchInfos | undefined;
         
-        if (!this.isStarted && this.mode !== MatchMode.sprintSolo) { // maybe this.players.length < this.maxPlayers?    
+        if (!this.isStarted && this.mode !== MatchMode.sprintSolo) {    
             let userInfos: PublicProfile[] = [];
 
             for (let player of this.players) {

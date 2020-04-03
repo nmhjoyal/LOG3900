@@ -6,11 +6,11 @@ export default class VirtualPlayer {
     private vps: Player[];
 
     public constructor() {
-        this.vps = VPS;
+        this.vps = VPS.slice();
     }
 
     public create(): Player {
-        return this.vps.slice(this.getRandomInt(this.vps.length), 1)[0];
+        return this.vps.splice(this.getRandomInt(this.vps.length), 1)[0];
     }
 
     public newAvailableVP(username: string): void {

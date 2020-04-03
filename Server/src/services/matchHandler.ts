@@ -42,7 +42,8 @@ export default class MatchHandler {
                 console.log(JSON.stringify(createMatch));
                 if (createMatch.timeLimit >= TIME_LIMIT_MIN && createMatch.timeLimit <= TIME_LIMIT_MAX) {
                     if (createMatch.nbRounds >= NB_ROUNDS_MIN && createMatch.nbRounds <= NB_ROUNDS_MAX) {
-                        this.currentMatches.set(matchId, MatchInstance.createMatch(matchId, user, createMatch, this.chatHandler));
+                        const match: Match = MatchInstance.createMatch(matchId, user, createMatch, this.chatHandler);
+                        this.currentMatches.set(matchId, match);
                         io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
                         createMatchFeedback.feedback.status = true;
                         createMatchFeedback.feedback.log_message = "Match created successfully.";

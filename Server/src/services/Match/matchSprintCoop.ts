@@ -9,8 +9,7 @@ export default class SprintCoop extends Match {
     
     public constructor(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler) {
         super(matchId, user, createMatch, chatHandler, sprintCoopSettings);
-        // add virtual player 
-        // io.in(this.matchId).emit("update_players", JSON.stringify(this.getPlayersPublicProfile()));
+        this.initVPDrawer();
     }
 
     public startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): void {
