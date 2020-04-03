@@ -214,7 +214,6 @@
 		<Button x:Name ="sendGuess"  Grid.Column="13" Grid.Row="11" BorderBrush="{x:Null}" Background="#FFDF1317" Foreground="White" Click="refocus" Height="auto" Width="auto" >
 			Deviner
 		</Button>
-		<Button Grid.Column="13" Grid.Row="13" Content="Indice" Foreground="White" BorderBrush="{x:Null}" Height="auto" Grid.ColumnSpan="1" Background="#FFE4934B" />
 
 		<Canvas Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="13" Grid.RowSpan="13" Name="mainUIFilter" Margin="0.4,30,0.4,0"></Canvas>
 		<Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="13" Grid.RowSpan="13" Visibility="Hidden" Name="endTurnBox" Margin="0.4,30,0.4,0">
@@ -262,7 +261,7 @@
 				</Grid>
 			</Border>
 		</Grid>
-		<Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="13" Grid.RowSpan="13" Visibility="Hidden" Name="selectNextDrawingBox" Margin="0.4,30,0.4,0">
+		<Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="13" Grid.RowSpan="13" Visibility="Hidden" Name="selectNextDrawingBox">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="2*"/>
@@ -309,5 +308,38 @@
 				</Grid>
 			</Border>
 		</Grid>
+		<Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="13" Grid.RowSpan="13" Visibility="Hidden" Name="guessFeedbackBox">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="6*"/>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+
+			<Border Background="#FFE1E7E7" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderBrush="Black" Opacity="0.9">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="2*"/>
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="*"/>
+						<RowDefinition Height="auto"/>
+						<RowDefinition Height="*"/>
+					</Grid.RowDefinitions>
+					<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+						<Image Source="{Binding guessFeedBackSource}" Height="55" VerticalAlignment="Center" Margin="20,0,0,0"></Image>
+						<TextBlock Text="{Binding guessFeedBackText}" Margin="20,0,20,0" FontSize="60" VerticalAlignment="Center"></TextBlock>
+					</StackPanel>
+
+				</Grid>
+			</Border>
+		</Grid>
+
 	</Grid>
 </UserControl>

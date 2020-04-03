@@ -22,7 +22,8 @@ namespace WPFUI.Views
     /// <summary>
     /// Logique d'interaction pour partieJeuView.xaml
     /// </summary>
-    public partial class partieJeuView : UserControl, IHandle<endTurnRoutineEvent>, IHandle<startTurnRoutineEvent>
+    public partial class partieJeuView : UserControl, IHandle<endTurnRoutineEvent>, IHandle<startTurnRoutineEvent>,
+                                         IHandle<guessResponseEvent>
     {
         private partieJeuViewModel _viewModel;
         private Boolean isMouseDown = false;
@@ -113,6 +114,13 @@ namespace WPFUI.Views
         private void surfaceDessin_StrokeCollected(object sender, InkCanvasStrokeCollectedEventArgs e)
         {
             (this.DataContext as partieJeuViewModel).strokeCollected(e.Stroke);
+        }
+
+        public async void Handle(guessResponseEvent message)
+        {
+            guessFeedbackBox.Visibility = Visibility.Visible;
+            await Task.Delay(1000);
+            guessFeedbackBox.Visibility = Visibility.Hidden;
         }
     }
 }

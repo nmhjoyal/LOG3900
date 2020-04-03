@@ -506,9 +506,9 @@ namespace WPFUI.Models
             this.socket.On("guess_res", (Feedback) =>
             {
                 dynamic json = JsonConvert.DeserializeObject(Feedback.ToString());
-                Console.WriteLine("onMatch guess_res");
-                Console.WriteLine(json.status);
-                Console.WriteLine(json.log_message);
+                Console.WriteLine("onMatch guess_res " + (Boolean)json.status);
+                _events.PublishOnUIThread(new guessResponseEvent((Boolean)json.status));
+
             });
         }
 
