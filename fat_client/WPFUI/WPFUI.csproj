@@ -445,25 +445,10 @@
     <Resource Include="Views\chat-icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Views\login image.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\chat logo png.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Views\login imagev2.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\account_circle_grey_72x72.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Views\MainMenu.PNG" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Views\chatRoom.PNG" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Views\ProfileLogo.PNG" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\add.png" />

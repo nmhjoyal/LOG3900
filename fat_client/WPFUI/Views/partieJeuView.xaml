@@ -66,13 +66,13 @@
 
 
 		<TextBlock FontSize="12" Grid.Row="2" TextAlignment="Center" Grid.Column="2" 
-				   Text="Temps Restant" Grid.ColumnSpan="5" Grid.RowSpan="3" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,5.6,8.8,4.2"/>
+				   Text="Remaining Time" Grid.ColumnSpan="5" Grid.RowSpan="3" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,5.6,8.8,4.2"/>
 		<TextBlock FontSize="14" Grid.Row="5" TextAlignment="Center" Grid.Column="2" Text="{Binding timerContent}" Grid.ColumnSpan="5" VerticalAlignment="Center" Margin="0,0.8,8.8,1.2"/>
 		<TextBlock FontSize="14" Grid.Row="3" TextAlignment="Center" Grid.Column="7" Text="Round" Grid.ColumnSpan="2" Margin="0.2,0.2,9.4,10.2" Grid.RowSpan="2"/>
 		<TextBlock FontSize="14" Grid.Row="5" TextAlignment="Center" Grid.Column="7" Text="{Binding roundText}" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0.2,0.8,9.4,1.2"/>
 
 
-		<TextBlock FontSize="14" Grid.ColumnSpan="3" Grid.Row="3" TextAlignment="Center" Grid.Column="11" Text="Mot à deviner" Grid.RowSpan="2"/>
+		<TextBlock FontSize="14" Grid.ColumnSpan="3" Grid.Row="3" TextAlignment="Center" Grid.Column="11" Text="Word To Guess" Grid.RowSpan="2"/>
 		<TextBlock FontSize="14" Grid.Row="4" TextAlignment="Center" Grid.Column="11" Text="{Binding currentWord}" 
 				   HorizontalAlignment="Center" Grid.RowSpan="2" VerticalAlignment="Center" Grid.ColumnSpan="3"/>
 
@@ -159,7 +159,7 @@
 		<Button  x:Name="goBack"  Grid.Column="4" Grid.Row="13" MaxWidth="100" HorizontalAlignment="Right"  
 				 Background="#FFBF0B0B"  Grid.ColumnSpan="5" Margin="0,4,9.4,4" BorderBrush="{x:Null}">
 			<StackPanel Orientation="Horizontal">
-				<TextBlock Foreground="White">Retour</TextBlock>
+                <TextBlock Foreground="White">Go Back</TextBlock>
 				<Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
 			</StackPanel>
 		</Button>
@@ -185,13 +185,13 @@
 		<TextBox x:Name ="currentMessage" Grid.Column="11" Grid.Row="9" Foreground="DarkSlateGray" BorderBrush="Black"  Background="White" Grid.ColumnSpan="2" Grid.RowSpan="1"/>
 		<Button x:Name ="sendMessage" BorderBrush="{x:Null}" Grid.Column="13" Grid.Row="9" Background="#FCBA03" Foreground="White" Click="refocus" 
 				HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="auto">
-			Envoyer
+			Send
 		</Button>
 		<TextBox x:Name ="guessBox" Grid.Column="11" Grid.Row="11" Foreground="DarkSlateGray" BorderBrush="Black" Background="White" Grid.ColumnSpan="2"/>
 		<Button x:Name ="sendGuess"  Grid.Column="13" Grid.Row="11" BorderBrush="{x:Null}" Background="#FC038C" Foreground="White" Click="refocus" Height="auto" Width="auto" >
-			Deviner
+			Guess
 		</Button>
-		<Button Grid.Column="13" Grid.Row="13" Content="Indice" Foreground="White" BorderBrush="{x:Null}" Height="auto" Grid.ColumnSpan="1" />
+		<Button Grid.Column="13" Grid.Row="13" Content="Clue" Foreground="White" BorderBrush="{x:Null}" Height="auto" Grid.ColumnSpan="1" />
 
 		<Canvas Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="13" Grid.RowSpan="13" Name="mainUIFilter" Margin="0.4,30,0.4,0"></Canvas>
 		<Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="13" Grid.RowSpan="13" Visibility="Hidden" Name="endTurnBox" Margin="0.4,30,0.4,0">

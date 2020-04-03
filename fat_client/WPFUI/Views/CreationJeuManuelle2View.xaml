@@ -49,13 +49,13 @@
             <RowDefinition Height="150"/>
             <RowDefinition Height="20*"/>
         </Grid.RowDefinitions>
-        <TextBlock  FontSize="40"  Foreground="#FF66CC00" Text="Création de jeu manuelle!" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" TextAlignment="Center"/>
+        <TextBlock  FontSize="40"  Foreground="#FF66CC00" Text="Manual Game Creation" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" TextAlignment="Center"/>
         <Border Background="#FF66CC00" BorderThickness="5" Grid.Column="1" Grid.Row="3" CornerRadius="10">
-            <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Mot recherché:" Grid.Column="1" Grid.Row="3"/>
+            <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Word To Guess:" Grid.Column="1" Grid.Row="3"/>
         </Border>
         <TextBox x:Name="Word" Grid.Column="3" Grid.Row="3" MinWidth="200" Grid.ColumnSpan="4"/>
         <Border Background="#FF66CC00" BorderThickness="5" Grid.Column="1" Grid.Row="5" CornerRadius="10">
-            <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Dessine ici:" Grid.Column="1" Grid.Row="3"/>
+            <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Draw Here:" Grid.Column="1" Grid.Row="3"/>
         </Border>
         <StackPanel Grid.Column="1" Grid.Row="10">
             <Image gif:ImageBehavior.AnimatedSource="/Resources/HAND-DRAW.gif" Grid.Column="1" Grid.Row="10" Opacity="0.6" />
@@ -116,22 +116,22 @@
         </Canvas>
 
         <Border Background="#FF66CC00" BorderThickness="5" Grid.Column="1" Grid.Row="12" CornerRadius="10">
-            <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center"  Text="Difficulté:" Grid.Column="1" Grid.Row="12"/>
+            <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center"  Text="Game Difficulty:" Grid.Column="1" Grid.Row="12"/>
         </Border>
         <ComboBox Name="Level" Grid.Column="3" Grid.Row="12">
             <ComboBoxItem>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock  Foreground="Green">Facile</TextBlock>
+                    <TextBlock  Foreground="Green">Easy</TextBlock>
                 </StackPanel>
             </ComboBoxItem>
             <ComboBoxItem>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Foreground="Orange">Moyen</TextBlock>
+                    <TextBlock Foreground="Orange">Normal</TextBlock>
                 </StackPanel>
             </ComboBoxItem>
             <ComboBoxItem>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Foreground="Red">Difficile</TextBlock>
+                    <TextBlock Foreground="Red">Hard</TextBlock>
                 </StackPanel>
             </ComboBoxItem>
         </ComboBox>
@@ -168,7 +168,7 @@
         <Button MaxWidth="140" Click="addClue" Background="#FF66CC00" Grid.Column="1" Grid.Row="16" BorderBrush="{x:Null}" Margin="0.333,0,0.333,118">
 
             <StackPanel  Orientation="Horizontal">
-                <TextBlock FontSize="12" Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Indice(s):</TextBlock>
+                <TextBlock FontSize="12" Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Clue(s):</TextBlock>
                 <Image Source="/Resources/add.png" Height="20"></Image>
             </StackPanel>
         </Button>
@@ -177,9 +177,9 @@
             <TextBox  x:Name="clue" Grid.Column="3" Grid.Row="16"  />
         </StackPanel>
 
-        <Button  x:Name="goBack"  Grid.Column="6" Grid.Row="0" MaxWidth="100" HorizontalAlignment="Right"  Background="#FFBF0B0B" BorderBrush="#FFBF0B0B">
+        <Button  x:Name="goBack"  Grid.Column="6" Grid.Row="0" MaxWidth="120" HorizontalAlignment="Right"  Background="#FFBF0B0B" BorderBrush="#FFBF0B0B">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Foreground="White">Retour</TextBlock>
+                <TextBlock Foreground="White">Go Back</TextBlock>
                 <Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
             </StackPanel>
         </Button>

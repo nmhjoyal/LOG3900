@@ -93,10 +93,10 @@ namespace WPFUI.Views
             if (this.Mode.SelectedIndex == 2)
             {
                 this.optionBlock.Children.Add(text);
-                comboBox.Items.Add("De gauche à droite");
-                comboBox.Items.Add("De droite à gauche");
-                comboBox.Items.Add("De haut en bas");
-                comboBox.Items.Add("De bas en haut");
+                comboBox.Items.Add("left to right");
+                comboBox.Items.Add("right to left");
+                comboBox.Items.Add("top to bottom");
+                comboBox.Items.Add("bottom to top");
                 comboBox.SelectedIndex = 0;
                 this.Options.Children.Add(comboBox);
             }
@@ -104,8 +104,8 @@ namespace WPFUI.Views
             else if (this.Mode.SelectedIndex == 3)
             {
                 this.optionBlock.Children.Add(text);
-                comboBox.Items.Add("De l'intérieur vers l'extérieur");
-                comboBox.Items.Add("Del'extérieur vers l'intérieur");
+                comboBox.Items.Add("From inside out");
+                comboBox.Items.Add("From outside in");
                 comboBox.SelectedIndex = 0;
                 this.Options.Children.Add(comboBox);
             }
