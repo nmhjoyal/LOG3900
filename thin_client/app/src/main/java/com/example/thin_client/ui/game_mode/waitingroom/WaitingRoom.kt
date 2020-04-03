@@ -1,7 +1,6 @@
 package com.example.thin_client.ui.game_mode.waitingroom
 
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -34,14 +33,18 @@ class WaitingRoom : Fragment() {
         start_match.setOnClickListener((({
             SocketHandler.startMatch()
         })))
+
         add_vp.setOnClickListener((({
             SocketHandler.addVirtualPlayer()
-            refreshPlayersAdapter()
+            adapter.add(WaitingRoomItem("Harry", "pear"))
+            GameManager.addVirtualPlayer()
         })))
+
         remove_vp.setOnClickListener((({
             SocketHandler.removeVirtualPlayer()
             refreshPlayersAdapter()
         })))
+
         setUpSocketEvents()
         SocketHandler.searchPlayers()
         refreshPlayersAdapter()

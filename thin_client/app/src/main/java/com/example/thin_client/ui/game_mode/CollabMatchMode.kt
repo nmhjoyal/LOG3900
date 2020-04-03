@@ -24,8 +24,6 @@ class CollabMatchMode : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter.add(MatchItem("A","Allllo", 4 ,5))
-        //faire la verification du matchID
         adapter.setOnItemClickListener{ item, _ ->
             val matchId = (item as MatchItem).matchId
             SocketHandler.joinMatch(matchId)
