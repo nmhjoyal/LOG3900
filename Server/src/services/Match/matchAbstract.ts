@@ -232,9 +232,11 @@ export default abstract class Match {
 
     protected endMatch(io: SocketIO.Server): void {
         // compile game stats for the players and the standings.
+
         // notify everyone that the game is ended.
+        io.in(this.matchId).emit("match_ended", JSON.stringify(this.getScores()));
          
-        this.isEnded = true;
+        this.isEnded = true; // to delete on future "update_matches" event called
     }
 
     /**
