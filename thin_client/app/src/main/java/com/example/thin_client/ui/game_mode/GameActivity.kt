@@ -47,6 +47,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
     private val lettersAdapter = GroupAdapter<GroupieViewHolder>()
     private var timer: CountDownTimer? = null
     private var isGameStarted = false
+    private var isWaitingRoomShowing = false
     private var currentDrawer = ""
     private var nbTries = 0
     private var firstTurnStarted = false
@@ -76,7 +77,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
             }
             MatchMode.COLLABORATIVE-> {}
             MatchMode.FREE_FOR_ALL -> {
-                if (!isGameStarted) {
+                if (!isWaitingRoomShowing) {
                     toolbar.visibility = View.GONE
                     points_view.visibility = View.GONE
                     val transaction = manager.beginTransaction()
@@ -84,6 +85,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                     transaction.replace(R.id.draw_view_container, waitingRoom)
                     transaction.addToBackStack(null)
                     transaction.commitAllowingStateLoss()
+                    isWaitingRoomShowing = true
                 }
             }
             MatchMode.ONE_ON_ONE -> {}
@@ -258,7 +260,13 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                 .on(SocketEvent.TURN_ENDED, ({ data ->
                     val turnParams = Gson().fromJson(data.first().toString(), EndTurn::class.java)
                     Handler(Looper.getMainLooper()).post(({
-                        resetTurn(turnParams.drawer, turnParams.scores[currentUser]?.scoreTotal)
+                        var currentUserScore = 0
+                        for (user in turnParams.scores) {
+                            if (user.username == currentUser) {
+                                currentUserScore = user.updateScore.scoreTotal.toInt()
+                            }
+                        }
+                        resetTurn(turnParams.drawer, currentUserScore)
                         user_block.bringToFront()
                         if (!firstTurnStarted) {
                             message.text = String.format(resources.getString(R.string.round), turnParams.currentRound.toInt())
@@ -271,7 +279,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                             val pointsAdapter = GroupAdapter<GroupieViewHolder>()
                             message.text = wordWasString
                             for (score in turnParams.scores) {
-                                pointsAdapter.add(PlayerPointHolder(score.key, score.value.scoreTurn.toInt()))
+                                pointsAdapter.add(PlayerPointHolder(score.username, score.updateScore.scoreTurn.toInt()))
                             }
                             pointsAdapter.add(PlayerPointHolder("user", 20))
                             pointsAdapter.add(PlayerPointHolder("user", 10))
