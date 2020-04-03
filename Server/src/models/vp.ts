@@ -21,12 +21,20 @@ export const VPS: Player[] = [
             username: MR_AVOCADO,
             avatar: "AVOCADO"
         },
+        score: {
+            scoreTotal: 0,
+            scoreTurn: 0
+        },
         isVirtual: true
     },
     {
         user: {
             username: LORD_BANANA,
             avatar: "BANANA"
+        },
+        score: {
+            scoreTotal: 0,
+            scoreTurn: 0
         },
         isVirtual: true
     },
@@ -35,12 +43,20 @@ export const VPS: Player[] = [
             username: SGT_STRAWBERRY,
             avatar: "STRAWBERRY"
         },
+        score: {
+            scoreTotal: 0,
+            scoreTurn: 0
+        },
         isVirtual: true
     },
     {
         user: {
             username: LADY_WATERMELON,
             avatar: "WATERMELON"
+        },
+        score: {
+            scoreTotal: 0,
+            scoreTurn: 0
         },
         isVirtual: true
     },
@@ -49,12 +65,20 @@ export const VPS: Player[] = [
             username: MASTER_GRAPE,
             avatar: "GRAPE"
         },
+        score: {
+            scoreTotal: 0,
+            scoreTurn: 0
+        },
         isVirtual: true
     },
     {
         user: {
             username: GENTLEMAN_KIWI,
             avatar: "KIWI"
+        },
+        score: {
+            scoreTotal: 0,
+            scoreTurn: 0
         },
         isVirtual: true
     },
@@ -63,12 +87,20 @@ export const VPS: Player[] = [
             username: MADAM_ORANGE,
             avatar: "ORANGE"
         },
+        score: {
+            scoreTotal: 0,
+            scoreTurn: 0
+        },
         isVirtual: true
     },
     {
         user: {
             username: SIR_PINEAPPLE,
             avatar: "PINEAPPLE"
+        },
+        score: {
+            scoreTotal: 0,
+            scoreTurn: 0
         },
         isVirtual: true
     },
@@ -77,12 +109,20 @@ export const VPS: Player[] = [
             username: LITTLE_APPLE,
             avatar: "APPLE"
         },
+        score: {
+            scoreTotal: 0,
+            scoreTurn: 0
+        },
         isVirtual: true
     },
     {
         user: {
             username: MISS_LEMON,
             avatar: "LEMON"
+        },
+        score: {
+            scoreTotal: 0,
+            scoreTurn: 0
         },
         isVirtual: true
     },
@@ -91,12 +131,20 @@ export const VPS: Player[] = [
             username: DRE_CHERRY,
             avatar: "CHERRY"
         },
+        score: {
+            scoreTotal: 0,
+            scoreTurn: 0
+        },
         isVirtual: true
     },
     {
         user: {
             username: PIRATE_PEAR,
             avatar: "PEAR"
+        },
+        score: {
+            scoreTotal: 0,
+            scoreTurn: 0
         },
         isVirtual: true
     }

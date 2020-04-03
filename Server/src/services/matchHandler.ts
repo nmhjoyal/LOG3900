@@ -149,6 +149,7 @@ export default class MatchHandler {
                 if (startMatchFeedback.feedback.status) {
                     io.in(match.matchId).emit("match_started", JSON.stringify(startMatchFeedback));
                     io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
+                    match.endTurn(io, false);
                 } else {
                     socket.emit("match_started", JSON.stringify(startMatchFeedback));
                 }

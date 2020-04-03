@@ -34,7 +34,7 @@ export default class FreeForAll extends Match {
         }, this.timeLimit * 1000);
     }
 
-    protected async endTurn(io: SocketIO.Server, drawerLeft: boolean): Promise<void> {
+    public async endTurn(io: SocketIO.Server, drawerLeft: boolean): Promise<void> {
         clearTimeout(this.timeout);
         let matchIsEnded: boolean = false;
 
@@ -43,7 +43,7 @@ export default class FreeForAll extends Match {
             if (oldDrawer) {
                 this.assignDrawer(oldDrawer);
 
-                if (this.round == this.nbRounds) {
+                if (this.round == this.nbRounds + 1) {
                     matchIsEnded = true;
                 }
             }
@@ -68,6 +68,8 @@ export default class FreeForAll extends Match {
                     const score: number = Math.round((Date.now() - this.timer) / 1000) * 10;
                     this.updateScore(username, score);
                     this.updateScore(this.drawer, Math.round(score / this.players.length));
+
+                    io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
         
                     if(this.everyoneHasGuessed()) {
                         this.endTurn(io, false);

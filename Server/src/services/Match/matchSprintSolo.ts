@@ -13,11 +13,11 @@ export default class SprintSolo extends Match {
         this.vp = this.addVP(io).user.username;
     }
 
-    public startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): void {
+    public async startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): Promise<void> {
         throw new Error("Method not implemented.");
     }
 
-    public endTurn(io: SocketIO.Server): void {
+    public async endTurn(io: SocketIO.Server): Promise<void> {
         throw new Error("Method not implemented.");
     }
 

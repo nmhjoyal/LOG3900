@@ -1,6 +1,6 @@
 import { Feedback, StartMatchFeedback, JoinRoomFeedback } from "../../models/feedback";
-import { MatchInfos, UpdateScore, CreateMatch, EndTurn, StartTurn, Score } from "../../models/match";
-import Player from "../../models/player";
+import { MatchInfos, CreateMatch, EndTurn, StartTurn } from "../../models/match";
+import Player, { UpdateScore } from "../../models/player";
 import PublicProfile from "../../models/publicProfile";
 import { MatchMode, MatchSettings } from "../../models/matchMode";
 import ChatHandler from "../chatHandler";
@@ -33,7 +33,6 @@ export default abstract class Match {
     protected timer: number;
     protected timeout: NodeJS.Timeout;          // setTimeout will be used for emitting end_turn and we will cancel it 
                                                 // if there is an unexpected leave of a room or stoppage of a turn
-    protected scores: Map<string, UpdateScore>  // Key: username, Value: score
     protected round: number;                    // In one round each player will draw one time
     protected drawer: string;                   // Username 
     protected drawing: Drawing;
@@ -42,8 +41,8 @@ export default abstract class Match {
     protected vp: string;
 
     // Match methods
-    public abstract startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): void;
-    protected abstract endTurn(io: SocketIO.Server, drawerLeft: boolean): void;
+    public async abstract startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): Promise<void>;
+    public async abstract endTurn(io: SocketIO.Server, drawerLeft: boolean): Promise<void>;
     public abstract guess(io: SocketIO.Server, guess: string, username: string): Feedback;
 
     protected constructor(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler, matchSettings: MatchSettings) {
@@ -57,6 +56,7 @@ export default abstract class Match {
         this.chatHandler = chatHandler;
         this.ms = matchSettings;
         this.vp = "";
+        this.virtualPlayer = new VirtualPlayer();
     }
 
     /**
@@ -130,6 +130,8 @@ export default abstract class Match {
         if (player) {
             if (this.isHost(player)) {
                 if (this.players.length < this.ms.MAX_NB_PLAYERS) {
+                    console.log(this.getNbVirtualPlayers());
+                    console.log(this.ms.MAX_NB_VP);
                     if (this.getNbVirtualPlayers() < this.ms.MAX_NB_VP) {
                         this.addVP(io);
                         io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
@@ -186,7 +188,6 @@ export default abstract class Match {
                     const nbVirtualPlayers: number = this.getNbVirtualPlayers();
                     if (nbVirtualPlayers > this.ms.MIN_NB_VP || nbVirtualPlayers < this.ms.MAX_NB_VP) {
                         this.initMatch(io);
-                        this.endTurn(io, false);
                         startMatchFeedback.nbRounds = this.nbRounds;
                         startMatchFeedback.feedback.status = true;
                         startMatchFeedback.feedback.log_message = "Match is starting...";
@@ -219,6 +220,7 @@ export default abstract class Match {
             io.in(this.matchId).emit("new_message", JSON.stringify(this.virtualPlayer.getEndTurnMessage(this.vp, this.matchId)));
         }
 
+        console.log("endtGen", endTurn);
         io.in(this.matchId).emit("turn_ended", JSON.stringify(endTurn));
         
         this.resetScoresTurn();
@@ -237,8 +239,8 @@ export default abstract class Match {
         // compile game stats for the players and the standings.
 
         // notify everyone that the game is ended.
-        io.in(this.matchId).emit("match_ended", JSON.stringify(this.getScores()));
-         
+        io.in(this.matchId).emit("match_ended");
+        
         this.isEnded = true; // to delete on future "update_matches" event called
     }
 
@@ -274,15 +276,11 @@ export default abstract class Match {
     }
 
     protected initScores(): void {
-        this.scores = new Map<string, UpdateScore>();
         for (let player of this.players) {
-            if(!player.isVirtual) {
-                const updateScore: UpdateScore = {
-                    scoreTotal: 0,
-                    scoreTurn: 0
-                }
-                this.scores.set(player.user.username, updateScore);
-            }
+            player.score = {
+                scoreTotal: 0,
+                scoreTurn: 0
+            };
         }
     }
 
@@ -293,7 +291,8 @@ export default abstract class Match {
         io.in(this.matchId).emit("new_message", JSON.stringify(this.virtualPlayer.getStartMatchMessage(this.vp, this.matchId)));
 
         // In the other modes the drawer is set to the virtual player in the constructor.
-        if (this.mode == MatchMode.freeForAll) { 
+        if (this.mode == MatchMode.freeForAll) {
+            console.log("got here")
             // Init to the last player on round 0 so it resets in endTurn for round 1 with first player.
             this.drawer = this.players[this.players.length - 1].user.username;
 
@@ -307,33 +306,31 @@ export default abstract class Match {
     }
 
     protected resetScoresTurn(): void {
-        this.scores.forEach((score: UpdateScore) => {
-            score.scoreTurn = 0;
-        });
+        for (let player of this.players) {
+            player.score.scoreTurn = 0;
+        }
     }
 
     protected everyoneHasGuessed(): boolean {
         let everyoneHasGuessed: boolean = true;
 
-        this.scores.forEach((score: UpdateScore, username: string) => {
-            if (score.scoreTurn == 0 && username != this.drawer) everyoneHasGuessed = false;
-        });
+        for (let player of this.players) {
+            if (player.score.scoreTurn == 0 && player.user.username != this.drawer) everyoneHasGuessed = false;
+        }
 
         return everyoneHasGuessed;
     }
 
     protected updateScore(username: string, score: number): void {
-        let playerScore: UpdateScore | undefined = this.scores.get(username);
-
-        if (playerScore) {
-            const oldScore: number = playerScore.scoreTotal;
-            const updatedScore: UpdateScore = {
-                scoreTotal: oldScore + score,
-                scoreTurn: score
-            };
-            this.scores.set(username, updatedScore);
-        } else {
-            console.log("error while updating score of : " + username);       
+        for (let player of this.players) {
+            if (player.user.username == username) {
+                const oldScore: number = player.score.scoreTotal;
+                const updatedScore: UpdateScore = {
+                    scoreTotal: oldScore + score,
+                    scoreTurn: score
+                };
+                player.score = updatedScore;
+            }
         }
     }
 
@@ -342,6 +339,7 @@ export default abstract class Match {
         if (currentIndex == this.players.length - 1) {
             this.drawer = this.players[0].user.username;
             this.round++;
+            console.log("end turn", this.drawer, this.round)
         } else {
             this.drawer = this.players[currentIndex + 1].user.username;
         }
@@ -358,6 +356,7 @@ export default abstract class Match {
 
     protected addVP(io: SocketIO.Server): Player {
         const randomVP: Player = this.virtualPlayer.create();
+        console.log(randomVP);
         this.players.push(randomVP);
         this.chatHandler.findPrivateRoom(this.matchId)?.avatars.set(randomVP.user.username, randomVP.user.avatar);
         this.chatHandler.notifyAvatarUpdate(io, randomVP.user, this.matchId);
@@ -420,17 +419,6 @@ export default abstract class Match {
         return (vp) ? vp.user.username : "";
     }
 
-    private getScores() : Score[] {
-        let scores: Score[] = []; 
-        this.scores.forEach((updateScore: UpdateScore, username: string) => {
-            scores.push({
-                username: username,
-                updateScore: updateScore
-            })
-        });
-        return scores;
-    }
-
     protected createMatchInfos(host: string, userInfos: PublicProfile[]): MatchInfos {
         return {
             matchId: this.matchId,
@@ -445,6 +433,10 @@ export default abstract class Match {
     protected createPlayer(user: PublicProfile): Player {
         return {
             user: user,
+            score: {
+                scoreTotal: 0,
+                scoreTurn: 0
+            },
             isVirtual: false
         };
     }
@@ -459,9 +451,9 @@ export default abstract class Match {
     protected createEndTurn(): EndTurn {
         return {
             currentRound: this.round,
+            players: this.players,
             choices: RandomWordGenerator.generateChoices(),
-            drawer: this.drawer,
-            scores: this.getScores()
+            drawer: this.drawer
         };
     }
 }
