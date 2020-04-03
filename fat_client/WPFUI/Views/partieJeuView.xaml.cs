@@ -119,8 +119,15 @@ namespace WPFUI.Views
         public async void Handle(guessResponseEvent message)
         {
             guessFeedbackBox.Visibility = Visibility.Visible;
+            if (!message._isGoodGuess)
+            {
+                Storyboard sb = MarginGrid.FindResource("shakeAnimation") as Storyboard;
+                sb.Begin();
+            }
             await Task.Delay(1000);
             guessFeedbackBox.Visibility = Visibility.Hidden;
         }
+
     }
+
 }
