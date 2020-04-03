@@ -29,7 +29,7 @@ export default class VirtualPlayer {
 
     public getEndTurnMessage(username: string, roomId: string): Message {
         const cMsg: CustomMessage | undefined = messages.get(username);
-        const content: string = (cMsg)? cMsg.endTurn[this.getRandomInt(messages.size)]: 
+        const content: string = (cMsg)? cMsg.endTurn[this.getRandomInt(cMsg.endTurn.length)]: 
                                         ERROR.endTurn[0];
 
         return this.createMessageObj(username, content, roomId);
