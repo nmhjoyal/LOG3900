@@ -15,17 +15,17 @@ export enum MatchMode {
 }
 
 export class MatchInstance {
-    public static createMatch(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler): Match {
+    public static createMatch(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler, io: SocketIO.Server): Match {
         console.log(createMatch.matchMode);
         switch (createMatch.matchMode) {
             case MatchMode.freeForAll:
                 return new FreeForAll(matchId, user, createMatch, chatHandler);
             case MatchMode.sprintSolo:
-                return new SprintSolo(matchId, user, createMatch, chatHandler);
+                return new SprintSolo(matchId, user, createMatch, chatHandler, io);
             case MatchMode.sprintCoop:
-                return new SprintCoop(matchId, user, createMatch, chatHandler);
+                return new SprintCoop(matchId, user, createMatch, chatHandler, io);
             case MatchMode.oneVsOne:
-                return new OneVsOne(matchId, user, createMatch, chatHandler);
+                return new OneVsOne(matchId, user, createMatch, chatHandler, io);
         }
     }
 }

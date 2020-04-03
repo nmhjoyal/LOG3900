@@ -42,7 +42,7 @@ export default class MatchHandler {
                 console.log(JSON.stringify(createMatch));
                 if (createMatch.timeLimit >= TIME_LIMIT_MIN && createMatch.timeLimit <= TIME_LIMIT_MAX) {
                     if (createMatch.nbRounds >= NB_ROUNDS_MIN && createMatch.nbRounds <= NB_ROUNDS_MAX) {
-                        const match: Match = MatchInstance.createMatch(matchId, user, createMatch, this.chatHandler);
+                        const match: Match = MatchInstance.createMatch(matchId, user, createMatch, this.chatHandler, io);
                         this.currentMatches.set(matchId, match);
                         io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
                         createMatchFeedback.feedback.status = true;
@@ -196,10 +196,10 @@ export default class MatchHandler {
             if (match) {
                 feedback = match.guess(io, guess, user.username);
             } else {
-                console.log("This match does not exist anymore.");
+                feedback.log_message = "This match does not exist anymore.";
             }
         } else {
-            console.log("You are not signed in.");
+            feedback.log_message = "You are not signed in.";
         }
 
         return feedback;

@@ -39,6 +39,7 @@ export default abstract class Match {
     protected drawing: Drawing;
     protected virtualDrawing: VirtualDrawing;
     protected virtualPlayer: VirtualPlayer;
+    protected vp: string;
 
     // Match methods
     public abstract startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): void;
@@ -55,6 +56,7 @@ export default abstract class Match {
         this.timeLimit = createMatch.timeLimit;
         this.chatHandler = chatHandler;
         this.ms = matchSettings;
+        this.vp = "";
     }
 
     /**
@@ -91,31 +93,31 @@ export default abstract class Match {
 
         if (player) {
             await this.chatHandler.leaveChatRoom(io, socket, this.matchId, user);
-                if (this.isStarted) {
-                    if (this.getNbHumanPlayers() > this.ms.MIN_NB_HP) {
-                        // after the match is started the host is not important.
-                        if (player.user.username == this.drawer) {
-                            let oldDrawer: Player | undefined = this.getPlayer(this.drawer);
-                            if (oldDrawer) {
-                                this.assignDrawer(oldDrawer);
-                                this.endTurn(io, true);
-                            }
+            if (this.isStarted) {
+                if (this.getNbHumanPlayers() > this.ms.MIN_NB_HP) {
+                    // after the match is started the host is not important.
+                    if (player.user.username == this.drawer) {
+                        let oldDrawer: Player | undefined = this.getPlayer(this.drawer);
+                        if (oldDrawer) {
+                            this.assignDrawer(oldDrawer);
+                            this.endTurn(io, true);
                         }
-                    } else {
-                        this.endMatch(io);
-                        deleteMatch = true;
                     }
                 } else {
-                    if (this.getNbHumanPlayers() > 1) { // otherwise assignHost wouldnt work.
-                        if (this.isHost(player)) {
-                            this.assignHost();
-                        }
-                    } else {
-                        deleteMatch = true;
-                    }
+                    this.endMatch(io);
+                    deleteMatch = true;
                 }
-                this.players.splice(this.players.indexOf(player), 1);
-                io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
+            } else {
+                if (this.getNbHumanPlayers() > 1) { // otherwise assignHost wouldnt work.
+                    if (this.isHost(player)) {
+                        this.assignHost();
+                    }
+                } else {
+                    deleteMatch = true;
+                }
+            }
+            this.players.splice(this.players.indexOf(player), 1);
+            io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
         }
 
         return deleteMatch;
@@ -183,7 +185,7 @@ export default abstract class Match {
                 if (nbHumanPlayers > this.ms.MIN_NB_HP || nbHumanPlayers < this.ms.MAX_NB_HP) {
                     const nbVirtualPlayers: number = this.getNbVirtualPlayers();
                     if (nbVirtualPlayers > this.ms.MIN_NB_VP || nbVirtualPlayers < this.ms.MAX_NB_VP) {
-                        this.initMatch();
+                        this.initMatch(io);
                         this.endTurn(io, false);
                         startMatchFeedback.nbRounds = this.nbRounds;
                         startMatchFeedback.feedback.status = true;
@@ -211,9 +213,10 @@ export default abstract class Match {
     protected async endTurnGeneral(io: SocketIO.Server): Promise<void> {
         const endTurn: EndTurn = this.createEndTurn();
 
-        if (this.currentWord != "") {
+        if (this.currentWord != "") { // currentWord is empty at the first endTurn
             const message: Message = Admin.createAdminMessage("The word was " + this.currentWord, this.matchId);
             io.in(this.matchId).emit("new_message", JSON.stringify(message));
+            io.in(this.matchId).emit("new_message", JSON.stringify(this.virtualPlayer.getEndTurnMessage(this.vp, this.matchId)));
         }
 
         io.in(this.matchId).emit("turn_ended", JSON.stringify(endTurn));
@@ -283,15 +286,20 @@ export default abstract class Match {
         }
     }
 
-    protected initMatch(): void {
+    protected initMatch(io: SocketIO.Server): void {
         this.isStarted = true;
         this.drawing = new Drawing(this.matchId);
         this.virtualDrawing = new VirtualDrawing(this.matchId, this.timeLimit);
+        io.in(this.matchId).emit("new_message", JSON.stringify(this.virtualPlayer.getStartMatchMessage(this.vp, this.matchId)));
 
-        // In the other modes the drawer is set to the virtual player int he constructor.
+        // In the other modes the drawer is set to the virtual player in the constructor.
         if (this.mode == MatchMode.freeForAll) { 
             // Init to the last player on round 0 so it resets in endTurn for round 1 with first player.
             this.drawer = this.players[this.players.length - 1].user.username;
+
+            if (this.getVPUsername() == "") { // no vp were added.
+                this.vp = this.virtualPlayer.create().user.username;
+            }
         }
         this.round = 0;
         
@@ -348,18 +356,12 @@ export default abstract class Match {
         return this.players.findIndex(player => !player.isVirtual);
     }
 
-    protected initVPDrawer(): void {
-        // Add the only virtual player in the mode 1vs1, sprint coop and solo
-        const player: Player = this.virtualPlayer.create();
-        this.players.push(player);
-        this.drawer = player.user.username;
-    }
-
-    protected addVP(io: SocketIO.Server): void {
+    protected addVP(io: SocketIO.Server): Player {
         const randomVP: Player = this.virtualPlayer.create();
         this.players.push(randomVP);
         this.chatHandler.findPrivateRoom(this.matchId)?.avatars.set(randomVP.user.username, randomVP.user.avatar);
         this.chatHandler.notifyAvatarUpdate(io, randomVP.user, this.matchId);
+        return randomVP;
     }
 
     protected removeVP(): void {
@@ -410,7 +412,12 @@ export default abstract class Match {
     }
 
     public getPlayer(username: string): Player | undefined {
-        return this.players.find(player => username == player.user.username);
+       return this.players.find(player => username == player.user.username);
+    }
+
+    protected getVPUsername(): string {
+        const vp: Player | undefined = this.players.find(player => player.isVirtual);
+        return (vp) ? vp.user.username : "";
     }
 
     private getScores() : Score[] {

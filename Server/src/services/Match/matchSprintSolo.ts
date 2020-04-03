@@ -7,9 +7,10 @@ import { sprintSoloSettings } from "../../models/matchMode";
 
 export default class SprintSolo extends Match {
 
-    public constructor(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler) {
+    public constructor(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler, io: SocketIO.Server) {
         super(matchId, user, createMatch, chatHandler, sprintSoloSettings);
-        this.initVPDrawer();
+        // Add the only virtual player in the mode 1vs1, sprint coop and solo
+        this.vp = this.addVP(io).user.username;
     }
 
     public startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): void {
