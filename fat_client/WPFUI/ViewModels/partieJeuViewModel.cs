@@ -19,7 +19,8 @@ using WPFUI.Utilitaires;
 namespace WPFUI.ViewModels
 {
     class partieJeuViewModel: Screen, INotifyPropertyChanged, IHandle<refreshMessagesEvent>, IHandle<addMessageEvent>,
-                              IHandle<wordSelectedEvent>, IHandle<startTurnRoutineEvent>, IHandle<endTurnRoutineVMEvent>
+                              IHandle<wordSelectedEvent>, IHandle<startTurnRoutineEvent>, IHandle<endTurnRoutineVMEvent>,
+                              IHandle<guessResponseEvent>
     {
         private Editeur editeur = new Editeur();
         private IEventAggregator _events;
@@ -35,6 +36,8 @@ namespace WPFUI.ViewModels
         private string _guessBox;
         private bool canDraw;
         private BindableCollection<dynamic> _joueurs;
+        private string _guessFeedBackSource;
+        private string _guessFeedBackText;
 
         // Commandes sur lesquels la vue pourra se connecter.
         public RelayCommand<string> ChoisirPointe { get; set; }
@@ -48,6 +51,8 @@ namespace WPFUI.ViewModels
             _socketHandler = socketHandler;
             _userData = userdata;
             messages = userdata.messages;
+            _guessFeedBackSource = "";
+            _guessFeedBackText = "";
             _timer = new DispatcherTimer();
             _wordChoices = new BindableCollection<dynamic>();
             _turnScores = new BindableCollection<dynamic>();
@@ -89,6 +94,26 @@ namespace WPFUI.ViewModels
         public Dictionary<Stroke, int> strokes { get; set; }
         public IselectWordCommand _selectWordCommand { get; set; }
         public DrawingAttributes AttributsDessin { get; set; } = new DrawingAttributes();
+
+        public string guessFeedBackSource
+        {
+            get { return _guessFeedBackSource; }
+            set
+            {
+                _guessFeedBackSource = value;
+                NotifyOfPropertyChange(() => guessFeedBackSource);
+            }
+        }
+
+        public string guessFeedBackText
+        {
+            get { return _guessFeedBackText; }
+            set
+            {
+                _guessFeedBackText = value;
+                NotifyOfPropertyChange(() => guessFeedBackText);
+            }
+        }
 
         public BindableCollection<dynamic> joueurs
         {
@@ -439,6 +464,19 @@ namespace WPFUI.ViewModels
         public void updateRoundInfos()
         {
             NotifyOfPropertyChange(null);
+        }
+
+        public void Handle(guessResponseEvent message)
+        {
+            if (message._isGoodGuess)
+            {
+                guessFeedBackText = "Good Guess !";
+                guessFeedBackSource = "/Resources/good guess.png";
+            } else
+            {
+                guessFeedBackText = "Bad Guess !";
+                guessFeedBackSource = "/Resources/bad guess.png";
+            }
         }
     }
 }

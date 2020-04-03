@@ -141,6 +141,7 @@
     <Compile Include="EventModels\goBackCreationMenuEvent.cs" />
     <Compile Include="EventModels\goBackEvent.cs" />
     <Compile Include="EventModels\goBackMainEvent.cs" />
+    <Compile Include="EventModels\guessResponseEvent.cs" />
     <Compile Include="EventModels\joinChatEvent.cs" />
     <Compile Include="EventModels\joinChatroomEvent.cs" />
     <Compile Include="EventModels\joinedRoomReceived.cs" />
@@ -487,6 +488,7 @@
     <Resource Include="Resources\avocado.png" />
     <Content Include="Resources\avocado.svg" />
     <Resource Include="Resources\banana.png" />
+    <Resource Include="Resources\bad guess.png" />
     <Content Include="Resources\banana.svg" />
     <Resource Include="Resources\cherry.png" />
     <Resource Include="Resources\chat.gif" />
@@ -499,6 +501,7 @@
     <Resource Include="Resources\fireworks.gif" />
     <Resource Include="Resources\expand.png" />
     <Resource Include="Resources\clock.gif" />
+    <Resource Include="Resources\good guess.png" />
     <Content Include="Resources\grape.svg" />
     <Resource Include="Resources\kiwi.png" />
     <Resource Include="Resources\HAND-DRAW.gif" />
@@ -523,6 +526,7 @@
     <Resource Include="Resources\watermelon.png" />
     <Resource Include="Resources\trophy.gif" />
     <Resource Include="Resources\trophy_cropped.gif" />
+    <Resource Include="Resources\Stripes.png" />
     <Content Include="Resources\watermelon.svg" />
   </ItemGroup>
   <ItemGroup>

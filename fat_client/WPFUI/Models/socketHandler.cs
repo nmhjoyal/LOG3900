@@ -198,11 +198,14 @@ namespace WPFUI.Models
         }
         public void sendMessage()
         {
-            ClientMessage message = new ClientMessage(_userdata.currentMessage, _userdata.currentRoomId);
-
-            if (message.content.Trim() != "")
+            if (_userdata.currentMessage != null)
             {
-                _socket.Emit("send_message", JsonConvert.SerializeObject(message));
+                ClientMessage message = new ClientMessage(_userdata.currentMessage, _userdata.currentRoomId);
+
+                if (message.content.Trim() != "")
+                {
+                    _socket.Emit("send_message", JsonConvert.SerializeObject(message));
+                }
             }
         }
 
@@ -506,9 +509,9 @@ namespace WPFUI.Models
             this.socket.On("guess_res", (Feedback) =>
             {
                 dynamic json = JsonConvert.DeserializeObject(Feedback.ToString());
-                Console.WriteLine("onMatch guess_res");
-                Console.WriteLine(json.status);
-                Console.WriteLine(json.log_message);
+                Console.WriteLine("onMatch guess_res " + (Boolean)json.status);
+                _events.PublishOnUIThread(new guessResponseEvent((Boolean)json.status));
+
             });
         }
 
