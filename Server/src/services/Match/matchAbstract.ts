@@ -130,8 +130,6 @@ export default abstract class Match {
         if (player) {
             if (this.isHost(player)) {
                 if (this.players.length < this.ms.MAX_NB_PLAYERS) {
-                    console.log(this.getNbVirtualPlayers());
-                    console.log(this.ms.MAX_NB_VP);
                     if (this.getNbVirtualPlayers() < this.ms.MAX_NB_VP) {
                         this.addVP(io);
                         io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
@@ -220,7 +218,6 @@ export default abstract class Match {
             io.in(this.matchId).emit("new_message", JSON.stringify(this.virtualPlayer.getEndTurnMessage(this.vp, this.matchId)));
         }
 
-        console.log("endtGen", endTurn);
         io.in(this.matchId).emit("turn_ended", JSON.stringify(endTurn));
         
         this.resetScoresTurn();
@@ -292,7 +289,6 @@ export default abstract class Match {
 
         // In the other modes the drawer is set to the virtual player in the constructor.
         if (this.mode == MatchMode.freeForAll) {
-            console.log("got here")
             // Init to the last player on round 0 so it resets in endTurn for round 1 with first player.
             this.drawer = this.players[this.players.length - 1].user.username;
 
@@ -339,7 +335,6 @@ export default abstract class Match {
         if (currentIndex == this.players.length - 1) {
             this.drawer = this.players[0].user.username;
             this.round++;
-            console.log("end turn", this.drawer, this.round)
         } else {
             this.drawer = this.players[currentIndex + 1].user.username;
         }
@@ -356,7 +351,6 @@ export default abstract class Match {
 
     protected addVP(io: SocketIO.Server): Player {
         const randomVP: Player = this.virtualPlayer.create();
-        console.log(randomVP);
         this.players.push(randomVP);
         this.chatHandler.findPrivateRoom(this.matchId)?.avatars.set(randomVP.user.username, randomVP.user.avatar);
         this.chatHandler.notifyAvatarUpdate(io, randomVP.user, this.matchId);
