@@ -186,18 +186,18 @@
 
 			<!-- End of the xaml of the drawing section -->
 
-		<ScrollViewer Grid.Column="1" Grid.Row="5" Grid.RowSpan="7" Grid.ColumnSpan="8" 
-					  VerticalScrollBarVisibility="Visible" Background="White" FontSize="26" Margin="0.4,19.8,9.4,0.2">
+		<ScrollViewer Grid.Column="1" Grid.Row="6" Grid.RowSpan="6" Grid.ColumnSpan="7" 
+					  VerticalScrollBarVisibility="Hidden" Background="White" FontSize="18" >
 			<ItemsControl x:Name="joueurs">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
-						<StackPanel Orientation="Vertical">
-							<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,20">
-								<Image Source="{Binding Avatar}" Height="40" Margin="20,0,0,0" VerticalAlignment="Center"></Image>
-								<TextBlock Text="{Binding Username}" Foreground="DarkSlateGray" Margin="10,0,0,0" VerticalAlignment="Center"/>
-								<TextBlock Text="{Binding ScoreTotal}" Foreground="#FF66CC37" Margin="10,0,0,0" VerticalAlignment="Center"/>
+							<StackPanel Orientation="Vertical">
+								<TextBlock Text="{Binding Username}" Foreground="DarkSlateGray"  Margin="0,20,0,20" VerticalAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+									<Image Source="{Binding Avatar}" Height="40" Margin="10,0,0,0" VerticalAlignment="Center"></Image>
+									<TextBlock Text="{Binding ScoreTotal}" Foreground="#FF66CC37" Margin="10,0,0,0" VerticalAlignment="Center"/>
+								</StackPanel>
 							</StackPanel>
-						</StackPanel>
 					</DataTemplate>
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>

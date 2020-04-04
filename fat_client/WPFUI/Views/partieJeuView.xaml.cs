@@ -47,14 +47,6 @@ namespace WPFUI.Views
             messagesUI.ScrollToEnd();
         }
 
-        private void currentMessage_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                //  _viewModel.sendMessage(currentMessage.Text);
-            }
-        }
-
         public async void Handle(endTurnRoutineEvent message)
         {
             Console.WriteLine(JsonConvert.SerializeObject(message));
@@ -67,6 +59,8 @@ namespace WPFUI.Views
                 endTurnBox.Visibility = Visibility.Hidden;
                 selectNextDrawingBox.Visibility = Visibility.Visible;
                 drawingEditingPanel.Visibility = Visibility.Visible;
+                sendMessage.IsEnabled = false;
+                sendGuess.IsEnabled = false;
 
             } else
             {
@@ -74,6 +68,8 @@ namespace WPFUI.Views
                 nextPlayerMessage.Text = "Next player to chose is " + ((dynamic)message.EndTurnFeedBack).drawer;
                 endTurnBox.Visibility = Visibility.Visible;
                 drawingEditingPanel.Visibility = Visibility.Collapsed;
+                sendMessage.IsEnabled = true;
+                sendGuess.IsEnabled = true;
             }
             (this.DataContext as partieJeuViewModel).NotifyOfPropertyChange(null);
         }
@@ -125,6 +121,10 @@ namespace WPFUI.Views
             {
                 Storyboard sb = MarginGrid.FindResource("shakeAnimation") as Storyboard;
                 sb.Begin();
+            } else
+            {
+                sendMessage.IsEnabled = false;
+                sendGuess.IsEnabled = false;
             }
             await Task.Delay(1000);
             guessFeedbackBox.Visibility = Visibility.Hidden;
