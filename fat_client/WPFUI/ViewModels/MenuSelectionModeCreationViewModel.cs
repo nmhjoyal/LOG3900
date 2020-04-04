@@ -20,10 +20,6 @@ namespace WPFUI.ViewModels
             _socketHandler = socketHandler;
         }
 
-        public void manuel1()
-        {
-            _events.PublishOnUIThread(new ManuelIEvent());
-        }
         public void manuel2()
         {
             _events.PublishOnUIThread(new ManuelleIIEvent());

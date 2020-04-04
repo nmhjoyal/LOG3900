@@ -3,7 +3,6 @@ import FreeForAll from "../services/Match/matchFreeForAll";
 import SprintSolo from "../services/Match/matchSprintSolo";
 import SprintCoop from "../services/Match/matchSprintCoop";
 import OneVsOne from "../services/Match/matchOneVsOne";
-import Inverted from "../services/Match/matchInverted";
 import { CreateMatch } from "./match";
 import PublicProfile from "./publicProfile";
 import ChatHandler from "../services/chatHandler";
@@ -12,23 +11,21 @@ export enum MatchMode {
     freeForAll,
     sprintSolo,
     sprintCoop,
-    oneVsOne,
-    inverted
+    oneVsOne
 }
 
 export class MatchInstance {
-    public static createMatch(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler): Match {
+    public static createMatch(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler, io: SocketIO.Server): Match {
+        console.log(createMatch.matchMode);
         switch (createMatch.matchMode) {
             case MatchMode.freeForAll:
                 return new FreeForAll(matchId, user, createMatch, chatHandler);
             case MatchMode.sprintSolo:
-                return new SprintSolo(matchId, user, createMatch, chatHandler);
+                return new SprintSolo(matchId, user, createMatch, chatHandler, io);
             case MatchMode.sprintCoop:
-                return new SprintCoop(matchId, user, createMatch, chatHandler);
+                return new SprintCoop(matchId, user, createMatch, chatHandler, io);
             case MatchMode.oneVsOne:
-                return new OneVsOne(matchId, user, createMatch, chatHandler);
-            case MatchMode.inverted:
-                return new Inverted(matchId, user, createMatch, chatHandler);
+                return new OneVsOne(matchId, user, createMatch, chatHandler, io);
         }
     }
 }
@@ -45,7 +42,7 @@ export const freeForAllSettings: MatchSettings = {
     MAX_NB_PLAYERS : 8, // A combination of maximum 8 human and virtual players.
     MIN_NB_VP : 0, 
     MAX_NB_VP : 7,      // in the case that there is 1 human player.
-    MIN_NB_HP : 1,
+    MIN_NB_HP : 2,
     MAX_NB_HP : 8       // if there is no virtual players.
 }
 export const sprintSoloSettings: MatchSettings = {

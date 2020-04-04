@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,14 +11,34 @@ using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    public class chatBoxWindowViewModel : Screen, IHandle<refreshMessagesEvent>, IHandle<addMessageEvent>
+    class WaitingRoomViewModel: Screen, IHandle<refreshMessagesEvent>, IHandle<addMessageEvent>
     {
         private IEventAggregator _events;
+        private ISocketHandler _socketHandler;
         private IUserData _userData;
         private BindableCollection<Models.Message> _messages;
         private string _currentMessage;
-        private ISocketHandler _socketHandler;
+        private BindableCollection<Player> players;
 
+        public BindableCollection<Player> Players
+        {
+            get
+            {
+                return this.players;
+            }
+        }
+        public WaitingRoomViewModel(IEventAggregator events, ISocketHandler socketHandler, IUserData userdata)
+        {
+            _events = events;
+            _events.Subscribe(this);
+            _socketHandler = socketHandler;
+            _userData = userdata;
+            userdata.messages = new BindableCollection<Models.Message>(userdata.selectableJoinedRooms.Single<SelectableRoom>(i => i.id == _userData.matchId).room.messages);
+            this._messages = userdata.messages;
+            this.players = new BindableCollection<Player>();
+            this._socketHandler.onWaitingRoom(this.players);
+            this._socketHandler.socket.Emit("get_players", this._userData.matchId);
+        }
         public string currentMessage
         {
             get { return _currentMessage; }
@@ -29,6 +50,15 @@ namespace WPFUI.ViewModels
             }
         }
 
+        public BindableCollection<Models.Message> messages
+        {
+            get { return _messages; }
+            set
+            {
+                _messages = value;
+                NotifyOfPropertyChange(() => messages);
+            }
+        }
         public void keyDown(ActionExecutionContext context)
         {
             var keyArgs = context.EventArgs as KeyEventArgs;
@@ -38,14 +68,14 @@ namespace WPFUI.ViewModels
                 //sendMessage();
             }
         }
-        public BindableCollection<Models.Message> messages
+        public void goBack()
         {
-            get { return _messages; }
-            set
-            {
-                _messages = value;
-                NotifyOfPropertyChange(() => messages);
-            }
+            this._socketHandler.socket.Emit("leave_match");
+        }
+
+        public string username
+        {
+            get { return _userData.userName; }
         }
 
         public void sendMessage(string content = null)
@@ -67,31 +97,21 @@ namespace WPFUI.ViewModels
             }
 
         }
-
-        public chatBoxWindowViewModel(IUserData userdata, IEventAggregator events, ISocketHandler socketHandler)
+        public void start()
         {
-            _events = events;
-            _events.Subscribe(this);
-            _socketHandler = socketHandler;
-            _userData = userdata;
-            messages = userdata.messages;
-            DisplayName = "chatBox";
-
+            this._socketHandler.socket.Emit("start_match");
+            // _events.PublishOnUIThread(new gameEvent());
         }
 
-        public string welcomeMessage
+        public void addVirtualPlayer()
         {
-            get
-            {
-                return $"Welcome to the chatroom {_userData.userName} !";
-            }
-        }
-        public void disconnect()
-        {
-            _socketHandler.disconnect();
-            _events.PublishOnUIThread(new DisconnectEvent());
+            this._socketHandler.socket.Emit("add_vp");
         }
 
+        public void removeVirtualPlayer()
+        {
+            this._socketHandler.socket.Emit("remove_vp");
+        }
         public void Handle(refreshMessagesEvent message)
         {
             this._messages = message._messages;
@@ -103,11 +123,6 @@ namespace WPFUI.ViewModels
             Console.WriteLine("hello");
             this._messages.Add(message.message);
             NotifyOfPropertyChange(() => messages);
-        }
-
-        public void windowMode()
-        {
-            _events.PublishOnUIThread(new windowChatEvent());
         }
     }
 }
