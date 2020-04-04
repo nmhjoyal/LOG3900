@@ -481,7 +481,6 @@
     <Resource Include="Resources\ranking.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Views\frame-0.png" />
     <Resource Include="Resources\apple.png" />
     <Resource Include="Potrace\Images\yao.bmp" />
     <Resource Include="Resources\alarmclock.png" />
@@ -503,7 +502,6 @@
     <Resource Include="Resources\expand.png" />
     <Resource Include="Resources\clock.gif" />
     <Resource Include="Resources\good guess.png" />
-    <Resource Include="Resources\Clouds.gif" />
     <Resource Include="Resources\gif\animatedLogo.gif" />
     <Resource Include="Resources\gif\animatedLogoWhiteSmoke.gif" />
     <Content Include="Resources\grape.svg" />

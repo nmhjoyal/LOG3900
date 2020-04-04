@@ -6,15 +6,15 @@
               xmlns:gif="http://wpfanimatedgif.codeplex.com"
              xmlns:local="clr-namespace:WPFUI.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="700" d:DesignWidth="900"
+             d:DesignHeight="1080" d:DesignWidth="1600"
              FontFamily="Microsoft JhengHei UI Light">
     <Grid Background="#FFF5F5F6" >
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="40"/>
+            <ColumnDefinition Width="0.5*"/>
             <ColumnDefinition Width="10"/>
             <ColumnDefinition Width="50" />
             <ColumnDefinition Width="10"/>
-            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="10" />
             <ColumnDefinition Width="10"/>
             <ColumnDefinition Width="100" />
@@ -23,12 +23,12 @@
             <ColumnDefinition Width="10" />
             <ColumnDefinition Width="3*" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="40" />
+            <ColumnDefinition Width="0.5*" />
 
 
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="0.5*"/>
             <RowDefinition Height="60"/>
             <RowDefinition Height="10"/>
             <RowDefinition Height="20"/>
@@ -36,7 +36,7 @@
             <RowDefinition Height="20"/>
             <RowDefinition Height="10"/>
             <RowDefinition Height="10"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="6*"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="5"/>
             <RowDefinition Height="20"/>
@@ -44,7 +44,7 @@
             <RowDefinition Height="40"/>
             <RowDefinition Height="10"/>
             <RowDefinition Height="40"/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
 
         </Grid.RowDefinitions>
         <TextBlock  FontSize="40"  Foreground="#FF66CC00" Text="Waiting Room" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="14" TextAlignment="Center"/>
