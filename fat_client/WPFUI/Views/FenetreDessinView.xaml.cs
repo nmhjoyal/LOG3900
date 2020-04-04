@@ -47,13 +47,11 @@ namespace WPFUI.Views
         }
 
         //code pris de: https://stackoverflow.com/questions/8881865/saving-a-wpf-canvas-as-an-image
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            PART_Image.Source = RenderVisualService.RenderToPNGImageSource(PART_Canvas);
-        }
+        
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+            PART_Image.Source = RenderVisualService.RenderToPNGImageSource(PART_Canvas);
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             //saveFileDialog.FileName = txtEditor.Text;
             if (saveFileDialog.ShowDialog() == true)

@@ -198,11 +198,14 @@ namespace WPFUI.Models
         }
         public void sendMessage()
         {
-            ClientMessage message = new ClientMessage(_userdata.currentMessage, _userdata.currentRoomId);
-
-            if (message.content.Trim() != "")
+            if (_userdata.currentMessage != null)
             {
-                _socket.Emit("send_message", JsonConvert.SerializeObject(message));
+                ClientMessage message = new ClientMessage(_userdata.currentMessage, _userdata.currentRoomId);
+
+                if (message.content.Trim() != "")
+                {
+                    _socket.Emit("send_message", JsonConvert.SerializeObject(message));
+                }
             }
         }
 

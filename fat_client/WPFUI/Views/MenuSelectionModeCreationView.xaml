@@ -24,15 +24,15 @@
         </Grid.RowDefinitions>
 
 
-        <Button  Background="#FF00CCCC"  BorderBrush="{x:Null}" x:Name="manuel2" Content="Manuelle" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="5" MaxWidth="200"/>
-        <Button  Background="#FF00CCCC"  BorderBrush="{x:Null}" x:Name="assiste1" Content="Assiste" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="5" MaxWidth="200"/>
+        <Button  Background="#FF00CCCC"  BorderBrush="{x:Null}" x:Name="manuel2" Content="Manual" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="5" MaxWidth="200"/>
+        <Button  Background="#FF00CCCC"  BorderBrush="{x:Null}" x:Name="assiste1" Content="Assisted" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="5" MaxWidth="200"/>
         
-        <Button  x:Name="goBack"  Grid.Column="1" Grid.Row="0" MaxWidth="100" HorizontalAlignment="Right"  Background="#FFBF0B0B" BorderBrush="#FFBF0B0B">
+        <Button  x:Name="goBack"  Grid.Column="1" Grid.Row="0" MaxWidth="120" HorizontalAlignment="Right"  Background="#FFBF0B0B" BorderBrush="#FFBF0B0B">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Foreground="White">Retour</TextBlock>
+                <TextBlock Foreground="White">Go Back</TextBlock>
                 <Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
             </StackPanel>
         </Button>
-        <TextBlock FontSize="40"  Foreground="#FF66CC00" Grid.Column="1" Grid.Row="1"> Choisi ton mode de création de jeu! </TextBlock>
+        <TextBlock HorizontalAlignment="Center" FontSize="40"  Foreground="#FF66CC00" Grid.Column="1" Grid.Row="1">Select your game creation mode</TextBlock>
     </Grid>
 </UserControl>
