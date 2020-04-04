@@ -18,6 +18,7 @@ export default class FreeForAll extends Match {
 
     public async startTurn(io: SocketIO.Server, word: string, isVirtual: boolean): Promise<void> {
         this.currentWord = word;
+        this.drawing.reset(io);
         io.in(this.matchId).emit("turn_started", this.createStartTurn(this.currentWord));
         
         if (isVirtual) {
@@ -74,6 +75,7 @@ export default class FreeForAll extends Match {
                     if(this.everyoneHasGuessed()) {
                         this.endTurn(io, false);
                     }
+                    feedback.status = true;
                 } else {
                     feedback.log_message = "Your guess is wrong.";
                 }

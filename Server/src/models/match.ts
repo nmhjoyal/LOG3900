@@ -28,7 +28,7 @@ export interface StartTurn {
 
 export interface EndTurn {
     currentRound: number
-    players: Player[],
+    players: Player[]
     choices: string[]
     drawer: string  // indicates if he is the drawer in FreeForAll and OneVsOne.
                     // not used in SprintCoop and SprintSolo because the players are always guessing
