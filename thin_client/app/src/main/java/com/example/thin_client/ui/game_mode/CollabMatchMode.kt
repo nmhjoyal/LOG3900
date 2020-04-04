@@ -24,8 +24,6 @@ class CollabMatchMode : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter.add(MatchItem("A","Allllo", 4 ,5))
-        //faire la verification du matchID
         adapter.setOnItemClickListener{ item, _ ->
             val matchId = (item as MatchItem).matchId
             SocketHandler.joinMatch(matchId)
@@ -44,16 +42,14 @@ class CollabMatchMode : Fragment() {
 
     }
 
-
     override fun onStart() {
         super.onStart()
         refreshMatchesAdapter()
     }
 
     private fun refreshMatchesAdapter() {
-        adapter.clear()
-        var collabMatchList = GameManager.collabModeMatchList
-        for (match in collabMatchList) {
+      adapter.clear()
+        for (match in GameManager.collabModeMatchList) {
             adapter.add(MatchItem(match.matchId, match.host, match.nbRounds, match.players.size))
         }
     }

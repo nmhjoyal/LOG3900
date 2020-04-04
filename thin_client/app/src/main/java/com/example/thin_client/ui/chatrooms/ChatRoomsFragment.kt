@@ -22,6 +22,7 @@ import com.example.thin_client.data.rooms.Invitation
 import com.example.thin_client.data.rooms.RoomManager
 import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
+import com.example.thin_client.ui.helpers.DEFAULT_INTERVAL
 import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder

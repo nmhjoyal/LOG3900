@@ -127,6 +127,7 @@
     <string name="create_match">Start new game</string>
     <string name="start_match">Start</string>
     <string name="players_in_game">Players in game </string>
+    <string name="virtual_players">Add virtual players </string>
     <string name="solo_mode">Solo</string>
     <string name="collab_mode">Collaborative</string>
     <string name="free_for_all_mode">Free-for-All</string>

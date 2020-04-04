@@ -8,10 +8,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.thin_client.R
 import com.example.thin_client.data.game.GameManager
+import com.example.thin_client.data.game.MatchMode
+import com.example.thin_client.data.model.MatchInfos
+import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.ui.LobbyMenuFragment
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.example.thin_client.server.*
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.freeforall_gameslist.*
 
 class FreeForAllMatchMode : Fragment() {
@@ -21,14 +25,12 @@ class FreeForAllMatchMode : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         adapter.setOnItemClickListener{ item, _ ->
             val matchId = (item as MatchItem).matchId
             SocketHandler.joinMatch(matchId)
         }
         refreshMatchesAdapter()
         availablefree_for_all.adapter = adapter
-
     }
 
 
@@ -49,8 +51,7 @@ class FreeForAllMatchMode : Fragment() {
 
     private fun refreshMatchesAdapter() {
         adapter.clear()
-        var freeForAllMatchList = GameManager.freeForAllMatchList
-        for (match in freeForAllMatchList) {
+        for (match in GameManager.freeForAllMatchList) {
             adapter.add(MatchItem(match.matchId, match.host, match.nbRounds, match.players.size))
         }
     }

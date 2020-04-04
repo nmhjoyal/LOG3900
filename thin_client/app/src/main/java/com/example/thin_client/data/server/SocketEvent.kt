@@ -55,4 +55,8 @@ object SocketEvent {
     const val GUESS = "guess"
     const val GUESS_RESULT = "guess_res"
     const val UPDATE_PLAYERS = "update_players"
+    const val ADD_VP = "add_vp"
+    const val VP_ADDED = "vp_added"
+    const val REMOVE_VP = "remove_vp"
+    const val VP_REMOVED = "vp_removed"
 }

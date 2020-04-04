@@ -206,7 +206,9 @@ class ChatFragment : Fragment() {
                     val response = Gson().fromJson(data.first().toString(), Feedback::class.java)
                     Handler(Looper.getMainLooper()).post(Runnable {
                         if (response.status) {
-                            send_guess.isEnabled = false
+                            if (send_guess != null) {
+                                send_guess.isEnabled = false
+                            }
                         } else {
                             showAdminMessage(response.log_message)
                         }

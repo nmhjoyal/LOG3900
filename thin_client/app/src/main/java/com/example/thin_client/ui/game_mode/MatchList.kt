@@ -22,6 +22,8 @@ import com.example.thin_client.data.rooms.JoinRoomFeedback
 import com.example.thin_client.data.rooms.RoomManager
 import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
+import com.example.thin_client.ui.helpers.DEFAULT_INTERVAL
+import com.example.thin_client.ui.helpers.setOnClickListener
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_games_list.*
@@ -44,7 +46,7 @@ class MatchList : Fragment() {
             SocketHandler.searchMatches()
         }
 
-        create_match.setOnClickListener {
+        create_match.setOnClickListener(DEFAULT_INTERVAL) {
             context?.let {context ->
                 showCreateMatchDialog(context)
             }
@@ -157,11 +159,13 @@ class MatchList : Fragment() {
                         gameStartedListener?.startGame()
                     } else {
                         Handler(Looper.getMainLooper()).post(({
-                            Toast.makeText(
-                                context,
-                                feedback.feedback.log_message,
-                                Toast.LENGTH_LONG
-                            ).show()
+                            if (context != null) {
+                                Toast.makeText(
+                                    context,
+                                    feedback.feedback.log_message,
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
                         }))
                     }
                 }))

@@ -1,26 +1,22 @@
 package com.example.thin_client.ui.helpers
 
-import android.os.SystemClock
 import android.view.View
-import java.util.*
 
+const val DEFAULT_INTERVAL = 500L
 
-abstract class DebounceClickListener(val minimumIntervalMillis: Long): View.OnClickListener {
+class DebounceClickListener(private val interval: Long = DEFAULT_INTERVAL,
+                            private val listenerBlock: (View) -> Unit): View.OnClickListener {
 
-    private var lastClickMap: MutableMap<View, Long>? = null
+    private var lastClickTime = 0L
 
-    init {
-        lastClickMap = WeakHashMap()
-    }
-
-    abstract fun onDebouncedClick(v: View?)
-
-    override fun onClick(clickedView: View) {
-        val previousClickTimestamp: Long? = lastClickMap?.get(clickedView)
-        val currentTimestamp = SystemClock.uptimeMillis()
-        lastClickMap!!.put(clickedView, currentTimestamp)
-        if (previousClickTimestamp == null || Math.abs(currentTimestamp - previousClickTimestamp) > minimumIntervalMillis) {
-            onDebouncedClick(clickedView)
+    override fun onClick(v: View) {
+        val time = System.currentTimeMillis()
+        if (time - lastClickTime >= interval) {
+            lastClickTime = time
+            listenerBlock(v)
         }
     }
 }
+
+fun View.setOnClickListener(debounceInterval: Long, listenerBlock: (View) -> Unit) =
+    setOnClickListener(DebounceClickListener(debounceInterval, listenerBlock))

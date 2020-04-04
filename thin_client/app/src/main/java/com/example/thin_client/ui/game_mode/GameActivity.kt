@@ -98,6 +98,11 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         turnOffSocketEvents()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        GameManager.isGameStarted = false
+    }
+
     override fun guessSent() {
         nbTries--
         nb_guesses.text = nbTries.toString()
@@ -261,9 +266,9 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                     val turnParams = Gson().fromJson(data.first().toString(), EndTurn::class.java)
                     Handler(Looper.getMainLooper()).post(({
                         var currentUserScore = 0
-                        for (user in turnParams.scores) {
-                            if (user.username == currentUser) {
-                                currentUserScore = user.updateScore.scoreTotal.toInt()
+                        for (user in turnParams.players) {
+                            if (user.user.username == currentUser) {
+                                currentUserScore = user.score.scoreTotal.toInt()
                             }
                         }
                         resetTurn(turnParams.drawer, currentUserScore)
@@ -278,12 +283,9 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                             currentRound = turnParams.currentRound.toInt()
                             val pointsAdapter = GroupAdapter<GroupieViewHolder>()
                             message.text = wordWasString
-                            for (score in turnParams.scores) {
-                                pointsAdapter.add(PlayerPointHolder(score.username, score.updateScore.scoreTurn.toInt()))
+                            for (score in turnParams.players) {
+                                pointsAdapter.add(PlayerPointHolder(score.user.username, score.score.scoreTurn.toInt()))
                             }
-                            pointsAdapter.add(PlayerPointHolder("user", 20))
-                            pointsAdapter.add(PlayerPointHolder("user", 10))
-                            pointsAdapter.add(PlayerPointHolder("user", 0))
                             user_points.adapter = pointsAdapter
                             user_points.visibility = View.VISIBLE
                             Handler().postDelayed({

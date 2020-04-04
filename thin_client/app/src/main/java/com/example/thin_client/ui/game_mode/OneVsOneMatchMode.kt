@@ -21,7 +21,6 @@ class OneVsOneMatchMode : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         adapter.setOnItemClickListener{ item, _ ->
             val matchId = (item as MatchItem).matchId
             SocketHandler.joinMatch(matchId)
@@ -48,8 +47,7 @@ class OneVsOneMatchMode : Fragment() {
 
     private fun refreshMatchesAdapter() {
         adapter.clear()
-        var oneVsOneMatchList = GameManager.oneVsOneMatchList
-        for (match in oneVsOneMatchList) {
+        for (match in GameManager.oneVsOneMatchList) {
             adapter.add(MatchItem(match.matchId, match.host, match.nbRounds, match.players.size))
         }
     }
