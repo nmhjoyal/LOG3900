@@ -40,9 +40,9 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="130"/>
         </Grid.RowDefinitions>
-		<Image gif:ImageBehavior.AnimatedSource="/Resources/HAND-DRAW.gif" Grid.Column="1" Grid.Row="3" Opacity="0.6" Grid.ColumnSpan="5" Grid.RowSpan="9"/>
+		<Image gif:ImageBehavior.AnimatedSource="/Resources/HAND-DRAW.gif" Grid.Column="1" Grid.Row="3" Opacity="0.5" Grid.ColumnSpan="5" Grid.RowSpan="9"/>
 		<StackPanel Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="5" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,0,0,20">
-			<TextBlock FontSize="40" Foreground="#FF66CC00" Margin="0,0,0,0" Background="WhiteSmoke" >Fais moi un dessin !</TextBlock>
+			<Image gif:ImageBehavior.AnimatedSource="/Resources/gif/animatedLogoWhiteSmoke.gif"  Opacity="1" HorizontalAlignment="Center"/>
 
 		</StackPanel>
 		<TextBlock Width="390" Text="Password: " Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="5" Foreground="DarkSlateGray"/>

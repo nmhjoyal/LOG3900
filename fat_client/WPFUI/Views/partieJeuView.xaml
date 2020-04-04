@@ -47,7 +47,7 @@
 		</Grid.Triggers>
 
 		<Grid.Background>
-			<ImageBrush ImageSource="/Resources/Stripes.png" TileMode="Tile">
+			<ImageBrush ImageSource="/Resources/Stripes.png" TileMode="Tile" >
 				<ImageBrush.RelativeTransform>
 					<RotateTransform CenterX="0.5" CenterY="0.5" Angle="0" x:Name="imgRot"/>
 				</ImageBrush.RelativeTransform>
