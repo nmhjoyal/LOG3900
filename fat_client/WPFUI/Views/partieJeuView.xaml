@@ -170,9 +170,9 @@
 					<DataTemplate>
 						<StackPanel Orientation="Vertical">
 							<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,20">
-								<Image Source="{Binding avatarSource}" Height="40" Margin="20,0,0,0" VerticalAlignment="Center"></Image>
-								<TextBlock Text="{Binding username}" Foreground="DarkSlateGray" Margin="10,0,0,0" VerticalAlignment="Center"/>
-								<TextBlock Text="{Binding score}" Foreground="#FF66CC37" Margin="10,0,0,0" VerticalAlignment="Center"/>
+								<Image Source="{Binding Avatar}" Height="40" Margin="20,0,0,0" VerticalAlignment="Center"></Image>
+								<TextBlock Text="{Binding Username}" Foreground="DarkSlateGray" Margin="10,0,0,0" VerticalAlignment="Center"/>
+								<TextBlock Text="{Binding ScoreTotal}" Foreground="#FF66CC37" Margin="10,0,0,0" VerticalAlignment="Center"/>
 							</StackPanel>
 						</StackPanel>
 					</DataTemplate>

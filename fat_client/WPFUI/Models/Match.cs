@@ -96,6 +96,12 @@ namespace WPFUI.Models
         public string username;
         public string avatar;
 
+        public PublicProfile(string username, string avatar)
+        {
+            this.username = username;
+            this.avatar = avatar;
+        }
+
         public string Username
         {
             get
@@ -129,9 +135,8 @@ namespace WPFUI.Models
     public class Player
     {
         public PublicProfile user;
-        public Boolean isHost;
-        public Boolean isVirtual;
-        public int score;
+        public bool isVirtual;
+        public UpdateScore score;
 
         public string Username
         {
@@ -148,6 +153,22 @@ namespace WPFUI.Models
                 return user.Avatar;
             }
         }
+
+        public int ScoreTotal
+        {
+            get
+            {
+                return score.scoreTotal;
+            }
+        }
+        public int ScoreTurn
+        {
+            get
+            {
+                return score.scoreTurn;
+            }
+        }
+
     }
 
     public class CreateMatch
@@ -169,30 +190,24 @@ namespace WPFUI.Models
         public int currentRound;
         public List<string> choices;
         public string drawer;
-        public List<Score> scores;
+        public BindableCollection<Player> players;
 
-        public EndTurn(int currentRound, List<string> choices, string drawer, List<Score> scores)
+        public EndTurn(int currentRound, List<string> choices, string drawer, BindableCollection<Player> players)
         {
             this.currentRound = currentRound;
             this.choices = new List<string>(choices);
             this.drawer = drawer;
-            this.scores = new List<Score>(scores);
+            this.players = new BindableCollection<Player>(players);
         }
-    }
-    public class Score
-    {
-        public string username;
-        public UpdateScore updateScore;
-        public string avatar;
 
-        public Score(string username, int scoreTotal, int scoreTurn, string avatar)
+        public void set(EndTurn endTurn)
         {
-            this.username = username;
-            this.updateScore = new UpdateScore(scoreTotal, scoreTurn);
-            this.avatar = avatar;
+            this.currentRound = endTurn.currentRound;
+            this.choices = endTurn.choices;
+            this.drawer = endTurn.drawer;
+            this.players = endTurn.players;
         }
     }
-
     public class UpdateScore
     {
         public int scoreTotal;
@@ -205,15 +220,21 @@ namespace WPFUI.Models
         }
     }
 
-    public class RoundInfos
+    public class StartTurn
     {
         public string word;
-        public int round;
+        public int timeLimit;
 
-        public RoundInfos(string word, int round)
+        public StartTurn(string word, int timeLimit)
         {
             this.word = word;
-            this.round = round;
+            this.timeLimit = timeLimit;
+        }
+
+        public void set(StartTurn startTurn)
+        {
+            this.word = startTurn.word;
+            this.timeLimit = startTurn.timeLimit;
         }
     }
 }

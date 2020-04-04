@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +43,7 @@ namespace WPFUI.Views
         {
             _viewModel = DataContext as partieJeuViewModel;
             (DataContext as partieJeuViewModel).events.Subscribe(this);
-            (DataContext as partieJeuViewModel).HandleFirstRound();
+            (DataContext as partieJeuViewModel).HandleEndTurn();
             messagesUI.ScrollToEnd();
         }
 
@@ -56,6 +57,7 @@ namespace WPFUI.Views
 
         public async void Handle(endTurnRoutineEvent message)
         {
+            Console.WriteLine(JsonConvert.SerializeObject(message));
             if (((dynamic)message.EndTurnFeedBack).nextIsYou)
             {
                 roundFinishedMessage.Text = "Round " + ((dynamic)message.EndTurnFeedBack).currentRound + " finished !";
@@ -73,14 +75,14 @@ namespace WPFUI.Views
                 endTurnBox.Visibility = Visibility.Visible;
                 drawingEditingPanel.Visibility = Visibility.Collapsed;
             }
-
+            (this.DataContext as partieJeuViewModel).NotifyOfPropertyChange(null);
         }
 
         public void Handle(startTurnRoutineEvent message)
         {
             selectNextDrawingBox.Visibility = Visibility.Hidden;
             endTurnBox.Visibility = Visibility.Hidden;
-            (this.DataContext as partieJeuViewModel).updateRoundInfos();
+            (this.DataContext as partieJeuViewModel).NotifyOfPropertyChange(null);
         }
 
         private void surfaceDessin_MouseMove(object sender, MouseEventArgs e)

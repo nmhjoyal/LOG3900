@@ -18,7 +18,7 @@ using WPFUI.Utilitaires;
 
 namespace WPFUI.ViewModels
 {
-    class partieJeuViewModel: Screen, INotifyPropertyChanged, IHandle<refreshMessagesEvent>, IHandle<addMessageEvent>,
+    class partieJeuViewModel : Screen, INotifyPropertyChanged, IHandle<refreshMessagesEvent>, IHandle<addMessageEvent>,
                               IHandle<wordSelectedEvent>, IHandle<startTurnRoutineEvent>, IHandle<endTurnRoutineVMEvent>,
                               IHandle<guessResponseEvent>
     {
@@ -35,7 +35,6 @@ namespace WPFUI.ViewModels
         public DispatcherTimer _timer;
         private string _guessBox;
         private bool canDraw;
-        private BindableCollection<dynamic> _joueurs;
         private string _guessFeedBackSource;
         private string _guessFeedBackText;
 
@@ -56,14 +55,13 @@ namespace WPFUI.ViewModels
             _timer = new DispatcherTimer();
             _wordChoices = new BindableCollection<dynamic>();
             _turnScores = new BindableCollection<dynamic>();
-            _joueurs = new BindableCollection<dynamic>();
             this.canDraw = false;
             // _roundDuration = 30;
             this.Traits = editeur.traits;
             this.strokes = new Dictionary<Stroke, int>();
             _timerContent = 0;
             _selectWordCommand = new selectWordCommand(events);
-            fillAvatars();
+            // fillAvatars();
             startTimer();
             _timer.Stop();
             /* ----------------------------------- Drawing editor declarations -----------------------------------------------*/
@@ -84,12 +82,39 @@ namespace WPFUI.ViewModels
             ChoisirOutil = new RelayCommand<string>(editeur.ChoisirOutil);
 
             this._socketHandler.onDrawing(this.Traits, this.strokes);
-            this.roundInfos = new RoundInfos("", 0);
+            this.startTurn = new StartTurn("", 0);
+            this.endTurn = new EndTurn(0, new List<string>(), "", new BindableCollection<Player>());
             this._socketHandler.offWaitingRoom();
-            this._socketHandler.onMatch(this.roundInfos);
+            this._socketHandler.onMatch(this.startTurn, this.endTurn);
         }
+        /*
+        public StartTurn StartTurn
+        {
+            get
+            {
+                return this.startTurn;
+            }
+            set
+            {
+                this.startTurn = value;
+            }
+        }
+        public EndTurn EndTurn
+        {
+            get
+            {
+                return this.endTurn;
+            }
+            set
+            {
+                this.endTurn = value;
+            }
+        }
+        */
 
-        public RoundInfos roundInfos { get; set; }
+        public StartTurn startTurn;
+
+        public EndTurn endTurn;
         public StrokeCollection Traits { get; set; }
         public Dictionary<Stroke, int> strokes { get; set; }
         public IselectWordCommand _selectWordCommand { get; set; }
@@ -115,12 +140,12 @@ namespace WPFUI.ViewModels
             }
         }
 
-        public BindableCollection<dynamic> joueurs
+        public BindableCollection<Player> joueurs
         {
-            get { return _joueurs; }
+            get { return this.endTurn.players; }
             set
             {
-                _joueurs = value;
+                this.endTurn.players = value;
                 NotifyOfPropertyChange(() => joueurs);
             }
         }
@@ -211,20 +236,14 @@ namespace WPFUI.ViewModels
                   NotifyOfPropertyChange(() => timerContent);
                 }   
         }
-
-        public int currentRound
-        {
-            get { return this.roundInfos.round; }
-        }
-
         public string roundText
         {
-            get { return currentRound + " of " + _userData.nbRounds; }
+            get { return this.endTurn.currentRound + " of " + _userData.nbRounds; }
         }
 
         public string currentWord
         {
-            get { return this.roundInfos.word; }
+            get { return this.startTurn.word; }
         }
 
         public string guessBox
@@ -342,51 +361,47 @@ namespace WPFUI.ViewModels
             wordChoices.Refresh();
         }
 
-        public void newScores(List<Score> scores)
+        public void newScores()
         {
             _turnScores.Clear();
-            foreach (Score score in scores)
+            foreach (Player player in this.endTurn.players)
             {
                 dynamic dynamicScore = new System.Dynamic.ExpandoObject();
                 dynamicScore.position = 0;
-                dynamicScore.name = score.username;
-                dynamicScore.score = score.updateScore.scoreTotal;
+                dynamicScore.name = player.Username;
+                dynamicScore.score = player.ScoreTotal;
                 _turnScores.Add(dynamicScore);
             }
             turnScores.Refresh();
         }
 
-        public void HandleFirstRound()
+        public void HandleEndTurn()
         {
             _timer.Stop();
-            this.roundInfos.round = this._userData.firstRound.currentRound;
-            List<Score> scores = new List<Score>(this._userData.firstRound.scores);
-            this.newScores(scores);
-            fillPlayers();
+            this.newScores();
+            // fillPlayers();
             dynamic endTurn = new System.Dynamic.ExpandoObject();
-            endTurn.currentRound = this._userData.firstRound.currentRound;
-            endTurn.drawer = this._userData.firstRound.drawer;
+            endTurn.currentRound = this.endTurn.currentRound;
+            endTurn.drawer = this.endTurn.drawer;
+            endTurn.nextIsYou = this.endTurn.drawer == this._userData.userName;
             this.canDraw = false;
-            endTurn.nextIsYou = this._userData.firstRound.drawer == this._userData.userName;
-            newWords(this._userData.firstRound.choices);
-            newScores(this._userData.firstRound.scores);
+            this.newWords(this.endTurn.choices);
             _events.PublishOnUIThread(new endTurnRoutineEvent(endTurn));
         }
-
+        /*
         public void fillPlayers()
         {
             joueurs.Clear();
-            List<Score> scores = new List<Score>(this._userData.firstRound.scores);
-            foreach (Score score in scores)
+            foreach (Player player in this.endTurn.players)
             {
-                dynamic player = new System.Dynamic.ExpandoObject();
-                player.username = score.username;
-                player.score = score.updateScore.scoreTotal;
-                player.avatarSource = getAvatarSource(score.avatar);
-                joueurs.Add(player);
+                dynamic joueur = new System.Dynamic.ExpandoObject();
+                joueur.username = player.Username;
+                joueur.score = score.updateScore.scoreTotal;
+                joueur.avatarSource = score.player.Avatar;
+                joueurs.Add(joueur);
             }
         }
-
+        */
         public void sendGuess()
         {
             if (guessBox != null & guessBox != "")
@@ -446,7 +461,7 @@ namespace WPFUI.ViewModels
         {
             this.canDraw = true;
             /* TODO envoyer le mot au serveur */
-            this.roundInfos.word = message.word;
+            this.startTurn.word = message.word;
             _socketHandler.socket.Emit("start_turn", message.word);
         }
 
@@ -458,7 +473,7 @@ namespace WPFUI.ViewModels
 
         public void Handle(endTurnRoutineVMEvent message)
         {
-            this.HandleFirstRound();
+            this.HandleEndTurn();
         }
 
         public void updateRoundInfos()

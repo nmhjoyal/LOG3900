@@ -473,34 +473,26 @@ namespace WPFUI.Models
                     Console.WriteLine((string)json.feedback.log_message);
                 }
             });
-
-            this.socket.On("turn_ended", (endTurn) =>
-            {
-                EndTurn json = JsonConvert.DeserializeObject<EndTurn>(endTurn.ToString());
-                Console.WriteLine(endTurn.ToString());
-                this._userdata.firstRound = json;
-            });
         }
 
-        public void onMatch(RoundInfos roundInfos)
+        public void onMatch(StartTurn startTurn, EndTurn endTurn)
         {
-            this.socket.On("turn_ended", (endTurn) =>
+            this.socket.On("turn_ended", (new_endTurn) =>
             {
                 Console.WriteLine("onMatch turn_ended");
                 /* TODO: Find why the emit is not catched here */
-                EndTurn json = JsonConvert.DeserializeObject<EndTurn>(endTurn.ToString());
-                Console.WriteLine(endTurn.ToString());
-                this._userdata.firstRound = json;
+                EndTurn json = JsonConvert.DeserializeObject<EndTurn>(new_endTurn.ToString());
+                endTurn.set(json);
                 _events.PublishOnUIThread(new endTurnRoutineVMEvent());
             });
 
-            this.socket.On("turn_started", (time) =>
+            this.socket.On("turn_started", (new_startTurn) =>
             {
                 Console.WriteLine("onMatch turn_started");
                 /* TODO: transmit the turn time to the viewmodel */
-                dynamic json = JsonConvert.DeserializeObject(time.ToString());
-                roundInfos.word = (string)json.word;
-                _events.PublishOnUIThread(new startTurnRoutineEvent((int)json.timeLimit));
+                StartTurn json = JsonConvert.DeserializeObject<StartTurn>(new_startTurn.ToString());
+                startTurn.set(json);
+                _events.PublishOnUIThread(new startTurnRoutineEvent(json.timeLimit));
             });
 
             this.socket.On("guess_res", (Feedback) =>
