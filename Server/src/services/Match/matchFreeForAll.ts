@@ -48,7 +48,7 @@ export default class FreeForAll extends Match {
 
         if (this.currentWord != "") {
             if (username != drawerUsername) {
-                if(guess == this.currentWord) {
+                if(guess.toUpperCase() == this.currentWord.toUpperCase()) {
                     const message: Message = Admin.createAdminMessage(username + " guessed the word.", this.matchId);
                     io.in(this.matchId).emit("new_message", JSON.stringify(message));
         

@@ -232,7 +232,7 @@ export default abstract class Match {
         // compile game stats for the players and the standings.
 
         // notify everyone that the game is ended.
-        io.in(this.matchId).emit("match_ended");
+        io.in(this.matchId).emit("match_ended", this.players);
         
         this.isEnded = true; // to delete on future "update_matches" event called
     }
