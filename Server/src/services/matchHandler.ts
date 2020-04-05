@@ -39,7 +39,6 @@ export default class MatchHandler {
             createMatchFeedback.feedback = await this.chatHandler.createChatRoom(io, socket, matchRoom, user);
             if (createMatchFeedback.feedback.status) {
                 createMatchFeedback.feedback.status = false
-                console.log(JSON.stringify(createMatch));
                 if (createMatch.timeLimit >= TIME_LIMIT_MIN && createMatch.timeLimit <= TIME_LIMIT_MAX) {
                     if (createMatch.nbRounds >= NB_ROUNDS_MIN && createMatch.nbRounds <= NB_ROUNDS_MAX) {
                         const match: Match = MatchInstance.createMatch(matchId, user, createMatch, this.chatHandler, io);
@@ -149,7 +148,7 @@ export default class MatchHandler {
                 if (startMatchFeedback.feedback.status) {
                     io.in(match.matchId).emit("match_started", JSON.stringify(startMatchFeedback));
                     io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
-                    match.endTurn(io, false);
+                    match.endTurn(io);
                 } else {
                     socket.emit("match_started", JSON.stringify(startMatchFeedback));
                 }
@@ -167,7 +166,7 @@ export default class MatchHandler {
         if (user) {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if(match) {
-                match.startTurn(io, word, false);
+                match.startTurn(io, word);
             } else {
                 console.log("This match does not exist anymore");
             }
@@ -259,7 +258,6 @@ export default class MatchHandler {
             } else {
                 let virtualDrawing: VirtualDrawing | undefined = this.previews.get(socket.id);
                 if(virtualDrawing) {
-                    console.log("clear");
                     virtualDrawing.clear(socket);
                 };
             }

@@ -114,8 +114,6 @@ export default class ChatHandler {
     }
 
     public async joinChatRoom(io: SocketIO.Server, socket: SocketIO.Socket, roomId: string, user: PrivateProfile | undefined): Promise<JoinRoomFeedback> {
-        
-        console.log(roomId);
         let privateRoom: Room | undefined = this.findPrivateRoom(roomId);
         let room_joined: Room | null = null;
         let status: boolean = false;
@@ -167,7 +165,6 @@ export default class ChatHandler {
             room_joined: room_joined,
             isPrivate: isPrivate
         };
-        console.log(JSON.stringify(joinRoomFeedback));
         return joinRoomFeedback;
     }
 

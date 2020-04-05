@@ -14,7 +14,7 @@ export default class OneVsOne extends Match {
 
     }
 
-    public async startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): Promise<void> {
+    public async startTurn(io: SocketIO.Server, chosenWord: string): Promise<void> {
         throw new Error("Method not implemented.");
     }
 

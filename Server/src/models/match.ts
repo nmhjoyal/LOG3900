@@ -7,8 +7,8 @@ export interface CreateMatch {
     timeLimit: number /* in seconds */
     matchMode: MatchMode
 }
-export const NB_ROUNDS_MIN: number = 1; /* 30 sec minimum */
-export const NB_ROUNDS_MAX: number = 10;/* 2 min maximum */
+export const NB_ROUNDS_MIN: number = 1;
+export const NB_ROUNDS_MAX: number = 10;
 export const TIME_LIMIT_MIN: number = 30; /* 30 sec minimum */
 export const TIME_LIMIT_MAX: number = 120;/* 2 min maximum */
 
@@ -30,6 +30,5 @@ export interface EndTurn {
     currentRound: number
     players: Player[]
     choices: string[]
-    drawer: string  // indicates if he is the drawer in FreeForAll and OneVsOne.
-                    // not used in SprintCoop and SprintSolo because the players are always guessing
+    drawer: string  // indicates who is the drawer useful in FreeForAll
 }
