@@ -148,7 +148,7 @@ export default class MatchHandler {
                 if (startMatchFeedback.feedback.status) {
                     io.in(match.matchId).emit("match_started", JSON.stringify(startMatchFeedback));
                     io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
-                    match.endTurn(io, false);
+                    match.endTurn(io);
                 } else {
                     socket.emit("match_started", JSON.stringify(startMatchFeedback));
                 }
@@ -166,7 +166,7 @@ export default class MatchHandler {
         if (user) {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if(match) {
-                match.startTurn(io, word, false);
+                match.startTurn(io, word);
             } else {
                 console.log("This match does not exist anymore");
             }
