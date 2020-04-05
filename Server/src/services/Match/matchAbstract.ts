@@ -42,7 +42,7 @@ export default abstract class Match {
 
     // Match methods
     public async abstract startTurn(io: SocketIO.Server, chosenWord: string): Promise<void>;
-    public async abstract endTurn(io: SocketIO.Server, drawerLeft: boolean): Promise<void>;
+    public async abstract endTurn(io: SocketIO.Server): Promise<void>;
     public abstract guess(io: SocketIO.Server, guess: string, username: string): Feedback;
 
     protected constructor(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler, matchSettings: MatchSettings) {
@@ -95,10 +95,8 @@ export default abstract class Match {
             await this.chatHandler.leaveChatRoom(io, socket, this.matchId, user);
             if (this.isStarted) {
                 if (this.getNbHumanPlayers() > this.ms.MIN_NB_HP) {
-                    // after the match is started the host is not important.
                     if (player == this.drawer) {
-                        this.assignDrawer();
-                        this.endTurn(io, true);
+                        this.endTurn(io);
                     }
                 } else {
                     this.endMatch(io);
@@ -308,6 +306,10 @@ export default abstract class Match {
         for (let player of this.players) {
             player.score.scoreTurn = 0;
         }
+    }
+
+    protected matchIsEnded(): boolean {
+        return this.round == this.nbRounds + 1;
     }
 
     protected everyoneHasGuessed(): boolean {

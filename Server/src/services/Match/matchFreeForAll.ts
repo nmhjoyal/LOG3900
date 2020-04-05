@@ -26,24 +26,16 @@ export default class FreeForAll extends Match {
         
         this.timer = Date.now();
         this.timeout = setTimeout(() => {
-            this.endTurn(io, false);
+            this.endTurn(io);
         }, this.timeLimit * 1000);
     }
 
-    public async endTurn(io: SocketIO.Server, drawerLeft: boolean): Promise<void> {
+    public async endTurn(io: SocketIO.Server): Promise<void> {
         this.reset(io);
 
-        let matchIsEnded: boolean = false;
+        this.assignDrawer();
 
-        if (!drawerLeft){
-            this.assignDrawer();
-
-            if (this.round == this.nbRounds + 1) {
-                matchIsEnded = true;
-            }
-        }
-
-        if (matchIsEnded) {
+        if (this.matchIsEnded()) {
             this.endMatch(io);
         } else {
             this.endTurnGeneral(io);
@@ -67,7 +59,7 @@ export default class FreeForAll extends Match {
                     io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
         
                     if(this.everyoneHasGuessed()) {
-                        this.endTurn(io, false);
+                        this.endTurn(io);
                     }
                     feedback.status = true;
                 } else {
