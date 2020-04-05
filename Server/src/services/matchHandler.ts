@@ -39,7 +39,6 @@ export default class MatchHandler {
             createMatchFeedback.feedback = await this.chatHandler.createChatRoom(io, socket, matchRoom, user);
             if (createMatchFeedback.feedback.status) {
                 createMatchFeedback.feedback.status = false
-                console.log(JSON.stringify(createMatch));
                 if (createMatch.timeLimit >= TIME_LIMIT_MIN && createMatch.timeLimit <= TIME_LIMIT_MAX) {
                     if (createMatch.nbRounds >= NB_ROUNDS_MIN && createMatch.nbRounds <= NB_ROUNDS_MAX) {
                         const match: Match = MatchInstance.createMatch(matchId, user, createMatch, this.chatHandler, io);
@@ -259,7 +258,6 @@ export default class MatchHandler {
             } else {
                 let virtualDrawing: VirtualDrawing | undefined = this.previews.get(socket.id);
                 if(virtualDrawing) {
-                    console.log("clear");
                     virtualDrawing.clear(socket);
                 };
             }

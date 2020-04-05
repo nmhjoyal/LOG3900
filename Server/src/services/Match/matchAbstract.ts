@@ -182,9 +182,9 @@ export default abstract class Match {
         if (player) {
             if (this.isHost(player)) {
                 const nbHumanPlayers: number = this.getNbHumanPlayers();
-                if (nbHumanPlayers > this.ms.MIN_NB_HP || nbHumanPlayers < this.ms.MAX_NB_HP) {
+                if (nbHumanPlayers >= this.ms.MIN_NB_HP && nbHumanPlayers <= this.ms.MAX_NB_HP) {
                     const nbVirtualPlayers: number = this.getNbVirtualPlayers();
-                    if (nbVirtualPlayers > this.ms.MIN_NB_VP || nbVirtualPlayers < this.ms.MAX_NB_VP) {
+                    if (nbVirtualPlayers >= this.ms.MIN_NB_VP && nbVirtualPlayers <= this.ms.MAX_NB_VP) {
                         this.initMatch(io);
                         startMatchFeedback.nbRounds = this.nbRounds;
                         startMatchFeedback.feedback.status = true;
@@ -212,7 +212,7 @@ export default abstract class Match {
     protected async endTurnGeneral(io: SocketIO.Server): Promise<void> {
         const endTurn: EndTurn = this.createEndTurn();
 
-        if (this.currentWord != "") { // currentWord is empty at the first endTurn
+        if (this.currentWord) { // currentWord is undefined at the first endTurn
             const message: Message = Admin.createAdminMessage("The word was " + this.currentWord, this.matchId);
             io.in(this.matchId).emit("new_message", JSON.stringify(message));
             io.in(this.matchId).emit("new_message", JSON.stringify(this.virtualPlayer.getEndTurnMessage(this.vp, this.matchId)));
@@ -292,9 +292,8 @@ export default abstract class Match {
             // Init to the last player on round 0 so it resets in endTurn for round 1 with first player.
             this.drawer = this.players[this.players.length - 1].user.username;
 
-            if (this.getVPUsername() == "") { // no vp were added.
-                this.vp = this.virtualPlayer.create().user.username;
-            }
+            const username: string | undefined = this.getVPUsername(); 
+            this.vp = (username) ? username : this.virtualPlayer.create().user.username;
         }
         this.round = 0;
         
@@ -311,7 +310,8 @@ export default abstract class Match {
         let everyoneHasGuessed: boolean = true;
 
         for (let player of this.players) {
-            if (player.score.scoreTurn == 0 && player.user.username != this.drawer) everyoneHasGuessed = false;
+            if (player.score.scoreTurn == 0 && player.user.username != this.drawer && !player.isVirtual) 
+                everyoneHasGuessed = false;
         }
 
         return everyoneHasGuessed;
@@ -408,9 +408,8 @@ export default abstract class Match {
        return this.players.find(player => username == player.user.username);
     }
 
-    protected getVPUsername(): string {
-        const vp: Player | undefined = this.players.find(player => player.isVirtual);
-        return (vp) ? vp.user.username : "";
+    protected getVPUsername(): string | undefined {
+        return this.players.find(player => player.isVirtual)?.user.username;
     }
 
     protected createMatchInfos(host: string, userInfos: PublicProfile[]): MatchInfos {
@@ -438,7 +437,7 @@ export default abstract class Match {
     protected createStartTurn(word: string): StartTurn {
         return { 
             timeLimit: this.timeLimit,
-            word: word.replace(/[a-z]/gi, '_')
+            word: word.replace(/[a-z]/gi, '_ ')
         };
     }
 

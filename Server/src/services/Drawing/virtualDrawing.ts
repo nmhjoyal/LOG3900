@@ -64,9 +64,7 @@ export class VirtualDrawing {
         } else {
             socketIO.emit("new_clear");
         }
-        for(const timeout of this.timeouts) {
-            clearTimeout(timeout);
-        }
+        this.timeouts.forEach(clearTimeout);
         this.timeouts = [];
     }
 }

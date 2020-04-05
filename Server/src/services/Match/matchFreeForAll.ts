@@ -18,7 +18,6 @@ export default class FreeForAll extends Match {
 
     public async startTurn(io: SocketIO.Server, word: string, isVirtual: boolean): Promise<void> {
         this.currentWord = word;
-        this.drawing.reset(io);
         io.in(this.matchId).emit("turn_started", this.createStartTurn(this.currentWord));
         
         if (isVirtual) {
@@ -28,15 +27,16 @@ export default class FreeForAll extends Match {
         
         this.timer = Date.now();
         this.timeout = setTimeout(() => {
-            if(isVirtual) {
-                this.virtualDrawing.clear(io);
-            }
             this.endTurn(io, false);
         }, this.timeLimit * 1000);
     }
 
     public async endTurn(io: SocketIO.Server, drawerLeft: boolean): Promise<void> {
-        clearTimeout(this.timeout);
+        // TODO: Function reset for all timeouts and virtual drawings. 
+        clearTimeout(this.timeout)
+        this.virtualDrawing.clear(io);
+        this.drawing.reset(io);
+
         let matchIsEnded: boolean = false;
 
         if (!drawerLeft){
