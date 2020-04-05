@@ -443,7 +443,7 @@ export default abstract class Match {
     protected createStartTurn(word: string): StartTurn {
         return { 
             timeLimit: this.timeLimit,
-            word: word.replace(/[a-z]/gi, '_ ')
+            word: word.replace(/[a-z]/gi, '_')
         };
     }
 
