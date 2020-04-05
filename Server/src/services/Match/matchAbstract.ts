@@ -43,7 +43,7 @@ export default abstract class Match {
     // Match methods
     public async abstract startTurn(io: SocketIO.Server, chosenWord: string): Promise<void>;
     public async abstract endTurn(io: SocketIO.Server): Promise<void>;
-    public abstract guess(io: SocketIO.Server, guess: string, username: string): Feedback;
+    public abstract guessRight(io: SocketIO.Server, username: string): void;
 
     protected constructor(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler, matchSettings: MatchSettings) {
         this.players = [this.createPlayer(user)];
@@ -202,6 +202,30 @@ export default abstract class Match {
         }
 
         return startMatchFeedback;
+    }
+
+    public guess(io: SocketIO.Server, guess: string, username: string): Feedback {
+        let feedback: Feedback = { status: false, log_message: "" };
+        const drawerUsername: string = this.drawer.user.username;
+
+        if (this.currentWord != "") {
+            if (username != drawerUsername) {
+                if(guess.toUpperCase() == this.currentWord.toUpperCase()) {
+                    // Depends on the instance
+                    this.guessRight(io, username); 
+
+                    feedback.status = true;
+                } else {
+                    feedback.log_message = "Your guess is wrong.";
+                }
+            } else {
+                feedback.log_message = "The player drawing is not supposed to guess.";
+            }
+        } else  {
+            feedback.log_message = "The word guessed is empty.";
+        }
+
+        return feedback;
     }
 
     protected async endTurnGeneral(io: SocketIO.Server): Promise<void> {

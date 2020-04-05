@@ -2,7 +2,6 @@ import Match from "./matchAbstract";
 import PublicProfile from "../../models/publicProfile";
 import ChatHandler from "../chatHandler";
 import { CreateMatch } from "../../models/match";
-import { Feedback } from "../../models/feedback";
 import { sprintSoloSettings } from "../../models/matchMode";
 
 export default class SprintSolo extends Match {
@@ -21,7 +20,7 @@ export default class SprintSolo extends Match {
         throw new Error("Method not implemented.");
     }
 
-    public guess(io: import("socket.io").Server, guess: string, username: string): Feedback {
+    public guessRight(io: SocketIO.Server, username: string): void {
         throw new Error("Method not implemented.");
     }
 }

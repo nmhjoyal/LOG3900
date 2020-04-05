@@ -6,7 +6,6 @@ import { gameDB } from "../Database/gameDB";
 import { Game } from "../../models/drawPoint";
 import { Message } from "../../models/message";
 import Admin from "../../models/admin";
-import { Feedback } from "../../models/feedback";
 import { freeForAllSettings } from "../../models/matchMode";
 
 export default class FreeForAll extends Match {
@@ -42,36 +41,18 @@ export default class FreeForAll extends Match {
         }
     }
 
-    public guess(io: SocketIO.Server, guess: string, username: string): Feedback {
-        let feedback: Feedback = { status: false, log_message: "" };
-        const drawerUsername: string = this.drawer.user.username;
+    public guessRight(io: SocketIO.Server, username: string): void {
+        const message: Message = Admin.createAdminMessage(username + " guessed the word.", this.matchId);
+        io.in(this.matchId).emit("new_message", JSON.stringify(message));
 
-        if (this.currentWord != "") {
-            if (username != drawerUsername) {
-                if(guess.toUpperCase() == this.currentWord.toUpperCase()) {
-                    const message: Message = Admin.createAdminMessage(username + " guessed the word.", this.matchId);
-                    io.in(this.matchId).emit("new_message", JSON.stringify(message));
-        
-                    const score: number = Math.round((Date.now() - this.timer) / 1000) * 10;
-                    this.updateScore(username, score);
-                    this.updateScore(drawerUsername, Math.round(score / this.players.length));
+        const score: number = Math.round((Date.now() - this.timer) / 1000) * 10;
+        this.updateScore(username, score);
+        this.updateScore(this.drawer.user.username, Math.round(score / this.players.length));
 
-                    io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
-        
-                    if(this.everyoneHasGuessed()) {
-                        this.endTurn(io);
-                    }
-                    feedback.status = true;
-                } else {
-                    feedback.log_message = "Your guess is wrong.";
-                }
-            } else {
-                feedback.log_message = "The player drawing is not supposed to guess.";
-            }
-        } else  {
-            feedback.log_message = "The word guessed is empty.";
+        io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
+
+        if(this.everyoneHasGuessed()) {
+            this.endTurn(io);
         }
-
-        return feedback;
     }
 }
