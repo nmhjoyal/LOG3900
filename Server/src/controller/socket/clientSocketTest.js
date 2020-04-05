@@ -4,7 +4,12 @@ var socket1 = io.connect('http://localhost:5000', { reconnect: true });
 
 var message = {
     content : "Fuck you, va chier",
-    roomId: "room1"
+    roomId: "General"
+}
+
+var signIn = {
+    username : "zak",
+    password : "zak"
 }
 
 var invitation = {
@@ -18,7 +23,7 @@ var createroom = {
 }
 
 socket1.on("connect", function (data) {
-    socket1.emit("test_get");
+    socket1.emit("sign_in", signIn);
 });
 
 socket1.on("sent_path", function(data) {console.log("ICI !!!!! : " + data)});
@@ -26,7 +31,7 @@ socket1.on("sent_path", function(data) {console.log("ICI !!!!! : " + data)});
 socket1.on("user_signed_in", function (data) {
     console.log("signed in : " + JSON.parse(data)["feedback"]);
     
-    socket1.emit("connect_free_draw");
+    socket1.emit("send_message", message);
     // socket1.emit("create_chat_room", createroom);
     // socket1.emit("getroom_test", "room99");
     // socket1.emit("create_chat_room", "room1");

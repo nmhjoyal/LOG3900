@@ -67,7 +67,7 @@
 
             </StackPanel>
 
-            <InkCanvas Strokes="{Binding Path=Traits, Mode=OneTime}" Name="imageTransformee" Grid.Row="7" Grid.Column="3" Grid.ColumnSpan="4" Grid.RowSpan="6">
+            <InkCanvas StrokeCollected="imageTransformee_StrokeCollected" Strokes="{Binding Path=Traits, Mode=OneTime}" Name="imageTransformee" Grid.Row="7" Grid.Column="3" Grid.ColumnSpan="4" Grid.RowSpan="6">
             </InkCanvas>
 
 

@@ -1,5 +1,6 @@
 import { MatchMode } from "./matchMode";
 import PublicProfile from "./publicProfile";
+import Player from "./player";
 
 export interface CreateMatch {
     nbRounds: number
@@ -27,12 +28,8 @@ export interface StartTurn {
 
 export interface EndTurn {
     currentRound: number
-    scores: Map<string, UpdateScore>/* username, score */
+    players: Player[]
     choices: string[]
     drawer: string  // indicates if he is the drawer in FreeForAll and OneVsOne.
                     // not used in SprintCoop and SprintSolo because the players are always guessing
-}
-export interface UpdateScore {
-    scoreTotal: number
-    scoreTurn: number
 }

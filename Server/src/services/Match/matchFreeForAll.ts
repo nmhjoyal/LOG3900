@@ -1,7 +1,7 @@
 import Match from "./matchAbstract";
 import PublicProfile from "../../models/publicProfile";
 import ChatHandler from "../chatHandler";
-import { CreateMatch } from "../../models/match";
+import { CreateMatch,} from "../../models/match";
 import Player from "../../models/player";
 import { gameDB } from "../Database/gameDB";
 import { Game } from "../../models/drawPoint";
@@ -18,6 +18,7 @@ export default class FreeForAll extends Match {
 
     public async startTurn(io: SocketIO.Server, word: string, isVirtual: boolean): Promise<void> {
         this.currentWord = word;
+        this.drawing.reset(io);
         io.in(this.matchId).emit("turn_started", this.createStartTurn(this.currentWord));
         
         if (isVirtual) {
@@ -34,23 +35,26 @@ export default class FreeForAll extends Match {
         }, this.timeLimit * 1000);
     }
 
-    protected async endTurn(io: SocketIO.Server, drawerLeft: boolean): Promise<void> {
+    public async endTurn(io: SocketIO.Server, drawerLeft: boolean): Promise<void> {
         clearTimeout(this.timeout);
+        let matchIsEnded: boolean = false;
+
         if (!drawerLeft){
             let oldDrawer: Player | undefined = this.getPlayer(this.drawer);
             if (oldDrawer) {
                 this.assignDrawer(oldDrawer);
 
-                if (this.round == this.nbRounds) {
-                    this.endMatch(io);
+                if (this.round == this.nbRounds + 1) {
+                    matchIsEnded = true;
                 }
             }
-        } else { // the drawer left the match during the round.
-            if (this.getNbHumanPlayers() < this.ms.MIN_NB_HP) {
-                this.endMatch(io);
-            }
         }
-        this.endTurnGeneral(io);
+
+        if (matchIsEnded) {
+            this.endMatch(io);
+        } else {
+            this.endTurnGeneral(io);
+        }
     }
 
     public guess(io: SocketIO.Server, guess: string, username: string): Feedback {
@@ -65,10 +69,13 @@ export default class FreeForAll extends Match {
                     const score: number = Math.round((Date.now() - this.timer) / 1000) * 10;
                     this.updateScore(username, score);
                     this.updateScore(this.drawer, Math.round(score / this.players.length));
+
+                    io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
         
                     if(this.everyoneHasGuessed()) {
                         this.endTurn(io, false);
                     }
+                    feedback.status = true;
                 } else {
                     feedback.log_message = "Your guess is wrong.";
                 }

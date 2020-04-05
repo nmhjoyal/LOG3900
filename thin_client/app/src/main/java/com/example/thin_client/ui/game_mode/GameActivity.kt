@@ -47,6 +47,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
     private val lettersAdapter = GroupAdapter<GroupieViewHolder>()
     private var timer: CountDownTimer? = null
     private var isGameStarted = false
+    private var isWaitingRoomShowing = false
     private var currentDrawer = ""
     private var nbTries = 0
     private var firstTurnStarted = false
@@ -64,6 +65,10 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
 
         currentUser = PreferenceHandler(this).getUser().username
+        back_to_lobby.setOnClickListener(({
+            finish()
+        }))
+
         draw_view_container.bringToFront()
     }
 
@@ -76,7 +81,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
             }
             MatchMode.COLLABORATIVE-> {}
             MatchMode.FREE_FOR_ALL -> {
-                if (!isGameStarted) {
+                if (!isWaitingRoomShowing) {
                     toolbar.visibility = View.GONE
                     points_view.visibility = View.GONE
                     val transaction = manager.beginTransaction()
@@ -84,6 +89,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                     transaction.replace(R.id.draw_view_container, waitingRoom)
                     transaction.addToBackStack(null)
                     transaction.commitAllowingStateLoss()
+                    isWaitingRoomShowing = true
                 }
             }
             MatchMode.ONE_ON_ONE -> {}
@@ -94,6 +100,11 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
     override fun onStop() {
         super.onStop()
         turnOffSocketEvents()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        GameManager.isGameStarted = false
     }
 
     override fun guessSent() {
@@ -258,7 +269,13 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                 .on(SocketEvent.TURN_ENDED, ({ data ->
                     val turnParams = Gson().fromJson(data.first().toString(), EndTurn::class.java)
                     Handler(Looper.getMainLooper()).post(({
-                        resetTurn(turnParams.drawer, turnParams.scores[currentUser]?.scoreTotal)
+                        var currentUserScore = 0
+                        for (user in turnParams.players) {
+                            if (user.user.username == currentUser) {
+                                currentUserScore = user.score.scoreTotal.toInt()
+                            }
+                        }
+                        resetTurn(turnParams.drawer, currentUserScore)
                         user_block.bringToFront()
                         if (!firstTurnStarted) {
                             message.text = String.format(resources.getString(R.string.round), turnParams.currentRound.toInt())
@@ -270,12 +287,9 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                             currentRound = turnParams.currentRound.toInt()
                             val pointsAdapter = GroupAdapter<GroupieViewHolder>()
                             message.text = wordWasString
-                            for (score in turnParams.scores) {
-                                pointsAdapter.add(PlayerPointHolder(score.key, score.value.scoreTurn.toInt()))
+                            for (score in turnParams.players) {
+                                pointsAdapter.add(PlayerPointHolder(score.user.username, score.score.scoreTurn.toInt()))
                             }
-                            pointsAdapter.add(PlayerPointHolder("user", 20))
-                            pointsAdapter.add(PlayerPointHolder("user", 10))
-                            pointsAdapter.add(PlayerPointHolder("user", 0))
                             user_points.adapter = pointsAdapter
                             user_points.visibility = View.VISIBLE
                             Handler().postDelayed({
@@ -321,6 +335,13 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                                 .show()
                         })
                     }
+                }))
+                .on(SocketEvent.MATCH_ENDED, ({ data ->
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        user_block.bringToFront()
+                        message.text = resources.getText(R.string.game_over)
+                        back_to_lobby.visibility = View.VISIBLE
+                    })
                 }))
         }
     }

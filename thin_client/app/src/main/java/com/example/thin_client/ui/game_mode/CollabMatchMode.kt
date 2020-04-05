@@ -42,7 +42,6 @@ class CollabMatchMode : Fragment() {
 
     }
 
-
     override fun onStart() {
         super.onStart()
         refreshMatchesAdapter()

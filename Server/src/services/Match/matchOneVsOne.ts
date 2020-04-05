@@ -7,17 +7,18 @@ import { OneVsOneSettings } from "../../models/matchMode";
 
 export default class OneVsOne extends Match {
 
-    public constructor(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler) {
+    public constructor(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler, io: SocketIO.Server) {
         super(matchId, user, createMatch, chatHandler, OneVsOneSettings);
-        // add virtual player 
-        // io.in(this.matchId).emit("update_players", JSON.stringify(this.getPlayersPublicProfile()));
+        // Add the only virtual player in the mode 1vs1, sprint coop and solo
+        this.vp = this.addVP(io).user.username;
+
     }
 
-    public startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): void {
+    public async startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): Promise<void> {
         throw new Error("Method not implemented.");
     }
 
-    public endTurn(io: SocketIO.Server): void {
+    public async endTurn(io: SocketIO.Server): Promise<void> {
         throw new Error("Method not implemented.");
     }
 

@@ -27,6 +27,7 @@ namespace WPFUI.Models
         Socket _socket;
         public bool _canConnect;
         private string _traitJSON;
+        private string _roomToBeCreated;
 
 
         public bool canConnect
@@ -63,19 +64,22 @@ namespace WPFUI.Models
         {
             _userdata = userdata;
             _events = events;
+            _roomToBeCreated = null;
             // TestPOSTWebRequest(user);
             // TestGETWebRequest("Testing get...");
             this._socket = IO.Socket("http://localhost:5000");
             _socket.On("user_signed_in", (signInFeedback) =>
             {
                 SignInFeedback feedback = JsonConvert.DeserializeObject<SignInFeedback>(signInFeedback.ToString());
-            if (feedback.feedback.status)
-            {
-                _events.PublishOnUIThread(new joinedRoomReceived(feedback.rooms_joined));
-                _userdata.avatarName = feedback.rooms_joined.Single(i => i.roomName == "General").avatars[_userdata.userName];
-                Console.WriteLine("fruit:");
-                Console.WriteLine(_userdata.avatarName);
-                _events.PublishOnUIThread(new LogInEvent());
+                if (feedback.feedback.status)
+                {
+                    Console.WriteLine("wudup");
+                    Console.WriteLine(JsonConvert.SerializeObject(feedback.rooms_joined[0].avatars).ToString());
+                    _events.PublishOnUIThread(new joinedRoomReceived(feedback.rooms_joined));
+                    _userdata.avatarName = feedback.rooms_joined.Single(i => i.roomName == "General").avatars[_userdata.userName];
+                    Console.WriteLine("fruit:");
+                    Console.WriteLine(_userdata.avatarName);
+                    _events.PublishOnUIThread(new LogInEvent());
 
                 }
                 //voir doc
@@ -107,11 +111,34 @@ namespace WPFUI.Models
 
             _socket.On("user_joined_room", (feedback) =>
             {
-                JoinRoomFeedBack fb = JsonConvert.DeserializeObject<JoinRoomFeedBack>(feedback.ToString());
-                if (fb.feedback.status & fb.joinedRoom != null)
+                dynamic magic = JsonConvert.DeserializeObject(feedback.ToString());
+                if (magic.room_joined != null & magic.isPrivate != null)
                 {
-                    _userdata.addRoom(fb.joinedRoom);
+                    JoinRoomFeedBack fb = JsonConvert.DeserializeObject<JoinRoomFeedBack>(feedback.ToString());
+                    if (fb.feedback.status & fb.room_joined != null)
+                    {
+                        Console.WriteLine("user_joined_room :");
+                        Console.WriteLine(fb.room_joined.id);
+
+                        if (fb.isPrivate)
+                        {
+                            _userdata.addJoinedRoom(fb.room_joined);
+                        }
+                        else
+                        {
+                            _userdata.addJoinedRoom(fb.room_joined);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine(fb.feedback.log_message);
+                    }
+                } else
+                {
+                    Console.WriteLine(magic);
+                    Console.WriteLine(magic.feedback.log_message);
                 }
+
                 //voir doc
             });
 
@@ -128,19 +155,31 @@ namespace WPFUI.Models
             _socket.On("room_created", (feedback) =>
             {
                 Feedback json = JsonConvert.DeserializeObject<Feedback>(feedback.ToString());
-                if (json.status)
+                Console.WriteLine("Room created onSocket");
+                if (json.status & _roomToBeCreated != null)
                 {
+                    Console.WriteLine(json.log_message);
                     getPublicChannels();
-                    _events.PublishOnUIThread(new createTheRoomEvent());
+                    _userdata.addJoinedRoom(new Room(_roomToBeCreated, new Message[0], new Dictionary<string, string>()));
+                    _roomToBeCreated = null;
+                    /* TODO: Ajouter l'avatar du user dans le dictionnaire */
                 }
             });
         }
 
         public void createRoom(string roomID)
         {
+            _roomToBeCreated = roomID;
             CreateRoom cR = new CreateRoom(roomID, false);
             _socket.Emit("create_chat_room", JsonConvert.SerializeObject(cR));
         }
+
+        public void joinRoom(string roomID)
+        {
+            Console.WriteLine("tentive de join de : " + roomID);
+            _socket.Emit("join_chat_room", roomID);
+        }
+
         public void connectionAttempt()
         {
             _user = new User(_userdata.userName, _userdata.password);
@@ -171,7 +210,7 @@ namespace WPFUI.Models
         {
             TestPOSTWebRequest(privateProfile, "/profile/create/");
         }
-        
+
         public void getPublicChannels()
         {
             _socket.Emit("get_rooms");
@@ -216,7 +255,8 @@ namespace WPFUI.Models
             string drawersTool = "";
             int currentStrokeIndex = -1;
 
-            this.socket.On("new_stroke", (new_stroke) => {
+            this.socket.On("new_stroke", (new_stroke) =>
+            {
                 Console.WriteLine("new stroke");
                 dynamic json = JsonConvert.DeserializeObject(new_stroke.ToString());
                 drawersTool = "crayon";
@@ -261,15 +301,18 @@ namespace WPFUI.Models
                 strokes.Add(stroke, top);
             });
 
-            this._socket.On("new_erase_stroke", () => {
+            this._socket.On("new_erase_stroke", () =>
+            {
                 drawersTool = "efface_trait";
             });
 
-            this._socket.On("new_erase_point", () => {
+            this._socket.On("new_erase_point", () =>
+            {
                 drawersTool = "efface_segment";
             });
 
-            this.socket.On("new_point", (new_point) => {
+            this.socket.On("new_point", (new_point) =>
+            {
                 dynamic json = JsonConvert.DeserializeObject(new_point.ToString());
                 if (drawersTool == "crayon")
                 {
@@ -335,6 +378,148 @@ namespace WPFUI.Models
         public void offPreviewing()
         {
             this._socket.Off("preview_done");
+        }
+
+        public void onLobby(BindableCollection<Match> matches)
+        {
+            this.socket.On("update_matches", (new_matches) => {
+                matches.Clear();
+                matches.AddRange(JsonConvert.DeserializeObject<BindableCollection<Match>>(new_matches.ToString()));
+            });
+
+            this.socket.On("match_joined", (joinRoomFeedback) =>
+            {
+                JoinRoomFeedBack jRF = JsonConvert.DeserializeObject<JoinRoomFeedBack>(joinRoomFeedback.ToString());
+                if(jRF.feedback.status)
+                {
+                    if (jRF.isPrivate)
+                    {
+                        this._userdata.matchId = jRF.room_joined.id;
+                        this._userdata.addJoinedRoom(jRF.room_joined);
+                        this._events.PublishOnUIThread(new waitingRoomEvent());
+                    }
+                } else
+                {
+                    Console.WriteLine(jRF.feedback.log_message);
+                }
+            });
+        }
+
+        public void offLobby()
+        {
+            this.socket.Off("update_matches");
+        }
+
+        public void onCreateMatch()
+        {
+            this.socket.On("match_created", (new_match) =>
+            {
+                dynamic json = JsonConvert.DeserializeObject(new_match.ToString());
+                if ((Boolean)json.feedback.status)
+                {
+                    this._userdata.matchId = json.matchId;
+                    Room room = new Room(this._userdata.matchId, new Message[0], new Dictionary<string, string>());
+                    this._userdata.addJoinedRoom(room);
+                    this._events.PublishOnUIThread(new waitingRoomEvent());
+                    this.offCreateMatch();
+                }
+            });
+        }
+
+        public void offCreateMatch()
+        {
+            this.socket.Off("match_created");
+        }
+
+        public void onWaitingRoom(BindableCollection<Player> players)
+        {
+            this.socket.On("update_players", (new_players) =>
+            {
+                players.Clear();
+                players.AddRange(JsonConvert.DeserializeObject<BindableCollection<Player>>(new_players.ToString()));
+            });
+
+            this.socket.On("match_left", (feedback) =>
+            {
+                dynamic json = JsonConvert.DeserializeObject(feedback.ToString());
+                Console.WriteLine(json);
+                if((Boolean)json.status)
+                {
+                    this._events.PublishOnUIThread(new goBackMainEvent());
+                    this.offWaitingRoom();
+                }
+            });
+
+            this.socket.On("vp_added", (feedback) =>
+            {
+                Console.WriteLine(JsonConvert.DeserializeObject(feedback.ToString()));
+            });
+
+            this.socket.On("vp_removed", (feedback) =>
+            {
+                Console.WriteLine(JsonConvert.DeserializeObject(feedback.ToString()));
+            });
+
+            this.socket.On("match_started", (startMatchFeedback) =>
+            {
+                dynamic json = JsonConvert.DeserializeObject(startMatchFeedback.ToString());
+                if((Boolean)json.feedback.status)
+                {
+                    this._userdata.nbRounds = (int)json.nbRounds;
+                } else
+                {
+                    Console.WriteLine((string)json.feedback.log_message);
+                }
+            });
+
+            this.socket.On("turn_ended", (endTurn) =>
+            {
+                EndTurn json = JsonConvert.DeserializeObject<EndTurn>(endTurn.ToString());
+                Console.WriteLine(endTurn.ToString());
+                this._userdata.firstRound = json;
+                this.offWaitingRoom();
+                onMatch();
+                _events.PublishOnUIThread(new gameEvent());
+            });
+        }
+
+        public void onMatch()
+        {
+            this.socket.On("turn_ended", (endTurn) =>
+            {
+                Console.WriteLine("onMatch turn_ended");
+                /* TODO: Find why the emit is not catched here */
+                EndTurn json = JsonConvert.DeserializeObject<EndTurn>(endTurn.ToString());
+                Console.WriteLine(endTurn.ToString());
+                this._userdata.firstRound = json;
+                _events.PublishOnUIThread(new endTurnRoutineVMEvent());
+            });
+
+            this.socket.On("turn_started", (time) =>
+            {
+                Console.WriteLine("onMatch turn_started");
+                /* TODO: transmit the turn time to the viewmodel */
+                dynamic json = JsonConvert.DeserializeObject(time.ToString());
+                _events.PublishOnUIThread(new startTurnRoutineEvent((int)json));
+            });
+
+            this.socket.On("guess_res", (Feedback) =>
+            {
+                dynamic json = JsonConvert.DeserializeObject(Feedback.ToString());
+                Console.WriteLine("onMatch guess_res");
+                Console.WriteLine(json.status);
+                Console.WriteLine(json.log_message);
+            });
+        }
+
+        public void offWaitingRoom()
+        {
+            this.socket.Off("update_players");
+            this.socket.Off("match_left");
+            this.socket.Off("vp_added");
+            this.socket.Off("vp_removed");
+            this.socket.Off("match_started");
+            this.socket.Off("turn_ended");
         }
     }
 

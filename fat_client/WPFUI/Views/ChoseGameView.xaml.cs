@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Caliburn.Micro;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,33 +11,28 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WPFUI.Models;
 using WPFUI.ViewModels;
-using Caliburn;
 
 namespace WPFUI.Views
 {
     /// <summary>
-    /// Interaction logic for chatBoxWindowView.xaml
+    /// Logique d'interaction pour ChoseGameView.xaml
     /// </summary>
-    public partial class chatBoxWindowView : Window
+    public partial class ChoseGameView : UserControl
     {
-        public chatBoxWindowView()
+        public ChoseGameView()
         {
             InitializeComponent();
         }
-        private void refocus(object sender, RoutedEventArgs e)
-        {
-            currentMessage.Focus();
-        }
 
-        private void currentMessage_KeyDown(object sender, KeyEventArgs e)
+        private void joinGame(object sender, RoutedEventArgs e)
         {
-            if (e.Key == Key.Enter)
-            {
-                //  _viewModel.sendMessage(currentMessage.Text);
-            }
-
+            string matchId = (string)(sender as Button).Tag;
+            (this.DataContext as ChoseGameViewModel).joinGame(matchId);
         }
     }
+
 }

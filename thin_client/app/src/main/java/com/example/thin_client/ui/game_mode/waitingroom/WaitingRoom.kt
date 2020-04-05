@@ -13,9 +13,11 @@ import com.example.thin_client.R
 import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.game.GameManager
 import com.example.thin_client.data.game.Player
+import com.example.thin_client.data.rooms.RoomManager
 import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
-import com.example.thin_client.ui.waitingroom.WaitingRoomItem
+import com.example.thin_client.ui.helpers.DEFAULT_INTERVAL
+import com.example.thin_client.ui.helpers.setOnClickListener
 import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -30,26 +32,25 @@ class WaitingRoom : Fragment() {
 
         super.onViewCreated(view, savedInstanceState)
 
-        start_match.setOnClickListener((({
+        recyclerview_available_players.adapter = adapter
+        setUpSocketEvents()
+
+        start_match.setOnClickListener(DEFAULT_INTERVAL) {
             SocketHandler.startMatch()
-        })))
+        }
+
 
         add_vp.setOnClickListener((({
             SocketHandler.addVirtualPlayer()
-            adapter.add(WaitingRoomItem("Harry", "pear"))
-            GameManager.addVirtualPlayer()
         })))
 
         remove_vp.setOnClickListener((({
             SocketHandler.removeVirtualPlayer()
-            refreshPlayersAdapter()
         })))
 
-        setUpSocketEvents()
-        SocketHandler.searchPlayers()
-        refreshPlayersAdapter()
         recyclerview_available_players.adapter = adapter
-
+        val matchID = RoomManager.currentRoom
+        SocketHandler.searchPlayers(matchID)
     }
 
     override fun onCreateView(
@@ -63,12 +64,17 @@ class WaitingRoom : Fragment() {
         if (SocketHandler.socket != null) {
             SocketHandler.socket
                 ?.on(SocketEvent.UPDATE_PLAYERS, ({ data ->
-                    val players = Gson().fromJson(data.first().toString(), Array<Player>::class.java)
-                    GameManager.playersList = players.toCollection(ArrayList())
-                    }))
+                    if (data.first() != null) {
+                        val players =
+                            Gson().fromJson(data.first().toString(), Array<Player>::class.java)
+                        GameManager.playersList = players.toCollection(ArrayList())
+                        Handler(Looper.getMainLooper()).post(Runnable {
+                            refreshPlayersAdapter()
+                        })
+                    }
+                 }))
                 ?.on(SocketEvent.VP_ADDED, ({ data ->
                     val feedback = Gson().fromJson(data.first().toString(), Feedback::class.java)
-                    GameManager.addVirtualPlayer()
                     if(!feedback.status){
                         Handler(Looper.getMainLooper()).post(Runnable {
                             Toast.makeText(
@@ -81,7 +87,6 @@ class WaitingRoom : Fragment() {
                 }))
                 ?.on(SocketEvent.VP_REMOVED, ({ data ->
                     val feedback = Gson().fromJson(data.first().toString(), Feedback::class.java)
-                    GameManager.removeVirtualPlayer()
                     if(!feedback.status){
                         Handler(Looper.getMainLooper()).post(Runnable {
                             Toast.makeText(

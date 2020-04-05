@@ -153,13 +153,12 @@ object SocketHandler {
         socket!!.emit(SocketEvent.GET_MATCHES)
     }
 
-    fun searchPlayers() {
-        socket!!.emit(SocketEvent.GET_PLAYERS)
+    fun searchPlayers(matchId: String) {
+        socket!!.emit(SocketEvent.GET_PLAYERS, matchId)
     }
 
-    fun joinMatch(matchId:String){
-        val args = Gson().toJson(matchId)
-        socket!!.emit(SocketEvent.JOIN_MATCH,args)
+    fun joinMatch(matchId: String){
+        socket!!.emit(SocketEvent.JOIN_MATCH, matchId)
     }
 
     fun leaveMatch() {
@@ -167,13 +166,11 @@ object SocketHandler {
     }
 
     fun startTurn(word: String) {
-        val args = Gson().toJson(word)
-        socket!!.emit(SocketEvent.START_TURN, args)
+        socket!!.emit(SocketEvent.START_TURN, word)
     }
 
     fun sendGuess(guess: String) {
-        val args = Gson().toJson(guess)
-        socket!!.emit(SocketEvent.GUESS, args)
+        socket!!.emit(SocketEvent.GUESS, guess)
     }
 
     fun addVirtualPlayer() {

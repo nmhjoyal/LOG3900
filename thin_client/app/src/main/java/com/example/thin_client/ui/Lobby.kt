@@ -71,15 +71,17 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
     }
 
     override fun startGame() {
-        val intent = Intent(this, GameActivity::class.java)
-        startActivity(intent)
+        if (!GameManager.isGameStarted) {
+            val intent = Intent(this, GameActivity::class.java)
+            startActivity(intent)
+            GameManager.isGameStarted = true
+        }
     }
 
     override fun onStart() {
         super.onStart()
         manager = supportFragmentManager
         setupSocket()
-        SocketHandler.searchMatches()
     }
 
     override fun onStop() {
@@ -178,29 +180,6 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
     private fun setupSocketEvents() {
         if (SocketHandler.socket != null) {
         SocketHandler.socket!!
-            .on(SocketEvent.UPDATE_MATCHES, ({data ->
-                val gson = Gson()
-                val matchInfosFeedback=
-                    gson.fromJson(data.first().toString(), Array<MatchInfos>::class.java)
-                GameManager.resetMatchLists()
-                for(match in matchInfosFeedback) {
-                    when(match.matchMode){
-                            MatchMode.COLLABORATIVE.ordinal ->
-                                if (!GameManager.collabModeMatchList.contains(match)) {
-                                    GameManager.collabModeMatchList.add(match)
-                                }
-                            MatchMode.FREE_FOR_ALL.ordinal ->
-                                if (!GameManager.freeForAllMatchList.contains(match)) {
-                                    GameManager.freeForAllMatchList.add(match)
-                                }
-                            MatchMode.ONE_ON_ONE.ordinal-> {
-                                if (!GameManager.oneVsOneMatchList.contains(match)) {
-                                    GameManager.oneVsOneMatchList.add(match)
-                                }
-                        }
-                    }
-                }
-            }))
             .on(SocketEvent.USER_SIGNED_IN, ({ data ->
                 val gson = Gson()
                 val signInFeedback =
