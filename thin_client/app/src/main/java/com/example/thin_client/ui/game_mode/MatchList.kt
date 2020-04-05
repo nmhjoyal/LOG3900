@@ -18,6 +18,7 @@ import com.example.thin_client.data.game.CreateMatchFeedback
 import com.example.thin_client.data.game.GameManager
 import com.example.thin_client.data.game.GameManager.tabNames
 import com.example.thin_client.data.game.MatchMode
+import com.example.thin_client.data.model.MatchInfos
 import com.example.thin_client.data.rooms.JoinRoomFeedback
 import com.example.thin_client.data.rooms.RoomManager
 import com.example.thin_client.data.server.SocketEvent
@@ -36,11 +37,13 @@ class MatchList : Fragment() {
         fun startGame()
     }
 
-    var gameStartedListener: IGameStarter? = null
+    private var gameStartedListener: IGameStarter? = null
+    private var currentTab: Int = 0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewpager.adapter = MyPagerAdapter(childFragmentManager)
+        setupSocketEvents()
 
         refresh_matches.setOnClickListener{
             SocketHandler.searchMatches()
@@ -54,24 +57,29 @@ class MatchList : Fragment() {
         setupTabs()
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                val tabName =
-                    tab!!.customView!!.findViewById(R.id.tab_name) as TextView
-                tabName.setTextColor(Color.WHITE)
-                tab.customView!!.setBackgroundResource(R.drawable.tab_background_selected)
+                if (tab != null && tab.customView != null) {
+                    val tabName =
+                        tab.customView!!.findViewById(R.id.tab_name) as TextView
+                    tabName.setTextColor(Color.WHITE)
+                    tab.customView!!.setBackgroundResource(R.drawable.tab_background_selected)
+                    currentTab = tab.position
+                }
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
-                val tabName =
-                    tab!!.customView!!.findViewById(R.id.tab_name) as TextView
-                tabName.setTextColor(ContextCompat.getColor(context!!, R.color.colorPrimaryDark))
-                tab.customView!!.setBackgroundResource(R.drawable.tab_background)
+                if (tab != null && tab.customView != null) {
+                    val tabName =
+                        tab.customView!!.findViewById(R.id.tab_name) as TextView
+                    tabName.setTextColor(ContextCompat.getColor(context!!, R.color.colorPrimaryDark))
+                    tab.customView!!.setBackgroundResource(R.drawable.tab_background)
+                    currentTab = 0
+                }
             }
         })
-
-        setupSocketEvents()
+        SocketHandler.searchMatches()
     }
 
     override fun onAttach(context: Context) {
@@ -80,6 +88,16 @@ class MatchList : Fragment() {
         if (gameStartedListener == null) {
             Toast.makeText(context, "Cannot start a new game at this time.", Toast.LENGTH_LONG).show()
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        turnOffSocketEvents()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        setupSocketEvents()
     }
 
     override fun onCreateView(
@@ -97,7 +115,7 @@ class MatchList : Fragment() {
             val customView = View.inflate(context,R.layout.tab_layout, null)
             val tabName = customView.findViewById(R.id.tab_name) as TextView
             tabName.text = tabNames[i]
-            if (i == 0) {
+            if (i == currentTab) {
                 tabName.setTextColor(Color.WHITE)
                 customView.setBackgroundResource(R.drawable.tab_background_selected)
             } else {
@@ -148,6 +166,15 @@ class MatchList : Fragment() {
         dialog.show()
     }
 
+    private fun turnOffSocketEvents() {
+        if (SocketHandler.socket != null) {
+            SocketHandler.socket!!
+                .off(SocketEvent.MATCH_CREATED)
+                .off(SocketEvent.MATCH_JOINED)
+                .off(SocketEvent.UPDATE_MATCHES)
+        }
+    }
+
     private fun setupSocketEvents() {
         if (SocketHandler.socket != null) {
             SocketHandler.socket!!
@@ -177,13 +204,42 @@ class MatchList : Fragment() {
                         gameStartedListener?.startGame()
                     } else {
                         Handler(Looper.getMainLooper()).post(({
-                            Toast.makeText(
-                                context,
-                                feedback.feedback.log_message,
-                                Toast.LENGTH_LONG
-                            ).show()
+                            if (context != null) {
+                                Toast.makeText(
+                                    context,
+                                    feedback.feedback.log_message,
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
                         }))
                     }
+                }))
+                .on(SocketEvent.UPDATE_MATCHES, ({data ->
+                    val gson = Gson()
+                    val matchInfosFeedback=
+                        gson.fromJson(data.first().toString(), Array<MatchInfos>::class.java)
+                    GameManager.resetMatchLists()
+                    for(match in matchInfosFeedback) {
+                        when(match.matchMode){
+                            MatchMode.COLLABORATIVE.ordinal ->
+                                if (!GameManager.collabModeMatchList.contains(match)) {
+                                    GameManager.collabModeMatchList.add(match)
+                                }
+                            MatchMode.FREE_FOR_ALL.ordinal ->
+                                if (!GameManager.freeForAllMatchList.contains(match)) {
+                                    GameManager.freeForAllMatchList.add(match)
+                                }
+                            MatchMode.ONE_ON_ONE.ordinal-> {
+                                if (!GameManager.oneVsOneMatchList.contains(match)) {
+                                    GameManager.oneVsOneMatchList.add(match)
+                                }
+                            }
+                        }
+                    }
+                    Handler(Looper.getMainLooper()).post(({
+                        viewpager.adapter?.notifyDataSetChanged()
+                        setupTabs()
+                    }))
                 }))
         }
     }
