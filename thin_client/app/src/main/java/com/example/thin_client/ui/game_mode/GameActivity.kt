@@ -65,6 +65,10 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
 
         currentUser = PreferenceHandler(this).getUser().username
+        back_to_lobby.setOnClickListener(({
+            finish()
+        }))
+
         draw_view_container.bringToFront()
     }
 
@@ -331,6 +335,13 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                                 .show()
                         })
                     }
+                }))
+                .on(SocketEvent.MATCH_ENDED, ({ data ->
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        user_block.bringToFront()
+                        message.text = resources.getText(R.string.game_over)
+                        back_to_lobby.visibility = View.VISIBLE
+                    })
                 }))
         }
     }

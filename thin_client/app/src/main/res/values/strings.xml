@@ -150,6 +150,8 @@
     <string name="word_was">The word was %1$s</string>
     <string name="points">Points</string>
     <string name="time_up">Times up!</string>
+    <string name="game_over">Game over</string>
+    <string name="back_to_lobby">Exit</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hostname">Hostname:</string>
