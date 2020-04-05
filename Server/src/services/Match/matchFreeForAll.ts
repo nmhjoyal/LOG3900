@@ -2,7 +2,6 @@ import Match from "./matchAbstract";
 import PublicProfile from "../../models/publicProfile";
 import ChatHandler from "../chatHandler";
 import { CreateMatch,} from "../../models/match";
-import Player from "../../models/player";
 import { gameDB } from "../Database/gameDB";
 import { Game } from "../../models/drawPoint";
 import { Message } from "../../models/message";
@@ -16,11 +15,11 @@ export default class FreeForAll extends Match {
         super(matchId, user, createMatch, chatHandler, freeForAllSettings);
     }
 
-    public async startTurn(io: SocketIO.Server, word: string, isVirtual: boolean): Promise<void> {
+    public async startTurn(io: SocketIO.Server, word: string): Promise<void> {
         this.currentWord = word;
         io.in(this.matchId).emit("turn_started", this.createStartTurn(this.currentWord));
         
-        if (isVirtual) {
+        if (this.drawer.isVirtual) {
             const game: Game = await gameDB.getGame(word);
             this.virtualDrawing.draw(io, game.drawing, game.level);
         }
@@ -32,21 +31,15 @@ export default class FreeForAll extends Match {
     }
 
     public async endTurn(io: SocketIO.Server, drawerLeft: boolean): Promise<void> {
-        // TODO: Function reset for all timeouts and virtual drawings. 
-        clearTimeout(this.timeout)
-        this.virtualDrawing.clear(io);
-        this.drawing.reset(io);
+        this.reset(io);
 
         let matchIsEnded: boolean = false;
 
         if (!drawerLeft){
-            let oldDrawer: Player | undefined = this.getPlayer(this.drawer);
-            if (oldDrawer) {
-                this.assignDrawer(oldDrawer);
+            this.assignDrawer();
 
-                if (this.round == this.nbRounds + 1) {
-                    matchIsEnded = true;
-                }
+            if (this.round == this.nbRounds + 1) {
+                matchIsEnded = true;
             }
         }
 
@@ -59,16 +52,17 @@ export default class FreeForAll extends Match {
 
     public guess(io: SocketIO.Server, guess: string, username: string): Feedback {
         let feedback: Feedback = { status: false, log_message: "" };
+        const drawerUsername: string = this.drawer.user.username;
 
         if (this.currentWord != "") {
-            if (this.drawer != username) {
+            if (username != drawerUsername) {
                 if(guess == this.currentWord) {
                     const message: Message = Admin.createAdminMessage(username + " guessed the word.", this.matchId);
                     io.in(this.matchId).emit("new_message", JSON.stringify(message));
         
                     const score: number = Math.round((Date.now() - this.timer) / 1000) * 10;
                     this.updateScore(username, score);
-                    this.updateScore(this.drawer, Math.round(score / this.players.length));
+                    this.updateScore(drawerUsername, Math.round(score / this.players.length));
 
                     io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
         

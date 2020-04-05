@@ -45,9 +45,9 @@ export class VirtualDrawing {
         // console.log(Date.now() - start);
     }
 
-    public async preview(socketIO: SocketIO.Socket, gamePreview: GamePreview) {
+    public async preview(socket: SocketIO.Socket, gamePreview: GamePreview) {
         Utils.sort(gamePreview.drawing, gamePreview.mode, gamePreview.option);
-        await this.draw(socketIO, gamePreview.drawing, Level.Hard);
+        await this.draw(socket, gamePreview.drawing, Level.Hard);
     }
 
     private totalPoints(drawing: Stroke[]): number {

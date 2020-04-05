@@ -34,14 +34,14 @@ export default abstract class Match {
     protected timeout: NodeJS.Timeout;          // setTimeout will be used for emitting end_turn and we will cancel it 
                                                 // if there is an unexpected leave of a room or stoppage of a turn
     protected round: number;                    // In one round each player will draw one time
-    protected drawer: string;                   // Username 
+    protected drawer: Player;                   // Username 
     protected drawing: Drawing;
     protected virtualDrawing: VirtualDrawing;
     protected virtualPlayer: VirtualPlayer;
     protected vp: string;
 
     // Match methods
-    public async abstract startTurn(io: SocketIO.Server, chosenWord: string, isVirtual: boolean): Promise<void>;
+    public async abstract startTurn(io: SocketIO.Server, chosenWord: string): Promise<void>;
     public async abstract endTurn(io: SocketIO.Server, drawerLeft: boolean): Promise<void>;
     public abstract guess(io: SocketIO.Server, guess: string, username: string): Feedback;
 
@@ -96,12 +96,9 @@ export default abstract class Match {
             if (this.isStarted) {
                 if (this.getNbHumanPlayers() > this.ms.MIN_NB_HP) {
                     // after the match is started the host is not important.
-                    if (player.user.username == this.drawer) {
-                        let oldDrawer: Player | undefined = this.getPlayer(this.drawer);
-                        if (oldDrawer) {
-                            this.assignDrawer(oldDrawer);
-                            this.endTurn(io, true);
-                        }
+                    if (player == this.drawer) {
+                        this.assignDrawer();
+                        this.endTurn(io, true);
                     }
                 } else {
                     this.endMatch(io);
@@ -223,13 +220,14 @@ export default abstract class Match {
         this.resetScoresTurn();
         this.currentWord = "";
         
-        if (this.getPlayer(this.drawer)?.isVirtual) {
+        if (this.drawer.isVirtual) {
             let word: string;
             setTimeout(() => {
-                this.startTurn(io, word, true);
+                this.startTurn(io, word);
             }, 5000);
             word = await gameDB.getRandomWord();
         }
+        // else we wait for the drawer to send his choice of word in the "start_turn" event.
     }
 
     protected endMatch(io: SocketIO.Server): void {
@@ -239,6 +237,12 @@ export default abstract class Match {
         io.in(this.matchId).emit("match_ended");
         
         this.isEnded = true; // to delete on future "update_matches" event called
+    }
+
+    protected reset(io: SocketIO.Server): void {
+        clearTimeout(this.timeout)
+        this.virtualDrawing.clear(io);
+        this.drawing.reset(io);
     }
 
     /**
@@ -290,7 +294,7 @@ export default abstract class Match {
         // In the other modes the drawer is set to the virtual player in the constructor.
         if (this.mode == MatchMode.freeForAll) {
             // Init to the last player on round 0 so it resets in endTurn for round 1 with first player.
-            this.drawer = this.players[this.players.length - 1].user.username;
+            this.drawer = this.players[this.players.length - 1];
 
             const username: string | undefined = this.getVPUsername(); 
             this.vp = (username) ? username : this.virtualPlayer.create().user.username;
@@ -310,7 +314,7 @@ export default abstract class Match {
         let everyoneHasGuessed: boolean = true;
 
         for (let player of this.players) {
-            if (player.score.scoreTurn == 0 && player.user.username != this.drawer && !player.isVirtual) 
+            if (player.score.scoreTurn == 0 && player != this.drawer && !player.isVirtual) 
                 everyoneHasGuessed = false;
         }
 
@@ -330,13 +334,13 @@ export default abstract class Match {
         }
     }
 
-    protected assignDrawer(oldDrawer: Player) {
-        const currentIndex: number = this.players.indexOf(oldDrawer);
+    protected assignDrawer() {
+        const currentIndex: number = this.players.indexOf(this.drawer);
         if (currentIndex == this.players.length - 1) {
-            this.drawer = this.players[0].user.username;
+            this.drawer = this.players[0];
             this.round++;
         } else {
-            this.drawer = this.players[currentIndex + 1].user.username;
+            this.drawer = this.players[currentIndex + 1];
         }
     }
 
@@ -446,7 +450,7 @@ export default abstract class Match {
             currentRound: this.round,
             players: this.players,
             choices: RandomWordGenerator.generateChoices(),
-            drawer: this.drawer
+            drawer: this.drawer.user.username
         };
     }
 }
