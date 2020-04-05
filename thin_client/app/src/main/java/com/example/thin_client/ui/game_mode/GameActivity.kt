@@ -12,6 +12,7 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.thin_client.R
@@ -37,6 +38,13 @@ import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.activity_game.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
+
+
+const val SECOND_INTERVAL: Long = 1000
+const val TIME_PATTERN = "mm:ss"
+const val POINT_SCREEN_TIMEOUT: Long = 5000
+const val ROUND_SCREEN_TIMEOUT: Long = 2000
 
 class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
     private lateinit var manager: FragmentManager
@@ -45,19 +53,16 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
     private var currentUser = ""
     private var isHost = false
     private val lettersAdapter = GroupAdapter<GroupieViewHolder>()
+    private var playerPointsAdapter = GroupAdapter<GroupieViewHolder>()
     private var timer: CountDownTimer? = null
     private var isGameStarted = false
     private var isWaitingRoomShowing = false
     private var currentDrawer = ""
     private var nbTries = 0
     private var firstTurnStarted = false
+    private var isTurnStarted = false
     private var currentRound = 1
     private var wordWasString = ""
-
-    private val SECOND_INTERVAL: Long = 1000
-    private val TIME_PATTERN = "mm:ss"
-    private val POINT_SCREEN_TIMEOUT: Long = 5000
-    private val ROUND_SCREEN_TIMEOUT: Long = 2000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +72,16 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         currentUser = PreferenceHandler(this).getUser().username
         back_to_lobby.setOnClickListener(({
             finish()
+        }))
+
+        show_points_button.setOnClickListener(({
+            if (user_points_toolbar.isVisible) {
+                user_points_toolbar.visibility = View.GONE
+                show_points_button.setImageResource(R.drawable.hide)
+            } else {
+                chatrooms_container.visibility = View.VISIBLE
+                show_points_button.setImageResource(R.drawable.ic_open)
+            }
         }))
 
         draw_view_container.bringToFront()
@@ -83,7 +98,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
             MatchMode.FREE_FOR_ALL -> {
                 if (!isWaitingRoomShowing) {
                     toolbar.visibility = View.GONE
-                    points_view.visibility = View.GONE
+                    user_points_toolbar.visibility = View.GONE
                     val transaction = manager.beginTransaction()
                     val waitingRoom = WaitingRoom()
                     transaction.replace(R.id.draw_view_container, waitingRoom)
@@ -155,7 +170,6 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         transaction.replace(R.id.draw_view_container, drawerFragment)
         transaction.addToBackStack(null)
         transaction.commitAllowingStateLoss()
-        points_view.visibility = View.GONE
         draw_view_container.bringToFront()
     }
 
@@ -165,8 +179,9 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         transaction.replace(R.id.draw_view_container, observerFragment)
         transaction.addToBackStack(null)
         transaction.commitAllowingStateLoss()
-        points_view.visibility = View.VISIBLE
-        showUserChoosingWord()
+        if (!isTurnStarted) {
+            showUserChoosingWord()
+        }
     }
 
     private fun startCountdown(totalTime: Long) {
@@ -192,6 +207,14 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         word_letters.adapter = lettersAdapter
     }
 
+    private fun refreshPlayerPointsToolbar(players: Array<Player>) {
+        playerPointsAdapter.clear()
+        for (player in players) {
+            playerPointsAdapter.add(PlayerPointToolbarHolder(player.user, player.score.scoreTotal.toInt()))
+        }
+        user_points_total.adapter = playerPointsAdapter
+    }
+
 
     private fun showWordsSelection(words: Array<String>) {
         val dialog = Dialog(this)
@@ -214,7 +237,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         dialog.show()
     }
 
-    private fun resetTurn(drawer: String, currentUserPoints: Number?) {
+    private fun resetTurn(drawer: String) {
         if (timer != null) {
             timer?.cancel()
             timer?.onFinish()
@@ -225,7 +248,6 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         nbTries = 3
         GameManager.canGuess = true
         isHost = drawer.equals(currentUser)
-        total_points.text = if (currentUserPoints != null) currentUserPoints.toString() else "0"
         currentDrawer = drawer
     }
 
@@ -267,15 +289,11 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         if (SocketHandler.socket != null) {
             SocketHandler.socket!!
                 .on(SocketEvent.TURN_ENDED, ({ data ->
+                    isTurnStarted = false
                     val turnParams = Gson().fromJson(data.first().toString(), EndTurn::class.java)
                     Handler(Looper.getMainLooper()).post(({
-                        var currentUserScore = 0
-                        for (user in turnParams.players) {
-                            if (user.user.username == currentUser) {
-                                currentUserScore = user.score.scoreTotal.toInt()
-                            }
-                        }
-                        resetTurn(turnParams.drawer, currentUserScore)
+                        refreshPlayerPointsToolbar(turnParams.players)
+                        resetTurn(turnParams.drawer)
                         user_block.bringToFront()
                         if (!firstTurnStarted) {
                             message.text = String.format(resources.getString(R.string.round), turnParams.currentRound.toInt())
@@ -283,33 +301,33 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                             Handler().postDelayed({
                                 delegateViews(turnParams.choices)
                             }, ROUND_SCREEN_TIMEOUT)
-                        } else if (turnParams.currentRound.toInt() != currentRound) {
-                            currentRound = turnParams.currentRound.toInt()
+                        } else {
                             val pointsAdapter = GroupAdapter<GroupieViewHolder>()
                             message.text = wordWasString
+                            turnParams.players.sortBy(({ it.score.scoreTurn.toInt() }))
                             for (score in turnParams.players) {
                                 pointsAdapter.add(PlayerPointHolder(score.user.username, score.score.scoreTurn.toInt()))
                             }
                             user_points.adapter = pointsAdapter
                             user_points.visibility = View.VISIBLE
                             Handler().postDelayed({
-                                user_points.visibility = View.GONE
-                                message.text = String.format(resources.getString(R.string.round), turnParams.currentRound.toInt())
-                                Handler().postDelayed({
+                                if (turnParams.currentRound.toInt() != currentRound) {
+                                    user_points.visibility = View.GONE
+                                    message.text = String.format(resources.getString(R.string.round), turnParams.currentRound.toInt())
+                                    Handler().postDelayed({
+                                        delegateViews(turnParams.choices)
+                                    }, ROUND_SCREEN_TIMEOUT)
+                                } else {
                                     delegateViews(turnParams.choices)
-                                }, ROUND_SCREEN_TIMEOUT)
+                                }
                             }, POINT_SCREEN_TIMEOUT)
-                        } else {
-                            message.text = wordWasString
-                            user_points.visibility = View.GONE
-                            Handler().postDelayed({
-                                delegateViews(turnParams.choices)
-                            }, POINT_SCREEN_TIMEOUT)
+                            currentRound = turnParams.currentRound.toInt()
                         }
                     }))
                 }))
                 .on(SocketEvent.TURN_STARTED, ({ data ->
                     Handler(Looper.getMainLooper()).post(Runnable {
+                        isTurnStarted = true
                         firstTurnStarted = true
                         draw_view_container.bringToFront()
                         val turnStart = Gson().fromJson(data.first().toString(), StartTurn::class.java)
@@ -338,6 +356,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                 }))
                 .on(SocketEvent.MATCH_ENDED, ({ data ->
                     Handler(Looper.getMainLooper()).post(Runnable {
+                        turnOffSocketEvents()
                         user_block.bringToFront()
                         message.text = resources.getText(R.string.game_over)
                         back_to_lobby.visibility = View.VISIBLE
