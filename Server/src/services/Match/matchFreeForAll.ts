@@ -47,12 +47,17 @@ export default class FreeForAll extends Match {
 
         const score: number = Math.round((Date.now() - this.timer) / 1000) * 10;
         this.updateScore(username, score);
-        this.updateScore(this.drawer.user.username, Math.round(score / this.players.length));
+        if (!this.drawer.isVirtual) 
+            this.updateScore(this.drawer.user.username, Math.round(score / this.players.length));
 
         io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
 
         if(this.everyoneHasGuessed()) {
             this.endTurn(io);
         }
+    }
+
+    public guessWrong(io: SocketIO.Server, username: string): void {
+        // nothing to do here no number of guesses in free for all.
     }
 }

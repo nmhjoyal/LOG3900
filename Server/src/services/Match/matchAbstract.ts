@@ -43,6 +43,7 @@ export default abstract class Match {
     // Match methods
     public async abstract startTurn(io: SocketIO.Server, chosenWord: string): Promise<void>;
     public async abstract endTurn(io: SocketIO.Server): Promise<void>;
+    public abstract guessWrong(io: SocketIO.Server, username: string): void;
     public abstract guessRight(io: SocketIO.Server, username: string): void;
 
     protected constructor(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler, matchSettings: MatchSettings) {
@@ -216,6 +217,7 @@ export default abstract class Match {
 
                     feedback.status = true;
                 } else {
+                    // this.guessWrong(io, username);
                     feedback.log_message = "Your guess is wrong.";
                 }
             } else {
@@ -232,9 +234,7 @@ export default abstract class Match {
         const endTurn: EndTurn = this.createEndTurn();
 
         if (this.currentWord) { // currentWord is undefined at the first endTurn
-            const message: Message = Admin.createAdminMessage("The word was " + this.currentWord, this.matchId);
-            io.in(this.matchId).emit("new_message", JSON.stringify(message));
-            io.in(this.matchId).emit("new_message", JSON.stringify(this.virtualPlayer.getEndTurnMessage(this.vp, this.matchId)));
+            this.notifyWord(io);
         }
 
         io.in(this.matchId).emit("turn_ended", JSON.stringify(endTurn));
@@ -254,11 +254,19 @@ export default abstract class Match {
 
     protected endMatch(io: SocketIO.Server): void {
         // compile game stats for the players and the standings.
+        // ...
 
+        this.notifyWord(io);
         // notify everyone that the game is ended.
         io.in(this.matchId).emit("match_ended", this.players);
         
         this.isEnded = true; // to delete on future "update_matches" event called
+    }
+    
+    protected notifyWord(io: SocketIO.Server): void {
+        const message: Message = Admin.createAdminMessage("The word was " + this.currentWord, this.matchId);
+        io.in(this.matchId).emit("new_message", JSON.stringify(message));
+        io.in(this.matchId).emit("new_message", JSON.stringify(this.virtualPlayer.getEndTurnMessage(this.vp, this.matchId)));
     }
 
     protected reset(io: SocketIO.Server): void {
