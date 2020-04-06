@@ -2,13 +2,15 @@ import { MatchMode } from "./matchMode";
 import PublicProfile from "./publicProfile";
 import Player from "./player";
 
+export const TIME_LIMIT_MIN: number = 30;   // 30 sec minimum
+export const TIME_LIMIT_MAX: number = 120;  // 2 min maximum
+export const SPRINT_BONUS_TIME: number = 15;// 15 sec in bonus
+
 export interface CreateMatch {
     nbRounds: number
     timeLimit: number /* in seconds */
     matchMode: MatchMode
 }
-export const TIME_LIMIT_MIN: number = 30; /* 30 sec minimum */
-export const TIME_LIMIT_MAX: number = 120;/* 2 min maximum */
 
 export interface MatchInfos {
     matchId: string

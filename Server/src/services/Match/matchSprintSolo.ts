@@ -1,7 +1,7 @@
 import Match from "./matchAbstract";
 import PublicProfile from "../../models/publicProfile";
 import ChatHandler from "../chatHandler";
-import { CreateMatch } from "../../models/match";
+import { CreateMatch, SPRINT_BONUS_TIME } from "../../models/match";
 import { sprintSoloSettings } from "../../models/matchMode";
 import { Message } from "../../models/message";
 import Admin from "../../models/admin";
@@ -25,17 +25,17 @@ export default class SprintSolo extends Match {
         
         this.timer = Date.now();
         this.timeout = setTimeout(() => {
-            this.endTurn(io);
+            this.endMatch(io);
         }, this.timeLimit * 1000);
     }
 
     public async endTurn(io: SocketIO.Server): Promise<void> {
         this.reset(io);
 
-        if (this.matchIsEnded()) {
+        if (/* HOW TO CHECK IF TIME IS DONE */false) {
             this.endMatch(io);
         } else {
-            this.endTurnGeneral(io);
+            //this.endTurnGeneral(io);
         }
     }
 
@@ -45,6 +45,7 @@ export default class SprintSolo extends Match {
 
         // const score: number = this.calculateScore();
         // this.updateScore(username, score);
+        this.timeLimit = this.timeLeft() + SPRINT_BONUS_TIME;
 
         io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
 
