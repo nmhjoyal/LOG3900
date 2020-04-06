@@ -1,5 +1,5 @@
 import { Feedback, StartMatchFeedback, JoinRoomFeedback } from "../../models/feedback";
-import { MatchInfos, CreateMatch, EndTurn, StartTurn } from "../../models/match";
+import { MatchInfos, CreateMatch, EndTurn, StartTurn, UpdateSprint } from "../../models/match";
 import Player, { UpdateScore } from "../../models/player";
 import PublicProfile from "../../models/publicProfile";
 import { MatchMode, MatchSettings } from "../../models/matchMode";
@@ -11,7 +11,6 @@ import { Stroke, StylusPoint } from "../../models/drawPoint";
 import RandomWordGenerator from "../WordGenerator/wordGenerator";
 import Admin from "../../models/admin";
 import { Message } from "../../models/message";
-import { gameDB } from "../Database/gameDB";
 import VirtualPlayer from "../VirtualPlayer/virtualPlayer";
 
 export default abstract class Match {
@@ -230,28 +229,6 @@ export default abstract class Match {
         return feedback;
     }
 
-    protected async endTurnGeneral(io: SocketIO.Server): Promise<void> {
-        const endTurn: EndTurn = this.createEndTurn();
-
-        if (this.currentWord) { // currentWord is undefined at the first endTurn
-            this.notifyWord(io);
-        }
-
-        io.in(this.matchId).emit("turn_ended", JSON.stringify(endTurn));
-        
-        this.resetScoresTurn();
-        this.currentWord = "";
-        
-        if (this.drawer.isVirtual) {
-            let word: string;
-            setTimeout(() => {
-                this.startTurn(io, word);
-            }, 5000);
-            word = await gameDB.getRandomWord();
-        }
-        // else we wait for the drawer to send his choice of word in the "start_turn" event.
-    }
-
     protected endMatch(io: SocketIO.Server): void {
         // compile game stats for the players and the standings.
         // ...
@@ -368,8 +345,12 @@ export default abstract class Match {
         }
     }
 
+    protected timeLeft(): number {
+        return this.timeLimit - Date.now() + this.timer;
+    }
+
     protected calculateScore(): number {
-        return Math.round((this.timeLimit - Date.now() + this.timer) / 1000) * 10;
+        return Math.round(this.timeLeft() / 1000) * 10;
     }
 
     protected assignDrawer() {
@@ -490,5 +471,14 @@ export default abstract class Match {
             choices: RandomWordGenerator.generateChoices(),
             drawer: this.drawer.user.username
         };
+    }
+
+    protected createUpdateSprint(guess: number, word: string, time: number): UpdateSprint {
+        return {
+            players: this.players,
+            guess: guess,
+            word: word.replace(/[a-z]/gi, '_'),
+            time: time
+        }
     }
 }

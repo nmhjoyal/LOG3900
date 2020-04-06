@@ -30,3 +30,10 @@ export interface EndTurn {
     choices: string[]
     drawer: string  // indicates who is the drawer useful in FreeForAll
 }
+
+export interface UpdateSprint {
+    guess: number // number of guess
+    time: number // time updated
+    word: string // hidden word (with underscores)
+    players: Player[]
+}

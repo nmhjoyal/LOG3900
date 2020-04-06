@@ -1,7 +1,7 @@
 import Match from "./matchAbstract";
 import PublicProfile from "../../models/publicProfile";
 import ChatHandler from "../chatHandler";
-import { CreateMatch } from "../../models/match";
+import { CreateMatch, EndTurn } from "../../models/match";
 import { OneVsOneSettings } from "../../models/matchMode";
 import { Game } from "../../models/drawPoint";
 import { gameDB } from "../Database/gameDB";
@@ -33,10 +33,30 @@ export default class OneVsOne extends Match {
     public async endTurn(io: SocketIO.Server): Promise<void> {
         this.reset(io);
 
+        this.round++;
+
         if (this.matchIsEnded()) {
             this.endMatch(io);
         } else {
-            this.endTurnGeneral(io);
+            const endTurn: EndTurn = this.createEndTurn();
+
+            if (this.currentWord) { // currentWord is undefined at the first endTurn
+                this.notifyWord(io);
+            }
+
+            io.in(this.matchId).emit("turn_ended", JSON.stringify(endTurn));
+            
+            this.resetScoresTurn();
+            this.currentWord = "";
+            
+            if (this.drawer.isVirtual) {
+                let word: string;
+                setTimeout(() => {
+                    this.startTurn(io, word);
+                }, 5000);
+                word = await gameDB.getRandomWord();
+            }
+            // else we wait for the drawer to send his choice of word in the "start_turn" event.
         }
     }
 
