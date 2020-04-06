@@ -1,5 +1,5 @@
 import { MatchInstance } from "../models/matchMode";
-import { CreateMatch, MatchInfos, TIME_LIMIT_MIN, TIME_LIMIT_MAX, NB_ROUNDS_MIN, NB_ROUNDS_MAX } from "../models/match";
+import { CreateMatch, MatchInfos, TIME_LIMIT_MIN, TIME_LIMIT_MAX } from "../models/match";
 import { Feedback, StartMatchFeedback, JoinRoomFeedback, CreateMatchFeedback } from "../models/feedback";
 import Match from "./Match/matchAbstract";
 import PrivateProfile from "../models/privateProfile";
@@ -32,6 +32,8 @@ export default class MatchHandler {
     public async createMatch(io: SocketIO.Server, socket: SocketIO.Socket, 
                     createMatch: CreateMatch, user: PrivateProfile | undefined): Promise<CreateMatchFeedback> {
         let createMatchFeedback: CreateMatchFeedback = { feedback: { status: false, log_message: "" }, matchId: ""};
+        const NB_ROUNDS_MAX: number = MatchInstance.getMaxNbRounds(createMatch.matchMode);
+        const NB_ROUNDS_MIN: number = MatchInstance.getMinNbRounds(createMatch.matchMode);
 
         if (user) {
             const matchId: string = RandomMatchIdGenerator.generate();
