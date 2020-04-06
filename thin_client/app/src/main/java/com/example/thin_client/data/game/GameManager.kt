@@ -9,6 +9,7 @@ object GameManager {
     var nbRounds: Int = 0
     var timeLimit: Int = 0
     var canGuess = true
+    var virtualPlayer =  Player(PublicProfile("Harry", "pear"), false)
     val tabNames = arrayListOf("Collaborative" ,"Free-for-all", "One-on-one")
 
 
@@ -23,4 +24,16 @@ object GameManager {
         oneVsOneMatchList.clear()
         freeForAllMatchList.clear()
     }
+
+    fun removeVirtualPlayer() {
+       for(player in playersList){
+           if(player.isVirtual)
+               playersList.drop(1)
+       }
+    }
+
+    fun addVirtualPlayer() {
+        playersList.add(virtualPlayer)
+    }
+
 }
