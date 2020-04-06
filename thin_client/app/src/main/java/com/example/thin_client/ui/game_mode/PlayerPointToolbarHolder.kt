@@ -8,6 +8,9 @@ import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.player_in_game_item.view.*
 import kotlinx.android.synthetic.main.player_point_layout.view.*
+import kotlinx.android.synthetic.main.player_point_layout.view.points
+import kotlinx.android.synthetic.main.player_point_layout.view.username
+import kotlinx.android.synthetic.main.player_point_toolbar_layout.view.*
 
 class PlayerPointToolbarHolder(val user: PublicProfile, val totalPoints: Int): Item<GroupieViewHolder>(){
 
@@ -16,7 +19,7 @@ class PlayerPointToolbarHolder(val user: PublicProfile, val totalPoints: Int): I
         viewHolder.itemView.username.text = user.username
         viewHolder.itemView.points.text = totalPoints.toString()
         val avatarId = getAvatar(user.avatar)
-        setAvatar(viewHolder.itemView.imageview_avatar, avatarId)
+        setAvatar(viewHolder.itemView.user_avatar, avatarId)
     }
 
     override fun getLayout(): Int {

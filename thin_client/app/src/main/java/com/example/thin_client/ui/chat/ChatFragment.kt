@@ -181,10 +181,9 @@ class ChatFragment : Fragment() {
                                 )
                                 else -> {
                                     var userAvatar: AvatarID = AvatarID.AVOCADO
-                                    val avatarList = RoomManager.roomAvatars[roomID]
+                                    val avatarList = RoomManager.roomAvatars[jsonData.roomId]
                                     if (avatarList !== null) {
-                                        userAvatar =
-                                            getAvatar(RoomManager.roomAvatars[roomID]!![username])
+                                        userAvatar = getAvatar(avatarList[username])
                                     }
                                     showFromMessage(
                                         jsonData.content,

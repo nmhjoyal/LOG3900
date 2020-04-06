@@ -249,8 +249,8 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
                     val update = Gson().fromJson(data.first().toString(), AvatarUpdate::class.java)
                     if (RoomManager.roomAvatars[update.roomId] != null) {
                         RoomManager.roomAvatars[update.roomId]!!.put(
-                            update.profile.username,
-                            update.profile.avatar
+                            update.updatedProfile.username,
+                            update.updatedProfile.avatar
                         )
                     }
                 }))

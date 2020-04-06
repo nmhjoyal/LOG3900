@@ -71,7 +71,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
 
         currentUser = PreferenceHandler(this).getUser().username
         back_to_lobby.setOnClickListener(({
-            finish()
+            cleanupAndFinish()
         }))
 
         show_points_button.setOnClickListener(({
@@ -79,7 +79,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                 user_points_toolbar.visibility = View.GONE
                 show_points_button.setImageResource(R.drawable.hide)
             } else {
-                chatrooms_container.visibility = View.VISIBLE
+                user_points_toolbar.visibility = View.VISIBLE
                 show_points_button.setImageResource(R.drawable.ic_open)
             }
         }))
@@ -117,9 +117,12 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         turnOffSocketEvents()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    private fun cleanupAndFinish() {
         GameManager.isGameStarted = false
+        RoomManager.roomsJoined.remove(RoomManager.currentRoom)
+        RoomManager.roomAvatars.remove(RoomManager.currentRoom)
+        RoomManager.currentRoom = ""
+        finish()
     }
 
     override fun guessSent() {
@@ -144,7 +147,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         when (SocketHandler.getLoginState(prefs)) {
             LoginState.FIRST_LOGIN -> {}
             LoginState.LOGIN_WITH_EXISTING -> {
-                finish()
+                cleanupAndFinish()
             }
             LoginState.LOGGED_IN -> {
                 showChatFragment()
@@ -266,7 +269,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
             .setMessage(R.string.leave_match_ask)
             .setPositiveButton(R.string.yes) { _, _ ->
                 SocketHandler.leaveMatch()
-                finish()
+                cleanupAndFinish()
             }
             .setNegativeButton(R.string.cancel) { _, _ -> }
 
@@ -304,7 +307,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                         } else {
                             val pointsAdapter = GroupAdapter<GroupieViewHolder>()
                             message.text = wordWasString
-                            turnParams.players.sortBy(({ it.score.scoreTurn.toInt() }))
+                            turnParams.players.sortByDescending(({ it.score.scoreTurn.toInt() }))
                             for (score in turnParams.players) {
                                 pointsAdapter.add(PlayerPointHolder(score.user.username, score.score.scoreTurn.toInt()))
                             }

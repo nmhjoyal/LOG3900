@@ -4,7 +4,8 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/button_room">
+    android:background="@drawable/button_room"
+    android:layout_margin="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
@@ -15,9 +16,7 @@
             android:layout_height="40dp"
             android:layout_margin="4dp"
             android:scaleType="fitXY"
-            app:layout_constraintBottom_toTopOf="@id/username"
-            app:layout_constraintStart_toStartOf="@id/username"
-            app:layout_constraintEnd_toEndOf="@id/username"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:background="@drawable/circle_primary_dark" />
         <TextView
@@ -29,7 +28,9 @@
             android:textColor="@color/colorPrimaryDark"
             android:text="@string/stat_placeholder"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/user_avatar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"/>
         <TextView
             android:id="@+id/points"
             android:layout_height="wrap_content"
@@ -41,6 +42,8 @@
             app:layout_constraintStart_toEndOf="@id/user_avatar"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/username"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
             android:text="@string/time_placeholder"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

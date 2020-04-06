@@ -68,6 +68,12 @@ class WaitingRoom : Fragment() {
                         val players =
                             Gson().fromJson(data.first().toString(), Array<Player>::class.java)
                         GameManager.playersList = players.toCollection(ArrayList())
+                        val roomAvatars = RoomManager.roomAvatars[RoomManager.currentRoom]
+                        for (player in players) {
+                            if (roomAvatars != null) {
+                                roomAvatars[player.user.username] = player.user.avatar
+                            }
+                        }
                         Handler(Looper.getMainLooper()).post(Runnable {
                             refreshPlayersAdapter()
                         })

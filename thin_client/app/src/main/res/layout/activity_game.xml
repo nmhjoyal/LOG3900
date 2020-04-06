@@ -9,7 +9,7 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/chat_guideline"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/user_points_toolbar"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
         <androidx.cardview.widget.CardView
             android:id="@+id/draw_view_container"
@@ -49,9 +49,9 @@
                     android:visibility="gone"
                     android:orientation="horizontal"
                     android:background="@drawable/button_primary_selector"
-                    android:layout_below="@id/message"
-                    android:layout_centerInParent="true"
-                    android:layout_margin="8dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="32dp"
                     android:paddingStart="4dp"
                     android:paddingEnd="8dp"
                     android:padding="4dp">
@@ -78,7 +78,6 @@
         android:id="@+id/user_points_toolbar"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:visibility="gone"
         android:background="@color/colorPrimaryDark"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
@@ -100,6 +99,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_below="@id/user_points_title"
+            android:layout_alignParentBottom="true"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
     </RelativeLayout>
 

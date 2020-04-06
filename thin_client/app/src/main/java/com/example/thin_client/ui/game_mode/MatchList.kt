@@ -183,6 +183,8 @@ class MatchList : Fragment() {
                         Gson().fromJson(data.first().toString(), CreateMatchFeedback::class.java)
                     if (feedback.feedback.status) {
                         RoomManager.currentRoom = feedback.matchId
+                        RoomManager.roomsJoined.put(feedback.matchId, arrayListOf())
+                        RoomManager.roomAvatars.put(feedback.matchId, mutableMapOf())
                         gameStartedListener?.startGame()
                     } else {
                         Handler(Looper.getMainLooper()).post(({
@@ -201,6 +203,8 @@ class MatchList : Fragment() {
                         Gson().fromJson(data.first().toString(), JoinRoomFeedback::class.java)
                     if (feedback.feedback.status) {
                         RoomManager.currentRoom = feedback.room_joined!!.id
+                        RoomManager.roomsJoined.put(feedback.room_joined.id, feedback.room_joined.messages)
+                        RoomManager.roomAvatars.put(feedback.room_joined.id, feedback.room_joined.avatars)
                         gameStartedListener?.startGame()
                     } else {
                         Handler(Looper.getMainLooper()).post(({
