@@ -368,6 +368,10 @@ export default abstract class Match {
         }
     }
 
+    protected calculateScore(): number {
+        return Math.round((this.timeLimit - Date.now() + this.timer) / 1000) * 10;
+    }
+
     protected assignDrawer() {
         const currentIndex: number = this.players.indexOf(this.drawer);
         if (currentIndex == this.players.length - 1) {
