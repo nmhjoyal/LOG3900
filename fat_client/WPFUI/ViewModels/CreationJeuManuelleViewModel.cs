@@ -16,7 +16,8 @@ using WPFUI.Utilitaires;
 
 namespace WPFUI.ViewModels
 {
-    class CreationManuelleViewModel: Caliburn.Micro.Screen, INotifyPropertyChanged
+    class CreationJeuManuelleViewModel: Caliburn.Micro.Screen, INotifyPropertyChanged
+
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private Editeur editeur = new Editeur();
@@ -66,7 +67,7 @@ namespace WPFUI.ViewModels
 
         private ISocketHandler _socketHandler;
 
-        public CreationManuelleViewModel(IEventAggregator events, ISocketHandler socketHandler)
+        public CreationJeuManuelleViewModel(IEventAggregator events, ISocketHandler socketHandler)
         {
 
             _socketHandler = socketHandler;

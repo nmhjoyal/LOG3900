@@ -276,6 +276,7 @@
     <Compile Include="ViewModels\CreationJeuAssiste1ViewModel.cs" />
     <Compile Include="ViewModels\CreationJeuManuelle1ViewModel.cs" />
     <Compile Include="ViewModels\CreationJeuManuelle2ViewModel.cs" />
+    <Compile Include="ViewModels\CreationJeuManuelleViewModel.cs" />
     <Compile Include="ViewModels\EmptyViewModel.cs" />
     <Compile Include="ViewModels\FenetreDessinViewModel.cs" />
     <Compile Include="ViewModels\gameViewModel.cs" />
@@ -306,6 +307,9 @@
     </Compile>
     <Compile Include="Views\CreationJeuManuelle2View.xaml.cs">
       <DependentUpon>CreationJeuManuelle2View.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CreationJeuManuelleView.xaml.cs">
+      <DependentUpon>CreationJeuManuelleView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FenetreDessinView.xaml.cs">
       <DependentUpon>FenetreDessinView.xaml</DependentUpon>
@@ -394,6 +398,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CreationJeuManuelle2View.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CreationJeuManuelleView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

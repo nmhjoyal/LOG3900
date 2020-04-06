@@ -84,7 +84,7 @@ namespace WPFUI.ViewModels
 		public void Handle(ManuelleIIEvent message)
 		{
 			Items.Clear();
-			Items.Add(_container.GetInstance<CreationJeuManuelle2ViewModel>());
+			Items.Add(_container.GetInstance<CreationJeuManuelleViewModel>());
 			Items.Add(_container.GetInstance<EmptyViewModel>());
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
