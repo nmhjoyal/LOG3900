@@ -43,7 +43,8 @@ export default abstract class Match {
     // Match methods
     public async abstract startTurn(io: SocketIO.Server, chosenWord: string): Promise<void>;
     public async abstract endTurn(io: SocketIO.Server): Promise<void>;
-    public abstract guess(io: SocketIO.Server, guess: string, username: string): Feedback;
+    public abstract guessWrong(io: SocketIO.Server, username: string): void;
+    public abstract guessRight(io: SocketIO.Server, username: string): void;
 
     protected constructor(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler, matchSettings: MatchSettings) {
         this.players = [this.createPlayer(user)];
@@ -204,13 +205,36 @@ export default abstract class Match {
         return startMatchFeedback;
     }
 
+    public guess(io: SocketIO.Server, guess: string, username: string): Feedback {
+        let feedback: Feedback = { status: false, log_message: "" };
+        const drawerUsername: string = this.drawer.user.username;
+
+        if (this.currentWord != "") {
+            if (username != drawerUsername) {
+                if(guess.toUpperCase() == this.currentWord.toUpperCase()) {
+                    // Depends on the instance
+                    this.guessRight(io, username); 
+
+                    feedback.status = true;
+                } else {
+                    // this.guessWrong(io, username);
+                    feedback.log_message = "Your guess is wrong.";
+                }
+            } else {
+                feedback.log_message = "The player drawing is not supposed to guess.";
+            }
+        } else  {
+            feedback.log_message = "The word guessed is empty.";
+        }
+
+        return feedback;
+    }
+
     protected async endTurnGeneral(io: SocketIO.Server): Promise<void> {
         const endTurn: EndTurn = this.createEndTurn();
 
         if (this.currentWord) { // currentWord is undefined at the first endTurn
-            const message: Message = Admin.createAdminMessage("The word was " + this.currentWord, this.matchId);
-            io.in(this.matchId).emit("new_message", JSON.stringify(message));
-            io.in(this.matchId).emit("new_message", JSON.stringify(this.virtualPlayer.getEndTurnMessage(this.vp, this.matchId)));
+            this.notifyWord(io);
         }
 
         io.in(this.matchId).emit("turn_ended", JSON.stringify(endTurn));
@@ -230,11 +254,19 @@ export default abstract class Match {
 
     protected endMatch(io: SocketIO.Server): void {
         // compile game stats for the players and the standings.
+        // ...
 
+        this.notifyWord(io);
         // notify everyone that the game is ended.
-        io.in(this.matchId).emit("match_ended");
+        io.in(this.matchId).emit("match_ended", this.players);
         
         this.isEnded = true; // to delete on future "update_matches" event called
+    }
+    
+    protected notifyWord(io: SocketIO.Server): void {
+        const message: Message = Admin.createAdminMessage("The word was " + this.currentWord, this.matchId);
+        io.in(this.matchId).emit("new_message", JSON.stringify(message));
+        io.in(this.matchId).emit("new_message", JSON.stringify(this.virtualPlayer.getEndTurnMessage(this.vp, this.matchId)));
     }
 
     protected reset(io: SocketIO.Server): void {
@@ -334,6 +366,10 @@ export default abstract class Match {
                 player.score = updatedScore;
             }
         }
+    }
+
+    protected calculateScore(): number {
+        return Math.round((this.timeLimit - Date.now() + this.timer) / 1000) * 10;
     }
 
     protected assignDrawer() {
@@ -443,7 +479,7 @@ export default abstract class Match {
     protected createStartTurn(word: string): StartTurn {
         return { 
             timeLimit: this.timeLimit,
-            word: word.replace(/[a-z]/gi, '_ ')
+            word: word.replace(/[a-z]/gi, '_')
         };
     }
 
