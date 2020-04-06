@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using WPFUI.EventModels;
 using WPFUI.ViewModels;
+using System.Diagnostics;
 
 namespace WPFUI.Views
 {
@@ -30,14 +31,16 @@ namespace WPFUI.Views
             InitializeComponent();
         }
 
-        public void Handle(LogInEvent message)
+        public async void Handle(LogInEvent message)
         {
-            Storyboard sb = mainGrid.FindResource("showTopMenu") as Storyboard;
-            sb.Begin();
-            Storyboard sb2 = mainGrid.FindResource("showChat") as Storyboard;
-            sb2.Begin();
             ellipse.Visibility = Visibility.Visible;
             arrow.Visibility = Visibility.Visible;
+            Storyboard sb = mainGrid.FindResource("showTopMenu") as Storyboard;
+            Storyboard sb2 = mainGrid.FindResource("showChat") as Storyboard;
+            sb.Begin();
+            await Task.Delay(500);
+            sb2.Begin();
+            
         }
 
         private void OnLoad(object sender, RoutedEventArgs e)
@@ -47,29 +50,30 @@ namespace WPFUI.Views
 
         private void ellipse_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (!chatBoxAnimating & !(e.ClickCount >= 2))
+            if (!chatBoxAnimating & (e.ClickCount == 1))
             {
                 chatBoxAnimating = true;
                 if (chatBoxState == "Visible")
                 {
+                    chatBoxState = "Hidden";
                     Storyboard sb2 = mainGrid.FindResource("hideChat") as Storyboard;
                     Storyboard sb3 = mainGrid.FindResource("flipArrowAnim") as Storyboard;
                     sb2.Begin();
                     sb3.Begin();
-                    chatBoxState = "Hidden";
                     chatBoxAnimating = false;
                 }
                 else if (chatBoxState == "Hidden")
                 {
+                    chatBoxState = "Visible";
                     Storyboard sb2 = mainGrid.FindResource("showChat") as Storyboard;
                     Storyboard sb3 = mainGrid.FindResource("unflipArrowAnim") as Storyboard;
                     sb2.Begin();
                     sb3.Begin();
-                    chatBoxState = "Visible";
                     chatBoxAnimating = false;
                 }
 
             }
+            Console.WriteLine(chatBoxState);
 
         }
 
@@ -99,20 +103,28 @@ namespace WPFUI.Views
 
         public void Handle(logOutEvent message)
         {
-            Storyboard sb = mainGrid.FindResource("hideTopMenu") as Storyboard;
-            sb.Begin();
-            ellipse.Visibility = Visibility.Hidden;
-            arrow.Visibility = Visibility.Hidden;
-            if (chatBoxState == "Visible")
+            if (!chatBoxAnimating)
             {
-                Storyboard sb2 = mainGrid.FindResource("hideChat") as Storyboard;
-                sb2.Begin();
-            } else
-            {
-                Storyboard sb3 = mainGrid.FindResource("unflipArrowAnim") as Storyboard;
-                sb3.Begin();
+                chatBoxAnimating = true;
+                Console.WriteLine("log out avec chatBox " + chatBoxState);
+                Storyboard sb = mainGrid.FindResource("hideTopMenu") as Storyboard;
+                sb.Begin();
+                if (chatBoxState == "Visible")
+                {
+                    Storyboard sb2 = mainGrid.FindResource("hideChat") as Storyboard;
+                    sb2.Begin();
+                }
+                else if (chatBoxState == "Hidden")
+                {
+                    Storyboard sb3 = mainGrid.FindResource("unflipArrowAnim") as Storyboard;
+                    sb3.Begin();
+                }
+                chatBoxState = "Visible";
+                ellipse.Visibility = Visibility.Hidden;
+                arrow.Visibility = Visibility.Hidden;
+                chatBoxAnimating = false;
+
             }
-            chatBoxState = "Visible";
         }
     }
 }

@@ -34,7 +34,6 @@ namespace WPFUI.ViewModels
         public void disconnect()
         {
             _socketHandler.SignOut();
-            _events.PublishOnUIThread(new logOutEvent());
         }
 
         public void goToMenu()
