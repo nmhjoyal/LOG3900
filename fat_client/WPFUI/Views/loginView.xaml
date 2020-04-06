@@ -41,8 +41,8 @@
             <RowDefinition Height="130"/>
         </Grid.RowDefinitions>
 		<Image gif:ImageBehavior.AnimatedSource="/Resources/HAND-DRAW.gif" Grid.Column="1" Grid.Row="3" Opacity="0.5" Grid.ColumnSpan="5" Grid.RowSpan="9"/>
-		<StackPanel Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="5" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,0,0,20">
-			<Image gif:ImageBehavior.AnimatedSource="/Resources/gif/animatedLogoWhiteSmoke.gif"  Opacity="1" HorizontalAlignment="Center"/>
+		<StackPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="7" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,0,0,20">
+			<Image Source="/Resources/login/Logo_still.png"  Opacity="1" HorizontalAlignment="Center" Height="160"/>
 
 		</StackPanel>
 		<TextBlock Width="390" Text="Password: " Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="5" Foreground="DarkSlateGray"/>
@@ -51,13 +51,13 @@
 		<TextBlock Width="390" Text="Username: " Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="5" Foreground="DarkSlateGray"/>
 		<TextBox Width="390" Grid.Column="1" Grid.Row="4" x:Name="_userName" Grid.ColumnSpan="5"  Margin="5" Foreground="#FF66CC00" MaxLength="20">
         </TextBox>
-		<Button x:Name="logIn" Style="{DynamicResource MaterialDesignRaisedAccentButton}" Width ="180" Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="5" Margin="0,20,0,0" Foreground="White" Background="#FF66CC00" BorderBrush="#FF519B07" HorizontalAlignment="Center">
+		<Button x:Name="logIn" Style="{DynamicResource MaterialDesignRaisedAccentButton}" Width ="180" Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="5" Margin="0,20,0,0" Foreground="White" Background="#FF01C853" BorderBrush="#FF519B07" HorizontalAlignment="Center">
 			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 				<TextBlock Margin="0,0,10,0"> Sign In</TextBlock>
 				<Image Source="/Resources/login.png" Height="15"></Image>
 			</StackPanel>
 		</Button>
-		<Button x:Name="signUp" Style="{DynamicResource MaterialDesignRaisedAccentButton}" Width =" 120" Grid.Column="1" Grid.Row="10" Grid.ColumnSpan="5" Margin="0,20,0,0" Foreground="White" Background="#FF66CC00" HorizontalAlignment="Center" BorderBrush="#FF519B07">
+		<Button x:Name="signUp" Style="{DynamicResource MaterialDesignRaisedAccentButton}" Width =" 120" Grid.Column="1" Grid.Row="10" Grid.ColumnSpan="5" Margin="0,20,0,0" Foreground="White" Background="#FF018577" HorizontalAlignment="Center" BorderBrush="#FF519B07">
 			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 				<TextBlock Margin="0,0,10,0"> Sign Up</TextBlock>
 				<Image Source="/Resources/add.png" Height="15"></Image>

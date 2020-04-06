@@ -36,5 +36,10 @@ namespace WPFUI.ViewModels
             _socketHandler.SignOut();
             _events.PublishOnUIThread(new logOutEvent());
         }
+
+        public void goToMenu()
+        {
+            _events.PublishOnUIThread(new goBackMainEvent());
+        }
     }
 }

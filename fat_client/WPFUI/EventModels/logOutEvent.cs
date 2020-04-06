@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WPFUI.EventModels
 {
-    class logOutEvent
+    public class logOutEvent
     {
     }
 }

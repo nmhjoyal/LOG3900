@@ -21,7 +21,7 @@ namespace WPFUI.Views
     /// <summary>
     /// Logique d'interaction pour ShellView.xaml
     /// </summary>
-    public partial class ShellView : Window, IHandle<LogInEvent>, IHandle<gameEvent>, IHandle<goBackMainEvent>
+    public partial class ShellView : Window, IHandle<LogInEvent>, IHandle<gameEvent>, IHandle<goBackMainEvent>, IHandle<logOutEvent>
     {
         private string chatBoxState = "Visible";
         private Boolean chatBoxAnimating = false;
@@ -95,6 +95,24 @@ namespace WPFUI.Views
         {
             ellipse.Visibility = Visibility.Visible;
             arrow.Visibility = Visibility.Visible;
+        }
+
+        public void Handle(logOutEvent message)
+        {
+            Storyboard sb = mainGrid.FindResource("hideTopMenu") as Storyboard;
+            sb.Begin();
+            ellipse.Visibility = Visibility.Hidden;
+            arrow.Visibility = Visibility.Hidden;
+            if (chatBoxState == "Visible")
+            {
+                Storyboard sb2 = mainGrid.FindResource("hideChat") as Storyboard;
+                sb2.Begin();
+            } else
+            {
+                Storyboard sb3 = mainGrid.FindResource("unflipArrowAnim") as Storyboard;
+                sb3.Begin();
+            }
+            chatBoxState = "Visible";
         }
     }
 }

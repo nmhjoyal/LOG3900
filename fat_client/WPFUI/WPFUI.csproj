@@ -513,6 +513,10 @@
     <Resource Include="Resources\good guess.png" />
     <Resource Include="Resources\gif\animatedLogo.gif" />
     <Resource Include="Resources\gif\animatedLogoWhiteSmoke.gif" />
+    <Resource Include="Resources\gif\logo.gif" />
+    <Resource Include="Resources\gif\logo_big.gif" />
+    <Resource Include="Resources\gif\logo_metronome.gif" />
+    <Resource Include="Resources\gif\logo_sides.gif" />
     <Content Include="Resources\grape.svg" />
     <Resource Include="Resources\kiwi.png" />
     <Resource Include="Resources\HAND-DRAW.gif" />
@@ -525,6 +529,8 @@
     <Resource Include="Resources\orange.png" />
     <Resource Include="Resources\mail.png" />
     <Resource Include="Resources\mad.gif" />
+    <Resource Include="Resources\login\Draw Something.png" />
+    <Resource Include="Resources\login\Logo_still.png" />
     <Content Include="Resources\orange.svg" />
     <Resource Include="Resources\pear.png" />
     <Resource Include="Resources\party.gif" />
@@ -541,6 +547,8 @@
     <Resource Include="Resources\topMenu\exit.png" />
     <Resource Include="Resources\topMenu\trophy.png" />
     <Resource Include="Resources\topMenu\user.png" />
+    <Resource Include="Resources\topMenu\house.png" />
+    <Resource Include="Resources\topMenu\logo_still_white.png" />
     <Content Include="Resources\watermelon.svg" />
   </ItemGroup>
   <ItemGroup>
