@@ -24,6 +24,11 @@ namespace WPFUI.ViewModels
             fillAvatars();
         }
 
+        public IEventAggregator events
+        {
+            get { return _events; }
+        }
+
         public string username
         {
             get { return _userdata.userName; }
