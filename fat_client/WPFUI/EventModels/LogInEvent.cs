@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WPFUI.EventModels
 {
-    class LogInEvent
+    public class LogInEvent
     {
     }
 }

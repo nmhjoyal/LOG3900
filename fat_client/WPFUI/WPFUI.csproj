@@ -288,6 +288,7 @@
     <Compile Include="ViewModels\partieJeuViewModel.cs" />
     <Compile Include="ViewModels\profileViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
+    <Compile Include="ViewModels\topMenuViewModel.cs" />
     <Compile Include="ViewModels\WaitingRoomViewModel.cs" />
     <Compile Include="Views\chatBoxView.xaml.cs">
       <DependentUpon>chatBoxView.xaml</DependentUpon>
@@ -336,6 +337,9 @@
     </Compile>
     <Compile Include="Views\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\topMenuView.xaml.cs">
+      <DependentUpon>topMenuView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\WaitingRoomView.xaml.cs">
       <DependentUpon>WaitingRoomView.xaml</DependentUpon>
@@ -437,12 +441,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\topMenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\WaitingRoomView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\mainMenu\arrowWhite.png" />
     <Resource Include="Views\chat-icon.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -529,6 +538,9 @@
     <Resource Include="Resources\trophy.gif" />
     <Resource Include="Resources\trophy_cropped.gif" />
     <Resource Include="Resources\Stripes.png" />
+    <Resource Include="Resources\topMenu\exit.png" />
+    <Resource Include="Resources\topMenu\trophy.png" />
+    <Resource Include="Resources\topMenu\user.png" />
     <Content Include="Resources\watermelon.svg" />
   </ItemGroup>
   <ItemGroup>

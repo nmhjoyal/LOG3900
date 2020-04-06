@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="WPFUI.Views.topMenuView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WPFUI.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="50" d:DesignWidth="1300"
+			 FontSize="22"
+			 Foreground="White">
+	<Grid Background="#FF018577">
+		<TextBlock Text="Draw Something" VerticalAlignment="Center" HorizontalAlignment="Left" 
+				   Margin="40,0,0,0" FontSize="25"></TextBlock>
+		<StackPanel VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,40,0" Orientation="Horizontal">
+			<Button Height="auto" Width="auto" Background="{x:Null}" BorderBrush="{x:Null}" x:Name="goToScores">
+				<StackPanel VerticalAlignment="Center">
+					<Image Source="/Resources/topMenu/trophy.png" Height="35"></Image>
+				</StackPanel>
+			</Button>
+			<Button Height="auto" Width="auto" Background="{x:Null}" BorderBrush="{x:Null}" x:Name="goToProfileEdit">
+				<StackPanel VerticalAlignment="Center">
+					<Image Source="/Resources/topMenu/user.png" Height="35"></Image>
+				</StackPanel>
+			</Button>
+			<Button Height="auto" Width="auto" Background="{x:Null}" BorderBrush="{x:Null}" x:Name="disconnect">
+				<StackPanel VerticalAlignment="Center">
+					<Image Source="/Resources/topMenu/exit.png" Height="35"></Image>
+				</StackPanel>
+			</Button>
+		</StackPanel>
+	</Grid>
+</UserControl>

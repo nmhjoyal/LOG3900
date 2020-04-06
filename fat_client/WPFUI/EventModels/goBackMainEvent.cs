@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WPFUI.EventModels
 {
-    class goBackMainEvent
+    public class goBackMainEvent
     {
     }
 }

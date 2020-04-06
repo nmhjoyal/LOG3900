@@ -12,7 +12,7 @@ using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    class ShellViewModel: Conductor<Screen>.Collection.AllActive, IHandle<LogInEvent>, IHandle<logOutEvent>, IHandle<joinChatEvent>,
+    class ShellViewModel: Conductor<Screen>.Collection.AllActive, IHandle<LogInEvent>, IHandle<logOutEvent>,
 						  IHandle<DisconnectEvent>, IHandle<userNameTakenEvent>,IHandle<signUpEvent>, IHandle<goBackEvent>,
 						  IHandle<passwordMismatchEvent>, IHandle<viewProfileEvent>, IHandle<goBackMainEvent>,
 						  IHandle<joinGameEvent>, IHandle<ManuelIEvent>, IHandle<ManuelleIIEvent>, IHandle<createGameEvent>,IHandle<freeDrawEvent>, 
@@ -36,6 +36,11 @@ namespace WPFUI.ViewModels
 			this._socketHandler = socketHandler;
 		}
 
+		public IEventAggregator events
+		{
+			get { return _events; }
+		}
+
 		public Screen FirstSubViewModel
 		{
 			get { return Items.ElementAt(0); }
@@ -46,11 +51,16 @@ namespace WPFUI.ViewModels
 			get { return Items.ElementAt(1); }
 		}
 
+		public Screen topMenu
+		{
+			get { return _container.GetInstance<topMenuViewModel>(); }
+		}
+
 		public void Handle(LogInEvent message)
 		{
 			Items.Clear();
 			Items.Add(_container.GetInstance<MainMenuViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
+			Items.Add(_container.GetInstance<chatBoxViewModel>());
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
@@ -59,7 +69,7 @@ namespace WPFUI.ViewModels
 		{
 			Items.Clear();
 			Items.Add(_container.GetInstance<profileViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
+			Items.Add(_container.GetInstance<chatBoxViewModel>());
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
@@ -77,7 +87,7 @@ namespace WPFUI.ViewModels
 		{
 			Items.Clear();
 			Items.Add(_container.GetInstance<CreationJeuAssiste1ViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
+			Items.Add(_container.GetInstance<chatBoxViewModel>());
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
@@ -85,7 +95,7 @@ namespace WPFUI.ViewModels
 		{
 			Items.Clear();
 			Items.Add(_container.GetInstance<CreationJeuManuelle2ViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
+			Items.Add(_container.GetInstance<chatBoxViewModel>());
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
@@ -94,7 +104,7 @@ namespace WPFUI.ViewModels
 		{
 			Items.Clear();
 			Items.Add(_container.GetInstance<LeaderboardViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
+			Items.Add(_container.GetInstance<chatBoxViewModel>());
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
@@ -103,7 +113,7 @@ namespace WPFUI.ViewModels
 		{
 			Items.Clear();
 			Items.Add(_container.GetInstance<MenuSelectionModeCreationViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
+			Items.Add(_container.GetInstance<chatBoxViewModel>());
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
@@ -123,7 +133,7 @@ namespace WPFUI.ViewModels
 			//ActivateItem(_container.GetInstance<MainMenuViewModel>());
 			Items.Clear();
 			Items.Add(_container.GetInstance<MainMenuViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
+			Items.Add(_container.GetInstance<chatBoxViewModel>());
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
@@ -141,7 +151,7 @@ namespace WPFUI.ViewModels
 		{
 			Items.Clear();
 			Items.Add(_container.GetInstance<MenuSelectionModeCreationViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
+			Items.Add(_container.GetInstance<chatBoxViewModel>());
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
@@ -155,11 +165,6 @@ namespace WPFUI.ViewModels
 			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
 
-		public void Handle(joinChatEvent message)
-		{
-			//ActivateItem(_container.GetInstance<chatBoxViewModel>());
-		}
-
 		public void Handle(joinChatroomEvent message)
 		{
 			Items.Clear();
@@ -197,7 +202,7 @@ namespace WPFUI.ViewModels
 		{
 			Items.Clear();
 			Items.Add(_container.GetInstance<ChoseGameViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
+			Items.Add(_container.GetInstance<chatBoxViewModel>());
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
@@ -205,7 +210,7 @@ namespace WPFUI.ViewModels
 		{
 			Items.Clear();
 			Items.Add(_container.GetInstance<partieJeuViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
+			Items.Add(_container.GetInstance<chatBoxViewModel>());
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
@@ -213,7 +218,7 @@ namespace WPFUI.ViewModels
 		{
 			Items.Clear();
 			Items.Add(_container.GetInstance<WaitingRoomViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
+			Items.Add(_container.GetInstance<chatBoxViewModel>());
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
@@ -221,7 +226,7 @@ namespace WPFUI.ViewModels
 		{
 			Items.Clear();
 			Items.Add(_container.GetInstance<createMatchViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
+			Items.Add(_container.GetInstance<chatBoxViewModel>());
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
@@ -229,7 +234,7 @@ namespace WPFUI.ViewModels
 		{
 			Items.Clear();
 			Items.Add(_container.GetInstance<FenetreDessinViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
+			Items.Add(_container.GetInstance<chatBoxViewModel>());
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
