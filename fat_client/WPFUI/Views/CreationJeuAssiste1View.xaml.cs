@@ -116,5 +116,15 @@ namespace WPFUI.Views
         {
             (this.DataContext as CreationJeuAssiste1ViewModel).preventDrawing(e.Stroke);
         }
+        private void close(object sender, RoutedEventArgs e)
+        {
+            border.Visibility = Visibility.Hidden;
+            selectNextDrawingBox.Visibility = Visibility.Hidden;
+        }
+        private void draw(object sender, RoutedEventArgs e)
+        {
+            border.Visibility = Visibility.Visible;
+            selectNextDrawingBox.Visibility = Visibility.Visible;
+        }
     }
 }
