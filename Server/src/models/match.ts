@@ -2,15 +2,15 @@ import { MatchMode } from "./matchMode";
 import PublicProfile from "./publicProfile";
 import Player from "./player";
 
+export const TIME_LIMIT_MIN: number = 30;   // 30 sec minimum
+export const TIME_LIMIT_MAX: number = 120;  // 2 min maximum
+export const SPRINT_BONUS_TIME: number = 15;// 15 sec in bonus
+
 export interface CreateMatch {
     nbRounds: number
     timeLimit: number /* in seconds */
     matchMode: MatchMode
 }
-export const NB_ROUNDS_MIN: number = 1;
-export const NB_ROUNDS_MAX: number = 10;
-export const TIME_LIMIT_MIN: number = 30; /* 30 sec minimum */
-export const TIME_LIMIT_MAX: number = 120;/* 2 min maximum */
 
 export interface MatchInfos {
     matchId: string
@@ -31,4 +31,11 @@ export interface EndTurn {
     players: Player[]
     choices: string[]
     drawer: string  // indicates who is the drawer useful in FreeForAll
+}
+
+export interface UpdateSprint {
+    guess: number // number of guess
+    time: number // time updated
+    word: string // hidden word (with underscores)
+    players: Player[]
 }

@@ -1,5 +1,5 @@
 import { Feedback, StartMatchFeedback, JoinRoomFeedback } from "../../models/feedback";
-import { MatchInfos, CreateMatch, EndTurn, StartTurn } from "../../models/match";
+import { MatchInfos, CreateMatch, EndTurn, StartTurn, UpdateSprint } from "../../models/match";
 import Player, { UpdateScore } from "../../models/player";
 import PublicProfile from "../../models/publicProfile";
 import { MatchMode, MatchSettings } from "../../models/matchMode";
@@ -7,11 +7,10 @@ import ChatHandler from "../chatHandler";
 import PrivateProfile from "../../models/privateProfile";
 import { VirtualDrawing } from "../Drawing/virtualDrawing";
 import { Drawing } from "../Drawing/drawing";
-import { Stroke, StylusPoint } from "../../models/drawPoint";
+import { Stroke, StylusPoint, Level } from "../../models/drawPoint";
 import RandomWordGenerator from "../WordGenerator/wordGenerator";
 import Admin from "../../models/admin";
 import { Message } from "../../models/message";
-import { gameDB } from "../Database/gameDB";
 import VirtualPlayer from "../VirtualPlayer/virtualPlayer";
 
 export default abstract class Match {
@@ -22,6 +21,7 @@ export default abstract class Match {
     protected mode: number;
     protected nbRounds: number;
     protected timeLimit: number;
+    protected hints: string[];
     protected currentWord: string;
     protected isStarted: boolean;
     protected chatHandler: ChatHandler;
@@ -43,7 +43,6 @@ export default abstract class Match {
     // Match methods
     public async abstract startTurn(io: SocketIO.Server, chosenWord: string): Promise<void>;
     public async abstract endTurn(io: SocketIO.Server): Promise<void>;
-    public abstract guessWrong(io: SocketIO.Server, username: string): void;
     public abstract guessRight(io: SocketIO.Server, username: string): void;
 
     protected constructor(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler, matchSettings: MatchSettings) {
@@ -214,10 +213,8 @@ export default abstract class Match {
                 if(guess.toUpperCase() == this.currentWord.toUpperCase()) {
                     // Depends on the instance
                     this.guessRight(io, username); 
-
                     feedback.status = true;
                 } else {
-                    // this.guessWrong(io, username);
                     feedback.log_message = "Your guess is wrong.";
                 }
             } else {
@@ -228,28 +225,6 @@ export default abstract class Match {
         }
 
         return feedback;
-    }
-
-    protected async endTurnGeneral(io: SocketIO.Server): Promise<void> {
-        const endTurn: EndTurn = this.createEndTurn();
-
-        if (this.currentWord) { // currentWord is undefined at the first endTurn
-            this.notifyWord(io);
-        }
-
-        io.in(this.matchId).emit("turn_ended", JSON.stringify(endTurn));
-        
-        this.resetScoresTurn();
-        this.currentWord = "";
-        
-        if (this.drawer.isVirtual) {
-            let word: string;
-            setTimeout(() => {
-                this.startTurn(io, word);
-            }, 5000);
-            word = await gameDB.getRandomWord();
-        }
-        // else we wait for the drawer to send his choice of word in the "start_turn" event.
     }
 
     protected endMatch(io: SocketIO.Server): void {
@@ -355,6 +330,19 @@ export default abstract class Match {
         return everyoneHasGuessed;
     }
 
+    protected updateTeamScore(score: number): void {
+        for (let player of this.players) {
+            if (!player.isVirtual) {
+                const oldScore: number = player.score.scoreTotal;
+                const updatedScore: UpdateScore = {
+                    scoreTotal: oldScore + score,
+                    scoreTurn: score
+                };
+                player.score = updatedScore;
+            }
+        }
+    }
+
     protected updateScore(username: string, score: number): void {
         for (let player of this.players) {
             if (player.user.username == username) {
@@ -368,8 +356,23 @@ export default abstract class Match {
         }
     }
 
+    protected getNbGuesses(difficulty: Level): number {
+        switch (difficulty) {
+            case Level.Easy:
+                return 7;
+            case Level.Medium:
+                return 5;
+            case Level.Hard:
+                return 3;
+        }
+    }
+
+    protected timeLeft(): number {
+        return Math.round(this.timeLimit - ((Date.now() - this.timer)/1000)); 
+    }
+
     protected calculateScore(): number {
-        return Math.round((this.timeLimit - Date.now() + this.timer) / 1000) * 10;
+        return Math.round(this.timeLeft()) * 10; // + (1-(nbAyantdevine/nbhumanPlayer)) * CONSTANTE (100)
     }
 
     protected assignDrawer() {
@@ -384,7 +387,7 @@ export default abstract class Match {
 
     protected assignHost(): void {
         // Place the new host at the beginning of the array.
-        this.players.splice(0, 0, this.players.splice(this.findNewHostIndex(), 1)[0])
+        this.players.splice(0, 0, this.players.splice(this.findNewHostIndex(), 1)[0]);
     }
 
     protected findNewHostIndex(): number {
@@ -490,5 +493,14 @@ export default abstract class Match {
             choices: RandomWordGenerator.generateChoices(),
             drawer: this.drawer.user.username
         };
+    }
+
+    protected createUpdateSprint(guess: number, word: string, time: number): UpdateSprint {
+        return {
+            players: this.players,
+            guess: guess,
+            word: word.replace(/[a-z]/gi, '_'),
+            time: time
+        }
     }
 }

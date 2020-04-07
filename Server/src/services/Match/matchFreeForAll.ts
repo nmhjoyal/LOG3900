@@ -1,7 +1,7 @@
 import Match from "./matchAbstract";
 import PublicProfile from "../../models/publicProfile";
 import ChatHandler from "../chatHandler";
-import { CreateMatch,} from "../../models/match";
+import { CreateMatch, EndTurn,} from "../../models/match";
 import { gameDB } from "../Database/gameDB";
 import { Game } from "../../models/drawPoint";
 import { Message } from "../../models/message";
@@ -20,6 +20,7 @@ export default class FreeForAll extends Match {
         
         if (this.drawer.isVirtual) {
             const game: Game = await gameDB.getGame(word);
+            this.hints = game.clues;
             this.virtualDrawing.draw(io, game.drawing, game.level);
         }
         
@@ -37,7 +38,25 @@ export default class FreeForAll extends Match {
         if (this.matchIsEnded()) {
             this.endMatch(io);
         } else {
-            this.endTurnGeneral(io);
+            const endTurn: EndTurn = this.createEndTurn();
+
+            if (this.currentWord) { // currentWord is undefined at the first endTurn
+                this.notifyWord(io);
+            }
+
+            io.in(this.matchId).emit("turn_ended", JSON.stringify(endTurn));
+            
+            this.resetScoresTurn();
+            this.currentWord = "";
+            
+            if (this.drawer.isVirtual) {
+                let word: string;
+                setTimeout(() => {
+                    this.startTurn(io, word);
+                }, 5000);
+                word = await gameDB.getRandomWord();
+            }
+            // else we wait for the drawer to send his choice of word in the "start_turn" event.
         }
     }
 
@@ -55,9 +74,5 @@ export default class FreeForAll extends Match {
         if(this.everyoneHasGuessed()) {
             this.endTurn(io);
         }
-    }
-
-    public guessWrong(io: SocketIO.Server, username: string): void {
-        // nothing to do here no number of guesses in free for all.
     }
 }
