@@ -544,6 +544,8 @@ namespace WPFUI.ViewModels
 
             _matchScores = new BindableCollection<dynamic>(_matchScores.OrderBy(i => i.position));
 
+            endTurn.players = new BindableCollection<Player>();
+            NotifyOfPropertyChange(() => joueurs);
             _winnerMessage = "The winner is " + _matchScores[0].name;
             NotifyOfPropertyChange(() => winnerMessage);
             matchScores.Refresh();

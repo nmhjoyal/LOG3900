@@ -160,6 +160,7 @@ namespace WPFUI.Models
             {
                 return score.scoreTotal;
             }
+
         }
         public int ScoreTurn
         {
@@ -167,6 +168,11 @@ namespace WPFUI.Models
             {
                 return score.scoreTurn;
             }
+            set
+            {
+                score.scoreTotal = value;
+            }
+
         }
 
     }
