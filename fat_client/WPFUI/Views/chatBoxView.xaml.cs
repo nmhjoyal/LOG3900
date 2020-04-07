@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using WPFUI.EventModels;
 using WPFUI.Models;
 using WPFUI.ViewModels;
@@ -43,6 +44,7 @@ namespace WPFUI.Views
         {
             _viewModel = DataContext as chatBoxViewModel;
             _events = (DataContext as chatBoxViewModel).events;
+            _events.Subscribe(this);
             _userdata = (DataContext as chatBoxViewModel).userdata;
             messagesUI.ScrollToBottom();
         }
@@ -80,12 +82,12 @@ namespace WPFUI.Views
 
         public void Handle(refreshMessagesEvent message)
         {
-            messagesUI.ScrollToBottom();
+            messagesUI.ScrollToEnd();
         }
 
         public void Handle(scrollDownEvent message)
         {
-            messagesUI.ScrollToBottom();
+            messagesUI.ScrollToEnd();
         }
     }
 }
