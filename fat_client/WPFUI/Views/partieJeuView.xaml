@@ -278,7 +278,7 @@
 					</Grid>
 				</Border>
 			</Grid>
-			<Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="13" Grid.RowSpan="13" Visibility="Visible" Name="endMatchBox" Margin="0.4,30,0.4,0">
+			<Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="13" Grid.RowSpan="13" Visibility="Hidden" Name="endMatchBox" Margin="0.4,30,0.4,0">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="*"/>
 					<ColumnDefinition Width="1.5*"/>

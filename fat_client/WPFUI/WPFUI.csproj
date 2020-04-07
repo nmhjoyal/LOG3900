@@ -526,6 +526,7 @@
     <Resource Include="Resources\gif\logo_big.gif" />
     <Resource Include="Resources\gif\logo_metronome.gif" />
     <Resource Include="Resources\gif\logo_sides.gif" />
+    <Resource Include="Resources\gameView\endGame logo.png" />
     <Content Include="Resources\grape.svg" />
     <Resource Include="Resources\kiwi.png" />
     <Resource Include="Resources\HAND-DRAW.gif" />
