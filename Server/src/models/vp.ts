@@ -342,7 +342,7 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
     [
         MISS_LEMON,
         {
-            startMatch: "TODO",
+            startMatch: "Buongiorno, I wish you guys a good game, the winner will get my beautiful lasagna.",
             endTurn: [
                 "TODO",
                 "TODO",
