@@ -93,6 +93,16 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         setupSocket()
         when (GameManager.currentGameMode) {
             MatchMode.SOLO -> {
+                if (!isWaitingRoomShowing) {
+                    toolbar.visibility = View.GONE
+                    user_points_toolbar.visibility = View.GONE
+                    val transaction = manager.beginTransaction()
+                    val waitingRoom = WaitingRoom()
+                    transaction.replace(R.id.draw_view_container, waitingRoom)
+                    transaction.addToBackStack(null)
+                    transaction.commitAllowingStateLoss()
+                    isWaitingRoomShowing = true
+                }
             }
             MatchMode.COLLABORATIVE-> {}
             MatchMode.FREE_FOR_ALL -> {
@@ -291,6 +301,9 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
     private fun setupSocketEvents() {
         if (SocketHandler.socket != null) {
             SocketHandler.socket!!
+                .on(SocketEvent.UPDATE_SPRINT, ({data ->
+
+                }))
                 .on(SocketEvent.TURN_ENDED, ({ data ->
                     isTurnStarted = false
                     val turnParams = Gson().fromJson(data.first().toString(), EndTurn::class.java)
