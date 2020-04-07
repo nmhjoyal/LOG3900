@@ -134,7 +134,8 @@
     <string name="one_v_one_mode">One-on-One</string>
     <string name="reverse_mode">Reverse</string>
     <string name="prompt_nb_rounds">Number of rounds</string>
-    <string name="prompt_time_limit">Time limit per round (seconds)</string>
+    <string name="prompt_time_limit_round">Time limit per round (seconds)</string>
+    <string name="prompt_time_limit">Time limit (seconds)</string>
     <string name="start">Start!</string>
     <string name="time_separator"> : </string>
     <string name="timer_cd">Timer</string>
