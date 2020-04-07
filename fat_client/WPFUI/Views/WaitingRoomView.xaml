@@ -66,28 +66,22 @@
 
 
 		<Border  BorderBrush="Black" BorderThickness="2" Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="7" Grid.RowSpan="2"/>
-        <ScrollViewer Grid.Column="1" Grid.Row="8" Grid.RowSpan="2" Grid.ColumnSpan="7" VerticalScrollBarVisibility="Visible">
-            <ItemsControl ItemsSource="{Binding Players}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Vertical" Margin="0,20,0,0">
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <TextBlock Text="{Binding Username}" Height="30" FontSize="20" VerticalAlignment="Center" Foreground="DarkSlateGray"/>
-                                <Image Source="{Binding Avatar}" Height="30" VerticalAlignment="Center" Margin="20,0,0,0"></Image>
-                            </StackPanel>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
-        <Button  x:Name="goBack"  Grid.Column="12" Grid.Row="1" MaxWidth="120" HorizontalAlignment="Right"  Background="#D81A60" BorderBrush="#D81A60">
-            <StackPanel Orientation="Horizontal">
-                
-                <Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
-            </StackPanel>
-        </Button>
+		<ScrollViewer Grid.Column="1" Grid.Row="8" Grid.RowSpan="2" Grid.ColumnSpan="7" VerticalScrollBarVisibility="Visible">
+			<ItemsControl ItemsSource="{Binding Players}">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<StackPanel Orientation="Vertical" Margin="0,20,0,0">
+							<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+								<TextBlock Text="{Binding Username}" Height="30" FontSize="20" VerticalAlignment="Center" Foreground="DarkSlateGray"/>
+								<Image Source="{Binding Avatar}" Height="30" VerticalAlignment="Center" Margin="20,0,0,0"></Image>
+							</StackPanel>
+						</StackPanel>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+		</ScrollViewer>
 
-        <ScrollViewer Grid.Column="11" Grid.Row="8" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Hidden" Name="messagesUI" FontSize="18">
+		<ScrollViewer Grid.Column="11" Grid.Row="8" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Hidden" Name="messagesUI" FontSize="18">
             <ItemsControl x:Name="messages">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>

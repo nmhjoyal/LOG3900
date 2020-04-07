@@ -41,21 +41,20 @@
 			<RowDefinition Height="20"/>
 		</Grid.RowDefinitions>
 		<Image Source="chat logo png.png" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" Grid.RowSpan="5"
-			   HorizontalAlignment="Center" Opacity="0.2" MaxHeight="400"/>
+			   HorizontalAlignment="Center" Opacity="0.15" MaxHeight="250"/>
 
-		<TextBlock Text="{Binding Path = welcomeMessage, Mode = Oneway}" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment ="Center" Grid.ColumnSpan="5" Foreground="DarkSlateGray" FontSize="14" Margin="0,0,110,0"/>
-		<TextBlock Text="{Binding Path = currentRoomId, Mode = Oneway}" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment ="Center" Grid.ColumnSpan="3" Foreground="DarkSlateGray" FontSize="20"/>
+		<TextBlock Text="{Binding Path = currentRoomId, Mode = Oneway}" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment ="Center" Grid.ColumnSpan="3" Foreground="#FF00584C" FontSize="20"/>
 		<ScrollViewer Grid.Column="1" Grid.Row="3" Grid.RowSpan="3" Grid.ColumnSpan="6" VerticalScrollBarVisibility="Visible" Margin="0,10,0,0" Name="messagesUI">
 			<ItemsControl x:Name="messages">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
-						<StackPanel Orientation="Vertical">
+						<StackPanel Orientation="Vertical" Margin="5,0,0,0">
 							<StackPanel Orientation="Horizontal">
 								<Image Source="account_circle_grey_72x72.png" MaxHeight="25" VerticalAlignment="Center"></Image>
-								<TextBlock Text="{Binding senderName}" Foreground="DarkSlateGray"/>
+								<TextBlock Text="{Binding senderName}" Foreground="DarkSlateGray" VerticalAlignment="Center"/>
 							</StackPanel>
-							<TextBlock Text="{Binding content}" Foreground="Black" TextWrapping="Wrap" Margin="10,0,0,0"/>
-							<TextBlock Text="{Binding formattedTimeStamp}" Foreground="DarkSlateGray" HorizontalAlignment="Left" FontSize="12" Margin="10,0,0,10"/>
+							<TextBlock Text="{Binding content}" Foreground="Black" TextWrapping="Wrap" Margin="0,0,0,0"/>
+							<TextBlock Text="{Binding formattedTimeStamp}" Foreground="DarkSlateGray" HorizontalAlignment="Left" FontSize="12" Margin="0,0,0,10"/>
 						</StackPanel>
 					</DataTemplate>
 				</ItemsControl.ItemTemplate>
@@ -70,10 +69,10 @@
 		</Button>
 		<StackPanel Grid.Row="1" Grid.Column="6" Orientation="Horizontal" HorizontalAlignment="Right">
 			
-			<Button Background="#FF00584C" BorderBrush="{x:Null}" x:Name ="channelsMode" Margin="5,0,0,0" Click="channelsMode_Click">
+			<Button Background="#FFD81A60" BorderBrush="{x:Null}" x:Name ="channelsMode" Margin="5,0,0,0" Click="channelsMode_Click">
 				<StackPanel Orientation="Horizontal">
 					<TextBlock Foreground="White" VerticalAlignment="Center"> Options</TextBlock>
-					<Image Source="/Resources/chat.png" Height="20"></Image>
+					<Image Source="/Resources/chat.png" Height="20" Margin="10,0,0,0"></Image>
 				</StackPanel>
 			</Button>
 
