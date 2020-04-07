@@ -104,7 +104,18 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                     isWaitingRoomShowing = true
                 }
             }
-            MatchMode.COLLABORATIVE-> {}
+            MatchMode.COLLABORATIVE-> {
+                if (!isWaitingRoomShowing) {
+                    toolbar.visibility = View.GONE
+                    user_points_toolbar.visibility = View.GONE
+                    val transaction = manager.beginTransaction()
+                    val waitingRoom = WaitingRoom()
+                    transaction.replace(R.id.draw_view_container, waitingRoom)
+                    transaction.addToBackStack(null)
+                    transaction.commitAllowingStateLoss()
+                    isWaitingRoomShowing = true
+                }
+            }
             MatchMode.FREE_FOR_ALL -> {
                 if (!isWaitingRoomShowing) {
                     toolbar.visibility = View.GONE
@@ -295,6 +306,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                 .off(SocketEvent.TURN_STARTED)
                 .off(SocketEvent.MATCH_LEFT)
                 .off(SocketEvent.MATCH_STARTED)
+                .off(SocketEvent.UPDATE_SPRINT)
         }
     }
 
@@ -302,6 +314,19 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         if (SocketHandler.socket != null) {
             SocketHandler.socket!!
                 .on(SocketEvent.UPDATE_SPRINT, ({data ->
+                    val sprintParams = Gson().fromJson(data.first().toString(), UpdateSprint::class.java)
+                    Handler(Looper.getMainLooper()).post(({
+                        refreshPlayerPointsToolbar(sprintParams.players)
+                        showObserverFragment()
+                        startCountdown(sprintParams.time.toLong() * SECOND_INTERVAL)
+                        if(sprintParams.guess == 0){
+                            GameManager.canGuess = false
+                            nb_guesses.text = ""
+                        }
+                        nb_guesses.text = sprintParams.guess.toString()
+                        message.text = sprintParams.word
+                    }))
+
 
                 }))
                 .on(SocketEvent.TURN_ENDED, ({ data ->
