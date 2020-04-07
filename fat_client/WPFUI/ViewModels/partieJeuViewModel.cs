@@ -386,6 +386,18 @@ namespace WPFUI.ViewModels
                 dynamicScore.score = player.ScoreTotal;
                 _turnScores.Add(dynamicScore);
             }
+
+            _turnScores = new BindableCollection<dynamic>(_turnScores.OrderByDescending(i => i.score));
+
+            int rank = 1;
+            foreach (dynamic score in _turnScores)
+            {
+                score.position = rank;
+                rank++;
+            }
+
+            _turnScores = new BindableCollection<dynamic>(_turnScores.OrderBy(i => i.position));
+
             turnScores.Refresh();
         }
 
@@ -510,27 +522,30 @@ namespace WPFUI.ViewModels
 
         public void Handle(endMatchEvent message)
         {
-            _turnScores.Clear();
+            _matchScores.Clear();
             foreach (Player player in message.players)
             {
                 dynamic dynamicScore = new System.Dynamic.ExpandoObject();
                 dynamicScore.position = 0;
                 dynamicScore.name = player.Username;
                 dynamicScore.score = player.ScoreTotal;
-                _turnScores.Add(dynamicScore);
+                _matchScores.Add(dynamicScore);
             }
 
-            _turnScores = new BindableCollection<dynamic>(_turnScores.OrderByDescending(i => i.score));
+            _matchScores = new BindableCollection<dynamic>(_matchScores.OrderByDescending(i => i.score));
 
             int rank = 1;
-            foreach (dynamic score in _turnScores)
+            foreach (dynamic score in _matchScores)
             {
                 score.position = rank;
                 rank++;
             }
-            _winnerMessage = "The winner is " + _turnScores[0].name;
+
+            _matchScores = new BindableCollection<dynamic>(_matchScores.OrderBy(i => i.position));
+
+            _winnerMessage = "The winner is " + _matchScores[0].name;
             NotifyOfPropertyChange(() => winnerMessage);
-            turnScores.Refresh();
+            matchScores.Refresh();
         }
     }
 }

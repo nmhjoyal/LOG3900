@@ -518,8 +518,8 @@ namespace WPFUI.Models
 
             this.socket.On("match_ended", (Feedback) =>
             {
-                dynamic json = JsonConvert.DeserializeObject(Feedback.ToString());
-                _events.PublishOnUIThread(new endMatchEvent((Player[])json));
+                Player[] players = JsonConvert.DeserializeObject<Player[]>(Feedback.ToString());
+                _events.PublishOnUIThread(new endMatchEvent(players));
             });
         }
 
