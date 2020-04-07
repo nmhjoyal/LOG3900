@@ -190,7 +190,14 @@ namespace WPFUI.ViewModels
                     sR.menuVisibility = "Collapsed";
                 }
 
-                int selectedRoomIndex = _joinedRooms.IndexOf(_joinedRooms.Single(i => i.id == message.selectedRoomId));
+                int selectedRoomIndex = 0;
+                try
+                {
+                    selectedRoomIndex = _joinedRooms.IndexOf(_joinedRooms.Single(i => i.id == message.selectedRoomId));
+                } catch {
+                    selectedRoomIndex = _joinedRooms.IndexOf(_joinedRooms.Where(x => x.id == message.selectedRoomId).ToList()[0]);
+                  }
+
                 _joinedRooms[selectedRoomIndex].changeColor("Black");
                 _joinedRooms[selectedRoomIndex].menuVisibility = "Visible";
                 _selectedJoinedRoom = message.selectedRoomId;
