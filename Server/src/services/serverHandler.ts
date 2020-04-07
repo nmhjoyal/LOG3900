@@ -34,6 +34,7 @@ class ServerHandler {
                 if(this.isConnected(signIn.username)) {
                     log_message = SignInStatus.AlreadyConnected
                 } else {
+                    // add connect time to statsDB.
                     this.users.set(socket.id, user);
                     signed_in = true;
                     log_message = SignInStatus.SignIn;
