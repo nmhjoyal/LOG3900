@@ -8,6 +8,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.thin_client.R
 import com.example.thin_client.server.SocketHandler
+import com.example.thin_client.ui.helpers.DEFAULT_INTERVAL
+import com.example.thin_client.ui.helpers.setOnClickListener
 import kotlinx.android.synthetic.main.free_draw_fragment.*
 
 private const val PERCENT = 100f
@@ -21,10 +23,10 @@ class DrawerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        trash.setOnClickListener(({
+        trash.setOnClickListener(DEFAULT_INTERVAL) {
             draw_view.clearCanvas()
             SocketHandler.clearDrawing()
-        }))
+        }
         save_button.visibility = View.GONE
 
         crayon.setOnClickListener(({

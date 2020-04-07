@@ -32,13 +32,14 @@ import com.example.thin_client.ui.game_mode.free_draw.DrawerFragment
 import com.example.thin_client.ui.game_mode.free_draw.ObserverFragment
 import com.example.thin_client.ui.game_mode.free_draw.WordHolder
 import com.example.thin_client.ui.game_mode.waitingroom.WaitingRoom
+import com.example.thin_client.ui.helpers.DEFAULT_INTERVAL
+import com.example.thin_client.ui.helpers.setOnClickListener
 import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.activity_game.*
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 const val SECOND_INTERVAL: Long = 1000
@@ -70,9 +71,9 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         prefs = this.getSharedPreferences(Preferences.USER_PREFS, Context.MODE_PRIVATE)
 
         currentUser = PreferenceHandler(this).getUser().username
-        back_to_lobby.setOnClickListener(({
+        back_to_lobby.setOnClickListener(DEFAULT_INTERVAL){
             cleanupAndFinish()
-        }))
+        }
 
         show_points_button.setOnClickListener(({
             if (user_points_toolbar.isVisible) {

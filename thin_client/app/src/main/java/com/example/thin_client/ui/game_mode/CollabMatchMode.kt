@@ -25,7 +25,7 @@ class CollabMatchMode : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         adapter.setOnItemClickListener{ item, _ ->
-            val matchId = (item as MatchItem).matchId
+            val matchId = (item as MatchItem).match.matchId
             SocketHandler.joinMatch(matchId)
         }
         refreshMatchesAdapter()
@@ -50,7 +50,7 @@ class CollabMatchMode : Fragment() {
     private fun refreshMatchesAdapter() {
       adapter.clear()
         for (match in GameManager.collabModeMatchList) {
-            adapter.add(MatchItem(match.matchId, match.host, match.nbRounds, match.players.size))
+            adapter.add(MatchItem(match))
         }
     }
 

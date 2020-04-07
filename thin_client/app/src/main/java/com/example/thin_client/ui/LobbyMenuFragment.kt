@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.example.thin_client.R
+import com.example.thin_client.ui.helpers.DEFAULT_INTERVAL
+import com.example.thin_client.ui.helpers.setOnClickListener
 import kotlinx.android.synthetic.main.lobby_menu_fragment.*
 
 class LobbyMenuFragment : Fragment() {
@@ -30,13 +32,13 @@ class LobbyMenuFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        free_draw.setOnClickListener(({
+        free_draw.setOnClickListener(DEFAULT_INTERVAL) {
             startNewFragment?.startFreeDraw()
-        }))
+        }
 
-        join_match.setOnClickListener(({
+        join_match.setOnClickListener(DEFAULT_INTERVAL) {
             startNewFragment?.startGameList()
-        }))
+        }
     }
 
     override fun onAttach(context: Context) {

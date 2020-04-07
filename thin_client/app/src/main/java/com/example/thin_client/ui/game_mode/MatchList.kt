@@ -11,13 +11,11 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.*
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.example.thin_client.R
-import com.example.thin_client.data.game.CreateMatch
-import com.example.thin_client.data.game.CreateMatchFeedback
-import com.example.thin_client.data.game.GameManager
+import com.example.thin_client.data.game.*
 import com.example.thin_client.data.game.GameManager.tabNames
-import com.example.thin_client.data.game.MatchMode
 import com.example.thin_client.data.model.MatchInfos
 import com.example.thin_client.data.rooms.JoinRoomFeedback
 import com.example.thin_client.data.rooms.RoomManager
@@ -28,6 +26,7 @@ import com.example.thin_client.ui.helpers.setOnClickListener
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_games_list.*
+import kotlinx.android.synthetic.main.game_item.*
 import java.util.*
 
 
@@ -45,7 +44,7 @@ class MatchList : Fragment() {
         viewpager.adapter = MyPagerAdapter(childFragmentManager)
         setupSocketEvents()
 
-        refresh_matches.setOnClickListener{
+        refresh_matches.setOnClickListener(DEFAULT_INTERVAL){
             SocketHandler.searchMatches()
         }
 

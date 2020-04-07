@@ -23,6 +23,7 @@ import com.example.thin_client.data.rooms.RoomManager
 import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.helpers.DEFAULT_INTERVAL
+import com.example.thin_client.ui.helpers.setOnClickListener
 import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -45,15 +46,15 @@ class ChatRoomsFragment : Fragment() {
 
         setupSocketEvents()
 
-        invites.setOnClickListener(({
+        invites.setOnClickListener(DEFAULT_INTERVAL) {
             showInboxDialog()
-        }))
+        }
 
-        add_room.setOnClickListener(({
+        add_room.setOnClickListener(DEFAULT_INTERVAL) {
             showCreateNewRoomDialog()
-        }))
+        }
 
-        rooms_list.setOnClickListener(({ v ->
+        rooms_list.setOnClickListener(DEFAULT_INTERVAL) { v ->
             val menu = PopupMenu(context, v)
             val groupId = 1
             for (room in roomList) {
@@ -67,7 +68,7 @@ class ChatRoomsFragment : Fragment() {
                 true
             }))
             menu.show()
-        }))
+        }
 
         search_room.setOnSearchListener(object: FloatingSearchView.OnSearchListener {
             override fun onSearchAction(currentQuery: String?) {
