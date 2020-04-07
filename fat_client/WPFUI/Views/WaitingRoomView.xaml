@@ -47,17 +47,17 @@
             <RowDefinition Height="*"/>
 
         </Grid.RowDefinitions>
-        <TextBlock  FontSize="40"  Foreground="#FF66CC00" Text="Waiting Room" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="14" TextAlignment="Center"/>
+        <TextBlock  FontSize="40"  Foreground="#00584C" Text="Waiting Room" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="14" TextAlignment="Center"/>
 
 
-        <Border BorderBrush="Black"  Background="#FF00CCCC" BorderThickness="2" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="7" Grid.RowSpan="5"/>
-        <TextBlock Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="6" Grid.RowSpan="5" Text="Current Players" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25"/>
-        <Border  Background="#FF00CCCC" BorderBrush="Black" BorderThickness="2" Grid.Column="11" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="5"/>
+        <Border BorderBrush="Black"  Background="#018677" BorderThickness="2" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="7" Grid.RowSpan="5"/>
+        <TextBlock Foreground="#D6EFE9" Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="6" Grid.RowSpan="5" Text="Current Players" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25"/>
+        <Border  Background="#018677" BorderBrush="Black" BorderThickness="2" Grid.Column="11" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="5"/>
         
        
         <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" Grid.RowSpan="5" Grid.Column="11" Grid.Row="2" HorizontalAlignment="Center">
             <Image HorizontalAlignment="Center" VerticalAlignment="Center" Width="70" gif:ImageBehavior.AnimatedSource="/Resources/chat.gif" Height="50"/>
-            <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontSize="25" Text="Socialize with your friends" HorizontalAlignment="Center"/>
+            <TextBlock Foreground="#D6EFE9" TextAlignment="Center" VerticalAlignment="Center" FontSize="25" Text="Socialize with your friends" HorizontalAlignment="Center"/>
         </StackPanel>
 
         <TextBlock FontSize="14" Grid.Row="5" TextAlignment="Center" Grid.Column="9" Name="word"/>
@@ -80,9 +80,9 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        <Button  x:Name="goBack"  Grid.Column="12" Grid.Row="1" MaxWidth="120" HorizontalAlignment="Right"  Background="#FFBF0B0B" BorderBrush="#FFBF0B0B">
+        <Button  x:Name="goBack"  Grid.Column="12" Grid.Row="1" MaxWidth="120" HorizontalAlignment="Right"  Background="#D81A60" BorderBrush="#D81A60">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Foreground="White">Go Back</TextBlock>
+                
                 <Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
             </StackPanel>
         </Button>
@@ -104,16 +104,16 @@
             </ItemsControl>
         </ScrollViewer>
         <TextBox x:Name ="currentMessage" Grid.Column="11" Grid.Row="9" Foreground="DarkSlateGray" BorderBrush="Black" BorderThickness="2" Background="White" KeyDown="currentMessage_KeyDown"/>
-        <Button x:Name ="sendMessage" BorderBrush="#FCBA03" Grid.Column="12" Grid.Row="9" Background="#FCBA03" Foreground="White" Click="refocus" 
+        <Button x:Name ="sendMessage" BorderBrush="#2B998E" Grid.Column="12" Grid.Row="9" Background="#2B998E" Foreground="White" Click="refocus" 
 				Height="auto">
             Send
         </Button>
         
         <Border BorderBrush="Black" BorderThickness="1" Grid.ColumnSpan="1" Grid.Row="15" Grid.Column="11"/>
-        <Button x:Name="start" BorderBrush="{x:Null}" Background="#FC038C" Grid.Column="12" Grid.Row="15" Content="Start " 
+        <Button x:Name="start" BorderBrush="{x:Null}" Background="#01C853" Grid.Column="12" Grid.Row="15" Content="Start " 
 				Foreground="White" Height="auto"/>
         <StackPanel Grid.Row="15" Grid.Column="11" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Image Width="40" gif:ImageBehavior.AnimatedSource="/Resources/party.gif"/>
+           
             <TextBlock  VerticalAlignment="Center" TextAlignment="Center" Text="Everyone's ready?" Margin="0,0,10,0"/>
         </StackPanel>
 
@@ -123,8 +123,8 @@
         <TextBlock Text="Feel a little lonely? Add virtual players!" Grid.Column="11" Grid.Row="13" 
 				   VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
         <StackPanel Orientation="Horizontal" Grid.Column="12" Grid.Row="13"  Height="auto" HorizontalAlignment="Right">
-            <Button x:Name="addVirtualPlayer" Content="+" Height="auto" Width="auto" />
-            <Button x:Name="removeVirtualPlayer" Content="-" Margin="5,0,0,0" Height="auto" />
+            <Button Background="#D6EFE9" BorderBrush="#D6EFE9" x:Name="addVirtualPlayer" Content="+" Height="auto" Width="auto" />
+            <Button Background="#D6EFE9" BorderBrush="#D6EFE9" x:Name="removeVirtualPlayer" Content="-" Margin="5,0,0,0" Height="auto" />
         </StackPanel>
     </Grid>
 </UserControl>

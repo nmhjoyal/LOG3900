@@ -24,15 +24,15 @@
         </Grid.RowDefinitions>
 
 
-        <Button  Background="#FF00CCCC"  BorderBrush="{x:Null}" x:Name="manuel2" Content="Manual" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="1" MaxWidth="200" Margin="0,30,0,0"/>
-        <Button  Background="#FF00CCCC"  BorderBrush="{x:Null}" x:Name="assiste1" Content="Assisted" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="1" MaxWidth="200"/>
-        
-        <Button  x:Name="goBack"  Grid.Column="1" Grid.Row="6" MaxWidth="120" HorizontalAlignment="Center"  Background="#FFBF0B0B" BorderBrush="#FFBF0B0B" VerticalAlignment="Top" Margin="0,20,0,0">
+        <Button  Foreground="#D6EFE9" Background="#018577"  BorderBrush="{x:Null}" x:Name="manuel2" Content="Manual" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="1" MaxWidth="200" Margin="0,30,0,0"/>
+        <Button  Foreground="#D6EFE9" Background="#018577"  BorderBrush="{x:Null}" x:Name="assiste1" Content="Assisted" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="1" MaxWidth="200"/>
+
+        <Button  x:Name="goBack"  Grid.Column="1" Grid.Row="6" MaxWidth="120" HorizontalAlignment="Center"  Background="#D81A60" BorderBrush="#D81A60" VerticalAlignment="Top" Margin="0,20,0,0">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Foreground="White">Go Back</TextBlock>
+                
                 <Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
             </StackPanel>
         </Button>
-        <TextBlock HorizontalAlignment="Center" FontSize="40"  Foreground="#FF66CC00" Grid.Column="1" Grid.Row="1">Select your game creation mode</TextBlock>
+        <TextBlock HorizontalAlignment="Center" FontSize="40"  Foreground="#00584C" Grid.Column="1" Grid.Row="1">Select your game creation mode</TextBlock>
     </Grid>
 </UserControl>

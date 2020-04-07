@@ -39,15 +39,15 @@
         </Grid.RowDefinitions>
 
         <Image gif:ImageBehavior.AnimatedSource="/Resources/fireworks.gif" Grid.Column="1" Grid.Row="1" Opacity="0.3" Grid.ColumnSpan="8" Grid.RowSpan="13" VerticalAlignment="Center" HorizontalAlignment="Center" Height="350"/>
-        <TextBlock  FontSize="50"  Foreground="#FF66CC00" Text="Leaderboard" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="8" TextAlignment="Center"/>
-        <Border Background="#FF00CCCC" BorderThickness="5" Grid.Column="1" Grid.Row="3" CornerRadius="10" Grid.ColumnSpan="2">
+        <TextBlock  FontSize="50"  Foreground="#00584C" Text="Leaderboard" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="8" TextAlignment="Center"/>
+        <Border Background="#018577" BorderThickness="5" Grid.Column="1" Grid.Row="3" CornerRadius="10" Grid.ColumnSpan="2">
             <TextBlock FontSize="16" Foreground="White" VerticalAlignment="Bottom" TextAlignment="Center" Text="SOLO GAME" Grid.Column="1" Grid.Row="3" Margin="-0.333,0,0.333,3.667"/>
         </Border>
         <TextBlock FontSize="16" VerticalAlignment="Center" TextAlignment="Right" Text="Your position: " Grid.Column="1" Grid.Row="5"/>
-        <Border  BorderBrush="#FF66CC00" BorderThickness="3" Grid.Column="2" Grid.Row="5" CornerRadius="10"  >
+        <Border  BorderBrush="#D3D3D3" BorderThickness="3" Grid.Column="2" Grid.Row="5" CornerRadius="10"  >
             <TextBlock FontSize="16" Foreground="White"  VerticalAlignment="Center" TextAlignment="Center" Name="soloGameScore"  Grid.Column="1" Grid.Row="3"/>
         </Border>
-        <Border  BorderBrush="#FCBA03" BorderThickness="3" Grid.Column="1" Grid.Row="7" CornerRadius="10" Grid.ColumnSpan="2">
+        <Border  BorderBrush="#00584C" BorderThickness="3" Grid.Column="1" Grid.Row="7" CornerRadius="10" Grid.ColumnSpan="2">
             <ItemsControl x:Name="soloPos" FontSize="16">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -63,16 +63,16 @@
             </ItemsControl>
         </Border>
 
-       
 
-        <Border Background="#FF00CCCC" BorderThickness="5" Grid.Column="7" Grid.Row="3" CornerRadius="10" Grid.ColumnSpan="2">
+
+        <Border Background="#018577" BorderThickness="5" Grid.Column="7" Grid.Row="3" CornerRadius="10" Grid.ColumnSpan="2">
             <TextBlock FontSize="16" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="1 VS 1 GAME" Grid.Column="7" Grid.Row="3"/>
         </Border>
         <TextBlock FontSize="16" VerticalAlignment="Center" TextAlignment="Right" Text="Your position: " Grid.Column="7" Grid.Row="5"/>
-        <Border  BorderBrush="#FF66CC00" BorderThickness="3" Grid.Column="8" Grid.Row="5" CornerRadius="10"  >
+        <Border  BorderBrush="#D3D3D3" BorderThickness="3" Grid.Column="8" Grid.Row="5" CornerRadius="10" Height="40" Margin="0.333,0,0,0" VerticalAlignment="Top"  >
             <TextBlock FontSize="16" Foreground="White"  VerticalAlignment="Center" TextAlignment="Center" Name="inversedGameScore"  Grid.Column="4" Grid.Row="3"/>
         </Border>
-        <Border  BorderBrush="#FCBA03" BorderThickness="3" Grid.Column="7" Grid.Row="7" CornerRadius="10" Grid.ColumnSpan="2" >
+        <Border  BorderBrush="#00584C" BorderThickness="3" Grid.Column="7" Grid.Row="7" CornerRadius="10" Grid.ColumnSpan="2" >
             <ItemsControl x:Name="invertedPos" FontSize="16">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -88,14 +88,14 @@
             </ItemsControl>
         </Border>
 
-        <Border Background="#FC038C" BorderThickness="5" Grid.Column="1" Grid.Row="9" CornerRadius="10" Grid.ColumnSpan="2">
-            <TextBlock FontSize="16" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="COOPERATIVE MODE" Grid.Column="1" Grid.Row="9"/>
+        <Border Background="#D6EFE9" BorderThickness="5" Grid.Column="1" Grid.Row="9" CornerRadius="10" Grid.ColumnSpan="2">
+            <TextBlock FontSize="16" Foreground="#018577" VerticalAlignment="Center" TextAlignment="Center" Text="COOPERATIVE MODE" Grid.Column="1" Grid.Row="9"/>
         </Border>
         <TextBlock FontSize="16" VerticalAlignment="Center" TextAlignment="Right" Text="Your position: " Grid.Column="1" Grid.Row="11"/>
-        <Border  BorderBrush="#FF66CC00" BorderThickness="3" Grid.Column="2" Grid.Row="11" CornerRadius="10"  >
+        <Border  BorderBrush="#D3D3D3" BorderThickness="3" Grid.Column="1" Grid.Row="11" CornerRadius="10" Grid.ColumnSpan="3" Height="40" Margin="113,0,9.667,0" VerticalAlignment="Top"  >
             <TextBlock FontSize="16" Foreground="White"  VerticalAlignment="Center" TextAlignment="Center" Name="coopGameScore"  Grid.Column="1" Grid.Row="11"/>
         </Border>
-        <Border  BorderBrush="#FCBA03" BorderThickness="3" Grid.Column="1" Grid.Row="13" CornerRadius="10" Grid.ColumnSpan="2" >
+        <Border  BorderBrush="#00584C" BorderThickness="3" Grid.Column="1" Grid.Row="13" CornerRadius="10" Grid.ColumnSpan="2" >
             <ItemsControl x:Name="coopPos" FontSize="16">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -112,14 +112,14 @@
 
         </Border>
 
-        <Border Background="#FC038C" BorderThickness="5" Grid.Column="7" Grid.Row="9" CornerRadius="10" Grid.ColumnSpan="2">
-            <TextBlock FontSize="16" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="SOLO MODE" Grid.Column="1" Grid.Row="9"/>
+        <Border Background="#D6EFE9" BorderThickness="5" Grid.Column="7" Grid.Row="9" CornerRadius="10" Grid.ColumnSpan="2">
+            <TextBlock FontSize="16" Foreground="#018577" VerticalAlignment="Bottom" TextAlignment="Center" Text="SOLO MODE" Grid.Column="1" Grid.Row="9" Margin="-0.333,0,0.333,3.667"/>
         </Border>
         <TextBlock FontSize="16" VerticalAlignment="Center" TextAlignment="Right" Text="Your position: " Grid.Column="7" Grid.Row="11"/>
-        <Border  BorderBrush="#FF66CC00" BorderThickness="3" Grid.Column="8" Grid.Row="11" CornerRadius="10"  >
+        <Border  BorderBrush="#D3D3D3" BorderThickness="3" Grid.Column="8" Grid.Row="11" CornerRadius="10"  >
             <TextBlock FontSize="16" Foreground="White"  VerticalAlignment="Center" TextAlignment="Center" Name="solomodeGameScore"  Grid.Column="8" Grid.Row="11"/>
         </Border>
-        <Border  BorderBrush="#FCBA03" BorderThickness="3" Grid.Column="7" Grid.Row="13" CornerRadius="10" Grid.ColumnSpan="2" >
+        <Border  BorderBrush="#00584C" BorderThickness="3" Grid.Column="7" Grid.Row="13" CornerRadius="10" Grid.ColumnSpan="2" >
             <ItemsControl x:Name="solo2Pos" FontSize="16">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -135,9 +135,9 @@
             </ItemsControl>
         </Border>
 
-        <Button  x:Name="goBack"  Grid.Column="8" Grid.Row="1" MaxWidth="120" HorizontalAlignment="Right"  Background="#FFBF0B0B" BorderBrush="#FFBF0B0B">
+        <Button  x:Name="goBack"  Grid.Column="8" Grid.Row="1" MaxWidth="120" HorizontalAlignment="Right"  Background="#D81A60" BorderBrush="#D81A60">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Foreground="White">Go Back</TextBlock>
+               
                 <Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
             </StackPanel>
         </Button>

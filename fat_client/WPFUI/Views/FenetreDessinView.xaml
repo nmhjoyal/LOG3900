@@ -69,9 +69,9 @@
                     
                     <Button Click="Button_Click_1" Content="Save To Disk" Width="120" Margin="10,0,0,0" FontSize="12" BorderBrush="{x:Null}" Background="#FFCFD1D0" Foreground="White"/>
                     <Button  Click="Get_Drawing" Content="Get Drawing" Width="120" Margin="10,0,0,0" FontSize="12" BorderBrush="{x:Null}" Background="#FFCFD1D0" Foreground="White"/>
-                    <Button Margin="100,0,0,0" x:Name="mainMenu"  MaxWidth="120" HorizontalAlignment="Right"  Background="#FFBF0B0B" BorderBrush="#FFBF0B0B">
+                    <Button Margin="100,0,0,0" x:Name="mainMenu"  MaxWidth="120" HorizontalAlignment="Right"  Background="#D81A60" BorderBrush="#D81A60">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Foreground="White">Go Back</TextBlock>
+                           
                             <Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
                         </StackPanel>
                     </Button>

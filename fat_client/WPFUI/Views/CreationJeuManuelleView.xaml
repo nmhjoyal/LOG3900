@@ -43,12 +43,12 @@
                 <RowDefinition Height="20"/>
 
             </Grid.RowDefinitions>
-            <TextBlock  FontSize="40"  Foreground="#FF66CC00" Text="Manual Game Creation" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" TextAlignment="Center"/>
-            <Border Background="#FF66CC00" BorderThickness="5" Grid.Column="1" Grid.Row="3" CornerRadius="10">
+            <TextBlock  FontSize="40"  Foreground="#00584C" Text="Manual Game Creation" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" TextAlignment="Center"/>
+            <Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="3" CornerRadius="10">
                 <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Word To Guess:" Grid.Column="1" Grid.Row="3"/>
             </Border>
             <TextBox x:Name="Word" Grid.Column="3" Grid.Row="3" MinWidth="200" Grid.ColumnSpan="3"/>
-            <Border Background="#FF66CC00" BorderThickness="5" Grid.Column="1" Grid.Row="5" CornerRadius="10">
+            <Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="5" CornerRadius="10">
                 <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center"  Text="Game Difficulty:" />
             </Border>
             <ComboBox Name="Level"  Grid.Column="3" Grid.Row="5" >
@@ -58,7 +58,7 @@
             </ComboBox>
             <StackPanel Name="optionBlock" Grid.Column="4" Grid.Row="7"></StackPanel>
             <StackPanel  Name="Options" Grid.Column="5" Grid.Row="7"></StackPanel>
-            <Border Background="#FF66CC00" BorderThickness="5" Grid.Column="1" Grid.Row="7" CornerRadius="10">
+            <Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="7" CornerRadius="10">
                 <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center"  Text="Mode:" />
             </Border>
             <ComboBox SelectionChanged="elementSelectionne" Name="Mode" Grid.Column="3" Grid.Row="7">
@@ -67,7 +67,7 @@
                 <ComboBoxItem Content="Panoramic"/>
                 <ComboBoxItem Content="Centered"/>
             </ComboBox>
-            <Button MaxWidth="140" Click="addClue" Background="#FF66CC00" Grid.Column="1" Grid.Row="9" BorderBrush="{x:Null}" Margin="0.333,0,0.333,118">
+            <Button MaxWidth="140" Click="addClue" Background="#FF018577" Grid.Column="1" Grid.Row="9" BorderBrush="{x:Null}" Margin="0.333,0,0.333,118">
                 <StackPanel  Orientation="Horizontal">
                     <TextBlock FontSize="12" Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Clue(s):</TextBlock>
                     <Image Source="/Resources/add.png" Height="20"></Image>
@@ -76,18 +76,18 @@
             <StackPanel Name="canContainer"  Grid.Column="3" Grid.Row="9">
                 <TextBox  x:Name="clue" Grid.Column="3" Grid.Row="16"  />
             </StackPanel>
-            <Button  x:Name="goBack"  Grid.Column="6"  Grid.Row="0" MaxWidth="120" HorizontalAlignment="Right"  Background="#FFBF0B0B" BorderBrush="#FFBF0B0B">
+            <Button  x:Name="goBack"  Grid.Column="6" Grid.Row="0" MaxWidth="120" HorizontalAlignment="Right"  Background="#D81A60" BorderBrush="#D81A60">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Foreground="White">Go Back</TextBlock>
+                    
                     <Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
                 </StackPanel>
             </Button>
             <StackPanel Orientation="Vertical" Grid.Column="6" Grid.Row="9">
-                <Button BorderBrush="{x:Null}" Background="#FF00CCCC" FontSize="12" Foreground="White" Click="draw" Content="Draw" HorizontalAlignment="Center" Width="110"/>
-                <Button BorderBrush="{x:Null}" Background="#FC038C" FontSize="12" Foreground="White" Click="createGame" Content="Create Game"   HorizontalAlignment="Center" Width="110"/>
+                <Button BorderBrush="{x:Null}" Background="#D6EFE9" FontSize="12" Foreground="#00584C" Click="draw" Content="Draw" HorizontalAlignment="Center" Width="110"/>
+                <Button BorderBrush="{x:Null}" Background="#00584C" FontSize="12" Foreground="#D6EFE9" Click="createGame" Content="Create Game"   HorizontalAlignment="Center" Width="110"/>
             </StackPanel>
 
-            <Border  Visibility="Hidden" Name="border" Background="#FFDF1317" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderBrush="Black" Opacity="0.9" Grid.ColumnSpan="6" Grid.RowSpan="9">
+            <Border  Visibility="Hidden" Name="border" Background="#00584C" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderBrush="Black" Opacity="0.9" Grid.ColumnSpan="6" Grid.RowSpan="9">
                 <Grid Visibility="Hidden" Name="selectNextDrawingBox" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="20"/>
@@ -111,7 +111,7 @@
                     </Canvas>
 
 
-                    <StackPanel Orientation="Horizontal" Background="#FF00CCCC" Grid.Column="1" Grid.Row="1" MaxWidth="600">
+                    <StackPanel Orientation="Horizontal" Background="#D3D3D3" Grid.Column="1" Grid.Row="1" MaxWidth="600">
 
                         <Button Name="crayon" Width="40" Height="40" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="10,0,0,0"
                         BorderBrush="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurBordure}, ConverterParameter=crayon, UpdateSourceTrigger=PropertyChanged}" 
@@ -157,8 +157,8 @@
                         TickFrequency="10" TickPlacement="BottomRight" IsSnapToTickEnabled="False">
                         </Slider>
                     </StackPanel>
-                    <Button Grid.Column="2" Grid.Row="1" FontSize="12" Foreground="White" Background="#FCBA03" BorderBrush="#FCBA03" Click="preview" Content="Preview" MaxWidth="100"/>
-                    <Button Grid.Column="2" Grid.Row="0" FontSize="12" Foreground="White" Background="DarkRed" BorderBrush="DarkRed" Click="close" Content="Close" MaxWidth="100"/>
+                    <Button Grid.Column="2" Grid.Row="1" FontSize="12" Foreground="#00584C" Background="#D6EFE9" BorderBrush="#D6EFE9" Click="preview" Content="Preview" MaxWidth="100"/>
+                    <Button Grid.Column="2" Grid.Row="0" FontSize="12" Foreground="White" Background="#D81A60" BorderBrush="#D81A60" Click="close" Content="Close" MaxWidth="100"/>
 
                 </Grid>
             </Border>
