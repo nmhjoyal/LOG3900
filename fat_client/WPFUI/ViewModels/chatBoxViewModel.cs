@@ -29,6 +29,16 @@ namespace WPFUI.ViewModels
         private string _selectedAvailableRoom;
         private string _selectedJoinedRoom;
 
+        public IEventAggregator events
+        {
+            get { return _events; }
+        }
+
+        public IUserData userdata
+        {
+            get { return _userData; }
+        }
+
         public string currentMessage
         {
             get { return _currentMessage; }

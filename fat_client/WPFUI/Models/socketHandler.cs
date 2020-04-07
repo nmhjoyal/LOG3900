@@ -89,7 +89,7 @@ namespace WPFUI.Models
              {
                  Message newMessage = JsonConvert.DeserializeObject<Message>(message.ToString());
                  Console.WriteLine("message received");
-                 _userdata.messages.Add(newMessage);
+                 _userdata.addMessage(newMessage);
              });
 
             /*_socket.On("new_client", (socketId) =>
