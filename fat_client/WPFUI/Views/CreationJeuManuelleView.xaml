@@ -8,9 +8,9 @@
              xmlns:gif="http://wpfanimatedgif.codeplex.com"
             xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit" 
             mc:Ignorable="d"
-              d:DesignHeight="1200" d:DesignWidth="820"
+             d:DesignHeight="800" d:DesignWidth="1200"
              
-			 FontFamily="Microsoft JhengHei UI Light">
+			 FontFamily="Microsoft JhengHei UI Light" Background="#FFF5F5F6">
     <UserControl.Resources>
         <convertisseurs:ConvertisseurBordure x:Key="convertisseurBordure" />
         <convertisseurs:ConvertisseurCouleurFond x:Key="convertisseurCouleurFond" />

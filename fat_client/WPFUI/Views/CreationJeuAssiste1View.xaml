@@ -8,170 +8,144 @@
              xmlns:gif="http://wpfanimatedgif.codeplex.com"
             xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit" 
             mc:Ignorable="d"
-              d:DesignHeight="1200" d:DesignWidth="1900"
-			 FontFamily="Microsoft JhengHei UI Light">
+            d:DesignHeight="900" d:DesignWidth="1100"
+			FontFamily="Microsoft JhengHei UI Light" Background="#FFF5F5F6">
     <UserControl.Resources>
         <convertisseurs:ConvertisseurBordure x:Key="convertisseurBordure" />
         <convertisseurs:ConvertisseurCouleurFond x:Key="convertisseurCouleurFond" />
         <convertisseurs:ConvertisseurModeEdition x:Key="convertisseurModeEdition" />
     </UserControl.Resources>
 
-	<Grid Background="#FFF5F5F6">
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="*"/>
-			<ColumnDefinition Width="auto"/>
-			<ColumnDefinition Width="*"/>
-		</Grid.ColumnDefinitions>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="*"></RowDefinition>
-		</Grid.RowDefinitions>
-		<Viewbox Grid.Column="1" Grid.Row="1">
-			<Grid Background="#FFF5F5F6" >
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="20"/>
-					<ColumnDefinition Width="150" />
-					<ColumnDefinition Width="20"/>
-					<ColumnDefinition Width="150" />
-					<ColumnDefinition Width="150" />
-					<ColumnDefinition Width="150" />
-					<ColumnDefinition Width="150" />
-					<ColumnDefinition Width="20" />
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="100"/>
-					<RowDefinition Height="50"/>
-					<RowDefinition Height="10"/>
-					<RowDefinition Height="40"/>
-					<RowDefinition Height="10"/>
-					<RowDefinition Height="40"/>
-					<RowDefinition Height="10"/>
-					<RowDefinition Height="40"/>
-					<RowDefinition Height="10"/>
-					<RowDefinition Height="40"/>
-					<RowDefinition Height="10"/>
-					<RowDefinition Height="150"/>
-					<RowDefinition Height="10"/>
-					
-				</Grid.RowDefinitions>
-                <TextBlock  FontSize="40"  Foreground="#00584C" Text="Assisted Game Creation" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" TextAlignment="Center"/>
-                <Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="3" CornerRadius="10">
-					<TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="File Name:" Grid.Column="1" Grid.Row="3"/>
-				</Border>
-				<TextBox x:Name="fileName" Grid.Column="3" Grid.Row="3" MinWidth="200" Grid.ColumnSpan="4"/>
-                <Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="5" CornerRadius="10">
-					<TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Word To Guess:" Grid.Column="1" Grid.Row="5"/>
-				</Border>
-				<TextBox x:Name="Word" Grid.Column="3" Grid.Row="5" MinWidth="200" Grid.ColumnSpan="4"/>
+	<Viewbox Grid.Column="1" Grid.Row="0" >
+		<Grid Background="#FFF5F5F6" >
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="20"/>
+				<ColumnDefinition Width="150" />
+				<ColumnDefinition Width="20"/>
+				<ColumnDefinition Width="150" />
+				<ColumnDefinition Width="150" />
+				<ColumnDefinition Width="150" />
+				<ColumnDefinition Width="150" />
+				<ColumnDefinition Width="20" />
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="100"/>
+				<RowDefinition Height="50"/>
+				<RowDefinition Height="10"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="10"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="10"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="10"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="10"/>
+				<RowDefinition Height="150"/>
+				<RowDefinition Height="10"/>
 
+			</Grid.RowDefinitions>
+			<TextBlock  FontSize="40"  Foreground="#00584C" Text="Assisted Game Creation" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" TextAlignment="Center"/>
+			<Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="3" CornerRadius="10">
+				<TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="File Name:" Grid.Column="1" Grid.Row="3"/>
+			</Border>
+			<TextBox x:Name="fileName" Grid.Column="3" Grid.Row="3" MinWidth="200" Grid.ColumnSpan="4"/>
+			<Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="5" CornerRadius="10">
+				<TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Word To Guess:" Grid.Column="1" Grid.Row="5"/>
+			</Border>
+			<TextBox x:Name="Word" Grid.Column="3" Grid.Row="5" MinWidth="200" Grid.ColumnSpan="4"/>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                <Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="7" CornerRadius="10">
-					<TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center"  Text="Difficulty:" Grid.Column="1" Grid.Row="14"/>
-				</Border>
-				<ComboBox Name="Level" Grid.Column="3" Grid.Row="7">
-					<ComboBoxItem IsSelected="True">
-						<StackPanel Orientation="Horizontal">
-							<TextBlock  Foreground="Green">Easy</TextBlock>
-						</StackPanel>
-					</ComboBoxItem>
-					<ComboBoxItem>
-						<StackPanel Orientation="Horizontal">
-							<TextBlock Foreground="Orange">Normal</TextBlock>
-						</StackPanel>
-					</ComboBoxItem>
-					<ComboBoxItem>
-						<StackPanel Orientation="Horizontal">
-							<TextBlock Foreground="Red">Hard</TextBlock>
-						</StackPanel>
-					</ComboBoxItem>
-				</ComboBox>
-                <Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="9" CornerRadius="10">
-					<TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center"  Text="Mode:" Grid.Column="1" Grid.Row="9"/>
-				</Border>
-				<StackPanel Name="optionBlock" Grid.Column="4" Grid.Row="9"></StackPanel>
-				<StackPanel  Name="Options" Grid.Column="5" Grid.Row="9"></StackPanel>
-				<ComboBox SelectionChanged="elementSelectionne" Name="Mode" Grid.Column="3" Grid.Row="9">
-					<ComboBoxItem IsSelected="True">
-						<StackPanel Orientation="Horizontal">
-							<TextBlock>Classic</TextBlock>
-						</StackPanel>
-					</ComboBoxItem>
-					<ComboBoxItem>
-						<StackPanel Orientation="Horizontal">
-							<TextBlock>Random</TextBlock>
-						</StackPanel>
-					</ComboBoxItem>
-					<ComboBoxItem >
-						<StackPanel Orientation="Horizontal">
-							<TextBlock >Panoramic</TextBlock>
-						</StackPanel>
-					</ComboBoxItem>
-					<ComboBoxItem>
-						<StackPanel Orientation="Horizontal">
-							<TextBlock>Centered</TextBlock>
-						</StackPanel>
-					</ComboBoxItem>
-				</ComboBox>
-
-                <Button MaxWidth="140" Click="addClue" Background="#FF018577" Grid.Column="1" Grid.Row="11" BorderBrush="{x:Null}" Margin="0,10,0,0" VerticalAlignment="Top">
-
-					<StackPanel  Orientation="Horizontal">
-						<TextBlock FontSize="12" Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Indice(s):</TextBlock>
-						<Image Source="/Resources/add.png" Height="20"></Image>
+			<Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="7" CornerRadius="10">
+				<TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center"  Text="Difficulty:" Grid.Column="1" Grid.Row="14"/>
+			</Border>
+			<ComboBox Name="Level" Grid.Column="3" Grid.Row="7">
+				<ComboBoxItem IsSelected="True">
+					<StackPanel Orientation="Horizontal">
+						<TextBlock  Foreground="Green">Easy</TextBlock>
 					</StackPanel>
-				</Button>
-				<StackPanel Name="canContainer"  Grid.Column="3" Grid.Row="11" VerticalAlignment="Top" Margin="0,10,0,0">
+				</ComboBoxItem>
+				<ComboBoxItem>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Foreground="Orange">Normal</TextBlock>
+					</StackPanel>
+				</ComboBoxItem>
+				<ComboBoxItem>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Foreground="Red">Hard</TextBlock>
+					</StackPanel>
+				</ComboBoxItem>
+			</ComboBox>
+			<Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="9" CornerRadius="10">
+				<TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center"  Text="Mode:" Grid.Column="1" Grid.Row="9"/>
+			</Border>
+			<StackPanel Name="optionBlock" Grid.Column="4" Grid.Row="9"></StackPanel>
+			<StackPanel  Name="Options" Grid.Column="5" Grid.Row="9"></StackPanel>
+			<ComboBox SelectionChanged="elementSelectionne" Name="Mode" Grid.Column="3" Grid.Row="9">
+				<ComboBoxItem IsSelected="True">
+					<StackPanel Orientation="Horizontal">
+						<TextBlock>Classic</TextBlock>
+					</StackPanel>
+				</ComboBoxItem>
+				<ComboBoxItem>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock>Random</TextBlock>
+					</StackPanel>
+				</ComboBoxItem>
+				<ComboBoxItem >
+					<StackPanel Orientation="Horizontal">
+						<TextBlock >Panoramic</TextBlock>
+					</StackPanel>
+				</ComboBoxItem>
+				<ComboBoxItem>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock>Centered</TextBlock>
+					</StackPanel>
+				</ComboBoxItem>
+			</ComboBox>
 
-					<TextBox  x:Name="clue" Grid.Column="3" Grid.Row="11"  />
+			<Button MaxWidth="140" Click="addClue" Background="#FF018577" Grid.Column="1" Grid.Row="11" BorderBrush="{x:Null}" Margin="0,10,0,0" VerticalAlignment="Top">
+
+				<StackPanel  Orientation="Horizontal">
+					<TextBlock FontSize="12" Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Indice(s):</TextBlock>
+					<Image Source="/Resources/add.png" Height="20"></Image>
 				</StackPanel>
+			</Button>
+			<StackPanel Name="canContainer"  Grid.Column="3" Grid.Row="11" VerticalAlignment="Top" Margin="0,10,0,0">
+
+				<TextBox  x:Name="clue" Grid.Column="3" Grid.Row="11"  />
+			</StackPanel>
 
 
-                <StackPanel Grid.Row="11" Grid.Column="6" Orientation="Vertical">
-                    <Button  BorderBrush="{x:Null}" Background="#D6EFE9" FontSize="12" Foreground="#00584C" Click="draw" Content="Visualize Game" Grid.Column="6" Grid.Row="11" HorizontalAlignment="Right" Width="120" Margin="0,0,0,10"/>
-                    <Button  BorderBrush="{x:Null}" Background="#00584C" FontSize="12" Foreground="#D6EFE9" Click="createGame" Content="Create Game" Grid.Column="6" Grid.Row="11" HorizontalAlignment="Right" Width="120"  Margin="0,0,0,10"/>
-                </StackPanel>
+			<StackPanel Grid.Row="11" Grid.Column="6" Orientation="Vertical">
+				<Button  BorderBrush="{x:Null}" Background="#D6EFE9" FontSize="12" Foreground="#00584C" Click="draw" Content="Visualize Game" Grid.Column="6" Grid.Row="11" HorizontalAlignment="Right" Width="120" Margin="0,0,0,10"/>
+				<Button  BorderBrush="{x:Null}" Background="#00584C" FontSize="12" Foreground="#D6EFE9" Click="createGame" Content="Create Game" Grid.Column="6" Grid.Row="11" HorizontalAlignment="Right" Width="120"  Margin="0,0,0,10"/>
+			</StackPanel>
 
-                <Border  Visibility="Hidden" Name="border" Background="#FFDF1317" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderBrush="Black" Opacity="0.9" Grid.ColumnSpan="6" Grid.RowSpan="11">
-                    <Grid Visibility="Hidden" Name="selectNextDrawingBox" >
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="20"/>
-                            <ColumnDefinition Width="600"/>
-                            <ColumnDefinition Width="120"/>
-                            <ColumnDefinition Width="20" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="7*"/>
-                            <RowDefinition Height="20"/>
-                        </Grid.RowDefinitions>
-                        <TextBlock Grid.Column="1" Grid.Row="0" Text="Preview Your Drawing Here !" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="22"
+			<Border  Visibility="Hidden" Name="border" Background="#FFDF1317" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderBrush="Black" Opacity="0.97" Grid.ColumnSpan="6" Grid.RowSpan="11">
+				<Grid Visibility="Hidden" Name="selectNextDrawingBox" >
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="20"/>
+						<ColumnDefinition Width="600"/>
+						<ColumnDefinition Width="120"/>
+						<ColumnDefinition Width="20" />
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="60"/>
+						<RowDefinition Height="60"/>
+						<RowDefinition Height="7*"/>
+						<RowDefinition Height="20"/>
+					</Grid.RowDefinitions>
+					<TextBlock Grid.Column="1" Grid.Row="0" Text="Preview Your Drawing Here !" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="22"
 							   Name="roundFinishedMessage" Margin="0,10,0,20" Foreground="White"/>
-                        <InkCanvas  StrokeCollected="imageTransformee_StrokeCollected" Strokes="{Binding Path=Traits, Mode=OneTime}" Name="imageTransformee" Grid.Row="1" Grid.Column="1"  Grid.RowSpan="2" Width="600" Height="600">
-                        </InkCanvas>
+					<InkCanvas  StrokeCollected="imageTransformee_StrokeCollected" Strokes="{Binding Path=Traits, Mode=OneTime}" Name="imageTransformee" Grid.Row="1" Grid.Column="1"  Grid.RowSpan="2" Width="600" Height="600">
+					</InkCanvas>
 
 
 
-                        <Button Grid.Column="2" Grid.Row="1" FontSize="12" Foreground="White" Background="#FCBA03" BorderBrush="#FCBA03" Click="preview" Content="Preview" MaxWidth="100"/>
-                        <Button Grid.Column="2" Grid.Row="0" FontSize="12" Foreground="White" Background="DarkRed" BorderBrush="DarkRed" Click="close" Content="Close" MaxWidth="100"/>
+					<Button Grid.Column="2" Grid.Row="1" FontSize="12" Foreground="White" Background="#FCBA03" BorderBrush="#FCBA03" Click="preview" Content="Preview" MaxWidth="100"/>
+					<Button Grid.Column="2" Grid.Row="0" FontSize="12" Foreground="White" Background="DarkRed" BorderBrush="DarkRed" Click="close" Content="Close" MaxWidth="100"/>
 
-                    </Grid>
-                </Border>
-            </Grid>
-        </Viewbox>
-	</Grid>
+				</Grid>
+			</Border>
+		</Grid>
+	</Viewbox>
 </UserControl>

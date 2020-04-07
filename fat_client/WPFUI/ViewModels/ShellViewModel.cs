@@ -78,7 +78,7 @@ namespace WPFUI.ViewModels
 		{
 			Items.Clear();
 			Items.Add(_container.GetInstance<CreationJeuManuelle1ViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
+			Items.Add(_container.GetInstance<chatBoxViewModel>());
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
@@ -95,7 +95,7 @@ namespace WPFUI.ViewModels
 		{
 			Items.Clear();
 			Items.Add(_container.GetInstance<CreationJeuManuelleViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
+			Items.Add(_container.GetInstance<chatBoxViewModel>());
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
 		}
