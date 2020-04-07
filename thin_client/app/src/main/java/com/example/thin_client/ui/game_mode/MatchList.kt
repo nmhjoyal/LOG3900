@@ -150,6 +150,24 @@ class MatchList : Fragment() {
                 gameSelectionSpinner.adapter = adapter
             }
 
+        gameSelectionSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val timeTitle = dialogView.findViewById<TextView>(R.id.time_limit_title)
+                if (position == 0 || position == 1) {
+                    nbRoundsSpinner.visibility = View.GONE
+                    dialogView.findViewById<TextView>(R.id.nb_rounds_title).visibility = View.GONE
+                    timeTitle.text = resources.getText(R.string.prompt_time_limit)
+                } else {
+                    nbRoundsSpinner.visibility = View.VISIBLE
+                    dialogView.findViewById<TextView>(R.id.nb_rounds_title).visibility = View.VISIBLE
+                    timeTitle.text = resources.getText(R.string.prompt_time_limit_round)
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
+
         alertBuilder
             .setPositiveButton(R.string.start) { _, _ ->
                 val stringMatchMode = gameSelectionSpinner.selectedItem.toString().replace("-", "_").toUpperCase(Locale.CANADA)
