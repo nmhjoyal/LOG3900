@@ -494,8 +494,18 @@ namespace WPFUI.Models
                 Console.WriteLine("onMatch turn_started");
                 /* TODO: transmit the turn time to the viewmodel */
                 StartTurn json = JsonConvert.DeserializeObject<StartTurn>(new_startTurn.ToString());
-                startTurn.set(json);
-                _events.PublishOnUIThread(new startTurnRoutineEvent(json.timeLimit));
+                startTurn.set(json, endTurn.drawer == this._userdata.userName);
+                _events.PublishOnUIThread(new startTurnRoutineEvent(startTurn.timeLimit));
+            });
+
+            this.socket.On("update_sprint", (new_update_sprint) =>
+            {
+                UpdateSprint json = JsonConvert.DeserializeObject<UpdateSprint>(new_update_sprint.ToString());
+                startTurn.word = json.word;
+                startTurn.timeLimit = json.time;
+                endTurn.players = json.players;
+                // json.guess TODO
+                _events.PublishOnUIThread(new startTurnRoutineEvent(startTurn.timeLimit));
             });
 
             this.socket.On("guess_res", (Feedback) =>

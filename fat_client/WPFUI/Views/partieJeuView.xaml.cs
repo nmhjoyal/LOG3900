@@ -78,6 +78,8 @@ namespace WPFUI.Views
         {
             selectNextDrawingBox.Visibility = Visibility.Hidden;
             endTurnBox.Visibility = Visibility.Hidden;
+            sendMessage.IsEnabled = true;
+            sendGuess.IsEnabled = true;
             (this.DataContext as partieJeuViewModel).NotifyOfPropertyChange(null);
         }
 
