@@ -202,13 +202,6 @@
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>
 		</ScrollViewer>
-		<Button  x:Name="goBack"  Grid.Column="4" Grid.Row="13" MaxWidth="100" HorizontalAlignment="Right"  
-				 Background="#FFBF0B0B"  Grid.ColumnSpan="5" Margin="0,4,9.4,4" BorderBrush="{x:Null}">
-			<StackPanel Orientation="Horizontal">
-                <TextBlock Foreground="White">Go Back</TextBlock>
-				<Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
-			</StackPanel>
-		</Button>
 
 			<ScrollViewer Grid.Column="11" Grid.Row="5" Grid.ColumnSpan="3" VerticalScrollBarVisibility="Visible" 
 					  Name="messagesUI" Background="#FFEBF3F3" FontSize="18" Grid.RowSpan="4" Margin="0,19.8,0.4,0.4">

@@ -140,15 +140,6 @@
 				</StackPanel>
 
 
-
-
-
-                <Button  x:Name="goBack"  Grid.Column="6" Grid.Row="0" MaxWidth="120" HorizontalAlignment="Right"  Background="#D81A60" BorderBrush="#D81A60">
-					<StackPanel Orientation="Horizontal">
-						
-						<Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
-					</StackPanel>
-				</Button>
                 <StackPanel Grid.Row="11" Grid.Column="6" Orientation="Vertical">
                     <Button  BorderBrush="{x:Null}" Background="#D6EFE9" FontSize="12" Foreground="#00584C" Click="draw" Content="Visualize Game" Grid.Column="6" Grid.Row="11" HorizontalAlignment="Right" Width="120" Margin="0,0,0,10"/>
                     <Button  BorderBrush="{x:Null}" Background="#00584C" FontSize="12" Foreground="#D6EFE9" Click="createGame" Content="Create Game" Grid.Column="6" Grid.Row="11" HorizontalAlignment="Right" Width="120"  Margin="0,0,0,10"/>
