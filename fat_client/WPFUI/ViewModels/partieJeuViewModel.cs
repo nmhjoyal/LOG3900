@@ -399,6 +399,7 @@ namespace WPFUI.ViewModels
             _turnScores = new BindableCollection<dynamic>(_turnScores.OrderBy(i => i.position));
 
             turnScores.Refresh();
+            NotifyOfPropertyChange(() => turnScores);
         }
 
         public void HandleEndTurn()
@@ -546,6 +547,7 @@ namespace WPFUI.ViewModels
             _winnerMessage = "The winner is " + _matchScores[0].name;
             NotifyOfPropertyChange(() => winnerMessage);
             matchScores.Refresh();
+            NotifyOfPropertyChange(() => matchScores);
         }
     }
 }
