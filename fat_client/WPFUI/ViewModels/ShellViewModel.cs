@@ -103,7 +103,7 @@ namespace WPFUI.ViewModels
 		public void Handle(LeaderboardEvent message)
 		{
 			Items.Clear();
-			Items.Add(_container.GetInstance<LeaderboardViewModel>());
+			Items.Add(_container.GetInstance<ClassementViewModel>());
 			Items.Add(_container.GetInstance<chatBoxViewModel>());
 			NotifyOfPropertyChange(() => FirstSubViewModel);
 			NotifyOfPropertyChange(() => SecondSubViewModel);
