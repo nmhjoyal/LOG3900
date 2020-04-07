@@ -133,6 +133,7 @@
     <Compile Include="EventModels\createMatchEvent.cs" />
     <Compile Include="EventModels\createTheRoomEvent.cs" />
     <Compile Include="EventModels\DisconnectEvent.cs" />
+    <Compile Include="EventModels\endMatchEvent.cs" />
     <Compile Include="EventModels\endTurnRoutineVMEvent.cs" />
     <Compile Include="EventModels\endTurnRoutineEvent.cs" />
     <Compile Include="EventModels\freeDrawEvent.cs" />

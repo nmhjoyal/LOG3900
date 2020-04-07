@@ -8,7 +8,7 @@
         Icon="/Resources/logo.ico"
         Title="Fais-moi un dessin!" WindowStartupLocation="CenterScreen"
 		d:DesignHeight="800" d:DesignWidth="1300"
-		MinWidth="1300" MinHeight="800"
+		MinWidth="1300" MinHeight="850"
 		Loaded="OnLoad">
 	
 	<Grid x:Name="mainGrid" Visibility="Visible">

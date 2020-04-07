@@ -515,6 +515,12 @@ namespace WPFUI.Models
                 _events.PublishOnUIThread(new guessResponseEvent((Boolean)json.status));
 
             });
+
+            this.socket.On("match_ended", (Feedback) =>
+            {
+                dynamic json = JsonConvert.DeserializeObject(Feedback.ToString());
+                _events.PublishOnUIThread(new endMatchEvent((Player[])json));
+            });
         }
 
         public void offWaitingRoom()
