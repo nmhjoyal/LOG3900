@@ -20,6 +20,7 @@ export default class FreeForAll extends Match {
         
         if (this.drawer.isVirtual) {
             const game: Game = await gameDB.getGame(word);
+            this.hints = game.clues;
             this.virtualDrawing.draw(io, game.drawing, game.level);
         }
         
@@ -73,9 +74,5 @@ export default class FreeForAll extends Match {
         if(this.everyoneHasGuessed()) {
             this.endTurn(io);
         }
-    }
-
-    public guessWrong(io: SocketIO.Server, username: string): void {
-        // nothing to do here no number of guesses in free for all.
     }
 }

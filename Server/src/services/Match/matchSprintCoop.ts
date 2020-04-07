@@ -1,26 +1,32 @@
 import Match from "./matchAbstract";
 import PublicProfile from "../../models/publicProfile";
 import ChatHandler from "../chatHandler";
-import { CreateMatch, SPRINT_BONUS_TIME } from "../../models/match";
+import { CreateMatch, SPRINT_BONUS_TIME, UpdateSprint } from "../../models/match";
 import { sprintCoopSettings } from "../../models/matchMode";
 import { Message } from "../../models/message";
 import Admin from "../../models/admin";
 import { gameDB } from "../Database/gameDB";
 import { Game } from "../../models/drawPoint";
+import Player from "../../models/player";
 
 export default class SprintCoop extends Match {
     
     public constructor(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler, io: SocketIO.Server) {
         super(matchId, user, createMatch, chatHandler, sprintCoopSettings);
         // Add the only virtual player in the mode 1vs1, sprint coop and solo
-        this.vp = this.addVP(io).user.username;
+        const vp: Player = this.addVP(io);
+        this.vp = vp.user.username;
+        this.drawer = vp;
     }
 
     public async startTurn(io: SocketIO.Server, word: string): Promise<void> {
         this.currentWord = word;
-        io.in(this.matchId).emit("turn_started", this.createStartTurn(this.currentWord));
-
         const game: Game = await gameDB.getGame(word);
+        this.hints = game.clues;
+        if (this.timer) this.timeLimit = this.timeLeft() + SPRINT_BONUS_TIME;
+        const updateSprint: UpdateSprint = this.createUpdateSprint(this.getNbGuesses(game.level), word,  this.timeLimit);
+        io.in(this.matchId).emit("update_sprint", JSON.stringify(updateSprint));
+
         this.virtualDrawing.draw(io, game.drawing, game.level);
         
         this.timer = Date.now();
@@ -32,10 +38,15 @@ export default class SprintCoop extends Match {
     public async endTurn(io: SocketIO.Server): Promise<void> {
         this.reset(io);
 
-        if (/* HOW TO CHECK IF TIME IS DONE */false) {
-            this.endMatch(io);
-        } else {
-            //this.endTurnGeneral(io);
+        if (this.currentWord) { // currentWord is undefined at the first endTurn
+            this.notifyWord(io);
+        }
+
+        this.currentWord = "";
+
+        if (this.drawer.isVirtual) {
+            const word: string = await gameDB.getRandomWord();
+            this.startTurn(io, word);
         }
     }
 
@@ -43,16 +54,11 @@ export default class SprintCoop extends Match {
         const message: Message = Admin.createAdminMessage(username + " guessed the word.", this.matchId);
         io.in(this.matchId).emit("new_message", JSON.stringify(message));
 
-        // const score: number = this.calculateScore();
-        // this.updateTeamScore(username, score);
-        this.timeLimit = this.timeLeft() + SPRINT_BONUS_TIME;
+        const score: number = this.calculateScore();
+        this.updateTeamScore(score);
 
         io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
 
         this.endTurn(io);
-    }
-
-    public guessWrong(io: SocketIO.Server, username: string): void {
-        // check for number of guesses left.
     }
 }
