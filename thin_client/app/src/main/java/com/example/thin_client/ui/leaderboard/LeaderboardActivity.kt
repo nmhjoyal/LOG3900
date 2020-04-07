@@ -1,65 +1,75 @@
 package com.example.thin_client.ui.leaderboard
 
+import android.graphics.Color
 import android.os.Bundle
+import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentManager
 import com.example.thin_client.R
+import com.example.thin_client.data.game.GameManager
+import com.example.thin_client.ui.game_mode.MyPagerAdapter
+import com.google.android.material.tabs.TabLayout
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
+import kotlinx.android.synthetic.main.activity_games_list.*
 import kotlinx.android.synthetic.main.activity_leaderboard.*
 import kotlinx.android.synthetic.main.leaderboard_item.view.*
 
 class LeaderboardActivity : AppCompatActivity() {
 
-    private val soloAdapter = GroupAdapter<GroupieViewHolder>()
-    private val coopAdapter = GroupAdapter<GroupieViewHolder>()
-    private val oneVsOneAdapter = GroupAdapter<GroupieViewHolder>()
-    private val freeForAllAdapter = GroupAdapter<GroupieViewHolder>()
-    private val reversedAdapter = GroupAdapter<GroupieViewHolder>()
+    private var currentTab: Int = 0
+    private lateinit var manager: FragmentManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        manager = supportFragmentManager
         setContentView(R.layout.activity_leaderboard)
-        soloGameMode.adapter = soloAdapter
-        cooperativeGameMode.adapter = coopAdapter
-        oneVsOne.adapter = oneVsOneAdapter
-        reversedGameMode.adapter = reversedAdapter
-        freeforallMode.adapter = freeForAllAdapter
-//en attendant la requête du serveur
-        showSoloRanking("Amar", 20)
-        showCoopRanking("Nicole", 30)
-        showReversedRanking("Karima", 0)
-        showFreeForAllRanking("Zak", 40)
-        showOneVsOneRanking("Amar", 50)
+        ranking_viewpager.adapter = MyLeaderboardPagerAdapter(supportFragmentManager)
+        setupTabs()
+        ranking_tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                if (tab != null && tab.customView != null) {
+                    val tabName =
+                        tab.customView!!.findViewById(R.id.tab_name) as TextView
+                    tabName.setTextColor(Color.WHITE)
+                    tab.customView!!.setBackgroundResource(R.drawable.tab_background_selected)
+                    currentTab = tab.position
+                }
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                if (tab != null && tab.customView != null) {
+                    val tabName =
+                        tab.customView!!.findViewById(R.id.tab_name) as TextView
+                    tabName.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorPrimaryDark))
+                    tab.customView!!.setBackgroundResource(R.drawable.tab_background)
+                    currentTab = 0
+                }
+            }
+        })
 
     }
-    private fun showSoloRanking(username:String, score: Int){
-        soloAdapter.add(LeaderboardItem(username,score))
-        if (soloGameMode != null){
-            soloGameMode.scrollToPosition(soloAdapter.itemCount - 1)
-        }
-    }
-    private fun showCoopRanking(username:String, score: Int){
-        coopAdapter.add(LeaderboardItem(username,score))
-        if (cooperativeGameMode != null){
-            cooperativeGameMode.scrollToPosition(coopAdapter.itemCount - 1)
-        }
-    }
-    private fun showOneVsOneRanking(username:String, score: Int){
-        oneVsOneAdapter.add(LeaderboardItem(username,score))
-        if (oneVsOne != null){
-            oneVsOne.scrollToPosition(oneVsOneAdapter.itemCount - 1)
-        }
-    }
-    private fun showFreeForAllRanking(username:String, score: Int){
-        freeForAllAdapter.add(LeaderboardItem(username,score))
-        if (freeforallMode != null){
-            freeforallMode.scrollToPosition(freeForAllAdapter.itemCount - 1)
-        }
-    }
-    private fun showReversedRanking(username:String, score: Int){
-        reversedAdapter.add(LeaderboardItem(username,score))
-        if (reversedGameMode!= null){
-            reversedGameMode.scrollToPosition(reversedAdapter.itemCount - 1)
+
+
+    private fun setupTabs() {
+        for (i in 0 until ranking_tabLayout.tabCount) {
+            val customView = View.inflate(applicationContext,R.layout.tab_layout, null)
+            val tabName = customView.findViewById(R.id.tab_name) as TextView
+            tabName.text = LeaderboardManager.leaderboardTabNames[i]
+            if (i == currentTab) {
+                tabName.setTextColor(Color.WHITE)
+                customView.setBackgroundResource(R.drawable.tab_background_selected)
+            } else {
+                customView.setBackgroundResource(R.drawable.tab_background)
+            }
+            ranking_tabLayout.getTabAt(i)!!.customView = customView
+            ranking_tabLayout.getTabAt(i)!!.view.setPadding(0, 0, 0, -16)
         }
     }
 }
@@ -67,8 +77,8 @@ class LeaderboardActivity : AppCompatActivity() {
 class LeaderboardItem(val username:String, val score:Int/*, val position: Long*/): Item<GroupieViewHolder>(){
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.textview_username_ranking.text = username//SocketHandler.user!!.username
-        viewHolder.itemView.textview_score.text = score.toString()
+        //viewHolder.itemView.textview_username_ranking.text = username//SocketHandler.user!!.username
+        //viewHolder.itemView.textview_score.text = score.toString()
     }
 
     override fun getLayout(): Int {

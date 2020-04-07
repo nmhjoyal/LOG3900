@@ -1,7 +1,7 @@
 package com.example.thin_client.data.game
 
 import com.example.thin_client.data.model.MatchInfos
-import com.example.thin_client.data.model.PublicProfile
+
 
 object GameManager {
     var currentGameMode: MatchMode = MatchMode.FREE_FOR_ALL
