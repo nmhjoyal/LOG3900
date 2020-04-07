@@ -24,7 +24,7 @@ namespace WPFUI.Views
     /// Logique d'interaction pour partieJeuView.xaml
     /// </summary>
     public partial class partieJeuView : UserControl, IHandle<endTurnRoutineEvent>, IHandle<startTurnRoutineEvent>,
-                                         IHandle<guessResponseEvent>
+                                         IHandle<guessResponseEvent>, IHandle<endMatchEvent>
     {
         private partieJeuViewModel _viewModel;
         private Boolean isMouseDown = false;
@@ -78,6 +78,8 @@ namespace WPFUI.Views
         {
             selectNextDrawingBox.Visibility = Visibility.Hidden;
             endTurnBox.Visibility = Visibility.Hidden;
+            sendMessage.IsEnabled = true;
+            sendGuess.IsEnabled = true;
             (this.DataContext as partieJeuViewModel).NotifyOfPropertyChange(null);
         }
 
@@ -130,6 +132,10 @@ namespace WPFUI.Views
             guessFeedbackBox.Visibility = Visibility.Hidden;
         }
 
+        public void Handle(endMatchEvent message)
+        {
+            endMatchBox.Visibility = Visibility.Visible;
+        }
     }
 
 }

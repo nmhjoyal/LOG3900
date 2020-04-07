@@ -8,9 +8,9 @@
              xmlns:gif="http://wpfanimatedgif.codeplex.com"
             xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit" 
             mc:Ignorable="d"
-              d:DesignHeight="1200" d:DesignWidth="820"
+             d:DesignHeight="800" d:DesignWidth="1200"
              
-			 FontFamily="Microsoft JhengHei UI Light">
+			 FontFamily="Microsoft JhengHei UI Light" Background="#FFF5F5F6">
     <UserControl.Resources>
         <convertisseurs:ConvertisseurBordure x:Key="convertisseurBordure" />
         <convertisseurs:ConvertisseurCouleurFond x:Key="convertisseurCouleurFond" />
@@ -76,12 +76,7 @@
             <StackPanel Name="canContainer"  Grid.Column="3" Grid.Row="9">
                 <TextBox  x:Name="clue" Grid.Column="3" Grid.Row="16"  />
             </StackPanel>
-            <Button  x:Name="goBack"  Grid.Column="6" Grid.Row="0" MaxWidth="120" HorizontalAlignment="Right"  Background="#D81A60" BorderBrush="#D81A60">
-                <StackPanel Orientation="Horizontal">
-                    
-                    <Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
-                </StackPanel>
-            </Button>
+
             <StackPanel Orientation="Vertical" Grid.Column="6" Grid.Row="9">
                 <Button BorderBrush="{x:Null}" Background="#D6EFE9" FontSize="12" Foreground="#00584C" Click="draw" Content="Draw" HorizontalAlignment="Center" Width="110"/>
                 <Button BorderBrush="{x:Null}" Background="#00584C" FontSize="12" Foreground="#D6EFE9" Click="createGame" Content="Create Game"   HorizontalAlignment="Center" Width="110"/>

@@ -135,11 +135,5 @@
             </ItemsControl>
         </Border>
 
-        <Button  x:Name="goBack"  Grid.Column="8" Grid.Row="1" MaxWidth="120" HorizontalAlignment="Right"  Background="#D81A60" BorderBrush="#D81A60">
-            <StackPanel Orientation="Horizontal">
-               
-                <Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
-            </StackPanel>
-        </Button>
     </Grid>
 </UserControl>

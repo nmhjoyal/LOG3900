@@ -160,6 +160,7 @@ namespace WPFUI.Models
             {
                 return score.scoreTotal;
             }
+
         }
         public int ScoreTurn
         {
@@ -167,6 +168,11 @@ namespace WPFUI.Models
             {
                 return score.scoreTurn;
             }
+            set
+            {
+                score.scoreTotal = value;
+            }
+
         }
 
     }
@@ -231,10 +237,37 @@ namespace WPFUI.Models
             this.timeLimit = timeLimit;
         }
 
-        public void set(StartTurn startTurn)
+        public void set(StartTurn startTurn, bool isDrawer)
         {
-            this.word = startTurn.word;
+            if(!isDrawer)
+            {
+                this.word = startTurn.word;
+            }
             this.timeLimit = startTurn.timeLimit;
+        }
+    }
+
+    public class UpdateSprint
+    {
+        public int guess;
+        public int time;
+        public string word;
+        public BindableCollection<Player> players;
+
+        public UpdateSprint(int guess, int time, string word, BindableCollection<Player> players)
+        {
+            this.guess = guess;
+            this.time = time;
+            this.word = word;
+            this.players = new BindableCollection<Player>(players);
+        }
+
+        public void set(UpdateSprint updateSprint)
+        {
+            this.guess = updateSprint.guess;
+            this.time = updateSprint.time;
+            this.word = updateSprint.word;
+            this.players = updateSprint.players;
         }
     }
 }

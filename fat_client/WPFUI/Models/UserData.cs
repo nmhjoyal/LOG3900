@@ -103,7 +103,14 @@ namespace WPFUI.Models
         {
             Console.WriteLine("changing channel in userdata: " + roomID);
             this.currentRoomId = roomID;
-            this.messages = new BindableCollection<Message>((this.selectableJoinedRooms.Single(i => i.id == roomID)).room.messages);
+            try
+            {
+                this.messages = new BindableCollection<Message>((this.selectableJoinedRooms.Single(i => i.id == roomID)).room.messages);
+            } catch
+            {
+                this.messages = new BindableCollection<Message>(this.selectableJoinedRooms.Where(x => x.id == roomID).ToList()[0].room.messages);
+            }
+
             _events.PublishOnUIThread(new refreshMessagesEvent(this.messages, roomID));
         }
 
@@ -142,17 +149,32 @@ namespace WPFUI.Models
 
         public void addMessage(Message message)
         {
-            Message[] messagesToUpdate = this.selectableJoinedRooms.Single(i => i.id == message.roomId).room.messages;
+            Message[] messagesToUpdate;
+            SelectableRoom roomToBeUpdated;
+
+            Console.WriteLine("currentRoomID: " + currentRoomId);
+            Console.WriteLine("messageRoom: " + message.roomId);
+            if (message.roomId == currentRoomId)
+            {
+                _messages.Add(message);
+                _events.PublishOnUIThread(new scrollDownEvent());
+            }
+
+            try
+            {
+                roomToBeUpdated = this.selectableJoinedRooms.Single(i => i.id == message.roomId);
+                messagesToUpdate = roomToBeUpdated.room.messages;
+            } catch
+            {
+                roomToBeUpdated = this.selectableJoinedRooms.Where(x => x.id == message.roomId).ToList()[0];
+                messagesToUpdate = roomToBeUpdated.room.messages;
+            }
 
             if (messagesToUpdate != null)
             {
-                if (message.roomId == currentRoomId)
-                {
-                    _events.PublishOnUIThread(new addMessageEvent(message));
-                }
                 List<Message> list = new List<Message>(messagesToUpdate);
                 list.Add(message);
-                this.selectableJoinedRooms.Single(i => i.id == message.roomId).room.messages = list.ToArray();
+                this.selectableJoinedRooms[selectableJoinedRooms.IndexOf(roomToBeUpdated)].room.messages = list.ToArray();
             }
         }
     }

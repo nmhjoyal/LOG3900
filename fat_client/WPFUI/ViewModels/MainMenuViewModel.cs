@@ -38,7 +38,6 @@ namespace WPFUI.ViewModels
         public void logOut()
         {
             _socketHandler.SignOut();
-            _events.PublishOnUIThread(new logOutEvent());
         }
         public void viewProfile()
         {

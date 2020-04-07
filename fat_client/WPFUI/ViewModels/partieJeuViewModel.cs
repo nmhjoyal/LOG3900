@@ -20,7 +20,7 @@ namespace WPFUI.ViewModels
 {
     class partieJeuViewModel : Screen, INotifyPropertyChanged, IHandle<refreshMessagesEvent>, IHandle<addMessageEvent>,
                               IHandle<wordSelectedEvent>, IHandle<startTurnRoutineEvent>, IHandle<endTurnRoutineVMEvent>,
-                              IHandle<guessResponseEvent>
+                              IHandle<guessResponseEvent>, IHandle<endMatchEvent>
     {
         private Editeur editeur = new Editeur();
         private IEventAggregator _events;
@@ -31,12 +31,14 @@ namespace WPFUI.ViewModels
         private string _currentMessage;
         public BindableCollection<dynamic> _wordChoices;
         public BindableCollection<dynamic> _turnScores;
+        public BindableCollection<dynamic> _matchScores;
         public int _timerContent;
         public DispatcherTimer _timer;
         private string _guessBox;
         private bool canDraw;
         private string _guessFeedBackSource;
         private string _guessFeedBackText;
+        private string _winnerMessage;
 
         // Commandes sur lesquels la vue pourra se connecter.
         public RelayCommand<string> ChoisirPointe { get; set; }
@@ -52,9 +54,11 @@ namespace WPFUI.ViewModels
             messages = userdata.messages;
             _guessFeedBackSource = "";
             _guessFeedBackText = "";
+            _winnerMessage = "";
             _timer = new DispatcherTimer();
             _wordChoices = new BindableCollection<dynamic>();
             _turnScores = new BindableCollection<dynamic>();
+            _matchScores = new BindableCollection<dynamic>();
             this.canDraw = false;
             // _roundDuration = 30;
             this.Traits = editeur.traits;
@@ -111,6 +115,11 @@ namespace WPFUI.ViewModels
             }
         }
         */
+
+        public string winnerMessage
+        {
+            get { return _winnerMessage; }
+        }
 
         public StartTurn startTurn;
 
@@ -272,6 +281,11 @@ namespace WPFUI.ViewModels
             get { return _turnScores; }
         }
 
+        public BindableCollection<dynamic> matchScores
+        {
+            get { return _matchScores; }
+        }
+
         public IEventAggregator events
         {
             get { return _events; }
@@ -372,7 +386,20 @@ namespace WPFUI.ViewModels
                 dynamicScore.score = player.ScoreTotal;
                 _turnScores.Add(dynamicScore);
             }
+
+            _turnScores = new BindableCollection<dynamic>(_turnScores.OrderByDescending(i => i.score));
+
+            int rank = 1;
+            foreach (dynamic score in _turnScores)
+            {
+                score.position = rank;
+                rank++;
+            }
+
+            _turnScores = new BindableCollection<dynamic>(_turnScores.OrderBy(i => i.position));
+
             turnScores.Refresh();
+            NotifyOfPropertyChange(() => turnScores);
         }
 
         public void HandleEndTurn()
@@ -492,6 +519,37 @@ namespace WPFUI.ViewModels
                 guessFeedBackText = "Bad Guess !";
                 guessFeedBackSource = "/Resources/bad guess.png";
             }
+        }
+
+        public void Handle(endMatchEvent message)
+        {
+            _matchScores.Clear();
+            foreach (Player player in message.players)
+            {
+                dynamic dynamicScore = new System.Dynamic.ExpandoObject();
+                dynamicScore.position = 0;
+                dynamicScore.name = player.Username;
+                dynamicScore.score = player.ScoreTotal;
+                _matchScores.Add(dynamicScore);
+            }
+
+            _matchScores = new BindableCollection<dynamic>(_matchScores.OrderByDescending(i => i.score));
+
+            int rank = 1;
+            foreach (dynamic score in _matchScores)
+            {
+                score.position = rank;
+                rank++;
+            }
+
+            _matchScores = new BindableCollection<dynamic>(_matchScores.OrderBy(i => i.position));
+
+            endTurn.players = new BindableCollection<Player>();
+            NotifyOfPropertyChange(() => joueurs);
+            _winnerMessage = "The winner is " + _matchScores[0].name;
+            NotifyOfPropertyChange(() => winnerMessage);
+            matchScores.Refresh();
+            NotifyOfPropertyChange(() => matchScores);
         }
     }
 }
