@@ -518,8 +518,8 @@ namespace WPFUI.Models
 
             this.socket.On("match_ended", (Feedback) =>
             {
-                Player[] players = JsonConvert.DeserializeObject<Player[]>(Feedback.ToString());
-                _events.PublishOnUIThread(new endMatchEvent(players));
+                List<Player> players = JsonConvert.DeserializeObject<List<Player>>(Feedback.ToString());
+                _events.PublishOnUIThread(new endMatchEvent(new List<Player>(players.Where(player => !player.isVirtual))));
             });
         }
 

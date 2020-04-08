@@ -91,30 +91,6 @@ namespace WPFUI.ViewModels
             this._socketHandler.offWaitingRoom();
             this._socketHandler.onMatch(this.startTurn, this.endTurn);
         }
-        /*
-        public StartTurn StartTurn
-        {
-            get
-            {
-                return this.startTurn;
-            }
-            set
-            {
-                this.startTurn = value;
-            }
-        }
-        public EndTurn EndTurn
-        {
-            get
-            {
-                return this.endTurn;
-            }
-            set
-            {
-                this.endTurn = value;
-            }
-        }
-        */
 
         public string winnerMessage
         {
@@ -378,12 +354,12 @@ namespace WPFUI.ViewModels
         public void newScores()
         {
             _turnScores.Clear();
-            foreach (Player player in this.endTurn.players)
+            foreach (Player player in this.endTurn.HumanPlayers)
             {
                 dynamic dynamicScore = new System.Dynamic.ExpandoObject();
                 dynamicScore.position = 0;
                 dynamicScore.name = player.Username;
-                dynamicScore.score = player.ScoreTotal;
+                dynamicScore.score = player.ScoreTurn;
                 _turnScores.Add(dynamicScore);
             }
 
@@ -392,7 +368,8 @@ namespace WPFUI.ViewModels
             int rank = 1;
             foreach (dynamic score in _turnScores)
             {
-                score.position = rank;
+                score.position = rank + ".";
+                score.score = "+" + score.score;
                 rank++;
             }
 
@@ -401,34 +378,6 @@ namespace WPFUI.ViewModels
             turnScores.Refresh();
             NotifyOfPropertyChange(() => turnScores);
         }
-
-        public void HandleEndTurn()
-        {
-            _timer.Stop();
-            this.newScores();
-            // fillPlayers();
-            dynamic endTurn = new System.Dynamic.ExpandoObject();
-            endTurn.currentRound = this.endTurn.currentRound;
-            endTurn.drawer = this.endTurn.drawer;
-            endTurn.nextIsYou = this.endTurn.drawer == this._userData.userName;
-            this.canDraw = false;
-            this.newWords(this.endTurn.choices);
-            _events.PublishOnUIThread(new endTurnRoutineEvent(endTurn));
-        }
-        /*
-        public void fillPlayers()
-        {
-            joueurs.Clear();
-            foreach (Player player in this.endTurn.players)
-            {
-                dynamic joueur = new System.Dynamic.ExpandoObject();
-                joueur.username = player.Username;
-                joueur.score = score.updateScore.scoreTotal;
-                joueur.avatarSource = score.player.Avatar;
-                joueurs.Add(joueur);
-            }
-        }
-        */
         public void sendGuess()
         {
             if (guessBox != null & guessBox != "")
@@ -494,13 +443,31 @@ namespace WPFUI.ViewModels
 
         public void Handle(startTurnRoutineEvent message)
         {
+            if(this.endTurn.drawer == this._userData.userName)
+            {
+                this.AttributsDessin.Color = (System.Windows.Media.Color)ColorConverter.ConvertFromString("#000000");
+                this.AttributsDessin.Width = 5;
+                this.AttributsDessin.Height = 5;
+            }
             timerContent = message.turnTime;
             _timer.Start();
         }
 
         public void Handle(endTurnRoutineVMEvent message)
         {
-            this.HandleEndTurn();
+            _timer.Stop();
+            this.newScores();
+            // fillPlayers();
+            dynamic endTurn = new System.Dynamic.ExpandoObject();
+            endTurn.currentRound = this.endTurn.currentRound;
+            endTurn.drawer = this.endTurn.drawer;
+            endTurn.nextIsYou = this.endTurn.drawer == this._userData.userName;
+            this.canDraw = false;
+            this.AttributsDessin.Color = (System.Windows.Media.Color)ColorConverter.ConvertFromString("#FFFFFF");
+            this.AttributsDessin.Width = 1;
+            this.AttributsDessin.Height = 1;
+            this.newWords(this.endTurn.choices);
+            _events.PublishOnUIThread(new endTurnRoutineEvent(endTurn));
         }
 
         public void updateRoundInfos()
@@ -550,6 +517,7 @@ namespace WPFUI.ViewModels
             NotifyOfPropertyChange(() => winnerMessage);
             matchScores.Refresh();
             NotifyOfPropertyChange(() => matchScores);
+            this._timer.Stop();
         }
     }
 }

@@ -9,14 +9,14 @@ namespace WPFUI.EventModels
 {
     public class endMatchEvent
     {
-        private Player[] _players;
+        private List<Player> _players;
 
-        public endMatchEvent(Player[] players)
+        public endMatchEvent(List<Player> players)
         {
-            _players = players;
+            _players = new List<Player>(players);
         }
 
-        public Player[] players
+        public List<Player> players
         {
             get { return _players; }
         }

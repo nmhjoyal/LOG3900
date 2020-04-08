@@ -154,25 +154,20 @@ namespace WPFUI.Models
             }
         }
 
-        public int ScoreTotal
+        public string ScoreTotal
         {
             get
             {
-                return score.scoreTotal;
+                return isVirtual? "" : score.scoreTotal.ToString();
             }
 
         }
-        public int ScoreTurn
+        public string ScoreTurn
         {
             get
             {
-                return score.scoreTurn;
+                return isVirtual ? "" : score.scoreTurn.ToString();
             }
-            set
-            {
-                score.scoreTotal = value;
-            }
-
         }
 
     }
@@ -198,6 +193,10 @@ namespace WPFUI.Models
         public string drawer;
         public BindableCollection<Player> players;
 
+        public BindableCollection<Player> HumanPlayers
+        {
+            get { return new BindableCollection<Player>(this.players.Where(player => !player.isVirtual)); }
+        }
         public EndTurn(int currentRound, List<string> choices, string drawer, BindableCollection<Player> players)
         {
             this.currentRound = currentRound;
@@ -211,7 +210,7 @@ namespace WPFUI.Models
             this.currentRound = endTurn.currentRound;
             this.choices = endTurn.choices;
             this.drawer = endTurn.drawer;
-            this.players = endTurn.players;
+            this.players = new BindableCollection<Player>(endTurn.players.OrderByDescending(i => i.ScoreTotal));
         }
     }
     public class UpdateScore
@@ -253,7 +252,10 @@ namespace WPFUI.Models
         public int time;
         public string word;
         public BindableCollection<Player> players;
-
+        public BindableCollection<Player> HumanPlayers
+        {
+            get { return new BindableCollection<Player>(this.players.Where(player => !player.isVirtual)); }
+        }
         public UpdateSprint(int guess, int time, string word, BindableCollection<Player> players)
         {
             this.guess = guess;
@@ -267,7 +269,7 @@ namespace WPFUI.Models
             this.guess = updateSprint.guess;
             this.time = updateSprint.time;
             this.word = updateSprint.word;
-            this.players = updateSprint.players;
+            this.players = new BindableCollection<Player>(updateSprint.players.OrderByDescending(i => i.ScoreTotal));
         }
     }
 }
