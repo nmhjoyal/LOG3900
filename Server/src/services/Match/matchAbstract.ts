@@ -12,6 +12,8 @@ import RandomWordGenerator from "../WordGenerator/wordGenerator";
 import Admin from "../../models/admin";
 import { Message } from "../../models/message";
 import VirtualPlayer from "../VirtualPlayer/virtualPlayer";
+import { rankingDB } from "../Database/rankingDB";
+import { statsDB } from "../Database/statsDB";
 
 export default abstract class Match {
     // Settings
@@ -25,6 +27,7 @@ export default abstract class Match {
     protected currentWord: string;
     protected isStarted: boolean;
     protected chatHandler: ChatHandler;
+    protected startTime: number;
 
     // Depends on the instance
     protected readonly ms: MatchSettings;
@@ -229,7 +232,8 @@ export default abstract class Match {
 
     protected endMatch(io: SocketIO.Server): void {
         // compile game stats for the players and the standings.
-        // ...
+        rankingDB.updateRanks(this.players, this.mode);
+        statsDB.updateMatchStats(this.players, this.mode, this.startTime);
 
         this.notifyWord(io);
         // notify everyone that the game is ended.
@@ -291,6 +295,7 @@ export default abstract class Match {
     }
 
     protected initMatch(io: SocketIO.Server): void {
+        this.startTime = Date.now();
         this.isStarted = true;
         this.drawing = new Drawing(this.matchId);
         this.virtualDrawing = new VirtualDrawing(this.matchId, this.timeLimit);

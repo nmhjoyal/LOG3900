@@ -9,6 +9,8 @@ import { serverHandler } from "../../services/serverHandler";
 import { Rank } from "../../models/rank";
 import { rankingDB } from "../../services/Database/rankingDB";
 import { MatchMode } from "../../models/matchMode";
+import { statsDB } from "../../services/Database/statsDB";
+import { StatsClient } from "../../models/stats";
 
 /**
  * ProfileController is used to manage user profiles in the database. 
@@ -36,7 +38,8 @@ export class ProfileController {
                     avatar: profile.avatar
                 };
                 await profileDB.createProfile(profile);
-                // await statsDB.createStats(profile.username);
+                rankingDB.createRank(profile.username);
+                statsDB.createStats(profile.username);
                 await roomDB.mapAvatar(publicProfile, generalRoomId);
             } catch {
                 feedback.status = false;
@@ -48,9 +51,11 @@ export class ProfileController {
     }
 
     @Delete("/:username")
-    public async deleteUserInfos(@Param("username") username: string): Promise<Feedback> {
+    public deleteUserInfos(@Param("username") username: string): Feedback {
 
-        await profileDB.deleteProfile(username);
+        profileDB.deleteProfile(username);
+        rankingDB.deleteRank(username);
+        statsDB.deleteStats(username);
         serverHandler.users.delete(username);
         let feedback: Feedback = {
             status: true,
@@ -67,14 +72,14 @@ export class ProfileController {
     }
 
     @Get("/rank/:username/:matchMode")
-    public async getRankings(@Param("username") username: string, @Param("matchMode") matchMode: MatchMode): Promise<Rank[]> {
-        return await rankingDB.getRankings(username, matchMode);
+    public async getRanks(@Param("username") username: string, @Param("matchMode") matchMode: MatchMode): Promise<Rank[]> {
+        return await rankingDB.getRanks(username, matchMode);
     }
 
-    // @Get("/stats/:username")
-    // public async getStats(): Promise<Stats> {
-        
-    // }
+    @Get("/stats/:username")
+    public async getStats(@Param("username") username: string): Promise<StatsClient> {
+        return await statsDB.getStats(username);
+    }
 }
 
 // Ref : https://www.npmjs.com/package/routing-controllers
