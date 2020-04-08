@@ -10,8 +10,7 @@ export default class VirtualPlayer {
     }
 
     public create(): Player {
-        const player: Player = this.vps.splice(this.getRandomInt(this.vps.length), 1)[0];
-        return player;
+        return this.vps.splice(this.getRandomInt(this.vps.length), 1)[0];
     }
 
     public newAvailableVP(username: string): void {
@@ -30,7 +29,8 @@ export default class VirtualPlayer {
 
     public getEndTurnMessage(username: string, roomId: string): Message {
         const cMsg: CustomMessage | undefined = messages.get(username);
-        const content: string = (cMsg) ? cMsg.endTurn : ERROR.endTurn;
+        const content: string = (cMsg)? cMsg.endTurn[this.getRandomInt(cMsg.endTurn.length)]: 
+                                        ERROR.endTurn[0];
 
         return this.createMessageObj(username, content, roomId);
     }

@@ -1,5 +1,5 @@
 import { MatchInstance } from "../models/matchMode";
-import { CreateMatch, MatchInfos, TIME_LIMIT_MIN, TIME_LIMIT_MAX, NB_ROUNDS_MIN, NB_ROUNDS_MAX } from "../models/match";
+import { CreateMatch, MatchInfos, TIME_LIMIT_MIN, TIME_LIMIT_MAX } from "../models/match";
 import { Feedback, StartMatchFeedback, JoinRoomFeedback, CreateMatchFeedback } from "../models/feedback";
 import Match from "./Match/matchAbstract";
 import PrivateProfile from "../models/privateProfile";
@@ -32,6 +32,8 @@ export default class MatchHandler {
     public async createMatch(io: SocketIO.Server, socket: SocketIO.Socket, 
                     createMatch: CreateMatch, user: PrivateProfile | undefined): Promise<CreateMatchFeedback> {
         let createMatchFeedback: CreateMatchFeedback = { feedback: { status: false, log_message: "" }, matchId: ""};
+        const NB_ROUNDS_MAX: number = MatchInstance.getMaxNbRounds(createMatch.matchMode);
+        const NB_ROUNDS_MIN: number = MatchInstance.getMinNbRounds(createMatch.matchMode);
 
         if (user) {
             const matchId: string = RandomMatchIdGenerator.generate();
@@ -39,10 +41,10 @@ export default class MatchHandler {
             createMatchFeedback.feedback = await this.chatHandler.createChatRoom(io, socket, matchRoom, user);
             if (createMatchFeedback.feedback.status) {
                 createMatchFeedback.feedback.status = false
-                console.log(JSON.stringify(createMatch));
                 if (createMatch.timeLimit >= TIME_LIMIT_MIN && createMatch.timeLimit <= TIME_LIMIT_MAX) {
                     if (createMatch.nbRounds >= NB_ROUNDS_MIN && createMatch.nbRounds <= NB_ROUNDS_MAX) {
-                        this.currentMatches.set(matchId, MatchInstance.createMatch(matchId, user, createMatch, this.chatHandler));
+                        const match: Match = MatchInstance.createMatch(matchId, user, createMatch, this.chatHandler, io);
+                        this.currentMatches.set(matchId, match);
                         io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
                         createMatchFeedback.feedback.status = true;
                         createMatchFeedback.feedback.log_message = "Match created successfully.";
@@ -145,9 +147,13 @@ export default class MatchHandler {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
                 startMatchFeedback = match.startMatch(user.username, io);
-                startMatchFeedback.feedback.status ?
-                    io.in(match.matchId).emit("match_started", JSON.stringify(startMatchFeedback)) :
+                if (startMatchFeedback.feedback.status) {
+                    io.in(match.matchId).emit("match_started", JSON.stringify(startMatchFeedback));
+                    io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
+                    match.endTurn(io);
+                } else {
                     socket.emit("match_started", JSON.stringify(startMatchFeedback));
+                }
             } else {
                 startMatchFeedback.feedback.log_message = "This match does not exist anymore.";
             }
@@ -162,7 +168,7 @@ export default class MatchHandler {
         if (user) {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if(match) {
-                match.startTurn(io, socket, word, false);
+                match.startTurn(io, word);
             } else {
                 console.log("This match does not exist anymore");
             }
@@ -192,10 +198,10 @@ export default class MatchHandler {
             if (match) {
                 feedback = match.guess(io, guess, user.username);
             } else {
-                console.log("This match does not exist anymore.");
+                feedback.log_message = "This match does not exist anymore.";
             }
         } else {
-            console.log("You are not signed in.");
+            feedback.log_message = "You are not signed in.";
         }
 
         return feedback;
@@ -254,7 +260,6 @@ export default class MatchHandler {
             } else {
                 let virtualDrawing: VirtualDrawing | undefined = this.previews.get(socket.id);
                 if(virtualDrawing) {
-                    console.log("clear");
                     virtualDrawing.clear(socket);
                 };
             }

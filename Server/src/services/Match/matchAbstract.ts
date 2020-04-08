@@ -1,18 +1,19 @@
 import { Feedback, StartMatchFeedback, JoinRoomFeedback } from "../../models/feedback";
-import { MatchInfos, UpdateScore, CreateMatch, EndTurn, StartTurn, Score } from "../../models/match";
-import Player from "../../models/player";
+import { MatchInfos, CreateMatch, EndTurn, StartTurn, UpdateSprint } from "../../models/match";
+import Player, { UpdateScore } from "../../models/player";
 import PublicProfile from "../../models/publicProfile";
 import { MatchMode, MatchSettings } from "../../models/matchMode";
 import ChatHandler from "../chatHandler";
 import PrivateProfile from "../../models/privateProfile";
 import { VirtualDrawing } from "../Drawing/virtualDrawing";
 import { Drawing } from "../Drawing/drawing";
-import { Stroke, StylusPoint } from "../../models/drawPoint";
+import { Stroke, StylusPoint, Level } from "../../models/drawPoint";
 import RandomWordGenerator from "../WordGenerator/wordGenerator";
 import Admin from "../../models/admin";
 import { Message } from "../../models/message";
-import { gameDB } from "../Database/gameDB";
 import VirtualPlayer from "../VirtualPlayer/virtualPlayer";
+import { rankingDB } from "../Database/rankingDB";
+import { statsDB } from "../Database/statsDB";
 
 export default abstract class Match {
     // Settings
@@ -22,9 +23,11 @@ export default abstract class Match {
     protected mode: number;
     protected nbRounds: number;
     protected timeLimit: number;
+    protected hints: string[];
     protected currentWord: string;
     protected isStarted: boolean;
     protected chatHandler: ChatHandler;
+    protected startTime: number;
 
     // Depends on the instance
     protected readonly ms: MatchSettings;
@@ -33,17 +36,17 @@ export default abstract class Match {
     protected timer: number;
     protected timeout: NodeJS.Timeout;          // setTimeout will be used for emitting end_turn and we will cancel it 
                                                 // if there is an unexpected leave of a room or stoppage of a turn
-    protected scores: Map<string, UpdateScore>  // Key: username, Value: score
     protected round: number;                    // In one round each player will draw one time
-    protected drawer: string;                   // Username 
+    protected drawer: Player;                   // Username 
     protected drawing: Drawing;
     protected virtualDrawing: VirtualDrawing;
     protected virtualPlayer: VirtualPlayer;
+    protected vp: string;
 
     // Match methods
-    public abstract startTurn(io: SocketIO.Server, socket: SocketIO.Socket | null, chosenWord: string, isVirtual: boolean): void;
-    protected abstract endTurn(io: SocketIO.Server, drawerLeft: boolean): void;
-    public abstract guess(io: SocketIO.Server, guess: string, username: string): Feedback;
+    public async abstract startTurn(io: SocketIO.Server, chosenWord: string): Promise<void>;
+    public async abstract endTurn(io: SocketIO.Server): Promise<void>;
+    public abstract guessRight(io: SocketIO.Server, username: string): void;
 
     protected constructor(matchId: string, user: PublicProfile, createMatch: CreateMatch, chatHandler: ChatHandler, matchSettings: MatchSettings) {
         this.players = [this.createPlayer(user)];
@@ -55,6 +58,7 @@ export default abstract class Match {
         this.timeLimit = createMatch.timeLimit;
         this.chatHandler = chatHandler;
         this.ms = matchSettings;
+        this.vp = "";
         this.virtualPlayer = new VirtualPlayer();
     }
 
@@ -92,31 +96,26 @@ export default abstract class Match {
 
         if (player) {
             await this.chatHandler.leaveChatRoom(io, socket, this.matchId, user);
-                if (this.isStarted) {
-                    if (this.getNbHumanPlayers() - 1 > this.ms.MIN_NB_HP) {
-                        // after the match is started the host is not important.
-                        if (player.user.username == this.drawer) {
-                            let oldDrawer: Player | undefined = this.getPlayer(this.drawer);
-                            if (oldDrawer) {
-                                this.assignDrawer(oldDrawer);
-                                this.endTurn(io, true);
-                            }
-                        }
-                    } else {
-                        this.endMatch(io);
-                        deleteMatch = true;
+            if (this.isStarted) {
+                if (this.getNbHumanPlayers() > this.ms.MIN_NB_HP) {
+                    if (player == this.drawer) {
+                        this.endTurn(io);
                     }
                 } else {
-                    if (this.getNbHumanPlayers() > 1) { // otherwise assignHost wouldnt work.
-                        if (this.isHost(player)) {
-                            this.assignHost();
-                        }
-                    } else {
-                        deleteMatch = true;
-                    }
+                    this.endMatch(io);
+                    deleteMatch = true;
                 }
-                this.players.splice(this.players.indexOf(player), 1);
-                io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
+            } else {
+                if (this.getNbHumanPlayers() > 1) { // otherwise assignHost wouldnt work.
+                    if (this.isHost(player)) {
+                        this.assignHost();
+                    }
+                } else {
+                    deleteMatch = true;
+                }
+            }
+            this.players.splice(this.players.indexOf(player), 1);
+            io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
         }
 
         return deleteMatch;
@@ -180,11 +179,10 @@ export default abstract class Match {
         if (player) {
             if (this.isHost(player)) {
                 const nbHumanPlayers: number = this.getNbHumanPlayers();
-                if (nbHumanPlayers > this.ms.MIN_NB_HP || nbHumanPlayers < this.ms.MAX_NB_HP) {
+                if (nbHumanPlayers >= this.ms.MIN_NB_HP && nbHumanPlayers <= this.ms.MAX_NB_HP) {
                     const nbVirtualPlayers: number = this.getNbVirtualPlayers();
-                    if (nbVirtualPlayers > this.ms.MIN_NB_VP || nbVirtualPlayers < this.ms.MAX_NB_VP) {
-                        this.initMatch();
-                        this.endTurn(io, false);
+                    if (nbVirtualPlayers >= this.ms.MIN_NB_VP && nbVirtualPlayers <= this.ms.MAX_NB_VP) {
+                        this.initMatch(io);
                         startMatchFeedback.nbRounds = this.nbRounds;
                         startMatchFeedback.feedback.status = true;
                         startMatchFeedback.feedback.log_message = "Match is starting...";
@@ -207,34 +205,51 @@ export default abstract class Match {
         return startMatchFeedback;
     }
 
-    protected async endTurnGeneral(io: SocketIO.Server): Promise<void> {
-        const endTurn: EndTurn = this.createEndTurn();
+    public guess(io: SocketIO.Server, guess: string, username: string): Feedback {
+        let feedback: Feedback = { status: false, log_message: "" };
+        const drawerUsername: string = this.drawer.user.username;
 
         if (this.currentWord != "") {
-            const message: Message = Admin.createAdminMessage("The word was " + this.currentWord, this.matchId);
-            io.in(this.matchId).emit("new_message", JSON.stringify(message));
+            if (username != drawerUsername) {
+                if(guess.toUpperCase() == this.currentWord.toUpperCase()) {
+                    // Depends on the instance
+                    this.guessRight(io, username); 
+                    feedback.status = true;
+                } else {
+                    feedback.log_message = "Your guess is wrong.";
+                }
+            } else {
+                feedback.log_message = "The player drawing is not supposed to guess.";
+            }
+        } else  {
+            feedback.log_message = "The word guessed is empty.";
         }
 
-        io.in(this.matchId).emit("turn_ended", JSON.stringify(endTurn));
-        console.log(JSON.stringify(endTurn));
-        
-        this.resetScoresTurn();
-        this.currentWord = "";
-        
-        if (this.getPlayer(this.drawer)?.isVirtual) {
-            let word: string = await gameDB.getRandomWord();
-            setTimeout(() => {
-                this.startTurn(io, null, word, true);
-            }, 5000);
-            // word = await gameDB.getRandomWord();
-        }
+        return feedback;
     }
 
     protected endMatch(io: SocketIO.Server): void {
         // compile game stats for the players and the standings.
+        rankingDB.updateRanks(this.players, this.mode);
+        statsDB.updateMatchStats(this.players, this.mode, this.startTime);
+
+        this.notifyWord(io);
         // notify everyone that the game is ended.
-         
-        this.isEnded = true;
+        io.in(this.matchId).emit("match_ended", this.players);
+        
+        this.isEnded = true; // to delete on future "update_matches" event called
+    }
+    
+    protected notifyWord(io: SocketIO.Server): void {
+        const message: Message = Admin.createAdminMessage("The word was " + this.currentWord, this.matchId);
+        io.in(this.matchId).emit("new_message", JSON.stringify(message));
+        io.in(this.matchId).emit("new_message", JSON.stringify(this.virtualPlayer.getEndTurnMessage(this.vp, this.matchId)));
+    }
+
+    protected reset(io: SocketIO.Server): void {
+        clearTimeout(this.timeout)
+        this.virtualDrawing.clear(io);
+        this.drawing.reset(io);
     }
 
     /**
@@ -269,85 +284,125 @@ export default abstract class Match {
     }
 
     protected initScores(): void {
-        this.scores = new Map<string, UpdateScore>();
         for (let player of this.players) {
-            if(!player.isVirtual) {
-                const updateScore: UpdateScore = {
-                    scoreTotal: 0,
-                    scoreTurn: 0
-                }
-                this.scores.set(player.user.username, updateScore);
-            }
+            player.score = {
+                scoreTotal: 0,
+                scoreTurn: 0
+            };
         }
     }
 
-    protected initMatch(): void {
+    protected initMatch(io: SocketIO.Server): void {
+        this.startTime = Date.now();
         this.isStarted = true;
         this.drawing = new Drawing(this.matchId);
         this.virtualDrawing = new VirtualDrawing(this.matchId, this.timeLimit);
+        io.in(this.matchId).emit("new_message", JSON.stringify(this.virtualPlayer.getStartMatchMessage(this.vp, this.matchId)));
 
-        // Init to the last player on round 0 so it resets in endTurn for round 1 with first player.
-        this.drawer = this.players[this.players.length - 1].user.username;
+        // In the other modes the drawer is set to the virtual player in the constructor.
+        if (this.mode == MatchMode.freeForAll) {
+            // Init to the last player on round 0 so it resets in endTurn for round 1 with first player.
+            this.drawer = this.players[this.players.length - 1];
+
+            const username: string | undefined = this.getVPUsername(); 
+            this.vp = (username) ? username : this.virtualPlayer.create().user.username;
+        }
         this.round = 0;
         
         this.initScores();
     }
 
     protected resetScoresTurn(): void {
-        this.scores.forEach((score: UpdateScore) => {
-            score.scoreTurn = 0;
-        });
+        for (let player of this.players) {
+            player.score.scoreTurn = 0;
+        }
+    }
+
+    protected matchIsEnded(): boolean {
+        return this.round == this.nbRounds + 1;
     }
 
     protected everyoneHasGuessed(): boolean {
         let everyoneHasGuessed: boolean = true;
 
-        this.scores.forEach((score: UpdateScore, username: string) => {
-            if (score.scoreTurn == 0 && username != this.drawer) everyoneHasGuessed = false;
-        });
+        for (let player of this.players) {
+            if (player.score.scoreTurn == 0 && player != this.drawer && !player.isVirtual) 
+                everyoneHasGuessed = false;
+        }
 
         return everyoneHasGuessed;
     }
 
-    protected updateScore(username: string, score: number): void {
-        let playerScore: UpdateScore | undefined = this.scores.get(username);
-
-        if (playerScore) {
-            const oldScore: number = playerScore.scoreTotal;
-            const updatedScore: UpdateScore = {
-                scoreTotal: oldScore + score,
-                scoreTurn: score
-            };
-            this.scores.set(username, updatedScore);
-        } else {
-            console.log("error while updating score of : " + username);       
+    protected updateTeamScore(score: number): void {
+        for (let player of this.players) {
+            if (!player.isVirtual) {
+                const oldScore: number = player.score.scoreTotal;
+                const updatedScore: UpdateScore = {
+                    scoreTotal: oldScore + score,
+                    scoreTurn: score
+                };
+                player.score = updatedScore;
+            }
         }
     }
 
-    protected assignDrawer(oldDrawer: Player) {
-        const currentIndex: number = this.players.indexOf(oldDrawer);
+    protected updateScore(username: string, score: number): void {
+        for (let player of this.players) {
+            if (player.user.username == username) {
+                const oldScore: number = player.score.scoreTotal;
+                const updatedScore: UpdateScore = {
+                    scoreTotal: oldScore + score,
+                    scoreTurn: score
+                };
+                player.score = updatedScore;
+            }
+        }
+    }
+
+    protected getNbGuesses(difficulty: Level): number {
+        switch (difficulty) {
+            case Level.Easy:
+                return 7;
+            case Level.Medium:
+                return 5;
+            case Level.Hard:
+                return 3;
+        }
+    }
+
+    protected timeLeft(): number {
+        return Math.round(this.timeLimit - ((Date.now() - this.timer)/1000)); 
+    }
+
+    protected calculateScore(): number {
+        return Math.round(this.timeLeft()) * 10; // + (1-(nbAyantdevine/nbhumanPlayer)) * CONSTANTE (100)
+    }
+
+    protected assignDrawer() {
+        const currentIndex: number = this.players.indexOf(this.drawer);
         if (currentIndex == this.players.length - 1) {
-            this.drawer = this.players[0].user.username;
+            this.drawer = this.players[0];
             this.round++;
         } else {
-            this.drawer = this.players[currentIndex + 1].user.username;
+            this.drawer = this.players[currentIndex + 1];
         }
     }
 
     protected assignHost(): void {
         // Place the new host at the beginning of the array.
-        this.players.splice(0, 0, this.players.splice(this.findNewHostIndex(), 1)[0])
+        this.players.splice(0, 0, this.players.splice(this.findNewHostIndex(), 1)[0]);
     }
 
     protected findNewHostIndex(): number {
         return this.players.findIndex(player => !player.isVirtual);
     }
 
-    protected addVP(io: SocketIO.Server): void {
+    protected addVP(io: SocketIO.Server): Player {
         const randomVP: Player = this.virtualPlayer.create();
         this.players.push(randomVP);
         this.chatHandler.findPrivateRoom(this.matchId)?.avatars.set(randomVP.user.username, randomVP.user.avatar);
         this.chatHandler.notifyAvatarUpdate(io, randomVP.user, this.matchId);
+        return randomVP;
     }
 
     protected removeVP(): void {
@@ -384,7 +439,7 @@ export default abstract class Match {
     public getMatchInfos(): MatchInfos | undefined {
         let matchInfos: MatchInfos | undefined;
         
-        if (!this.isStarted && this.mode !== MatchMode.sprintSolo) { // maybe this.players.length < this.maxPlayers?    
+        if (!this.isStarted && this.mode !== MatchMode.sprintSolo) {    
             let userInfos: PublicProfile[] = [];
 
             for (let player of this.players) {
@@ -398,7 +453,11 @@ export default abstract class Match {
     }
 
     public getPlayer(username: string): Player | undefined {
-        return this.players.find(player => username == player.user.username);
+       return this.players.find(player => username == player.user.username);
+    }
+
+    protected getVPUsername(): string | undefined {
+        return this.players.find(player => player.isVirtual)?.user.username;
     }
 
     protected createMatchInfos(host: string, userInfos: PublicProfile[]): MatchInfos {
@@ -415,6 +474,10 @@ export default abstract class Match {
     protected createPlayer(user: PublicProfile): Player {
         return {
             user: user,
+            score: {
+                scoreTotal: 0,
+                scoreTurn: 0
+            },
             isVirtual: false
         };
     }
@@ -443,19 +506,18 @@ export default abstract class Match {
     protected createEndTurn(): EndTurn {
         return {
             currentRound: this.round,
+            players: this.players,
             choices: RandomWordGenerator.generateChoices(),
-            drawer: this.drawer,
-            scores: this.getScores()
+            drawer: this.drawer.user.username
         };
     }
 
-    protected getAvatar(username: string): string {
-        for(let player of this.players) {
-            if(player.user.username == username) {
-                return player.user.avatar;
-            }
+    protected createUpdateSprint(guess: number, word: string, time: number): UpdateSprint {
+        return {
+            players: this.players,
+            guess: guess,
+            word: word.replace(/[a-z]/gi, '_'),
+            time: time
         }
-
-        return "undefined";
     }
 }

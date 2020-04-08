@@ -29,8 +29,7 @@ export class Drawing {
     }
 
     public clear(socket: SocketIO.Socket): void {
-        socket.in(this.roomId).emit("new_clear");
-        this.top = 0;
+        socket.to(this.roomId).emit("new_clear");
     }
 
     public reset(io: SocketIO.Server): void {

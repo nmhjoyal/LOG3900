@@ -21,12 +21,20 @@ export const VPS: Player[] = [
             username: MR_AVOCADO,
             avatar: "AVOCADO"
         },
+        score: {
+            scoreTotal: 0,
+            scoreTurn: 0
+        },
         isVirtual: true
     },
     {
         user: {
             username: LORD_BANANA,
             avatar: "BANANA"
+        },
+        score: {
+            scoreTotal: 0,
+            scoreTurn: 0
         },
         isVirtual: true
     },
@@ -35,12 +43,20 @@ export const VPS: Player[] = [
             username: SGT_STRAWBERRY,
             avatar: "STRAWBERRY"
         },
+        score: {
+            scoreTotal: 0,
+            scoreTurn: 0
+        },
         isVirtual: true
     },
     {
         user: {
             username: LADY_WATERMELON,
             avatar: "WATERMELON"
+        },
+        score: {
+            scoreTotal: 0,
+            scoreTurn: 0
         },
         isVirtual: true
     },
@@ -49,12 +65,20 @@ export const VPS: Player[] = [
             username: MASTER_GRAPE,
             avatar: "GRAPE"
         },
+        score: {
+            scoreTotal: 0,
+            scoreTurn: 0
+        },
         isVirtual: true
     },
     {
         user: {
             username: GENTLEMAN_KIWI,
             avatar: "KIWI"
+        },
+        score: {
+            scoreTotal: 0,
+            scoreTurn: 0
         },
         isVirtual: true
     },
@@ -63,12 +87,20 @@ export const VPS: Player[] = [
             username: MADAM_ORANGE,
             avatar: "ORANGE"
         },
+        score: {
+            scoreTotal: 0,
+            scoreTurn: 0
+        },
         isVirtual: true
     },
     {
         user: {
             username: SIR_PINEAPPLE,
             avatar: "PINEAPPLE"
+        },
+        score: {
+            scoreTotal: 0,
+            scoreTurn: 0
         },
         isVirtual: true
     },
@@ -77,12 +109,20 @@ export const VPS: Player[] = [
             username: LITTLE_APPLE,
             avatar: "APPLE"
         },
+        score: {
+            scoreTotal: 0,
+            scoreTurn: 0
+        },
         isVirtual: true
     },
     {
         user: {
             username: MISS_LEMON,
             avatar: "LEMON"
+        },
+        score: {
+            scoreTotal: 0,
+            scoreTurn: 0
         },
         isVirtual: true
     },
@@ -91,12 +131,20 @@ export const VPS: Player[] = [
             username: DRE_CHERRY,
             avatar: "CHERRY"
         },
+        score: {
+            scoreTotal: 0,
+            scoreTurn: 0
+        },
         isVirtual: true
     },
     {
         user: {
             username: PIRATE_PEAR,
             avatar: "PEAR"
+        },
+        score: {
+            scoreTotal: 0,
+            scoreTurn: 0
         },
         isVirtual: true
     }
@@ -105,7 +153,7 @@ export const VPS: Player[] = [
 
 export interface CustomMessage {
     startMatch: string,
-    endTurn: string,
+    endTurn: string[],
     hint: string
 }
 
@@ -115,7 +163,7 @@ export const INSERT_HINT: string = "_";
 // Used for unexpected error of not finding messages of a username in the map, should not happen.
 export const ERROR: CustomMessage = {
     startMatch: "The game is started.",
-    endTurn: "The turn is done.",
+    endTurn: ["The turn is done."],
     hint: "The hint is " + INSERT_HINT + "."
 }
 
@@ -124,7 +172,18 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
         MR_AVOCADO,
         {
             startMatch: "TODO",
-            endTurn: "TODO",
+            endTurn: [
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO"
+            ],
             hint: "TODO" + INSERT_HINT
         },
     ],
@@ -132,7 +191,18 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
         LORD_BANANA,
         {
             startMatch: "TODO",
-            endTurn: "TODO",
+            endTurn: [
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO"
+            ],
             hint: "TODO" + INSERT_HINT
         },
     ],
@@ -140,7 +210,18 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
         SGT_STRAWBERRY,
         {
             startMatch: "TODO",
-            endTurn: "TODO",
+            endTurn: [
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO"
+            ],
             hint: "TODO" + INSERT_HINT
         },
     ],
@@ -148,7 +229,18 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
         LADY_WATERMELON,
         {
             startMatch: "TODO",
-            endTurn: "TODO",
+            endTurn: [
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO"
+            ],
             hint: "TODO" + INSERT_HINT
         },
     ],
@@ -156,7 +248,18 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
         MASTER_GRAPE,
         {
             startMatch: "TODO",
-            endTurn: "TODO",
+            endTurn: [
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO"
+            ],
             hint: "TODO" + INSERT_HINT
         },
     ],
@@ -164,7 +267,18 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
         GENTLEMAN_KIWI,
         {
             startMatch: "TODO",
-            endTurn: "TODO",
+            endTurn: [
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO"
+            ],
             hint: "TODO" + INSERT_HINT
         },
     ],
@@ -172,7 +286,18 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
         MADAM_ORANGE,
         {
             startMatch: "TODO",
-            endTurn: "TODO",
+            endTurn: [
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO"
+            ],
             hint: "TODO" + INSERT_HINT
         },
     ],
@@ -180,7 +305,18 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
         SIR_PINEAPPLE,
         {
             startMatch: "TODO",
-            endTurn: "TODO",
+            endTurn: [
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO"
+            ],
             hint: "TODO" + INSERT_HINT
         },
     ],
@@ -188,15 +324,37 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
         LITTLE_APPLE,
         {
             startMatch: "TODO",
-            endTurn: "TODO",
+            endTurn: [
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO"
+            ],
             hint: "TODO" + INSERT_HINT
         },
     ],
     [
         MISS_LEMON,
         {
-            startMatch: "TODO",
-            endTurn: "TODO",
+            startMatch: "Buongiorno, I wish you guys a good game, the winner will get my beautiful lasagna.",
+            endTurn: [
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO"
+            ],
             hint: "TODO" + INSERT_HINT
         },
     ],
@@ -204,7 +362,18 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
         DRE_CHERRY,
         {
             startMatch: "TODO",
-            endTurn: "TODO",
+            endTurn: [
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO"
+            ],
             hint: "TODO" + INSERT_HINT
         },
     ],
@@ -212,7 +381,18 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
         PIRATE_PEAR,
         {
             startMatch: "TODO",
-            endTurn: "TODO",
+            endTurn: [
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO",
+                "TODO"
+            ],
             hint: "TODO" + INSERT_HINT
         },
     ],

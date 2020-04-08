@@ -1,15 +1,16 @@
 import { MatchMode } from "./matchMode";
 import PublicProfile from "./publicProfile";
+import Player from "./player";
+
+export const TIME_LIMIT_MIN: number = 30;   // 30 sec minimum
+export const TIME_LIMIT_MAX: number = 120;  // 2 min maximum
+export const SPRINT_BONUS_TIME: number = 15;// 15 sec in bonus
 
 export interface CreateMatch {
     nbRounds: number
     timeLimit: number /* in seconds */
     matchMode: MatchMode
 }
-export const NB_ROUNDS_MIN: number = 1; /* 30 sec minimum */
-export const NB_ROUNDS_MAX: number = 10;/* 2 min maximum */
-export const TIME_LIMIT_MIN: number = 30; /* 30 sec minimum */
-export const TIME_LIMIT_MAX: number = 120;/* 2 min maximum */
 
 export interface MatchInfos {
     matchId: string
@@ -27,18 +28,14 @@ export interface StartTurn {
 
 export interface EndTurn {
     currentRound: number
-    scores: Score[]/* username, score */
+    players: Player[]
     choices: string[]
-    drawer: string  // indicates if he is the drawer in FreeForAll and OneVsOne.
-                    // not used in SprintCoop and SprintSolo because the players are always guessing
-}
-export interface UpdateScore {
-    scoreTotal: number
-    scoreTurn: number
+    drawer: string  // indicates who is the drawer useful in FreeForAll
 }
 
-export interface Score {
-    username: string,
-    avatar: string,
-    updateScore: UpdateScore
+export interface UpdateSprint {
+    guess: number // number of guess
+    time: number // time updated
+    word: string // hidden word (with underscores)
+    players: Player[]
 }

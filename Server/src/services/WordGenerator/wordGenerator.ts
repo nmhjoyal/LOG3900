@@ -25,7 +25,7 @@ export default class RandomWordGenerator {
             liner.next();
         }
         const word: string = liner.next().toString();
-        return word;
+        return word.replace(new RegExp("\r"), "");     // removing \r
     }
 }
 

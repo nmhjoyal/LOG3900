@@ -1,13 +1,11 @@
 import Match from "./matchAbstract";
 import PublicProfile from "../../models/publicProfile";
 import ChatHandler from "../chatHandler";
-import { CreateMatch } from "../../models/match";
-import Player from "../../models/player";
+import { CreateMatch, EndTurn,} from "../../models/match";
 import { gameDB } from "../Database/gameDB";
 import { Game } from "../../models/drawPoint";
 import { Message } from "../../models/message";
 import Admin from "../../models/admin";
-import { Feedback } from "../../models/feedback";
 import { freeForAllSettings } from "../../models/matchMode";
 
 export default class FreeForAll extends Match {
@@ -16,13 +14,13 @@ export default class FreeForAll extends Match {
         super(matchId, user, createMatch, chatHandler, freeForAllSettings);
     }
 
-    public async startTurn(io: SocketIO.Server, socket: SocketIO.Socket, word: string, isVirtual: boolean): Promise<void> {
+    public async startTurn(io: SocketIO.Server, word: string): Promise<void> {
         this.currentWord = word;
-        this.drawing.reset(io);
-        if(isVirtual) {
+        io.in(this.matchId).emit("turn_started", this.createStartTurn(this.currentWord));
+        
+        if (this.drawer.isVirtual) {
             const game: Game = await gameDB.getGame(word);
-            this.currentWord = game.word;
-            io.in(this.matchId).emit("turn_started", this.createStartTurn(this.currentWord, false));
+            this.hints = game.clues;
             this.virtualDrawing.draw(io, game.drawing, game.level);
         } else {
             socket.emit("turn_started", this.createStartTurn(this.currentWord, true));
@@ -31,62 +29,53 @@ export default class FreeForAll extends Match {
         
         this.timer = Date.now();
         this.timeout = setTimeout(() => {
-            if(isVirtual) {
-                this.virtualDrawing.clear(io);
-            }
-            this.endTurn(io, false);
+            this.endTurn(io);
         }, this.timeLimit * 1000);
     }
 
-    protected async endTurn(io: SocketIO.Server, drawerLeft: boolean): Promise<void> {
-        clearTimeout(this.timeout);
-        this.virtualDrawing.clear(io);
-        let matchIsEnded: boolean = false;
+    public async endTurn(io: SocketIO.Server): Promise<void> {
+        this.reset(io);
 
-        if (!drawerLeft){
-            let oldDrawer: Player | undefined = this.getPlayer(this.drawer);
-            if (oldDrawer) {
-                this.assignDrawer(oldDrawer);
+        this.assignDrawer();
 
-                if (this.round == this.nbRounds) {
-                    matchIsEnded = true;
-                }
-            }
-        }
-
-        if (matchIsEnded) {
+        if (this.matchIsEnded()) {
             this.endMatch(io);
         } else {
-            this.endTurnGeneral(io);
+            const endTurn: EndTurn = this.createEndTurn();
+
+            if (this.currentWord) { // currentWord is undefined at the first endTurn
+                this.notifyWord(io);
+            }
+
+            io.in(this.matchId).emit("turn_ended", JSON.stringify(endTurn));
+            
+            this.resetScoresTurn();
+            this.currentWord = "";
+            
+            if (this.drawer.isVirtual) {
+                let word: string;
+                setTimeout(() => {
+                    this.startTurn(io, word);
+                }, 5000);
+                word = await gameDB.getRandomWord();
+            }
+            // else we wait for the drawer to send his choice of word in the "start_turn" event.
         }
     }
 
-    public guess(io: SocketIO.Server, guess: string, username: string): Feedback {
-        let feedback: Feedback = { status: false, log_message: "" };
+    public guessRight(io: SocketIO.Server, username: string): void {
+        const message: Message = Admin.createAdminMessage(username + " guessed the word.", this.matchId);
+        io.in(this.matchId).emit("new_message", JSON.stringify(message));
 
-        if (this.currentWord != "") {
-            if (this.drawer != username) {
-                if(guess == this.currentWord) {
-                    const message: Message = Admin.createAdminMessage(username + " guessed the word.", this.matchId);
-                    io.in(this.matchId).emit("new_message", JSON.stringify(message));
-        
-                    const score: number = Math.round((Date.now() - this.timer) / 1000) * 10;
-                    this.updateScore(username, score);
-                    this.updateScore(this.drawer, Math.round(score / this.players.length));
-        
-                    if(this.everyoneHasGuessed()) {
-                        this.endTurn(io, false);
-                    }
-                } else {
-                    feedback.log_message = "Your guess is wrong.";
-                }
-            } else {
-                feedback.log_message = "The player drawing is not supposed to guess.";
-            }
-        } else  {
-            feedback.log_message = "The word guessed is empty.";
+        const score: number = this.calculateScore();
+        this.updateScore(username, score);
+        if (!this.drawer.isVirtual) 
+            this.updateScore(this.drawer.user.username, Math.round(score / this.players.length));
+
+        io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
+
+        if(this.everyoneHasGuessed()) {
+            this.endTurn(io);
         }
-
-        return feedback;
     }
 }
