@@ -2,6 +2,7 @@ package com.example.thin_client.data.game
 
 import com.example.thin_client.data.model.MatchInfos
 
+
 object GameManager {
     var currentGameMode: MatchMode = MatchMode.FREE_FOR_ALL
     var isGameStarted = false

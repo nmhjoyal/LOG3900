@@ -11,13 +11,11 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.*
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.example.thin_client.R
-import com.example.thin_client.data.game.CreateMatch
-import com.example.thin_client.data.game.CreateMatchFeedback
-import com.example.thin_client.data.game.GameManager
+import com.example.thin_client.data.game.*
 import com.example.thin_client.data.game.GameManager.tabNames
-import com.example.thin_client.data.game.MatchMode
 import com.example.thin_client.data.model.MatchInfos
 import com.example.thin_client.data.rooms.JoinRoomFeedback
 import com.example.thin_client.data.rooms.RoomManager
@@ -28,6 +26,7 @@ import com.example.thin_client.ui.helpers.setOnClickListener
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_games_list.*
+import kotlinx.android.synthetic.main.game_item.*
 import java.util.*
 
 
@@ -45,7 +44,7 @@ class MatchList : Fragment() {
         viewpager.adapter = MyPagerAdapter(childFragmentManager)
         setupSocketEvents()
 
-        refresh_matches.setOnClickListener{
+        refresh_matches.setOnClickListener(DEFAULT_INTERVAL){
             SocketHandler.searchMatches()
         }
 
@@ -129,6 +128,7 @@ class MatchList : Fragment() {
     private fun showCreateMatchDialog(context: Context) {
         val alertBuilder = android.app.AlertDialog.Builder(context)
         alertBuilder.setTitle(R.string.create_match)
+
         val dialogView = layoutInflater.inflate(R.layout.dialog_create_match, null)
         alertBuilder.setView(dialogView)
         val gameSelectionSpinner = dialogView.findViewById<Spinner>(R.id.game_mode_selection)
@@ -150,6 +150,24 @@ class MatchList : Fragment() {
                 adapter.setDropDownViewResource(R.layout.spinner_item)
                 gameSelectionSpinner.adapter = adapter
             }
+
+        gameSelectionSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val timeTitle = dialogView.findViewById<TextView>(R.id.time_limit_title)
+                if (position == 0 || position == 1) {
+                    nbRoundsSpinner.visibility = View.GONE
+                    dialogView.findViewById<TextView>(R.id.nb_rounds_title).visibility = View.GONE
+                    timeTitle.text = resources.getText(R.string.prompt_time_limit)
+                } else {
+                    nbRoundsSpinner.visibility = View.VISIBLE
+                    dialogView.findViewById<TextView>(R.id.nb_rounds_title).visibility = View.VISIBLE
+                    timeTitle.text = resources.getText(R.string.prompt_time_limit_round)
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
 
         alertBuilder
             .setPositiveButton(R.string.start) { _, _ ->

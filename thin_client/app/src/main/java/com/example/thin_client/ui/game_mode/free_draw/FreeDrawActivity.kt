@@ -22,6 +22,8 @@ import com.example.thin_client.data.app_preferences.Preferences
 import com.example.thin_client.data.lifecycle.LoginState
 import com.example.thin_client.data.model.User
 import com.example.thin_client.server.SocketHandler
+import com.example.thin_client.ui.helpers.DEFAULT_INTERVAL
+import com.example.thin_client.ui.helpers.setOnClickListener
 import kotlinx.android.synthetic.main.free_draw_fragment.*
 import java.util.*
 
@@ -79,13 +81,13 @@ class FreeDrawActivity : AppCompatActivity() {
             showClearDialog()
         }))
 
-        save_button.setOnClickListener(({
+        save_button.setOnClickListener(DEFAULT_INTERVAL) {
             if (!PermissionHandler.hasStoragePermission(applicationContext)) {
                 PermissionHandler.requestStoragePermission(this)
             } else {
                 showSaveDialog(draw_view.getBitmap())
             }
-        }))
+        }
 
         red.setOnClickListener(({
             setColour(R.drawable.circle_red, R.color.color_red)

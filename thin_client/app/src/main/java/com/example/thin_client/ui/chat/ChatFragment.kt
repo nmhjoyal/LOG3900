@@ -24,7 +24,8 @@ import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.chatrooms.ChatRoomsFragment
 import com.example.thin_client.ui.chatrooms.InviteUserRow
-import com.example.thin_client.ui.game_mode.GameActivity
+import com.example.thin_client.ui.helpers.DEFAULT_INTERVAL
+import com.example.thin_client.ui.helpers.setOnClickListener
 import com.example.thin_client.ui.login.afterTextChanged
 import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
@@ -70,9 +71,9 @@ class ChatFragment : Fragment() {
         retreiveExistingMessages()
         setupSocketEvents()
 
-        back_button.setOnClickListener(({
+        back_button.setOnClickListener(DEFAULT_INTERVAL) {
             goBackToRooms()
-        }))
+        }
 
         send_button_chat.setOnClickListener {
             if (editText_chat.text.isNotBlank()) {
@@ -107,20 +108,20 @@ class ChatFragment : Fragment() {
             false
         })
 
-        leave_button.setOnClickListener(({
+        leave_button.setOnClickListener(DEFAULT_INTERVAL) {
             RoomManager.roomToRemove = roomID!!
             SocketHandler.leaveChatRoom(roomID!!)
             goBackToRooms()
-        }))
+        }
 
         editText_chat.afterTextChanged {
             send_button_chat.isEnabled = editText_chat.text.isNotBlank()
             send_guess.isEnabled = (editText_chat.text.isNotBlank() && GameManager.canGuess)
         }
 
-        invite_user_button.setOnClickListener(({
+        invite_user_button.setOnClickListener(DEFAULT_INTERVAL) {
             showInviteDialog()
-        }))
+        }
     }
 
     override fun onCreateView(
