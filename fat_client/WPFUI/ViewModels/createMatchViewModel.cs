@@ -15,11 +15,13 @@ namespace WPFUI.ViewModels
 
         private IEventAggregator _events;
         private ISocketHandler _socketHandler;
+        private IUserData userdata;
 
-        public createMatchViewModel(IEventAggregator events, ISocketHandler socketHandler)
+        public createMatchViewModel(IEventAggregator events, ISocketHandler socketHandler, IUserData userdata)
         {
             _events = events;
             _socketHandler = socketHandler;
+            this.userdata = userdata;
             this._socketHandler.onCreateMatch();
         }
         public void goBack()
@@ -28,8 +30,9 @@ namespace WPFUI.ViewModels
         }
         public void createMatch(MatchMode matchMode, int nbRounds, int timeLimit)
         {
-             CreateMatch createMatch = new CreateMatch(nbRounds, timeLimit, matchMode);
-             this._socketHandler.socket.Emit("create_match", JsonConvert.SerializeObject(createMatch));
+            CreateMatch createMatch = new CreateMatch(nbRounds, timeLimit, matchMode);
+            this._socketHandler.socket.Emit("create_match", JsonConvert.SerializeObject(createMatch));
+            this.userdata.matchMode = matchMode;
         }
     }
 }

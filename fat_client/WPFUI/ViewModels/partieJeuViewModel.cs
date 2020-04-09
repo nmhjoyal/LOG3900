@@ -104,7 +104,24 @@ namespace WPFUI.ViewModels
         public Dictionary<Stroke, int> strokes { get; set; }
         public IselectWordCommand _selectWordCommand { get; set; }
         public DrawingAttributes AttributsDessin { get; set; } = new DrawingAttributes();
-
+        public string MatchMode
+        {
+            get
+            {
+                switch (this._userData.matchMode)
+                {
+                    case Models.MatchMode.freeForAll:
+                        return "Free for all";
+                    case Models.MatchMode.oneVsOne:
+                        return "1 vs 1";
+                    case Models.MatchMode.sprintSolo:
+                        return "Solo sprint";
+                    case Models.MatchMode.sprintCoop:
+                        return "Coop sprint";
+                    default: return "";
+                }
+            }
+        }
         public string guessFeedBackSource
         {
             get { return _guessFeedBackSource; }

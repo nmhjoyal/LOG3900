@@ -14,6 +14,7 @@ namespace WPFUI.ViewModels
     {
         private IEventAggregator _events;
         private ISocketHandler _socketHandler;
+        private IUserData userdata;
         public BindableCollection<Match> matches;
 
         public BindableCollection<Match> Matches
@@ -25,10 +26,11 @@ namespace WPFUI.ViewModels
         }
         
        
-        public ChoseGameViewModel(IEventAggregator events, ISocketHandler socketHandler)
+        public ChoseGameViewModel(IEventAggregator events, ISocketHandler socketHandler, IUserData userdata)
         {
             _events = events;
             _events.Subscribe(this);
+            this.userdata = userdata;
             _socketHandler = socketHandler;
             this.matches = new BindableCollection<Match>();
             // this._socketHandler.onLobby(this.matches);
@@ -49,6 +51,7 @@ namespace WPFUI.ViewModels
         public void joinGame(string matchId)
         {
             this._socketHandler.socket.Emit("join_match", matchId);
+            this.userdata.matchMode = this.matches.Single(match => match.matchId == matchId).matchMode;
             // _events.PublishOnUIThread(new gameEvent());
         }
         public void createGame()

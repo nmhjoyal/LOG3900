@@ -116,7 +116,7 @@
 		<TextBlock FontSize="14" Grid.Row="5" TextAlignment="Center" Grid.Column="2" Text="{Binding timerContent}" Grid.ColumnSpan="5" VerticalAlignment="Center" Margin="0,0.8,8.8,1.2"/>
 		<TextBlock FontSize="14" Grid.Row="3" TextAlignment="Center" Grid.Column="7" Text="Round" Grid.ColumnSpan="2" Margin="0.2,0.2,9.4,10.2" Grid.RowSpan="2"/>
 		<TextBlock FontSize="14" Grid.Row="5" TextAlignment="Center" Grid.Column="7" Text="{Binding roundText}" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0.2,0.8,9.4,1.2"/>
-
+		<TextBlock FontSize="14" Grid.Row="3" TextAlignment="Center" Grid.Column="8" Text="{Binding MatchMode}" Grid.ColumnSpan="2" Margin="0.2,0.2,9.4,10.2" Grid.RowSpan="2"/>
 
 		<TextBlock FontSize="14" Grid.ColumnSpan="3" Grid.Row="3" TextAlignment="Center" Grid.Column="11" Text="Word To Guess" Grid.RowSpan="2"/>
 		<TextBlock FontSize="14" Grid.Row="4" TextAlignment="Center" Grid.Column="11" Text="{Binding currentWord}" 

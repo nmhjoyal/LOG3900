@@ -16,6 +16,7 @@ namespace WPFUI.Models
         string userName { get; set; } 
         string matchId { get; set; }
         int nbRounds { get; set; }
+        MatchMode matchMode { get; set; }
         void addJoinedRoom(Room room);
         void addMessage(Message message);
         void addPublicRoom(Room room);
