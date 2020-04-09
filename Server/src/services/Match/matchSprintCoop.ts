@@ -36,8 +36,8 @@ export default class SprintCoop extends Match {
         this.virtualDrawing.draw(io, game.drawing, this.gameLevel);
         
         this.timer = Date.now();
-        this.timeout = setTimeout(() => {
-            this.endMatch(io);
+        this.timeout = setTimeout(async () => {
+            await this.endMatch(io);
         }, this.timeLimit * 1000);
     }
 

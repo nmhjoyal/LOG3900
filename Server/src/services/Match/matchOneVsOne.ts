@@ -39,7 +39,7 @@ export default class OneVsOne extends Match {
         this.round++;
 
         if (this.matchIsEnded()) {
-            this.endMatch(io);
+            await this.endMatch(io);
         } else {
             const endTurn: EndTurn = this.createEndTurn();
 

@@ -37,9 +37,10 @@ class StatsDB {
         if(matchMode == MatchMode.sprintSolo) {
             await this.mongoDB.db("Stats").collection("stats").updateOne(
                 { username: players[0].user.username },
-                { score : { $max: players[0].score.scoreTotal } }
+                { $max: { score: players[0].score.scoreTotal } }
             );
         }
+        
         const winner: Player = players.reduce(
             function(winner, player) { 
                 return (player.score.scoreTotal > winner.score.scoreTotal) ? player : winner
@@ -54,12 +55,15 @@ class StatsDB {
             myScore: 0,
             playerNames: players.filter(player => !player.isVirtual).map(player => player.user.username)
         }
+        
         for(let player of players) {
-            matchHistory.myScore = player.score.scoreTotal;
-            await this.mongoDB.db("Stats").collection("stats").updateOne(
-                { username: player.user.username },
-                { $push: { matchesHistory : matchHistory } }
-            );
+            if (!player.isVirtual) {
+                matchHistory.myScore = player.score.scoreTotal;
+                await this.mongoDB.db("Stats").collection("stats").updateOne(
+                    { username: player.user.username },
+                    { $push: { matchesHistory : matchHistory } }
+                );
+            }
         }
     }
 
