@@ -59,7 +59,7 @@ namespace WPFUI.ViewModels
 
 		public void showStats()
 		{
-			BindableCollection<StatsClient> stats = JsonConvert.DeserializeObject<BindableCollection<StatsClient>>(this._socketHandler.TestGETWebRequest("/profile/stats/" + this._userData.userName).ToString());
+			StatsClient statsClient = JsonConvert.DeserializeObject<StatsClient>(this._socketHandler.TestGETWebRequest("/profile/stats/" + this._userData.userName + "/").ToString());
 		}
 		public string newConfirmedPassword
 		{
