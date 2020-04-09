@@ -387,8 +387,8 @@ export default abstract class Match {
         return Math.round(this.timeLimit - ((Date.now() - this.timer)/1000)); 
     }
 
-    protected calculateScore(): number {
-        return Math.round(this.timeLeft()) * 10; // + (1-(nbAyantdevine/nbhumanPlayer)) * CONSTANTE (100)
+    protected calculateScore(isSprint: boolean): number {
+        return Math.round(this.timeLeft()) * 10 + ((isSprint) ? 0 : (1 - (this.getPlayerGuessCount()/this.getNbHumanPlayers())) * 100);
     }
 
     protected assignDrawer() {
@@ -431,6 +431,17 @@ export default abstract class Match {
 
     private getPublicProfile(privateProfile: PrivateProfile): PublicProfile {
         return { username: privateProfile.username, avatar: privateProfile.avatar };
+    }
+
+    protected getPlayerGuessCount(): number {
+        let playerGuessCount: number = 0;
+
+        for (let player of this.players) {
+            if (player.score.scoreTurn != 0 && player != this.drawer) 
+                playerGuessCount++;
+        }
+
+        return playerGuessCount;
     }
 
     protected getNbVirtualPlayers(): number {

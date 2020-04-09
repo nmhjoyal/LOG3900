@@ -60,7 +60,7 @@ export default class SprintCoop extends Match {
         const message: Message = Admin.createAdminMessage(username + " guessed the word.", this.matchId);
         io.in(this.matchId).emit("new_message", JSON.stringify(message));
 
-        const score: number = this.calculateScore();
+        const score: number = this.calculateScore(true);
         this.updateTeamScore(score);
 
         io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
