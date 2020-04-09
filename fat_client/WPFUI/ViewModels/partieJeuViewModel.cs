@@ -301,6 +301,11 @@ namespace WPFUI.ViewModels
             _events.PublishOnUIThread(new goBackMainEvent());
         }
 
+        public void goToGameView()
+        {
+            _events.PublishOnUIThread(new joinGameEvent());
+        }
+
         public string username
         {
             get { return _userData.userName; }

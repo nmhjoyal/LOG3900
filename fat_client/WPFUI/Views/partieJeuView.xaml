@@ -278,7 +278,7 @@
 					</Grid>
 				</Border>
 			</Grid>
-			<Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="13" Grid.RowSpan="13" Visibility="Hidden" Name="endMatchBox" Margin="0.4,30,0.4,0">
+			<Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="13" Grid.RowSpan="13" Visibility="Visible" Name="endMatchBox" Margin="0.4,30,0.4,0">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="*"/>
 					<ColumnDefinition Width="1.5*"/>
@@ -300,6 +300,7 @@
 						<Grid.RowDefinitions>
 							<RowDefinition Height="*"/>
 							<RowDefinition Height="7*"/>
+							<RowDefinition Height="*"/>
 							<RowDefinition Height="*"/>
 						</Grid.RowDefinitions>
 						<StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1">
@@ -324,6 +325,14 @@
 
 						<TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding winnerMessage}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="22"
 							       Margin="0,0,0,20" Foreground="#FFFFE12E"/>
+						<StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="2">
+							<Button Content="Join another game" x:Name="goToGameView"
+									BorderBrush="{x:Null}" Background="#FF01C853" Foreground="White">
+							</Button>
+							<Button Content="Return to menu" Margin="10,0,0,0" Background="#FFDF1317" x:Name="goBack"
+									BorderBrush="{x:Null}" Foreground="White">
+							</Button>
+						</StackPanel>
 
 					</Grid>
 				</Border>
