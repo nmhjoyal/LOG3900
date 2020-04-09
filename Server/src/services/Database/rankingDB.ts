@@ -46,17 +46,16 @@ class RankingDB {
                                         .find().sort({ score: -1 }).toArray();
         
         const ranks: RankClient[] = [];
-        const limit: number = Math.max(ranksDB.length, 10);
-        for (let i: number = 0; i < limit; i++) {
-            const rank: RankClient = { username: ranksDB[i].username, score: ranksDB[i].score, pos: i };
+        for (let i: number = 0; i <  Math.min(ranksDB.length, 10); i++) {
+            const rank: RankClient = { username: ranksDB[i].username, score: ranksDB[i].score, pos: i + 1 };
             ranks.push(rank);
         }
         
         // Rank of the requester.
-        const rank: Rank | undefined = ranksDB.find((rank: Rank) => rank.username == username); 
-        if (rank) {
-            const rankClient: RankClient = { username: rank.username, score: rank.score, pos: ranksDB.indexOf(rank) };
-            ranks.push(rankClient);
+        const rankDB: Rank | undefined = ranksDB.find((rank: Rank) => rank.username == username); 
+        if (rankDB) {
+            const rank: RankClient = { username: rankDB.username, score: rankDB.score, pos: ranksDB.indexOf(rankDB) + 1 };
+            ranks.push(rank);
         }
         return ranks;
     }
