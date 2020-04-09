@@ -557,6 +557,7 @@
     <Content Include="Resources\pineapple.svg" />
     <Resource Include="Resources\strawberry.png" />
     <Resource Include="Resources\questions.gif" />
+    <Resource Include="Resources\settings.png" />
     <Content Include="Resources\strawberry.svg" />
     <Resource Include="Resources\watermelon.png" />
     <Resource Include="Resources\trophy.gif" />
