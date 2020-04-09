@@ -222,7 +222,7 @@ export default abstract class Match {
                         this.guessRight(io, username);
                         feedback.status = true;
                     } else {
-                        this.decrementGuessCounter();
+                        this.decrementGuessCounter(io);
                         feedback.log_message = "Your guess is wrong.";
                     }
                 } else {
@@ -330,9 +330,16 @@ export default abstract class Match {
         }
     }
 
-    protected decrementGuessCounter(): void {
-        if (this.mode == MatchMode.sprintCoop || this.mode == MatchMode.sprintSolo)
+    protected decrementGuessCounter(io: SocketIO.Server): void {
+        if (this.mode == MatchMode.sprintCoop || this.mode == MatchMode.sprintSolo) {
             this.guessCounter--;
+            if (this.noMoreGuess())
+                this.endTurn(io);
+        }
+    }
+
+    protected noMoreGuess(): boolean {
+        return this.guessCounter == -1;
     }
 
     protected matchIsEnded(): boolean {
