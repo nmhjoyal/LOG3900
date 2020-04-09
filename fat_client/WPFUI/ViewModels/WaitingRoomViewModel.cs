@@ -33,7 +33,9 @@ namespace WPFUI.ViewModels
             _events.Subscribe(this);
             _socketHandler = socketHandler;
             _userData = userdata;
-            userdata.messages = new BindableCollection<Models.Message>(userdata.selectableJoinedRooms.Single<SelectableRoom>(i => i.id == _userData.matchId).room.messages);
+            userdata.messages = new BindableCollection<Models.Message>(userdata.currentGameRoom.messages);
+            userdata.currentRoomId = userdata.matchId;
+            _events.PublishOnUIThread(new refreshMessagesEvent(userdata.messages, userdata.currentRoomId));
             this._messages = userdata.messages;
             this.players = new BindableCollection<Player>();
             this._socketHandler.onWaitingRoom(this.players);

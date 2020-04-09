@@ -90,7 +90,7 @@
 			</Grid.ColumnDefinitions>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="0.1*"/>
-				<RowDefinition Height="30"/>
+				<RowDefinition Height="0"/>
 				<RowDefinition Height="10"/>
 				<RowDefinition Height="20"/>
 				<RowDefinition Height="10"/>
@@ -107,7 +107,7 @@
 
 			</Grid.RowDefinitions>
 
-			<Border Grid.Column="1" Grid.ColumnSpan="13" Grid.Row="1" Grid.RowSpan="5" Background="#FFE1E7E7" Margin="0.4,30,0.4,0.2"/>
+			<Border Grid.Column="1" Grid.ColumnSpan="13" Grid.Row="2" Grid.RowSpan="4" Background="#FFE1E7E7" />
 
 
 
@@ -124,7 +124,7 @@
 
 
 			<!-- Start of the xaml of the drawing section -->
-			<Grid Grid.Column="8" Grid.Row="1" Grid.RowSpan="10" Grid.ColumnSpan="2" Margin="9.2,30,0.4,0.2" >
+			<Grid Grid.Column="9" Grid.Row="2" Grid.RowSpan="10" Grid.ColumnSpan="2">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="61"/>
 					<RowDefinition Height="6*"/>
@@ -324,8 +324,8 @@
 						</ScrollViewer>
 
 						<TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding winnerMessage}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="22"
-							       Margin="0,0,0,20" Foreground="#FFFFE12E"/>
-						<StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="2">
+							       Margin="0,10,0,10" Foreground="#FFFFE12E"/>
+						<StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="3" Margin="0,0,0,10">
 							<Button Content="Join another game" x:Name="goToGameView"
 									BorderBrush="{x:Null}" Background="#FF01C853" Foreground="White">
 							</Button>
