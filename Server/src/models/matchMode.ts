@@ -53,6 +53,19 @@ export class MatchInstance {
                 return OneVsOneSettings.NB_ROUNDS_MIN;
         }
     }
+
+    public static getModeName(matchMode: MatchMode): string {
+        switch (matchMode) {
+            case MatchMode.freeForAll:
+                return "FreeForAll";
+            case MatchMode.sprintSolo:
+                return "SprintSolo";
+            case MatchMode.sprintCoop:
+                return "SprintCoop";
+            case MatchMode.oneVsOne:
+                return "OneVsOne";
+        }
+    }
 }
 
 export interface MatchSettings {

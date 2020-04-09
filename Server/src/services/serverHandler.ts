@@ -12,6 +12,7 @@ import MatchHandler from "./matchHandler";
 import RandomMatchIdGenerator from "./IdGenerator/idGenerator";
 import { CreateMatch } from "../models/match";
 import { StylusPoint, Stroke } from "../models/drawPoint";
+import { statsDB } from "./Database/statsDB";
 
 class ServerHandler {
     public users: Map<string, PrivateProfile>;
@@ -34,6 +35,7 @@ class ServerHandler {
                 if(this.isConnected(signIn.username)) {
                     log_message = SignInStatus.AlreadyConnected
                 } else {
+                    statsDB.updateConnectionStats(user.username);
                     this.users.set(socket.id, user);
                     signed_in = true;
                     log_message = SignInStatus.SignIn;
@@ -61,7 +63,7 @@ class ServerHandler {
         let status: boolean = false;
         let log_message: SignOutStatus = SignOutStatus.Error;
         if(user) {
-
+            statsDB.updateDisconnectionStats(user.username);
             // TEMPORARY
             this.matchHandler.leaveFreeDrawTestRoom(io, socket);
             this.matchHandler.leaveMatch(io, socket, this.getUser(socket.id));
@@ -263,8 +265,8 @@ class ServerHandler {
         this.matchHandler.startTurn(io, word, this.getUser(socket.id));
     }
     
-    public guess(io: SocketIO.Server, socket: SocketIO.Socket, guess: string): Feedback {
-        return this.matchHandler.guess(io, guess, this.getUser(socket.id));
+    public guess(io: SocketIO.Server, socket: SocketIO.Socket, guess: string): void {
+        this.matchHandler.guess(io, socket, guess, this.getUser(socket.id));
     }
 
     public stroke(socket: SocketIO.Socket, stroke: Stroke): void {
