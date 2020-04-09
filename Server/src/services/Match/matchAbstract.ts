@@ -20,7 +20,7 @@ export default abstract class Match {
     public matchId: string;
     public isEnded: boolean;
     public players: Player[]; /* socketid, Player */
-    protected mode: number;
+    public mode: number;
     protected nbRounds: number;
     protected timeLimit: number;
     protected hints: string[];
@@ -42,6 +42,8 @@ export default abstract class Match {
     protected virtualDrawing: VirtualDrawing;
     protected virtualPlayer: VirtualPlayer;
     protected vp: string;
+    protected gameLevel: Level;
+    protected guessCounter: number;
 
     // Match methods
     public async abstract startTurn(io: SocketIO.Server, chosenWord: string): Promise<void>;
@@ -59,6 +61,7 @@ export default abstract class Match {
         this.chatHandler = chatHandler;
         this.ms = matchSettings;
         this.vp = "";
+        this.currentWord = "";
         this.virtualPlayer = new VirtualPlayer();
     }
 
@@ -74,7 +77,7 @@ export default abstract class Match {
             if (this.players.length < this.ms.MAX_NB_PLAYERS) {
                 if (this.getNbHumanPlayers() < this.ms.MAX_NB_HP) {
                     joinRoomFeedback = await this.chatHandler.joinChatRoom(io, socket, this.matchId, user);
-                    this.players.push(this.createPlayer(user));
+                    this.players.push(this.createPlayer(this.getPublicProfile(user)));
                     io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
                     joinRoomFeedback.feedback.log_message = "You joined the match.";
                 } else {
@@ -102,7 +105,7 @@ export default abstract class Match {
                         this.endTurn(io);
                     }
                 } else {
-                    this.endMatch(io);
+                    io.in(this.matchId).emit("unexpected_leave");
                     deleteMatch = true;
                 }
             } else {
@@ -205,33 +208,40 @@ export default abstract class Match {
         return startMatchFeedback;
     }
 
-    public guess(io: SocketIO.Server, guess: string, username: string): Feedback {
+    public guess(io: SocketIO.Server, socket: SocketIO.Socket, guess: string, username: string): void {
         let feedback: Feedback = { status: false, log_message: "" };
         const drawerUsername: string = this.drawer.user.username;
 
         if (this.currentWord != "") {
-            if (username != drawerUsername) {
-                if(guess.toUpperCase() == this.currentWord.toUpperCase()) {
-                    // Depends on the instance
-                    this.guessRight(io, username); 
-                    feedback.status = true;
+            if (guess != "") {
+                if (username != drawerUsername) {
+                    if(guess.toUpperCase() == this.currentWord.toUpperCase()) {
+                        // Depends on the instance
+                        this.guessRight(io, username);
+                        feedback.status = true;
+                    } else {
+                        this.decrementGuessCounter(io);
+                        feedback.log_message = "Your guess is wrong.";
+                    }
                 } else {
-                    feedback.log_message = "Your guess is wrong.";
+                    feedback.log_message = "The player drawing is not supposed to guess.";
                 }
-            } else {
-                feedback.log_message = "The player drawing is not supposed to guess.";
+            } else  {
+                feedback.log_message = "The word guessed is empty.";
             }
-        } else  {
-            feedback.log_message = "The word guessed is empty.";
+        } else {
+            feedback.log_message = "You can not guess when the round is not started.";
         }
-
-        return feedback;
+   
+        (this.mode == MatchMode.sprintCoop) ? 
+            io.in(this.matchId).emit("guess_res", JSON.stringify(feedback)) :
+            socket.emit("guess_res", JSON.stringify(feedback));
     }
 
-    protected endMatch(io: SocketIO.Server): void {
+    protected async endMatch(io: SocketIO.Server): Promise<void> {
         // compile game stats for the players and the standings.
-        rankingDB.updateRanks(this.players, this.mode);
-        statsDB.updateMatchStats(this.players, this.mode, this.startTime);
+        await rankingDB.updateRanks(this.players, this.mode);
+        await statsDB.updateMatchStats(this.players, this.mode, this.startTime);
 
         this.notifyWord(io);
         // notify everyone that the game is ended.
@@ -318,6 +328,18 @@ export default abstract class Match {
         }
     }
 
+    protected decrementGuessCounter(io: SocketIO.Server): void {
+        if (this.mode == MatchMode.sprintCoop || this.mode == MatchMode.sprintSolo) {
+            this.guessCounter--;
+            if (this.noMoreGuess())
+                this.endTurn(io);
+        }
+    }
+
+    protected noMoreGuess(): boolean {
+        return this.guessCounter == -1;
+    }
+
     protected matchIsEnded(): boolean {
         return this.round == this.nbRounds + 1;
     }
@@ -359,23 +381,12 @@ export default abstract class Match {
         }
     }
 
-    protected getNbGuesses(difficulty: Level): number {
-        switch (difficulty) {
-            case Level.Easy:
-                return 7;
-            case Level.Medium:
-                return 5;
-            case Level.Hard:
-                return 3;
-        }
-    }
-
     protected timeLeft(): number {
         return Math.round(this.timeLimit - ((Date.now() - this.timer)/1000)); 
     }
 
-    protected calculateScore(): number {
-        return Math.round(this.timeLeft()) * 10; // + (1-(nbAyantdevine/nbhumanPlayer)) * CONSTANTE (100)
+    protected calculateScore(isSprint: boolean): number {
+        return Math.round(this.timeLeft()) * 10 + ((isSprint) ? 0 : (1 - (this.getPlayerGuessCount()/this.getNbHumanPlayers())) * 100);
     }
 
     protected assignDrawer() {
@@ -414,6 +425,21 @@ export default abstract class Match {
                 break;
             }
         }
+    }
+
+    private getPublicProfile(privateProfile: PrivateProfile): PublicProfile {
+        return { username: privateProfile.username, avatar: privateProfile.avatar };
+    }
+
+    protected getPlayerGuessCount(): number {
+        let playerGuessCount: number = 0;
+
+        for (let player of this.players) {
+            if (player.score.scoreTurn != 0 && player != this.drawer) 
+                playerGuessCount++;
+        }
+
+        return playerGuessCount;
     }
 
     protected getNbVirtualPlayers(): number {
