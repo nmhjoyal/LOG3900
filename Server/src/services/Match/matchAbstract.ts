@@ -236,8 +236,8 @@ export default abstract class Match {
         }
    
         (this.mode == MatchMode.sprintCoop) ? 
-            io.in(this.matchId).emit("gues_res", JSON.stringify(feedback)) :
-            socket.emit("gues_res", JSON.stringify(feedback));
+            io.in(this.matchId).emit("guess_res", JSON.stringify(feedback)) :
+            socket.emit("guess_res", JSON.stringify(feedback));
     }
 
     protected async endMatch(io: SocketIO.Server): Promise<void> {
