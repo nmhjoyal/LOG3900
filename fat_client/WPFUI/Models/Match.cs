@@ -240,7 +240,7 @@ namespace WPFUI.Models
         {
             if(!isDrawer)
             {
-                this.word = startTurn.word;
+                this.word = string.Concat(startTurn.word.Select(letter => letter + " "));
             }
             this.timeLimit = startTurn.timeLimit;
         }

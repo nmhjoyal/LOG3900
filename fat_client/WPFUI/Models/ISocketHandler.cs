@@ -30,9 +30,11 @@ namespace WPFUI.Models
         void offWaitingRoom();
 
         void onMatch(StartTurn startTurn, EndTurn endTurn);
+
+        void offMatch();
         void sendMessage();
         void SignOut();
-        void TestGETWebRequest(string request);
+        Object TestGETWebRequest(string request);
         void TestPOSTWebRequest(object obj, string url);
     }
 }

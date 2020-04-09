@@ -8,12 +8,12 @@ namespace WPFUI.Models
 {
     public class Ranking
     {
-        private int _position;
+        private int _pos;
 
-        public int position
+        public int pos
         {
-            get { return _position; }
-            set { _position = value; }
+            get { return _pos; }
+            set { _pos = value; }
         }
 
         private string _username;
@@ -24,10 +24,25 @@ namespace WPFUI.Models
             set { _username = value; }
         }
 
-        public Ranking(string username, int position)
+        private int _score;
+        public int score
+        {
+            get { return _score; }
+            set { _score = value; }
+        }
+
+        public Ranking(string username, int pos, int score)
         {
             _username = username;
-            _position = position;
+            _pos = pos;
+            _score = score;
+        }
+
+        public void set(Ranking ranking)
+        {
+            this.username = ranking.username;
+            this.pos = ranking.pos;
+            this.score = ranking.score;
         }
     }
 }
