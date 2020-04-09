@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,81 +14,50 @@ namespace WPFUI.ViewModels
     {
         private IEventAggregator _events;
         private ISocketHandler _socketHandler;
-
-        private BindableCollection<Ranking> _soloPos;
-
-        public BindableCollection<Ranking> soloPos
+        private Ranking ranking;
+        public Ranking Ranking
         {
-            get { return _soloPos; }
-            set { _soloPos = value; }
+            get { return this.ranking; }
+        }
+        private BindableCollection<Ranking> rankings;
+        public BindableCollection<Ranking> Rankings
+        {
+            get { return this.rankings; }
         }
 
-        private BindableCollection<Ranking> _vs1Pos;
-
-        public BindableCollection<Ranking> vs1Pos
+        private int mode;
+        public int Mode
         {
-            get { return _vs1Pos; }
-            set { _vs1Pos = value; }
+            get { return this.mode; }
+            set { this.mode = value;  this.update(mode); }
         }
 
-        private BindableCollection<Ranking> _inversedPos;
+        private IUserData userdata;
 
-        public BindableCollection<Ranking> inversedPos
+        public ClassementViewModel(IEventAggregator events, ISocketHandler socketHandler, IUserData userdata)
         {
-            get { return _inversedPos; }
-            set { _inversedPos = value; }
-        }
-
-        private BindableCollection<Ranking> _coopPos;
-
-        public BindableCollection<Ranking> coopPos
-        {
-            get { return _coopPos; }
-            set { _coopPos = value; }
-        }
-
-        private BindableCollection<Ranking> _solo2Pos;
-
-        public BindableCollection<Ranking> solo2pos
-        {
-            get { return _solo2Pos; }
-            set { _solo2Pos = value; }
-        }
-
-
-        public ClassementViewModel(IEventAggregator events, ISocketHandler socketHandler)
-        {
-            _soloPos = new BindableCollection<Ranking>();
-            _vs1Pos = new BindableCollection<Ranking>();
-            _inversedPos = new BindableCollection<Ranking>();
-            _coopPos = new BindableCollection<Ranking>();
-            _solo2Pos = new BindableCollection<Ranking>();
-
-            getFakeScores();
+            // getFakeScores();
 
             _socketHandler = socketHandler;
             _events = events;
+            this.userdata = userdata;
+            this.ranking = new Ranking("", 0, 0);
+            this.rankings = new BindableCollection<Ranking>();
+            this.mode = 0;
+            this.update(this.mode);
+        }
 
+        public void update(int index)
+        {
+            BindableCollection<Ranking> new_rankings = JsonConvert.DeserializeObject<BindableCollection<Ranking>>(this._socketHandler.TestGETWebRequest("/profile/rank/" + this.userdata.userName + "/" + index).ToString());
+            this.rankings.Clear();
+            this.ranking.set(new_rankings[new_rankings.Count - 1]);
+            this.rankings.AddRange(new_rankings.Take(new_rankings.Count - 1));
+            NotifyOfPropertyChange(null);
         }
         public void goBack()
         {
             _events.PublishOnUIThread(new goBackMainEvent());
-        }
-
-        public void getFakeScores()
-        {
-            soloPos.Add(new Ranking("karima", 1));
-            soloPos.Add(new Ranking("nicole", 2));
-            soloPos.Add(new Ranking("hubert", 3));
-            soloPos.Add(new Ranking("olivierG", 4));
-            soloPos.Add(new Ranking("sebG", 5));
-            soloPos.Add(new Ranking("log3000", 6));
-            soloPos.Add(new Ranking("log2410", 7));
-            soloPos.Add(new Ranking("log2610", 8));
-            soloPos.Add(new Ranking("tanguy", 9));
-            soloPos.Add(new Ranking("covid-19", 10));
-            soloPos.Add(new Ranking("h1n1", 11));
-            soloPos.Add(new Ranking("vacheFolle", 12));
         }
     }
 

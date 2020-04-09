@@ -52,7 +52,7 @@ namespace WPFUI.Views
             Console.WriteLine(JsonConvert.SerializeObject(message));
             if (((dynamic)message.EndTurnFeedBack).nextIsYou)
             {
-                roundFinishedMessage.Text = "Round " + ((dynamic)message.EndTurnFeedBack).currentRound + " finished !";
+                roundFinishedMessage.Text = "Round " + ((dynamic)message.EndTurnFeedBack).currentRound;
                 nextPlayerMessage.Text = "Next player to chose is " + ((dynamic)message.EndTurnFeedBack).drawer;
                 endTurnBox.Visibility = Visibility.Visible;
                 await Task.Delay(3000);
@@ -64,7 +64,7 @@ namespace WPFUI.Views
 
             } else
             {
-                roundFinishedMessage.Text = "Round " + ((dynamic)message.EndTurnFeedBack).currentRound + " finished !";
+                roundFinishedMessage.Text = "Round " + ((dynamic)message.EndTurnFeedBack).currentRound;
                 nextPlayerMessage.Text = "Next player to chose is " + ((dynamic)message.EndTurnFeedBack).drawer;
                 endTurnBox.Visibility = Visibility.Visible;
                 drawingEditingPanel.Visibility = Visibility.Collapsed;

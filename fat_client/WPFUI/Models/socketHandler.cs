@@ -240,9 +240,9 @@ namespace WPFUI.Models
             }
         }
 
-        public void TestGETWebRequest(string request)
+        public Object TestGETWebRequest(string url)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000/user/" + request);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000" + url);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "GET";
 
@@ -250,7 +250,8 @@ namespace WPFUI.Models
             using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
             {
                 var result = streamReader.ReadToEnd();
-                Console.WriteLine(result);
+                // Console.WriteLine(result);
+                return result;
             }
         }
         public void onDrawing(StrokeCollection Traits, Dictionary<Stroke, int> strokes)
@@ -478,6 +479,16 @@ namespace WPFUI.Models
             });
         }
 
+        public void offWaitingRoom()
+        {
+            this.socket.Off("update_players");
+            this.socket.Off("match_left");
+            this.socket.Off("vp_added");
+            this.socket.Off("vp_removed");
+            this.socket.Off("match_started");
+            this.socket.Off("turn_ended");
+        }
+
         public void onMatch(StartTurn startTurn, EndTurn endTurn)
         {
             this.socket.On("turn_ended", (new_endTurn) =>
@@ -503,7 +514,7 @@ namespace WPFUI.Models
                 UpdateSprint json = JsonConvert.DeserializeObject<UpdateSprint>(new_update_sprint.ToString());
                 startTurn.word = json.word;
                 startTurn.timeLimit = json.time;
-                endTurn.players = json.players;
+                endTurn.players = new BindableCollection<Player>(json.players.OrderByDescending(i => i.ScoreTotal));
                 // json.guess TODO
                 _events.PublishOnUIThread(new startTurnRoutineEvent(startTurn.timeLimit));
             });
@@ -523,14 +534,13 @@ namespace WPFUI.Models
             });
         }
 
-        public void offWaitingRoom()
+        public void offMatch()
         {
-            this.socket.Off("update_players");
-            this.socket.Off("match_left");
-            this.socket.Off("vp_added");
-            this.socket.Off("vp_removed");
-            this.socket.Off("match_started");
             this.socket.Off("turn_ended");
+            this.socket.Off("turn_started");
+            this.socket.Off("update_sprint");
+            this.socket.Off("guess_res");
+            this.socket.Off("match_ended");
         }
     }
 

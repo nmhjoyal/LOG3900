@@ -369,7 +369,7 @@ namespace WPFUI.ViewModels
             foreach (dynamic score in _turnScores)
             {
                 score.position = rank + ".";
-                score.score = "+" + score.score;
+                score.score = ": +" + score.score + " points";
                 rank++;
             }
 
@@ -505,7 +505,8 @@ namespace WPFUI.ViewModels
             int rank = 1;
             foreach (dynamic score in _matchScores)
             {
-                score.position = rank;
+                score.position = rank + ".";
+                score.score = ": " + score.score + " points";
                 rank++;
             }
 

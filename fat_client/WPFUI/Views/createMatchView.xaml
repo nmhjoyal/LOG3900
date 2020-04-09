@@ -44,6 +44,8 @@
             <TextBlock FontSize="14" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Number of rounds:" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="5"/>
         </Border>
 		<ComboBox Width="auto" Grid.Column="2" Grid.Row="5"  Name="roundcomboBox" Margin="10,0,10,0">
+            <ComboBoxItem Content="1"/>
+            <ComboBoxItem Content="2"/>
             <ComboBoxItem Content="3"/>
             <ComboBoxItem Content="4"/>
             <ComboBoxItem Content="5"/>

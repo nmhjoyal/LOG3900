@@ -46,11 +46,11 @@
         <Border Background="#018677" BorderThickness="5" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="3" CornerRadius="10">
             <TextBlock FontSize="14" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Choose the mode" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="3"/>
         </Border>
-        <ComboBox Grid.ColumnSpan="4" Grid.Column="5" Grid.Row="3"  Name="comboBox"  Width="200">
+        <ComboBox Grid.ColumnSpan="4" Grid.Column="5" Grid.Row="3"  Name="comboBox"  Width="200" SelectedIndex ="{Binding Mode}">
             <ComboBoxItem Content="Free For All"/>
+            <ComboBoxItem Content="Sprint solo"/>
+            <ComboBoxItem Content="Sprint coop"/>
             <ComboBoxItem Content="1 vs 1"/>
-            <ComboBoxItem Content="Mode 3"/>
-            <ComboBoxItem Content="Mode 4"/>
         </ComboBox>
         <Border BorderBrush="Black" BorderThickness="4" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="9" Grid.RowSpan="5"/>
         <Border BorderBrush="Black" BorderThickness="2" Grid.Column="2" Grid.Row="6" Grid.ColumnSpan="7" Grid.RowSpan="3"/>
@@ -59,6 +59,10 @@
        
         <Border Background="#D6EFE9" BorderBrush="Black" BorderThickness="3" Grid.Column="2" Grid.Row="6" Grid.ColumnSpan="7" Grid.RowSpan="1"/>
         <Border BorderBrush="Black" BorderThickness="3" Grid.Column="1" Grid.Row="11" Grid.ColumnSpan="9" />
+
+        <TextBlock Grid.Column="2" Grid.Row="11" Text="{Binding Ranking.pos}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Center"></TextBlock>
+        <TextBlock Grid.Column="5" Grid.Row="11" Text="{Binding Ranking.username}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Center"></TextBlock>
+        <TextBlock Grid.Column="8" Grid.Row="11" Text="{Binding Ranking.score}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Center"></TextBlock>
        
         <Button  x:Name="goBack"  Grid.ColumnSpan="2" Grid.Column="8" Grid.Row="1" MaxWidth="120" HorizontalAlignment="Right"   Background="#D81A60" BorderBrush="#D81A60">
             <StackPanel Orientation="Horizontal">
@@ -67,52 +71,43 @@
             </StackPanel>
         </Button>
 
-        <ItemsControl Grid.Column="2" Grid.Row="8" x:Name="soloPos" FontSize="16">
+        <ItemsControl ItemsSource="{Binding Rankings}" Grid.Column="2" Grid.Row="8" FontSize="16">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding position}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
-                            
+                            <TextBlock Text="{Binding pos}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+
                         </StackPanel>
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <ItemsControl Grid.Column="2" Grid.Row="8" x:Name="vs1Pos" FontSize="16">
+        <ItemsControl ItemsSource="{Binding Rankings}" Grid.Column="5" Grid.Row="8" FontSize="16">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
                         <StackPanel Orientation="Horizontal">
-                            
-                            <Image Source="account_circle_grey_72x72.png" MaxHeight="20" VerticalAlignment="Center" Margin="0,0,2,0"></Image>
-                            
+                            <TextBlock Text="{Binding username}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+
                         </StackPanel>
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <ItemsControl Grid.Column="2" Grid.Row="8" x:Name="inversedPos" FontSize="16">
+        <ItemsControl ItemsSource="{Binding Rankings}" Grid.Column="8" Grid.Row="8" FontSize="16">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
                         <StackPanel Orientation="Horizontal">
-       
-                            <TextBlock Text="{Binding username}" Foreground="#FF8AD63E" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding score}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+
                         </StackPanel>
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-
-
-
-
-
-
-
-
     </Grid>
 </UserControl>
