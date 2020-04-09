@@ -83,41 +83,153 @@
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="10" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
             <TextBlock Text="Username:"/>
-            <TextBlock x:Name="olduserName" Width="200" Foreground="#FF66CC00" Margin="2,0,0,0"/>
+            <ItemsControl ItemsSource="{Binding StatsClient}" FontSize="16">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding username}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </StackPanel>
 
         <StackPanel Grid.Column="1" Grid.Row="11" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
             <TextBlock Text="Match Count:"/>
-            <TextBlock  x:Name="matchCount" Width="200" Foreground="#FF66CC00" Margin="2,0,0,0"/>
+            <ItemsControl ItemsSource="{Binding StatsClient}" FontSize="16">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding matchCount}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </StackPanel>
 
         <StackPanel Grid.Column="1" Grid.Row="12" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
             <TextBlock Text="Victory Percentage:"/>
-            <TextBlock x:Name="victoryPercentage" Width="200" Foreground="#FF66CC00" Margin="2,0,0,0"/>
+            <ItemsControl ItemsSource="{Binding StatsClient}" FontSize="16">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding victoryPerc}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </StackPanel>
 
         <StackPanel Grid.Column="1" Grid.Row="13" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
             <TextBlock Text="Average Time:"/>
-            <TextBlock x:Name="timeAvg" Width="200" Foreground="#FF66CC00" Margin="2,0,0,0"/>
+            <ItemsControl ItemsSource="{Binding StatsClient}" FontSize="16">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding averageTime}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </StackPanel>
 
         <StackPanel Grid.Column="1" Grid.Row="14" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
             <TextBlock Text="Total Time:"/>
-            <TextBlock x:Name="timeTotal" Width="130" Foreground="#FF66CC00" Margin="2,0,0,0"/>
+            <ItemsControl ItemsSource="{Binding StatsClient}" FontSize="16">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding totalTime}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </StackPanel>
 
         <StackPanel Grid.Column="1" Grid.Row="15" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
             <TextBlock Text="Best Score:"/>
+            <ItemsControl ItemsSource="{Binding StatsClient}" FontSize="16">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding bestSSS}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </StackPanel>
 
         <StackPanel Grid.Column="1" Grid.Row="16" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
-            <TextBlock Text="Number of Connections:"/>
+            <TextBlock Text="Connections:"/>
+            <ScrollViewer Margin="0,0,0,0.333" Width="122">
+                <ItemsControl ItemsSource="{Binding StatsClient}" FontSize="16">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding connections}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="17" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
-            <TextBlock Text="Number of Disconnections:"/>
+            <TextBlock Text="Disconnections:"/>
+            <ScrollViewer Margin="0,0,0,0.333" Width="187">
+                <ItemsControl ItemsSource="{Binding StatsClient}" FontSize="16">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding disconnections}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="18" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
             <TextBlock Text="Matches History:"/>
+            <ScrollViewer  Width="182" Margin="0,0,0,0.333">
+                <ItemsControl ItemsSource="{Binding StatsClient}" FontSize="16" Width="200">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="200"  Text="{Binding matchesHistory}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            
         </StackPanel>
 
 

@@ -25,6 +25,7 @@ namespace WPFUI.ViewModels
 			_userData = userdata;
 			_events = events;
 			_socketHandler = socketHandler;
+			this.statsClient = new BindableCollection<StatsClient>();
 		}
 
 		public string newConfirmedPassword
@@ -68,6 +69,12 @@ namespace WPFUI.ViewModels
 			_events.PublishOnUIThread(new goBackMainEvent());
 		}
 
+		private BindableCollection<StatsClient> statsClient;
+
+		public BindableCollection<StatsClient> StatsClient
+		{
+			get { return this.statsClient; }
+		}
 
 	}
 }

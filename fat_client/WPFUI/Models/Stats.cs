@@ -10,7 +10,6 @@ namespace WPFUI.Models
     {
 
 
-
         private string _username;
 
         public string username
