@@ -9,8 +9,6 @@ import androidx.fragment.app.Fragment
 import com.example.thin_client.R
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import kotlinx.android.synthetic.main.collab_gameslist.*
-import kotlinx.android.synthetic.main.collab_ranking_list.*
 import kotlinx.android.synthetic.main.freeforall_ranking_list.*
 
 class RankingFreeForAllMode : Fragment() {
@@ -43,7 +41,7 @@ class RankingFreeForAllMode : Fragment() {
     private fun refreshRankingAdapter() {
       adapter.clear()
        for (ranking in LeaderboardManager.freeForAllRankingList) {
-           // adapter.add(LeaderboardItem("amar",20))
+           adapter.add(LeaderboardItem(ranking))
         }
     }
 

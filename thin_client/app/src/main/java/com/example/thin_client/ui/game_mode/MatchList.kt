@@ -128,6 +128,7 @@ class MatchList : Fragment() {
     private fun showCreateMatchDialog(context: Context) {
         val alertBuilder = android.app.AlertDialog.Builder(context)
         alertBuilder.setTitle(R.string.create_match)
+
         val dialogView = layoutInflater.inflate(R.layout.dialog_create_match, null)
         alertBuilder.setView(dialogView)
         val gameSelectionSpinner = dialogView.findViewById<Spinner>(R.id.game_mode_selection)

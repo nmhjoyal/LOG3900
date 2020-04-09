@@ -40,7 +40,6 @@ import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.activity_game.*
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 const val SECOND_INTERVAL: Long = 1000
@@ -279,12 +278,28 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                 .off(SocketEvent.TURN_STARTED)
                 .off(SocketEvent.MATCH_LEFT)
                 .off(SocketEvent.MATCH_STARTED)
+                .off(SocketEvent.UPDATE_SPRINT)
         }
     }
 
     private fun setupSocketEvents() {
         if (SocketHandler.socket != null) {
             SocketHandler.socket!!
+                .on(SocketEvent.UPDATE_SPRINT, ({data ->
+                    val sprintParams = Gson().fromJson(data.first().toString(), UpdateSprint::class.java)
+                    getNonVirtualPlayers(sprintParams.players)
+                    Handler(Looper.getMainLooper()).post(({
+                        refreshPlayerPointsToolbar()
+                        showObserverFragment()
+                        startCountdown(sprintParams.time.toLong() * SECOND_INTERVAL)
+                        if(sprintParams.guess == 0){
+                            GameManager.canGuess = false
+                            nb_guesses.text = ""
+                        }
+                        nb_guesses.text = sprintParams.guess.toString()
+                        message.text = sprintParams.word
+                    }))
+                }))
                 .on(SocketEvent.TURN_ENDED, ({ data ->
                     isTurnStarted = false
                     val turnParams = Gson().fromJson(data.first().toString(), EndTurn::class.java)

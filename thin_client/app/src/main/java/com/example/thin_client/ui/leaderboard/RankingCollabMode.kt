@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import com.example.thin_client.R
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import kotlinx.android.synthetic.main.collab_gameslist.*
 import kotlinx.android.synthetic.main.collab_ranking_list.*
 
 class RankingCollabMode : Fragment() {
@@ -22,6 +21,7 @@ class RankingCollabMode : Fragment() {
 
         refreshRankingAdapter()
         collab_rankinglist.adapter = adapter
+
     }
 
 
@@ -42,7 +42,7 @@ class RankingCollabMode : Fragment() {
     private fun refreshRankingAdapter() {
       adapter.clear()
        for (ranking in LeaderboardManager.collabRankingList) {
-           // adapter.add(LeaderboardItem("amar",20))
+           adapter.add(LeaderboardItem(ranking))
         }
     }
 

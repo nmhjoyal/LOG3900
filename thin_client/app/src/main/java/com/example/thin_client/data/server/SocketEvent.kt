@@ -60,4 +60,5 @@ object SocketEvent {
     const val VP_ADDED = "vp_added"
     const val REMOVE_VP = "remove_vp"
     const val VP_REMOVED = "vp_removed"
+    const val UPDATE_SPRINT = "update_sprint"
 }
