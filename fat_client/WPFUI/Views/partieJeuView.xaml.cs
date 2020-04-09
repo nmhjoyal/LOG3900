@@ -43,7 +43,6 @@ namespace WPFUI.Views
         {
             _viewModel = DataContext as partieJeuViewModel;
             (DataContext as partieJeuViewModel).events.Subscribe(this);
-            (DataContext as partieJeuViewModel).Handle(new endTurnRoutineVMEvent());
             messagesUI.ScrollToEnd();
         }
 

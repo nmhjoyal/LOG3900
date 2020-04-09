@@ -298,12 +298,25 @@ namespace WPFUI.ViewModels
         }
         public void goBack()
         {
+            leaveMatchRoutine();
             _events.PublishOnUIThread(new goBackMainEvent());
         }
 
         public void goToGameView()
         {
+            leaveMatchRoutine();
             _events.PublishOnUIThread(new joinGameEvent());
+        }
+
+        public void leaveMatchRoutine()
+        {
+            _socketHandler.socket.Emit("leave_chat_room", _userData.matchId);
+            _userData.matchId = null;
+            _userData.currentGameRoom = null;
+            Room general = _userData.selectableJoinedRooms[0].room;
+            _userData.messages = new BindableCollection<Models.Message>(general.messages);
+            _userData.currentRoomId = general.roomName;
+            _events.PublishOnUIThread(new refreshMessagesEvent(_userData.messages, _userData.currentRoomId));
         }
 
         public string username
@@ -385,6 +398,7 @@ namespace WPFUI.ViewModels
         }
         public void sendGuess()
         {
+            Console.WriteLine("SEND GUESS VUE");
             if (guessBox != null & guessBox != "")
             {
                 _socketHandler.socket.Emit("guess", guessBox);

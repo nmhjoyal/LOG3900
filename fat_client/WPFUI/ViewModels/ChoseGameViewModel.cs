@@ -49,7 +49,6 @@ namespace WPFUI.ViewModels
         public void joinGame(string matchId)
         {
             this._socketHandler.socket.Emit("join_match", matchId);
-            // _events.PublishOnUIThread(new gameEvent());
         }
         public void createGame()
         {

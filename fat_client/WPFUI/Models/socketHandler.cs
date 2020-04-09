@@ -399,7 +399,8 @@ namespace WPFUI.Models
                     if (jRF.isPrivate)
                     {
                         this._userdata.matchId = jRF.room_joined.id;
-                        this._userdata.addJoinedRoom(jRF.room_joined);
+                        this._userdata.currentRoomId = jRF.room_joined.id;
+                        this._userdata.currentGameRoom = jRF.room_joined;
                         this._events.PublishOnUIThread(new waitingRoomEvent());
                     }
                 } else
@@ -423,7 +424,7 @@ namespace WPFUI.Models
                 {
                     this._userdata.matchId = json.matchId;
                     Room room = new Room(this._userdata.matchId, new Message[0], new Dictionary<string, string>());
-                    this._userdata.addJoinedRoom(room);
+                    this._userdata.currentGameRoom = room;
                     this._events.PublishOnUIThread(new waitingRoomEvent());
                     this.offCreateMatch();
                 }

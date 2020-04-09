@@ -13,9 +13,11 @@ namespace WPFUI.ViewModels
     {
         private IEventAggregator _events;
         private ISocketHandler _socketHandler;
+        private IUserData _userData;
 
-        public topMenuViewModel(IEventAggregator events, ISocketHandler socketHandler)
+        public topMenuViewModel(IEventAggregator events, ISocketHandler socketHandler, IUserData userdata)
         {
+            _userData = userdata;
             _events = events;
             _socketHandler = socketHandler;
             _events.Subscribe(this);
@@ -38,9 +40,24 @@ namespace WPFUI.ViewModels
 
         public void goToMenu()
         {
+            if (_userData.matchId != null)
+            {
+                leaveMatchRoutine();
+            }
             _events.PublishOnUIThread(new goBackMainEvent());
         }
 
-        
+        public void leaveMatchRoutine()
+        {
+            _socketHandler.socket.Emit("leave_chat_room", _userData.matchId);
+            _userData.matchId = null;
+            _userData.currentGameRoom = null;
+            Room general = _userData.selectableJoinedRooms[0].room;
+            _userData.messages = new BindableCollection<Models.Message>(general.messages);
+            _userData.currentRoomId = general.roomName;
+            _events.PublishOnUIThread(new refreshMessagesEvent(_userData.messages, _userData.currentRoomId));
+        }
+
+
     }
 }

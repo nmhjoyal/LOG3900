@@ -58,7 +58,9 @@ namespace WPFUI.ViewModels
         public string currentRoomId
         {
             get { return _currentRoomId; }
-            set { _currentRoomId = value; }
+            set { _currentRoomId = value;
+                  NotifyOfPropertyChange(() => currentRoomId);
+            }
         }
 
 
@@ -218,10 +220,8 @@ namespace WPFUI.ViewModels
 
         public void Handle(refreshMessagesEvent message)
         {
-            this._messages = message._messages;
-            this._currentRoomId = message._currentRoomId;
-            NotifyOfPropertyChange(() => currentRoomId);
-            NotifyOfPropertyChange(() => messages);
+            this.messages = message._messages;
+            this.currentRoomId = message._currentRoomId;
         }
 
         public void Handle(addMessageEvent message)
