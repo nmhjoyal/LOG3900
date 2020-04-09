@@ -1,6 +1,8 @@
 package com.example.thin_client.data.model
 
-data class Rank(
+
+data class RankClient (
     val username: String,
-    val score: Number
+    val score: Number,
+    val pos: Number
 )

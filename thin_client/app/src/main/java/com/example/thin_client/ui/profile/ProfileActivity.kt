@@ -21,8 +21,11 @@ import com.example.thin_client.data.AvatarID
 import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.app_preferences.PreferenceHandler
 import com.example.thin_client.data.app_preferences.Preferences
+import com.example.thin_client.data.game.MatchMode
 import com.example.thin_client.data.lifecycle.LoginState
 import com.example.thin_client.data.model.PrivateProfile
+import com.example.thin_client.data.model.RankClient
+import com.example.thin_client.data.model.Stats
 import com.example.thin_client.data.model.User
 import com.example.thin_client.data.rooms.RoomManager
 import com.example.thin_client.data.server.HTTPRequest
@@ -34,11 +37,23 @@ import com.example.thin_client.ui.createUser.CreateUserModel
 import com.example.thin_client.ui.createUser.CreateUserModelFactory
 import com.example.thin_client.ui.helpers.DEFAULT_INTERVAL
 import com.example.thin_client.ui.helpers.setOnClickListener
+import com.example.thin_client.ui.leaderboard.LeaderboardManager
 import com.example.thin_client.ui.login.afterTextChanged
+import com.example.thin_client.ui.profile.stats.ConnectionsHolder
+import com.example.thin_client.ui.profile.stats.MatchHistoryHolder
 import com.google.gson.Gson
+import com.xwray.groupie.Group
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
+import kotlinx.android.synthetic.main.activity_leaderboard.*
 import kotlinx.android.synthetic.main.activity_profile.*
+import kotlinx.android.synthetic.main.connections_layout.*
+import kotlinx.android.synthetic.main.match_history_layout.*
 import okhttp3.Call
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -116,10 +131,10 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         user_stats_button.setOnClickListener(({
-            if (user_stats_table.isVisible) {
-                user_stats_table.visibility = View.GONE
+            if (connections.isVisible) {
+                connections.visibility = View.GONE
             } else {
-                user_stats_table.visibility = View.VISIBLE
+                connections.visibility = View.VISIBLE
             }
         }))
 
@@ -128,6 +143,14 @@ class ProfileActivity : AppCompatActivity() {
                 game_stats_table.visibility = View.GONE
             } else {
                 game_stats_table.visibility = View.VISIBLE
+            }
+        }))
+
+        match_history_button.setOnClickListener(({
+            if (match_history.isVisible) {
+                match_history.visibility = View.GONE
+            } else {
+                match_history.visibility = View.VISIBLE
             }
         }))
 
@@ -174,6 +197,7 @@ class ProfileActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         setupSocket()
+        getStats()
     }
 
     override fun onStop() {
@@ -339,6 +363,64 @@ class ProfileActivity : AppCompatActivity() {
             LoginState.LOGGED_IN -> {}
 
         }
+    }
+
+    private fun getStats() {
+        val httpClient = OkHttpRequest(okhttp3.OkHttpClient())
+        httpClient.GET(
+            HTTPRequest.BASE_URL + HTTPRequest.URL_STATS + PreferenceHandler(applicationContext).getUser().username,
+            object : okhttp3.Callback {
+                //N'entre pas dans le on failure
+                override fun onFailure(call: Call, e: IOException) {
+                }
+
+                override fun onResponse(call: Call, response: okhttp3.Response) {
+                    val responseData = response.body?.charStream()
+                    val stats = Gson().fromJson(responseData, Stats::class.java)
+                    if (stats != null) {
+                        Handler(Looper.getMainLooper()).post(Runnable {
+                            // user stats
+                            val connectionsAdapter = GroupAdapter<GroupieViewHolder>()
+                            for (i in 0 until stats.connections.size - 1) {
+                                if (stats.disconnections.size > i) {
+                                    connectionsAdapter.add(
+                                        ConnectionsHolder(
+                                            stats.connections[i].toLong(),
+                                            stats.disconnections[i].toLong()
+                                        )
+                                    )
+                                }
+                            }
+                            connections.adapter = connectionsAdapter
+
+                            // game stats
+                            val stringDate = "HH:mm:ss"
+                            val simpleDateFormat = SimpleDateFormat(stringDate, Locale.US)
+                            matches_played.text = stats.matchCount.toString()
+                            victory_perc.text = String.format(resources.getString(R.string.percentage_placeholder), stats.victoryPerc.toString())
+                            avg_time_played.text = simpleDateFormat.format(Date(stats.averageTime.toLong()))
+                            total_time_played.text = simpleDateFormat.format(Date(stats.totalTime.toLong()))
+                            best_solo_score.text = stats.bestSSS.toString()
+
+                            // match history
+                            val adapter = GroupAdapter<GroupieViewHolder>()
+                            for (match in stats.matchesHistory) {
+                                adapter.add(MatchHistoryHolder(match))
+                            }
+                            adapter.setOnItemClickListener(({ item, view ->
+                                if (extras.isVisible) {
+                                    extras.visibility = View.GONE
+                                    player_list.visibility = View.GONE
+                                } else {
+                                    extras.visibility = View.VISIBLE
+                                    player_list.visibility = View.VISIBLE
+                                }
+                            }))
+                            match_history.adapter = adapter
+                        })
+                    }
+                }
+            })
     }
 
     private fun setupSocketEvents() {

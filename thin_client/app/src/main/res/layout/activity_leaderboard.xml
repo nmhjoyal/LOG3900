@@ -25,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabTextColor="@color/color_white"
+            android:background="@color/default_background"
             android:layout_margin="0dp"
             app:tabIndicatorHeight="0dp"
             app:tabGravity="fill"
