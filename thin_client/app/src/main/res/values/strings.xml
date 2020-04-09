@@ -40,7 +40,8 @@
     <string name="welcome">"Welcome !"</string>
     <string name="invalid_username">Username cannot be blank and cannot exceed 20 characters.</string>
     <string name="invalid_password">Invalid Password</string>
-    <string name="login_failed">Failed to connect</string>
+    <string name="login_failed">Failed to connect to server</string>
+    <string name="server_timeout">Connection timed out. Please try again later.</string>
     <string name="error_logging_in">Error logging in, please sign in again.</string>
     <string name="error_connect_title">Server error</string>
     <string name="error_connect">Error connecting to server. Please try again later.</string>

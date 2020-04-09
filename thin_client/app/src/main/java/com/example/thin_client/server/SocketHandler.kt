@@ -26,6 +26,7 @@ object SocketHandler {
     fun connect(): Socket {
         val opts = IO.Options()
         opts.reconnection = false
+        opts.timeout = 15000L
         socket = IO.socket(HTTPRequest.BASE_URL)
         return socket!!.connect()
     }
