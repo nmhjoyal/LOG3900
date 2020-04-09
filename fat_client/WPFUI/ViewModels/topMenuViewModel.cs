@@ -40,5 +40,7 @@ namespace WPFUI.ViewModels
         {
             _events.PublishOnUIThread(new goBackMainEvent());
         }
+
+        
     }
 }
