@@ -27,6 +27,7 @@ class FreeForAllMatchMode : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         adapter.setOnItemClickListener{ item, _ ->
             val matchId = (item as MatchItem).match.matchId
+            GameManager.currentGameMode = MatchMode.FREE_FOR_ALL
             SocketHandler.joinMatch(matchId)
         }
         refreshMatchesAdapter()
