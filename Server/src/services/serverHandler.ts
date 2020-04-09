@@ -265,8 +265,8 @@ class ServerHandler {
         this.matchHandler.startTurn(io, word, this.getUser(socket.id));
     }
     
-    public guess(io: SocketIO.Server, socket: SocketIO.Socket, guess: string): Feedback {
-        return this.matchHandler.guess(io, guess, this.getUser(socket.id));
+    public guess(io: SocketIO.Server, socket: SocketIO.Socket, guess: string): void {
+        this.matchHandler.guess(io, socket, guess, this.getUser(socket.id));
     }
 
     public stroke(socket: SocketIO.Socket, stroke: Stroke): void {

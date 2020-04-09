@@ -17,3 +17,11 @@ GET http://localhost:5000/profile/private/hub1
 ###
 
 DELETE http://localhost:5000/profile/hub1
+
+###
+
+GET http://localhost:5000/profile/stats/x
+
+###
+
+GET http://localhost:5000/profile/rank/4/0

@@ -20,7 +20,7 @@ export default abstract class Match {
     public matchId: string;
     public isEnded: boolean;
     public players: Player[]; /* socketid, Player */
-    protected mode: number;
+    public mode: number;
     protected nbRounds: number;
     protected timeLimit: number;
     protected hints: string[];
@@ -42,6 +42,8 @@ export default abstract class Match {
     protected virtualDrawing: VirtualDrawing;
     protected virtualPlayer: VirtualPlayer;
     protected vp: string;
+    protected gameLevel: Level;
+    protected guessCounter: number;
 
     // Match methods
     public async abstract startTurn(io: SocketIO.Server, chosenWord: string): Promise<void>;
@@ -59,6 +61,7 @@ export default abstract class Match {
         this.chatHandler = chatHandler;
         this.ms = matchSettings;
         this.vp = "";
+        this.currentWord = "";
         this.virtualPlayer = new VirtualPlayer();
     }
 
@@ -207,27 +210,34 @@ export default abstract class Match {
         return startMatchFeedback;
     }
 
-    public guess(io: SocketIO.Server, guess: string, username: string): Feedback {
+    public guess(io: SocketIO.Server, socket: SocketIO.Socket, guess: string, username: string): void {
         let feedback: Feedback = { status: false, log_message: "" };
         const drawerUsername: string = this.drawer.user.username;
 
         if (this.currentWord != "") {
-            if (username != drawerUsername) {
-                if(guess.toUpperCase() == this.currentWord.toUpperCase()) {
-                    // Depends on the instance
-                    this.guessRight(io, username); 
-                    feedback.status = true;
+            if (guess != "") {
+                if (username != drawerUsername) {
+                    if(guess.toUpperCase() == this.currentWord.toUpperCase()) {
+                        // Depends on the instance
+                        this.guessRight(io, username);
+                        feedback.status = true;
+                    } else {
+                        this.decrementGuessCounter();
+                        feedback.log_message = "Your guess is wrong.";
+                    }
                 } else {
-                    feedback.log_message = "Your guess is wrong.";
+                    feedback.log_message = "The player drawing is not supposed to guess.";
                 }
-            } else {
-                feedback.log_message = "The player drawing is not supposed to guess.";
+            } else  {
+                feedback.log_message = "The word guessed is empty.";
             }
-        } else  {
-            feedback.log_message = "The word guessed is empty.";
+        } else {
+            feedback.log_message = "You can not guess when the round is not started.";
         }
-
-        return feedback;
+   
+        (this.mode == MatchMode.sprintCoop) ? 
+            io.in(this.matchId).emit("gues_res", JSON.stringify(feedback)) :
+            socket.emit("gues_res", JSON.stringify(feedback));
     }
 
     protected endMatch(io: SocketIO.Server): void {
@@ -320,6 +330,11 @@ export default abstract class Match {
         }
     }
 
+    protected decrementGuessCounter(): void {
+        if (this.mode == MatchMode.sprintCoop || this.mode == MatchMode.sprintSolo)
+            this.guessCounter--;
+    }
+
     protected matchIsEnded(): boolean {
         return this.round == this.nbRounds + 1;
     }
@@ -358,17 +373,6 @@ export default abstract class Match {
                 };
                 player.score = updatedScore;
             }
-        }
-    }
-
-    protected getNbGuesses(difficulty: Level): number {
-        switch (difficulty) {
-            case Level.Easy:
-                return 7;
-            case Level.Medium:
-                return 5;
-            case Level.Hard:
-                return 3;
         }
     }
 

@@ -43,7 +43,8 @@ class RankingDB {
     public async getRanks(username: string, matchMode: MatchMode): Promise<Rank[]> {
         // Top 10
         const ranksDB: any = await this.mongoDB.db("Ranks").collection(MatchInstance.getModeName(matchMode))
-                                        .find().limit(10).toArray();
+                                        .find().sort({ score: -1 }).toArray();
+        
         const ranks: Rank[] = [];
         for (let rankDB of ranksDB) {
             const rank: Rank = { username: rankDB.username, score: rankDB.score };

@@ -52,28 +52,30 @@ class StatsDB {
             matchMode: matchMode,
             winner: { username: winner.user.username, score: winner.score.scoreTotal },
             myScore: 0,
-            playerNames: players.map(player => player.user.username)
+            playerNames: players.filter(player => !player.isVirtual).map(player => player.user.username)
         }
         for(let player of players) {
             matchHistory.myScore = player.score.scoreTotal;
             await this.mongoDB.db("Stats").collection("stats").updateOne(
                 { username: player.user.username },
-                { $push: { matchsHistory : matchHistory } }
+                { $push: { matchesHistory : matchHistory } }
             );
         }
     }
 
-    public async updateConnectionStats(username: string) {
+    public async updateConnectionStats(username: string): Promise<void> {
+        const date: number = Date.now();
         await this.mongoDB.db("Stats").collection("stats").updateOne(
             { username: username },
-            { $push: { connections : Date.now() } }
+            { $push: { connections : date } }
         );
     }
 
-    public async updateDisconnectionStats(username: string) {
+    public async updateDisconnectionStats(username: string): Promise<void> {
+        const date: number = Date.now();
         await this.mongoDB.db("Stats").collection("stats").updateOne(
             { username: username },
-            { $push: { disconnections : Date.now() } }
+            { $push: { disconnections : date } }
         );
     }
 
@@ -81,7 +83,7 @@ class StatsDB {
         const statsDB: any = await this.mongoDB.db("Stats").collection("stats").findOne({ username: username });
         const matchCount: number = statsDB.matchesHistory.length;
         const victoryCount: number = statsDB.matchesHistory.map((matchHistory: MatchHistory) => 
-            matchHistory.winner.username).count(username);
+            matchHistory.winner.username).filter((winner: string) => winner == username ).length;
 
         const totalTime: number = statsDB.matchesHistory.reduce((totalTime: number, matchHistory: MatchHistory) => 
             totalTime + matchHistory.endTime - matchHistory.startTime, 0);
@@ -89,8 +91,8 @@ class StatsDB {
         return {
             username: statsDB.username,
             matchCount: matchCount,
-            victoryPerc: Math.round(victoryCount / matchCount * 100),
-            averageTime: totalTime / matchCount,
+            victoryPerc: (matchCount == 0) ? 0 : Math.round(victoryCount / matchCount * 100),
+            averageTime: (matchCount == 0) ? 0 : Math.round(totalTime / matchCount),
             totalTime: totalTime,
             bestSSS: statsDB.bestSSS,
             connections: statsDB.connections,

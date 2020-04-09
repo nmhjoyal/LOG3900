@@ -190,21 +190,17 @@ export default class MatchHandler {
         }
     }
 
-    public guess(io: SocketIO.Server, guess: string, user: PrivateProfile | undefined): Feedback {
-        let feedback: Feedback = { status: false, log_message: "" };
-
+    public guess(io: SocketIO.Server, socket: SocketIO.Socket, guess: string, user: PrivateProfile | undefined): void {
         if (user) {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
-                feedback = match.guess(io, guess, user.username);
+                match.guess(io, socket, guess, user.username);
             } else {
-                feedback.log_message = "This match does not exist anymore.";
+                console.log("This match does not exist anymore.");
             }
         } else {
-            feedback.log_message = "You are not signed in.";
+            console.log("You are not signed in.");
         }
-
-        return feedback;
     }
 
     public stroke(socket: SocketIO.Socket, stroke: Stroke, user: PrivateProfile | undefined): void {
