@@ -85,7 +85,7 @@ class ServerHandler {
      * Other functions.
      * 
      */   
-
+    
     public getUser(socketId: string): PrivateProfile | undefined {
         return this.users.get(socketId);
     }

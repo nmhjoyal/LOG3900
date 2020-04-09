@@ -77,7 +77,7 @@ export default abstract class Match {
             if (this.players.length < this.ms.MAX_NB_PLAYERS) {
                 if (this.getNbHumanPlayers() < this.ms.MAX_NB_HP) {
                     joinRoomFeedback = await this.chatHandler.joinChatRoom(io, socket, this.matchId, user);
-                    this.players.push(this.createPlayer(user));
+                    this.players.push(this.createPlayer(this.getPublicProfile(user)));
                     io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
                     joinRoomFeedback.feedback.log_message = "You joined the match.";
                 } else {
@@ -105,7 +105,7 @@ export default abstract class Match {
                         this.endTurn(io);
                     }
                 } else {
-                    this.endMatch(io);
+                    io.in(this.matchId).emit("unexpected_leave");
                     deleteMatch = true;
                 }
             } else {
@@ -236,14 +236,14 @@ export default abstract class Match {
         }
    
         (this.mode == MatchMode.sprintCoop) ? 
-            io.in(this.matchId).emit("gues_res", JSON.stringify(feedback)) :
-            socket.emit("gues_res", JSON.stringify(feedback));
+            io.in(this.matchId).emit("guess_res", JSON.stringify(feedback)) :
+            socket.emit("guess_res", JSON.stringify(feedback));
     }
 
-    protected endMatch(io: SocketIO.Server): void {
+    protected async endMatch(io: SocketIO.Server): Promise<void> {
         // compile game stats for the players and the standings.
-        rankingDB.updateRanks(this.players, this.mode);
-        statsDB.updateMatchStats(this.players, this.mode, this.startTime);
+        await rankingDB.updateRanks(this.players, this.mode);
+        await statsDB.updateMatchStats(this.players, this.mode, this.startTime);
 
         this.notifyWord(io);
         // notify everyone that the game is ended.
@@ -387,8 +387,8 @@ export default abstract class Match {
         return Math.round(this.timeLimit - ((Date.now() - this.timer)/1000)); 
     }
 
-    protected calculateScore(): number {
-        return Math.round(this.timeLeft()) * 10; // + (1-(nbAyantdevine/nbhumanPlayer)) * CONSTANTE (100)
+    protected calculateScore(isSprint: boolean): number {
+        return Math.round(this.timeLeft()) * 10 + ((isSprint) ? 0 : (1 - (this.getPlayerGuessCount()/this.getNbHumanPlayers())) * 100);
     }
 
     protected assignDrawer() {
@@ -427,6 +427,21 @@ export default abstract class Match {
                 break;
             }
         }
+    }
+
+    private getPublicProfile(privateProfile: PrivateProfile): PublicProfile {
+        return { username: privateProfile.username, avatar: privateProfile.avatar };
+    }
+
+    protected getPlayerGuessCount(): number {
+        let playerGuessCount: number = 0;
+
+        for (let player of this.players) {
+            if (player.score.scoreTurn != 0 && player != this.drawer) 
+                playerGuessCount++;
+        }
+
+        return playerGuessCount;
     }
 
     protected getNbVirtualPlayers(): number {

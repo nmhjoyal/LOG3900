@@ -36,8 +36,8 @@ export default class SprintCoop extends Match {
         this.virtualDrawing.draw(io, game.drawing, this.gameLevel);
         
         this.timer = Date.now();
-        this.timeout = setTimeout(() => {
-            this.endMatch(io);
+        this.timeout = setTimeout(async () => {
+            await this.endMatch(io);
         }, this.timeLimit * 1000);
     }
 
@@ -60,7 +60,7 @@ export default class SprintCoop extends Match {
         const message: Message = Admin.createAdminMessage(username + " guessed the word.", this.matchId);
         io.in(this.matchId).emit("new_message", JSON.stringify(message));
 
-        const score: number = this.calculateScore();
+        const score: number = this.calculateScore(true);
         this.updateTeamScore(score);
 
         io.in(this.matchId).emit("update_players", JSON.stringify(this.players));

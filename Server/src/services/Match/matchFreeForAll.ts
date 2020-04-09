@@ -36,7 +36,7 @@ export default class FreeForAll extends Match {
         this.assignDrawer();
 
         if (this.matchIsEnded()) {
-            this.endMatch(io);
+            await this.endMatch(io);
         } else {
             const endTurn: EndTurn = this.createEndTurn();
 
@@ -64,7 +64,7 @@ export default class FreeForAll extends Match {
         const message: Message = Admin.createAdminMessage(username + " guessed the word.", this.matchId);
         io.in(this.matchId).emit("new_message", JSON.stringify(message));
 
-        const score: number = this.calculateScore();
+        const score: number = this.calculateScore(false);
         this.updateScore(username, score);
         if (!this.drawer.isVirtual) 
             this.updateScore(this.drawer.user.username, Math.round(score / this.players.length));
