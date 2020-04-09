@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,14 +21,46 @@ namespace WPFUI.ViewModels
 		private IEventAggregator _events;
 		private ISocketHandler _socketHandler;
 
+		private Rank _rank;
+
+		public Rank rank
+		{
+			get { return _rank; }
+			set { _rank = value; }
+		}
+
+		private StatsClient stats;
+
+		public StatsClient Stats
+		{
+			get { return this.stats; }
+			
+		}
+
+		private MatchHistory _matchHistory;
+
+		public MatchHistory matchHistory
+		{
+			get { return this._matchHistory; }
+
+		}
+
 		public profileViewModel(IUserData userdata, IEventAggregator events, ISocketHandler socketHandler)
 		{
 			_userData = userdata;
 			_events = events;
 			_socketHandler = socketHandler;
+			this._rank = new Rank("", 0);
+			
 			this.statsClient = new BindableCollection<StatsClient>();
+			this.showStats();
+			
 		}
 
+		public void showStats()
+		{
+			BindableCollection<StatsClient> stats = JsonConvert.DeserializeObject<BindableCollection<StatsClient>>(this._socketHandler.TestGETWebRequest("/profile/stats/" + this._userData.userName).ToString());
+		}
 		public string newConfirmedPassword
 		{
 			get { return _newConfirmedPassword; }

@@ -8,7 +8,20 @@ namespace WPFUI.Models
 {
     public class StatsClient
     {
+        public StatsClient(string username, int matchCount, double victoryPerc,
+            int averageTime, int totalTime, int bestSSS)
+        {
+            this._username = username;
+            this._matchCount = matchCount;
+            this._victoryPerc = victoryPerc;
+            this._averageTime = averageTime;
+            this._totalTime = totalTime;
+            this._bestSSS = bestSSS;
+            this._connections= new int[30];
+            this._disconnections = new int[30];
+            this._matchesHistory = new MatchHistory[10];
 
+        }
 
         private string _username;
 
@@ -86,6 +99,15 @@ namespace WPFUI.Models
 
     public class Stats
     {
+        public Stats(string username, int bestSSS)
+        {
+            this._username = username;
+            this._bestSSS = bestSSS;
+            this._connections = new int[30];
+            this._disconnections = new int[30];
+            this._matchesHistory = new MatchHistory[10];
+
+        }
         private string _username;
 
         public string username
@@ -128,7 +150,17 @@ namespace WPFUI.Models
     }
     public class MatchHistory
     {
-        
+        public MatchHistory(int startTime, int endTime, string matchMode, Rank winner, int myScore
+           )
+        {
+            this._startTime = startTime;
+            this._endTime = endTime;
+            this._matchMode = matchMode;
+            this.playerNames = new string[8];
+            this._winner = winner;
+            this._myScore = myScore;
+
+        }
         private int _startTime;
 
         public int startTime

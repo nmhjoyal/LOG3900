@@ -8,6 +8,11 @@ namespace WPFUI.Models
 {
     public class Rank
     {
+        public Rank(string username, int score)
+        {
+            this._username = username;
+            this._score = score;
+        }
 
         private string _username;
 
