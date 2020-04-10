@@ -108,6 +108,11 @@ export default class MatchController {
         serverHandler.guess(io, socket, guess);
     }
 
+    @OnMessage("hint")
+    public hint(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
+        serverHandler.hint(io, socket);
+    }
+
     /**
      * 
      * Preview

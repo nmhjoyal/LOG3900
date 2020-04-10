@@ -22,12 +22,15 @@ export default class FreeForAll extends Match {
             const game: Game = await gameDB.getGame(word);
             this.hints = game.clues;
             this.virtualDrawing.draw(io, game.drawing, game.level);
+            this.timeouts.push(setTimeout(() =>{
+                io.in(this.matchId).emit("hint_enable");
+            }, this.timeLimit * 1000 * 0.5));
         }
         
         this.timer = Date.now();
-        this.timeout = setTimeout(() => {
+        this.timeouts.push(setTimeout(() => {
             this.endTurn(io);
-        }, this.timeLimit * 1000);
+        }, this.timeLimit * 1000));
     }
 
     public async endTurn(io: SocketIO.Server): Promise<void> {
