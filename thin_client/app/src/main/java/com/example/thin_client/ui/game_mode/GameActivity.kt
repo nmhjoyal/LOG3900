@@ -64,6 +64,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
     private var isTurnStarted = false
     private var currentRound = 1
     private var wordWasString = ""
+    private var nonVirtualPlayers = ArrayList<Player>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -202,9 +203,9 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         word_letters.adapter = lettersAdapter
     }
 
-    private fun refreshPlayerPointsToolbar(players: Array<Player>) {
+    private fun refreshPlayerPointsToolbar() {
         playerPointsAdapter.clear()
-        for (player in players) {
+        for (player in nonVirtualPlayers) {
             playerPointsAdapter.add(PlayerPointToolbarHolder(player.user, player.score.scoreTotal.toInt()))
         }
         user_points_total.adapter = playerPointsAdapter
@@ -285,8 +286,9 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
             SocketHandler.socket!!
                 .on(SocketEvent.UPDATE_SPRINT, ({data ->
                     val sprintParams = Gson().fromJson(data.first().toString(), UpdateSprint::class.java)
+                    getNonVirtualPlayers(sprintParams.players)
                     Handler(Looper.getMainLooper()).post(({
-                        refreshPlayerPointsToolbar(sprintParams.players)
+                        refreshPlayerPointsToolbar()
                         showObserverFragment()
                         startCountdown(sprintParams.time.toLong() * SECOND_INTERVAL)
                         if(sprintParams.guess == 0){
@@ -296,16 +298,26 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                         nb_guesses.text = sprintParams.guess.toString()
                         message.text = sprintParams.word
                     }))
-
-
                 }))
                 .on(SocketEvent.TURN_ENDED, ({ data ->
                     isTurnStarted = false
                     val turnParams = Gson().fromJson(data.first().toString(), EndTurn::class.java)
+                    getNonVirtualPlayers(turnParams.players)
                     Handler(Looper.getMainLooper()).post(({
-                        refreshPlayerPointsToolbar(turnParams.players)
+                        refreshPlayerPointsToolbar()
                         resetTurn(turnParams.drawer)
                         user_block.bringToFront()
+                        if (GameManager.currentGameMode == MatchMode.ONE_ON_ONE) {
+                            if (nonVirtualPlayers.size > 1) {
+                                val player1 = nonVirtualPlayers[0]
+                                val player2 = nonVirtualPlayers[1]
+                                one_vs_one_title.text = String.format(
+                                    resources.getString(R.string.one_vs_one_title),
+                                    player1.user.username, player2.user.username
+                                )
+                                one_vs_one_title.visibility = View.VISIBLE
+                            }
+                        }
                         if (!firstTurnStarted) {
                             message.text = String.format(resources.getString(R.string.round), turnParams.currentRound.toInt())
                             user_points.visibility = View.GONE
@@ -315,8 +327,8 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                         } else {
                             val pointsAdapter = GroupAdapter<GroupieViewHolder>()
                             message.text = wordWasString
-                            turnParams.players.sortByDescending(({ it.score.scoreTurn.toInt() }))
-                            for (score in turnParams.players) {
+                            nonVirtualPlayers.sortByDescending(({ it.score.scoreTurn.toInt() }))
+                            for (score in nonVirtualPlayers) {
                                 pointsAdapter.add(PlayerPointHolder(score.user.username, score.score.scoreTurn.toInt()))
                             }
                             user_points.adapter = pointsAdapter
@@ -369,6 +381,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                     Handler(Looper.getMainLooper()).post(Runnable {
                         turnOffSocketEvents()
                         user_block.bringToFront()
+                        user_points.visibility = View.GONE
                         message.text = resources.getText(R.string.game_over)
                         back_to_lobby.visibility = View.VISIBLE
                     })
@@ -380,5 +393,14 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         message.text = String.format(resources.getString(R.string.user_choosing_word), currentDrawer)
         user_points.visibility = View.GONE
         user_block.bringToFront()
+    }
+
+    private fun getNonVirtualPlayers(players: Array<Player>) {
+        nonVirtualPlayers.clear()
+        for (player in players) {
+            if (!player.isVirtual) {
+                nonVirtualPlayers.add(player)
+            }
+        }
     }
 }

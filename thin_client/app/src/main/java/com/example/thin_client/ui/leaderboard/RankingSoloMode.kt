@@ -9,8 +9,6 @@ import androidx.fragment.app.Fragment
 import com.example.thin_client.R
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import kotlinx.android.synthetic.main.collab_gameslist.*
-import kotlinx.android.synthetic.main.collab_ranking_list.*
 import kotlinx.android.synthetic.main.solo_ranking_list.*
 
 class RankingSoloMode : Fragment() {

@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.example.thin_client.server.*
 import com.example.thin_client.R
 import com.example.thin_client.data.game.GameManager
+import com.example.thin_client.data.game.MatchMode
 import com.example.thin_client.ui.LobbyMenuFragment
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -23,6 +24,7 @@ class OneVsOneMatchMode : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         adapter.setOnItemClickListener{ item, _ ->
             val matchId = (item as MatchItem).match.matchId
+            GameManager.currentGameMode = MatchMode.ONE_ON_ONE
             SocketHandler.joinMatch(matchId)
         }
         refreshMatchesAdapter()

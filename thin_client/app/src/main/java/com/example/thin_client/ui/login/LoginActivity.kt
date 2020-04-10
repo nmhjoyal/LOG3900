@@ -59,7 +59,15 @@ class LoginActivity : AppCompatActivity() {
                 }))
                 .on(Socket.EVENT_CONNECT_ERROR, ({
                     Handler(Looper.getMainLooper()).post(Runnable {
-                        showLoginFailed()
+                        showConnectionFailed(resources.getString(R.string.login_failed))
+                        loading.visibility = ProgressBar.GONE
+                        login.isEnabled = true
+                    })
+                    SocketHandler.disconnect()
+                }))
+                .on(Socket.EVENT_CONNECT_TIMEOUT, ({
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        showConnectionFailed(resources.getString(R.string.server_timeout))
                         loading.visibility = ProgressBar.GONE
                         login.isEnabled = true
                     })
@@ -117,8 +125,8 @@ class LoginActivity : AppCompatActivity() {
         turnOffSocketEvents()
     }
 
-    private fun showLoginFailed() {
-        Toast.makeText(applicationContext, R.string.login_failed, Toast.LENGTH_SHORT).show()
+    private fun showConnectionFailed(text: String) {
+        Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT).show()
     }
 
     override fun onBackPressed() {
@@ -130,6 +138,7 @@ class LoginActivity : AppCompatActivity() {
             SocketHandler.socket!!.off(SocketEvent.USER_SIGNED_IN)
                 .off(Socket.EVENT_CONNECT)
                 .off(Socket.EVENT_CONNECT_ERROR)
+                .off(Socket.EVENT_CONNECT_TIMEOUT)
         }
     }
 }

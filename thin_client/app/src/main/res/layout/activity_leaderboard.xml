@@ -24,7 +24,7 @@
             android:id="@+id/ranking_tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabTextColor="@color/color_white"
+            app:tabBackground="@drawable/tab_background_selector"
             android:layout_margin="0dp"
             app:tabIndicatorHeight="0dp"
             app:tabGravity="fill"

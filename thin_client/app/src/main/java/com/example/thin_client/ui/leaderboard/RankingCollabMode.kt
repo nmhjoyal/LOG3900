@@ -7,17 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.thin_client.R
-import com.example.thin_client.data.game.MatchMode
 
-import com.example.thin_client.data.server.HTTPRequest
-import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import kotlinx.android.synthetic.main.collab_gameslist.*
 import kotlinx.android.synthetic.main.collab_ranking_list.*
-import okhttp3.Call
-import OkHttpRequest
-import java.io.IOException
 
 class RankingCollabMode : Fragment() {
 

@@ -21,17 +21,31 @@
 
     <!-- Profile -->
     <style name="profile">Profile</style>
-
     <string name="edit_profile">Edit profile</string>
     <string name="change_avatar">Change your avatar</string>
     <string name="undo_changes">Undo</string>
     <string name="stats">Stats</string>
     <string name="game_stats">Game stats</string>
-    <string name="user_stats">User stats</string>
+    <string name="user_stats">Connection stats</string>
+    <string name="match_history">Match history</string>
     <string name="stat_placeholder">PLACEHOLDER</string>
     <string name="delete_profile">Delete profile</string>
     <string name="delete">DELETE</string>
     <string name="delete_profile_warning">Are you sure you want to delete your profile? You will lose all your progress. This action is IRREVERSIBLE.</string>
+
+    <!-- stats strings -->
+    <string name="connections">Connection</string>
+    <string name="to">To</string>
+    <string name="matches_played">Number of games</string>
+    <string name="victory_perc">Percentage of victories</string>
+    <string name="percentage_placeholder">%1$s %%</string>
+    <string name="avg_time_played">Average time played</string>
+    <string name="total_time_played">Total time played</string>
+    <string name="best_solo">Best Solo score</string>
+    <string name="start_time">Start time:</string>
+    <string name="end_time">End time:</string>
+    <string name="winner">Winner:</string>
+    <string name="my_score">My score</string>
 
     <!-- Strings related to login -->
     <string name="prompt_password">Password</string>
@@ -40,7 +54,8 @@
     <string name="welcome">"Welcome !"</string>
     <string name="invalid_username">Username cannot be blank and cannot exceed 20 characters.</string>
     <string name="invalid_password">Invalid Password</string>
-    <string name="login_failed">Failed to connect</string>
+    <string name="login_failed">Failed to connect to server</string>
+    <string name="server_timeout">Connection timed out. Please try again later.</string>
     <string name="error_logging_in">Error logging in, please sign in again.</string>
     <string name="error_connect_title">Server error</string>
     <string name="error_connect">Error connecting to server. Please try again later.</string>
@@ -153,6 +168,7 @@
     <string name="time_up">Times up!</string>
     <string name="game_over">Game over</string>
     <string name="back_to_lobby">Exit</string>
+    <string name="one_vs_one_title">%1$s vs. %2$s</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hostname">Hostname:</string>

@@ -44,8 +44,8 @@ class ProfileDB {
         return privateProfile;
     }
 
-    public async deleteProfile(username: string): Promise<void> {
-        await this.mongoDB.db("Profiles").collection("profiles")
+    public deleteProfile(username: string): void {
+        this.mongoDB.db("Profiles").collection("profiles")
             .deleteOne({ username: username });
     }
 

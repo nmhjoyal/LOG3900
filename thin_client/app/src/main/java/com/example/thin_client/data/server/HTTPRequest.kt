@@ -5,5 +5,6 @@ object HTTPRequest {
     const val URL_CREATE = "/profile/create"
     const val URL_PRIVATE = "/profile/private/"
     const val URL_PROFILE = "/profile/"
-    const val URL_RANKING = "/rank/"
+    const val URL_RANKING = "/profile/rank/"
+    const val URL_STATS = "/profile/stats/"
 }

@@ -40,7 +40,7 @@ export default class FreeForAll extends Match {
         } else {
             const endTurn: EndTurn = this.createEndTurn();
 
-            if (this.currentWord) { // currentWord is undefined at the first endTurn
+            if (this.currentWord != "") { // currentWord is undefined at the first endTurn
                 this.notifyWord(io);
             }
 
