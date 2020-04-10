@@ -95,7 +95,13 @@ namespace WPFUI.Views
             {
                 Console.WriteLine("message.visible = true");
                 channelsMode.IsEnabled = true;
-                ChannelText.Text = "{Binding Path = currentRoomId, Mode = Oneway}";
+
+                Binding myBinding = new Binding();
+                myBinding.Source = DataContext as chatBoxViewModel;
+                myBinding.Path = new PropertyPath("currentRoomId");
+                myBinding.Mode = BindingMode.OneWay;
+                myBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+                BindingOperations.SetBinding(ChannelText, TextBlock.TextProperty, myBinding);
             }
         }
     }

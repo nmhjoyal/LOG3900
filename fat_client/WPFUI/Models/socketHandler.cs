@@ -438,16 +438,19 @@ namespace WPFUI.Models
             this.socket.Off("match_created");
         }
 
+
         public void onWaitingRoom(BindableCollection<Player> players)
         {
             this.socket.On("update_players", (new_players) =>
             {
+                Console.WriteLine("update_players " + _userdata.userName);
                 players.Clear();
                 players.AddRange(JsonConvert.DeserializeObject<BindableCollection<Player>>(new_players.ToString()));
             });
 
             this.socket.On("match_left", (feedback) =>
             {
+                Console.WriteLine("match_left " + _userdata.userName);
                 dynamic json = JsonConvert.DeserializeObject(feedback.ToString());
                 Console.WriteLine(json);
                 if((Boolean)json.status)
@@ -479,6 +482,12 @@ namespace WPFUI.Models
                 {
                     Console.WriteLine((string)json.feedback.log_message);
                 }
+            });
+
+            this.socket.On("unexpected_leave", () =>
+            {
+                this._events.PublishOnUIThread(new joinGameEvent());
+                this.offWaitingRoom();
             });
         }
 
@@ -538,8 +547,8 @@ namespace WPFUI.Models
 
             this.socket.On("unexpected_leave", () =>
             {
-                this.offMatch();
                 this._events.PublishOnUIThread(new joinGameEvent());
+                this.offMatch();
             });
         }
 

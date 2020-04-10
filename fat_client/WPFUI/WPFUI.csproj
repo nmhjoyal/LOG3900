@@ -157,6 +157,7 @@
     <Compile Include="EventModels\refreshRoomsEvent.cs" />
     <Compile Include="EventModels\refreshMessagesEvent.cs" />
     <Compile Include="EventModels\refreshUIEvent.cs" />
+    <Compile Include="EventModels\resetToGeneralEvent.cs" />
     <Compile Include="EventModels\roomsChangedEvent.cs" />
     <Compile Include="EventModels\roomsRetrievedEvent.cs" />
     <Compile Include="EventModels\scrollDownEvent.cs" />
