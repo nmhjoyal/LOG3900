@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,45 +20,39 @@ namespace WPFUI.ViewModels
 		private IUserData _userData;
 		private IEventAggregator _events;
 		private ISocketHandler _socketHandler;
+		private StatsClient statsClient;
 
 		public profileViewModel(IUserData userdata, IEventAggregator events, ISocketHandler socketHandler)
 		{
 			_userData = userdata;
 			_events = events;
 			_socketHandler = socketHandler;
-			this.statsClient = new BindableCollection<StatsClient>();
+			this.statsClient = JsonConvert.DeserializeObject<StatsClient>(this._socketHandler.TestGETWebRequest("/profile/stats/" + this._userData.userName).ToString());
 		}
-
+		public StatsClient StatsClient
+		{
+			get { return this.statsClient; }
+		}
 		public string newConfirmedPassword
 		{
 			get { return _newConfirmedPassword; }
 			set { _newConfirmedPassword = value; }
 		}
-
-
-
 		public string newchangedPassword
 		{
 			get { return _newchangedPassword; }
 			set { _newchangedPassword = value; }
 		}
-
-
 		public string changedLastName
 		{
 			get { return _changedLastName; }
 			set { _changedLastName = value; }
 		}
-
-
 		public string changedUsername
 		{
 			get { return _changedUsername; }
 			set { _changedUsername = value; }
 		}
-
-		
-
 		public string changedFirstName
 		{
 			get { return _changedFirstName; }
@@ -68,13 +63,5 @@ namespace WPFUI.ViewModels
 		{
 			_events.PublishOnUIThread(new goBackMainEvent());
 		}
-
-		private BindableCollection<StatsClient> statsClient;
-
-		public BindableCollection<StatsClient> StatsClient
-		{
-			get { return this.statsClient; }
-		}
-
 	}
 }

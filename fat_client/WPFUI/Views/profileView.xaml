@@ -83,98 +83,32 @@
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="10" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
             <TextBlock Text="Username:"/>
-            <ItemsControl ItemsSource="{Binding StatsClient}" FontSize="16">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding username}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
-
-                            </StackPanel>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <TextBlock Text="{Binding StatsClient.Username}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
         </StackPanel>
 
         <StackPanel Grid.Column="1" Grid.Row="11" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
             <TextBlock Text="Match Count:"/>
-            <ItemsControl ItemsSource="{Binding StatsClient}" FontSize="16">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding matchCount}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
-
-                            </StackPanel>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <TextBlock Text="{Binding StatsClient.MatchCount}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
         </StackPanel>
 
         <StackPanel Grid.Column="1" Grid.Row="12" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
             <TextBlock Text="Victory Percentage:"/>
-            <ItemsControl ItemsSource="{Binding StatsClient}" FontSize="16">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding victoryPerc}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
-
-                            </StackPanel>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <TextBlock Text="{Binding StatsClient.VictoryPerc}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
         </StackPanel>
 
         <StackPanel Grid.Column="1" Grid.Row="13" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
             <TextBlock Text="Average Time:"/>
-            <ItemsControl ItemsSource="{Binding StatsClient}" FontSize="16">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding averageTime}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
-
-                            </StackPanel>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <TextBlock Text="{Binding StatsClient.AverageTime}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
         </StackPanel>
 
         <StackPanel Grid.Column="1" Grid.Row="14" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
             <TextBlock Text="Total Time:"/>
-            <ItemsControl ItemsSource="{Binding StatsClient}" FontSize="16">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding totalTime}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
-
-                            </StackPanel>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <TextBlock Text="{Binding StatsClient.TotalTime}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
         </StackPanel>
 
         <StackPanel Grid.Column="1" Grid.Row="15" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
-            <TextBlock Text="Best Score:"/>
-            <ItemsControl ItemsSource="{Binding StatsClient}" FontSize="16">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding bestSSS}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
-
-                            </StackPanel>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <TextBlock Text="Best solo sprint score:"/>
+            <TextBlock Text="{Binding StatsClient.BestSSS}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
         </StackPanel>
 
         <StackPanel Grid.Column="1" Grid.Row="16" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">

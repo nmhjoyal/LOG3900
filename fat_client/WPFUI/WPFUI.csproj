@@ -170,10 +170,9 @@
     <Compile Include="Models\ISocketHandler.cs" />
     <Compile Include="Models\IUserData.cs" />
     <Compile Include="Models\Match.cs" />
-    <Compile Include="Models\Rank.cs" />
     <Compile Include="Models\Ranking.cs" />
     <Compile Include="Models\SelectableRoom.cs" />
-    <Compile Include="Models\Stats.cs" />
+    <Compile Include="Models\StatsClient.cs" />
     <Compile Include="Models\Trace.cs" />
     <Compile Include="Models\Avatar.cs" />
     <Compile Include="Models\ClientMessage.cs" />

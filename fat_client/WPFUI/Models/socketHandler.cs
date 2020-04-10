@@ -63,7 +63,7 @@ namespace WPFUI.Models
 
         public SocketHandler(IUserData userdata, IEventAggregator events)
         {
-            this.baseURL = "http://1ce05917.ngrok.io";
+            this.baseURL = "http://localhost:5000";
             _userdata = userdata;
             _events = events;
             _roomToBeCreated = null;
