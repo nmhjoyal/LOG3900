@@ -67,7 +67,7 @@ export default class FreeForAll extends Match {
         const score: number = this.calculateScore(false);
         this.updateScore(username, score);
         if (!this.drawer.isVirtual) 
-            this.updateScore(this.drawer.user.username, Math.round(score / this.players.length));
+            this.updateScore(this.drawer.user.username, Math.round(score / this.getNbHumanPlayers()));
 
         io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
 
