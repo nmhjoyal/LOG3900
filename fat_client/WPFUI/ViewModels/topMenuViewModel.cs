@@ -43,8 +43,12 @@ namespace WPFUI.ViewModels
             if (_userData.matchId != null)
             {
                 leaveMatchRoutine();
+                _events.PublishOnUIThread(new goBackMainEvent());
+                this._events.BeginPublishOnUIThread(new changeChatOptionsEvent(true));
+            } else
+            {
+                _events.PublishOnUIThread(new goBackMainEvent());
             }
-            _events.PublishOnUIThread(new goBackMainEvent());
         }
 
         public void leaveMatchRoutine()

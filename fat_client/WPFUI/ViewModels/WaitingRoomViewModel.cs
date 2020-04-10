@@ -61,6 +61,11 @@ namespace WPFUI.ViewModels
                 NotifyOfPropertyChange(() => messages);
             }
         }
+
+        public IEventAggregator events
+        {
+            get { return _events; }
+        }
         public void keyDown(ActionExecutionContext context)
         {
             var keyArgs = context.EventArgs as KeyEventArgs;
