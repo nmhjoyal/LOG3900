@@ -16,6 +16,7 @@ namespace WPFUI.ViewModels
         private ISocketHandler _socketHandler;
         private IUserData userdata;
         public BindableCollection<Match> matches;
+        public Boolean _addClicked;
 
         public BindableCollection<Match> Matches
         {
@@ -29,6 +30,7 @@ namespace WPFUI.ViewModels
         public ChoseGameViewModel(IEventAggregator events, ISocketHandler socketHandler, IUserData userdata)
         {
             _events = events;
+            _addClicked = false;
             _events.Subscribe(this);
             this.userdata = userdata;
             _socketHandler = socketHandler;
@@ -56,8 +58,13 @@ namespace WPFUI.ViewModels
         }
         public void createGame()
         {
-            this._socketHandler.offLobby();
-            _events.PublishOnUIThread(new createMatchEvent());
+            if (!_addClicked)
+            {
+                _addClicked = true;
+                this._socketHandler.offLobby();
+                _events.PublishOnUIThread(new createMatchEvent());
+                _addClicked = false;
+            }
         }
     }
 }

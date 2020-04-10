@@ -7,7 +7,8 @@
              xmlns:local="clr-namespace:WPFUI.Views"
              mc:Ignorable="d" 
              d:DesignHeight="1080" d:DesignWidth="1600"
-             FontFamily="Microsoft JhengHei UI Light">
+             FontFamily="Microsoft JhengHei UI Light"
+			 Loaded="OnLoad">
     <Grid Background="#FFF5F5F6" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.5*"/>
@@ -104,8 +105,8 @@
         </Button>
         
         <Border BorderBrush="Black" BorderThickness="1" Grid.ColumnSpan="1" Grid.Row="15" Grid.Column="11"/>
-        <Button x:Name="start" BorderBrush="{x:Null}" Background="#01C853" Grid.Column="12" Grid.Row="15" Content="Start " 
-				Foreground="White" Height="auto"/>
+        <Button BorderBrush="{x:Null}" Background="#01C853" Grid.Column="12" Grid.Row="15" Content="Start " 
+				Foreground="White" Height="auto" PreviewMouseDown="Button_Click"/>
         <StackPanel Grid.Row="15" Grid.Column="11" Orientation="Horizontal" HorizontalAlignment="Right">
            
             <TextBlock  VerticalAlignment="Center" TextAlignment="Center" Text="Everyone's ready?" Margin="0,0,10,0"/>

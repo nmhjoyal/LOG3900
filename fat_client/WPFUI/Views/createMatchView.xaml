@@ -65,7 +65,7 @@
            
         </ComboBox>
 
-		<Button HorizontalAlignment="Right" Click="createMatch" BorderBrush="{x:Null}" Background="#D6EFE9" Grid.Column="2" Grid.Row="9" Content="Lets go! " Foreground="#00584C"/>
+		<Button HorizontalAlignment="Right" BorderBrush="{x:Null}" Background="#D6EFE9" Grid.Column="2" Grid.Row="9" Content="Lets go! " Foreground="#00584C" PreviewMouseDown="createMatch"/>
 		<TextBlock FontSize="40"  Foreground="#00584C" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">Create your game!</TextBlock>
     </Grid>
 </UserControl>
