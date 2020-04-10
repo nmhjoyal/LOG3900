@@ -493,6 +493,7 @@ namespace WPFUI.ViewModels
 
         public void Handle(endTurnRoutineVMEvent message)
         {
+            Console.WriteLine("endTurn VM");
             _timer.Stop();
             this.newScores();
             // fillPlayers();

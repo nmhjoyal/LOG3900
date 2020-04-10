@@ -8,7 +8,7 @@
              xmlns:gif="http://wpfanimatedgif.codeplex.com"
             xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit" 
             mc:Ignorable="d"
-             d:DesignHeight="800" d:DesignWidth="1200"
+             d:DesignHeight="850" d:DesignWidth="1200"
              
 			 FontFamily="Microsoft JhengHei UI Light" Background="#FFF5F5F6">
     <UserControl.Resources>
@@ -30,8 +30,8 @@
                 <ColumnDefinition Width="20" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="10"/>
                 <RowDefinition Height="100"/>
-                <RowDefinition Height="50"/>
                 <RowDefinition Height="10"/>
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="10"/>
@@ -39,11 +39,12 @@
                 <RowDefinition Height="10"/>
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="10"/>
-                <RowDefinition Height="150"/>
-                <RowDefinition Height="20"/>
+                <RowDefinition Height="350"/>
+                <RowDefinition Height="10"/>
 
             </Grid.RowDefinitions>
-            <TextBlock  FontSize="40"  Foreground="#00584C" Text="Manual Game Creation" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" TextAlignment="Center"/>
+            <TextBlock  FontSize="40"  Foreground="#00584C" Text="Manual Game Creation" 
+						Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" TextAlignment="Center" VerticalAlignment="Center"/>
             <Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="3" CornerRadius="10">
                 <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Word To Guess:" Grid.Column="1" Grid.Row="3"/>
             </Border>
@@ -67,7 +68,8 @@
                 <ComboBoxItem Content="Panoramic"/>
                 <ComboBoxItem Content="Centered"/>
             </ComboBox>
-            <Button MaxWidth="140" Click="addClue" Background="#FF018577" Grid.Column="1" Grid.Row="9" BorderBrush="{x:Null}" Margin="0.333,0,0.333,118">
+            <Button MaxWidth="140" Click="addClue" Background="#FF018577" 
+					Grid.Column="1" Grid.Row="9" BorderBrush="{x:Null}" VerticalAlignment="Top">
                 <StackPanel  Orientation="Horizontal">
                     <TextBlock FontSize="12" Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Clue(s):</TextBlock>
                     <Image Source="/Resources/add.png" Height="20"></Image>
@@ -82,7 +84,7 @@
                 <Button BorderBrush="{x:Null}" Background="#00584C" FontSize="12" Foreground="#D6EFE9" Click="createGame" Content="Create Game"   HorizontalAlignment="Center" Width="110"/>
             </StackPanel>
 
-            <Border  Visibility="Hidden" Name="border" Background="#00584C" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderBrush="Black" Opacity="0.9" Grid.ColumnSpan="6" Grid.RowSpan="9">
+            <Border  Visibility="Hidden" Name="border" Background="#00584C" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderBrush="Black"  Grid.ColumnSpan="6" Grid.RowSpan="9" Margin="0,0,0,20">
                 <Grid Visibility="Hidden" Name="selectNextDrawingBox" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="20"/>
@@ -90,23 +92,21 @@
                         <ColumnDefinition Width="120"/>
                         <ColumnDefinition Width="20" />
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="50"/>
-                        <RowDefinition Height="60"/>
-                        <RowDefinition Height="7*"/>
-                        <RowDefinition Height="20"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.Column="1" Grid.Row="0" Text="Draw Here!" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="22"
-							   Name="roundFinishedMessage" Margin="0,10,0,20" Foreground="White"/>
-                    <Canvas x:Name="PART_Canvas" Grid.Row="2" Grid.Column="1">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="60"/>
+						<RowDefinition Height="60"/>
+						<RowDefinition Height="7*"/>
+						<RowDefinition Height="20"/>
+					</Grid.RowDefinitions>
+					<Canvas x:Name="PART_Canvas" Grid.Row="1" Grid.Column="1">
                         <InkCanvas ClipToBounds="True" Grid.Column="2" Grid.Row="1" Name="surfaceDessin" 
                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"                                                                      
                            Strokes="{Binding Path=Traits, Mode=OneTime}" EditingMode="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurModeEdition}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                           DefaultDrawingAttributes="{Binding Path=AttributsDessin, Mode=OneTime}"  Height="230" Width="600"/>
+                           DefaultDrawingAttributes="{Binding Path=AttributsDessin, Mode=OneTime}"  Height="500" Width="600"/>
                     </Canvas>
 
 
-                    <StackPanel Orientation="Horizontal" Background="#D3D3D3" Grid.Column="1" Grid.Row="1" MaxWidth="600">
+                    <StackPanel Orientation="Horizontal" Background="#D3D3D3" Grid.Column="1" Grid.Row="0" MaxWidth="600" Margin="0,13,0,0">
 
                         <Button Name="crayon" Width="40" Height="40" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="10,0,0,0"
                         BorderBrush="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurBordure}, ConverterParameter=crayon, UpdateSourceTrigger=PropertyChanged}" 

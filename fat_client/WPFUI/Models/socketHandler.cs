@@ -513,7 +513,6 @@ namespace WPFUI.Models
             this.socket.On("turn_ended", (new_endTurn) =>
             {
                 Console.WriteLine("onMatch turn_ended");
-                /* TODO: Find why the emit is not catched here */
                 EndTurn json = JsonConvert.DeserializeObject<EndTurn>(new_endTurn.ToString());
                 endTurn.set(json);
                 _events.PublishOnUIThread(new endTurnRoutineVMEvent());
@@ -522,7 +521,6 @@ namespace WPFUI.Models
             this.socket.On("turn_started", (new_startTurn) =>
             {
                 Console.WriteLine("onMatch turn_started");
-                /* TODO: transmit the turn time to the viewmodel */
                 StartTurn json = JsonConvert.DeserializeObject<StartTurn>(new_startTurn.ToString());
                 startTurn.set(json, endTurn.drawer == this._userdata.userName);
                 _events.PublishOnUIThread(new startTurnRoutineEvent(startTurn.timeLimit));
