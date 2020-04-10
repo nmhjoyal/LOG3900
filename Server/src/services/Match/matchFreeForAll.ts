@@ -53,7 +53,7 @@ export default class FreeForAll extends Match {
                 let word: string;
                 setTimeout(() => {
                     this.startTurn(io, word);
-                }, 5000);
+                }, 10000);
                 word = await gameDB.getRandomWord();
             }
             // else we wait for the drawer to send his choice of word in the "start_turn" event.
