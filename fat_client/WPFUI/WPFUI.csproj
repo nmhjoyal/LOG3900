@@ -127,11 +127,13 @@
     <Compile Include="Commands\selectAvatarCommand.cs" />
     <Compile Include="Converters\Converters.cs" />
     <Compile Include="EventModels\addMessageEvent.cs" />
+    <Compile Include="EventModels\appWarningEvent.cs" />
     <Compile Include="EventModels\AssisteIEvent.cs" />
     <Compile Include="EventModels\connectionEvent.cs" />
     <Compile Include="EventModels\createGameEvent.cs" />
     <Compile Include="EventModels\createMatchEvent.cs" />
     <Compile Include="EventModels\createTheRoomEvent.cs" />
+    <Compile Include="EventModels\changeChatOptionsEvent.cs" />
     <Compile Include="EventModels\DisconnectEvent.cs" />
     <Compile Include="EventModels\endMatchEvent.cs" />
     <Compile Include="EventModels\endTurnRoutineVMEvent.cs" />
@@ -156,6 +158,7 @@
     <Compile Include="EventModels\refreshRoomsEvent.cs" />
     <Compile Include="EventModels\refreshMessagesEvent.cs" />
     <Compile Include="EventModels\refreshUIEvent.cs" />
+    <Compile Include="EventModels\resetToGeneralEvent.cs" />
     <Compile Include="EventModels\roomsChangedEvent.cs" />
     <Compile Include="EventModels\roomsRetrievedEvent.cs" />
     <Compile Include="EventModels\scrollDownEvent.cs" />
@@ -559,6 +562,8 @@
     <Resource Include="Resources\strawberry.png" />
     <Resource Include="Resources\questions.gif" />
     <Resource Include="Resources\settings.png" />
+    <Resource Include="Resources\shellView\Nono.png" />
+    <Resource Include="Resources\shellView\stop.png" />
     <Content Include="Resources\strawberry.svg" />
     <Resource Include="Resources\watermelon.png" />
     <Resource Include="Resources\trophy.gif" />

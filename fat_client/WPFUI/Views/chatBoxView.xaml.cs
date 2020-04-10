@@ -23,7 +23,8 @@ namespace WPFUI.Views
     /// <summary>
     /// Logique d'interaction pour chatBoxView.xaml
     /// </summary>
-    public partial class chatBoxView : UserControl, IHandle<refreshMessagesEvent>, IHandle<scrollDownEvent>
+    public partial class chatBoxView : UserControl, IHandle<refreshMessagesEvent>, IHandle<scrollDownEvent>,
+                                       IHandle<changeChatOptionsEvent>
 
     {
         chatBoxViewModel _viewModel;
@@ -49,14 +50,6 @@ namespace WPFUI.Views
             messagesUI.ScrollToBottom();
         }
 
-        private void currentMessage_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-             //  _viewModel.sendMessage(currentMessage.Text);
-            }
-            
-        }
 
         private void channelsMode_Click(object sender, RoutedEventArgs e)
         {
@@ -88,6 +81,28 @@ namespace WPFUI.Views
         public void Handle(scrollDownEvent message)
         {
             messagesUI.ScrollToEnd();
+        }
+
+        public void Handle(changeChatOptionsEvent message)
+        {
+            if (!message.visible)
+            {
+                Console.WriteLine("message.visible = false");
+                channelsMode.IsEnabled = false;
+                ChannelText.Text = "Talk to your friends !";
+            }
+            else
+            {
+                Console.WriteLine("message.visible = true");
+                channelsMode.IsEnabled = true;
+
+                Binding myBinding = new Binding();
+                myBinding.Source = DataContext as chatBoxViewModel;
+                myBinding.Path = new PropertyPath("currentRoomId");
+                myBinding.Mode = BindingMode.OneWay;
+                myBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+                BindingOperations.SetBinding(ChannelText, TextBlock.TextProperty, myBinding);
+            }
         }
     }
 }

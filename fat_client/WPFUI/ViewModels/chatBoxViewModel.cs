@@ -12,7 +12,7 @@ using WPFUI.Models;
 namespace WPFUI.ViewModels
 {
     public class chatBoxViewModel: Screen, IHandle<refreshMessagesEvent>, IHandle<addMessageEvent>, IHandle<createTheRoomEvent>,
-                                   IHandle<refreshRoomsEvent>
+                                   IHandle<refreshRoomsEvent>, IHandle<resetToGeneralEvent>
     {
         private IEventAggregator _events;
         private IUserData _userData;
@@ -230,6 +230,20 @@ namespace WPFUI.ViewModels
             this._messages.Add(message.message);
             NotifyOfPropertyChange(() => messages);
         }
+
+        public void Handle(resetToGeneralEvent message)
+        {
+            _userData.matchId = null;
+            _userData.currentGameRoom = null;
+            Room general = _userData.selectableJoinedRooms[0].room;
+            _userData.messages = new BindableCollection<Models.Message>(general.messages);
+            _userData.currentRoomId = general.roomName;
+
+            this.messages = _userData.messages;
+            this.currentRoomId = _userData.currentRoomId;
+            _events.PublishOnUIThread(new changeChatOptionsEvent(true));
+        }
+
     }
 
 }

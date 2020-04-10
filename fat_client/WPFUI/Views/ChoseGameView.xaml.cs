@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WPFUI.Models;
 using WPFUI.ViewModels;
+using WPFUI.EventModels;
 
 namespace WPFUI.Views
 {
@@ -32,6 +33,14 @@ namespace WPFUI.Views
         {
             string matchId = (string)(sender as Button).Tag;
             (this.DataContext as ChoseGameViewModel).joinGame(matchId);
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            if ((this.DataContext as ChoseGameViewModel).userData.matchId != null)
+            {
+                (this.DataContext as ChoseGameViewModel).events.PublishOnUIThread(new resetToGeneralEvent());
+            }
         }
     }
 
