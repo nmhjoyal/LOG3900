@@ -541,6 +541,13 @@ namespace WPFUI.Models
                 this.offMatch();
                 this._events.PublishOnUIThread(new joinGameEvent());
             });
+
+            this.socket.On("update_players", (new_players) =>
+            {
+                List<Player> players = JsonConvert.DeserializeObject<List<Player>>(new_players.ToString());
+                endTurn.players.Clear();
+                endTurn.players.AddRange(players.OrderByDescending(i => i.ScoreTotal));
+            });
         }
 
         public void offMatch()
@@ -551,6 +558,7 @@ namespace WPFUI.Models
             this.socket.Off("guess_res");
             this.socket.Off("match_ended");
             this.socket.Off("unexpected_leave");
+            this.socket.Off("update_players");
         }
     }
 
