@@ -22,6 +22,30 @@ namespace WPFUI.ViewModels
 		private ISocketHandler _socketHandler;
 		private StatsClient statsClient;
 
+		private Rank _rank;
+
+		public Rank rank
+		{
+			get { return _rank; }
+			set { _rank = value; }
+		}
+
+		private StatsClient stats;
+
+		public StatsClient Stats
+		{
+			get { return this.stats; }
+			
+		}
+
+		private MatchHistory _matchHistory;
+
+		public MatchHistory matchHistory
+		{
+			get { return this._matchHistory; }
+
+		}
+
 		public profileViewModel(IUserData userdata, IEventAggregator events, ISocketHandler socketHandler)
 		{
 			_userData = userdata;

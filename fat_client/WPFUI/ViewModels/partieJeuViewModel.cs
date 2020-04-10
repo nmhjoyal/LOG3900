@@ -328,6 +328,8 @@ namespace WPFUI.ViewModels
         public void leaveMatchRoutine()
         {
             _socketHandler.socket.Emit("leave_chat_room", _userData.matchId);
+            _socketHandler.socket.Emit("leave_match");
+            _socketHandler.offMatch();
             _userData.matchId = null;
             _userData.currentGameRoom = null;
             Room general = _userData.selectableJoinedRooms[0].room;
@@ -491,6 +493,7 @@ namespace WPFUI.ViewModels
 
         public void Handle(endTurnRoutineVMEvent message)
         {
+            Console.WriteLine("endTurn VM");
             _timer.Stop();
             this.newScores();
             // fillPlayers();

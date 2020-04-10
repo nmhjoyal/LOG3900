@@ -193,8 +193,19 @@ namespace WPFUI.Models
                 }
                 catch
                 {
-                    roomToBeUpdated = this.selectableJoinedRooms.Where(x => x.id == message.roomId).ToList()[0];
-                    messagesToUpdate = roomToBeUpdated.room.messages;
+                    try
+                    {
+                        roomToBeUpdated = this.selectableJoinedRooms.Where(x => x.id == message.roomId).ToList()[0];
+                        messagesToUpdate = roomToBeUpdated.room.messages;
+                    }
+                    catch
+                    {
+                        roomToBeUpdated = null;
+                        messagesToUpdate = null;
+                        // TODO: faire un popup approprie
+                        Console.WriteLine("message sent to unjoigned room");
+                    }
+
                 }
 
                 if (messagesToUpdate != null)

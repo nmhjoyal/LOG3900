@@ -25,8 +25,18 @@ namespace WPFUI.ViewModels
                 return this.matches;
             }
         }
-        
-       
+
+        public IUserData userData
+        {
+            get { return userdata; }
+        }
+
+        public IEventAggregator events
+        {
+            get { return _events; }
+        }
+
+
         public ChoseGameViewModel(IEventAggregator events, ISocketHandler socketHandler, IUserData userdata)
         {
             _events = events;

@@ -35,6 +35,12 @@ namespace WPFUI.ViewModels
 
         public void disconnect()
         {
+            if ((_userData.matchId != null))
+            {
+                _socketHandler.socket.Emit("leave_chat_room", _userData.matchId);
+                _socketHandler.socket.Emit("leave_match");
+                _socketHandler.offMatch();
+            }
             _socketHandler.SignOut();
         }
 
@@ -42,6 +48,7 @@ namespace WPFUI.ViewModels
         {
             if (_userData.matchId != null)
             {
+                Console.WriteLine("----------------LEFT MATCH ------------------");
                 leaveMatchRoutine();
                 _events.PublishOnUIThread(new goBackMainEvent());
                 this._events.BeginPublishOnUIThread(new changeChatOptionsEvent(true));
@@ -53,7 +60,10 @@ namespace WPFUI.ViewModels
 
         public void leaveMatchRoutine()
         {
+            Console.WriteLine(_userData.matchId);
             _socketHandler.socket.Emit("leave_chat_room", _userData.matchId);
+            _socketHandler.socket.Emit("leave_match");
+            _socketHandler.offMatch();
             _userData.matchId = null;
             _userData.currentGameRoom = null;
             Room general = _userData.selectableJoinedRooms[0].room;

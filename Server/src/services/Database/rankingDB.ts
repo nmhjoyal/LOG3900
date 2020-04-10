@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 import * as ServerConfig from "../../serverConfig.json";
-import { Rank } from "../../models/rank";
+import { Rank, RankClient } from "../../models/rank";
 import { MatchMode, MatchInstance } from "../../models/matchMode";
 import Player from "../../models/player";
 
@@ -40,21 +40,21 @@ class RankingDB {
         }
     }
 
-    public async getRanks(username: string, matchMode: MatchMode): Promise<Rank[]> {
+    public async getRanks(username: string, matchMode: MatchMode): Promise<RankClient[]> {
         // Top 10
         const ranksDB: any = await this.mongoDB.db("Ranks").collection(MatchInstance.getModeName(matchMode))
-                                        .find().limit(10).toArray();
-        const ranks: Rank[] = [];
-        for (let rankDB of ranksDB) {
-            const rank: Rank = { username: rankDB.username, score: rankDB.score };
+                                        .find().sort({ score: -1 }).toArray();
+        
+        const ranks: RankClient[] = [];
+        for (let i: number = 0; i <  Math.min(ranksDB.length, 10); i++) {
+            const rank: RankClient = { username: ranksDB[i].username, score: ranksDB[i].score, pos: i + 1 };
             ranks.push(rank);
         }
         
         // Rank of the requester.
-        const rankDB: any = await this.mongoDB.db("Ranks").collection(MatchInstance.getModeName(matchMode))
-        .findOne({ username: { $eq: username }});
-        const rank: Rank = { username: rankDB.username, score: rankDB.score };
-        if(rank) {
+        const rankDB: Rank | undefined = ranksDB.find((rank: Rank) => rank.username == username); 
+        if (rankDB) {
+            const rank: RankClient = { username: rankDB.username, score: rankDB.score, pos: ranksDB.indexOf(rankDB) + 1 };
             ranks.push(rank);
         }
         return ranks;

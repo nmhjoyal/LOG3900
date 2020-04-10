@@ -1,7 +1,7 @@
 import Match from "./matchAbstract";
 import PublicProfile from "../../models/publicProfile";
 import ChatHandler from "../chatHandler";
-import { CreateMatch, SPRINT_BONUS_TIME, UpdateSprint } from "../../models/match";
+import { CreateMatch, UpdateSprint, SPRINT } from "../../models/match";
 import { sprintSoloSettings } from "../../models/matchMode";
 import { Message } from "../../models/message";
 import Admin from "../../models/admin";
@@ -21,25 +21,31 @@ export default class SprintSolo extends Match {
 
     public async startTurn(io: SocketIO.Server, word: string): Promise<void> {
         this.currentWord = word;
+        if (this.timer && this.gameLevel)
+            // Calculate new timeLimit with bonus depending on last round difficulty and if all guesses were used
+            this.timeLimit = this.timeLeft() + ((this.noMoreGuess()) ?  0 : SPRINT.getBonusTime(this.gameLevel));
+
+        
+        // Set up new game.
         const game: Game = await gameDB.getGame(word);
         this.hints = game.clues;
-        if (this.timer) this.timeLimit = this.timeLeft() + SPRINT_BONUS_TIME;
-        const updateSprint: UpdateSprint = this.createUpdateSprint(this.getNbGuesses(game.level), word,  this.timeLimit);
-        console.log(updateSprint);
+        this.gameLevel = game.level;
+        this.guessCounter =  SPRINT.getNbGuesses(this.gameLevel);
+        const updateSprint: UpdateSprint = this.createUpdateSprint(this.guessCounter, word,  this.timeLimit);
         io.in(this.matchId).emit("update_sprint", JSON.stringify(updateSprint));
 
-        this.virtualDrawing.draw(io, game.drawing, game.level);
+        this.virtualDrawing.draw(io, game.drawing, this.gameLevel);
         
         this.timer = Date.now();
-        this.timeout = setTimeout(() => {
-            this.endMatch(io);
+        this.timeout = setTimeout(async () => {
+            await this.endMatch(io);
         }, this.timeLimit * 1000);
     }
 
     public async endTurn(io: SocketIO.Server): Promise<void> {
         this.reset(io);
 
-        if (this.currentWord) { // currentWord is undefined at the first endTurn
+        if (this.currentWord != "") { // currentWord is undefined at the first endTurn
             this.notifyWord(io);
         }
 
@@ -55,7 +61,7 @@ export default class SprintSolo extends Match {
         const message: Message = Admin.createAdminMessage(username + " guessed the word.", this.matchId);
         io.in(this.matchId).emit("new_message", JSON.stringify(message));
 
-        const score: number = this.calculateScore();
+        const score: number = this.calculateScore(true);
         this.updateScore(username, score);
 
         io.in(this.matchId).emit("update_players", JSON.stringify(this.players));

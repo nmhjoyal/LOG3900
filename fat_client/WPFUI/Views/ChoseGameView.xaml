@@ -7,7 +7,8 @@
              xmlns:local="clr-namespace:WPFUI.Views"
              mc:Ignorable="d" 
              d:DesignHeight="1080" d:DesignWidth="1600"
-             FontFamily="Microsoft JhengHei UI Light">
+             FontFamily="Microsoft JhengHei UI Light"
+			 Loaded="UserControl_Loaded">
 	<Grid Background="#FFF5F5F6" >
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="1.5*"/>

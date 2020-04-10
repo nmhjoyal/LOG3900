@@ -1,10 +1,33 @@
 import { MatchMode } from "./matchMode";
 import PublicProfile from "./publicProfile";
 import Player from "./player";
+import { Level } from "./drawPoint";
 
 export const TIME_LIMIT_MIN: number = 30;   // 30 sec minimum
 export const TIME_LIMIT_MAX: number = 120;  // 2 min maximum
-export const SPRINT_BONUS_TIME: number = 15;// 15 sec in bonus
+export class SPRINT {
+    public static getBonusTime(lvl: Level): number {
+        switch (lvl) {
+            case Level.Easy:
+                return 10;
+            case Level.Medium:
+                return 20;
+            case Level.Hard:
+                return 30;
+        }
+    }
+
+    public static getNbGuesses(lvl: Level): number {
+        switch (lvl) {
+            case Level.Easy:
+                return 7;
+            case Level.Medium:
+                return 5;
+            case Level.Hard:
+                return 3;
+        }
+    }
+}
 
 export interface CreateMatch {
     nbRounds: number

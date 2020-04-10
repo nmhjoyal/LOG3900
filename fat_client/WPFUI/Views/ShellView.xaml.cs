@@ -23,7 +23,8 @@ namespace WPFUI.Views
     /// Logique d'interaction pour ShellView.xaml
     /// </summary>
     public partial class ShellView : Window, IHandle<LogInEvent>, IHandle<gameEvent>, 
-                                    IHandle<goBackMainEvent>, IHandle<logOutEvent>, IHandle<joinGameEvent>
+                                    IHandle<goBackMainEvent>, IHandle<logOutEvent>, IHandle<joinGameEvent>,
+                                    IHandle<appWarningEvent>
     {
         private string chatBoxState = "Visible";
         private Boolean chatBoxAnimating = false;
@@ -132,6 +133,18 @@ namespace WPFUI.Views
         {
             ellipse.Visibility = Visibility.Visible;
             arrow.Visibility = Visibility.Visible;
+        }
+
+        public void Handle(appWarningEvent message)
+        {
+            errorMessageTB.Text = message.warningContent;
+            errorBox.Visibility = Visibility.Visible;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            errorBox.Visibility = Visibility.Hidden;
+            errorMessageTB.Text = "";
         }
     }
 }

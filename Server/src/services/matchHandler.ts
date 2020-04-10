@@ -10,6 +10,7 @@ import { GamePreview, Stroke, StylusPoint } from "../models/drawPoint";
 import { VirtualDrawing } from "./Drawing/virtualDrawing";
 import ChatHandler from "./chatHandler";
 import Player from "../models/player";
+import PublicProfile from "../models/publicProfile";
 
 export default class MatchHandler {
     private currentMatches: Map<string, Match>;
@@ -43,7 +44,7 @@ export default class MatchHandler {
                 createMatchFeedback.feedback.status = false
                 if (createMatch.timeLimit >= TIME_LIMIT_MIN && createMatch.timeLimit <= TIME_LIMIT_MAX) {
                     if (createMatch.nbRounds >= NB_ROUNDS_MIN && createMatch.nbRounds <= NB_ROUNDS_MAX) {
-                        const match: Match = MatchInstance.createMatch(matchId, user, createMatch, this.chatHandler, io);
+                        const match: Match = MatchInstance.createMatch(matchId, this.getPublicProfile(user), createMatch, this.chatHandler, io);
                         this.currentMatches.set(matchId, match);
                         io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
                         createMatchFeedback.feedback.status = true;
@@ -190,21 +191,17 @@ export default class MatchHandler {
         }
     }
 
-    public guess(io: SocketIO.Server, guess: string, user: PrivateProfile | undefined): Feedback {
-        let feedback: Feedback = { status: false, log_message: "" };
-
+    public guess(io: SocketIO.Server, socket: SocketIO.Socket, guess: string, user: PrivateProfile | undefined): void {
         if (user) {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
-                feedback = match.guess(io, guess, user.username);
+                match.guess(io, socket, guess, user.username);
             } else {
-                feedback.log_message = "This match does not exist anymore.";
+                console.log("This match does not exist anymore.");
             }
         } else {
-            feedback.log_message = "You are not signed in.";
+            console.log("You are not signed in.");
         }
-
-        return feedback;
     }
 
     public stroke(socket: SocketIO.Socket, stroke: Stroke, user: PrivateProfile | undefined): void {
@@ -264,6 +261,11 @@ export default class MatchHandler {
                 };
             }
         }
+    }
+
+    
+    private getPublicProfile(privateProfile: PrivateProfile): PublicProfile {
+        return { username: privateProfile.username, avatar: privateProfile.avatar };
     }
 
     private getMatchFromPlayer(username: string): Match | undefined {
