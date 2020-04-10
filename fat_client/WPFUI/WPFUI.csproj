@@ -127,6 +127,7 @@
     <Compile Include="Commands\selectAvatarCommand.cs" />
     <Compile Include="Converters\Converters.cs" />
     <Compile Include="EventModels\addMessageEvent.cs" />
+    <Compile Include="EventModels\appWarningEvent.cs" />
     <Compile Include="EventModels\AssisteIEvent.cs" />
     <Compile Include="EventModels\connectionEvent.cs" />
     <Compile Include="EventModels\createGameEvent.cs" />
@@ -561,6 +562,8 @@
     <Resource Include="Resources\strawberry.png" />
     <Resource Include="Resources\questions.gif" />
     <Resource Include="Resources\settings.png" />
+    <Resource Include="Resources\shellView\Nono.png" />
+    <Resource Include="Resources\shellView\stop.png" />
     <Content Include="Resources\strawberry.svg" />
     <Resource Include="Resources\watermelon.png" />
     <Resource Include="Resources\trophy.gif" />

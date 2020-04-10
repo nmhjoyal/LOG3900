@@ -83,6 +83,9 @@ namespace WPFUI.Models
                     Console.WriteLine(_userdata.avatarName);
                     _events.PublishOnUIThread(new LogInEvent());
 
+                } else
+                {
+                    _events.PublishOnUIThread(new appWarningEvent(feedback.feedback.log_message));
                 }
                 //voir doc
             });

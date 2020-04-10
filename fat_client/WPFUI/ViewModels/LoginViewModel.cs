@@ -55,9 +55,13 @@ namespace WPFUI.ViewModels
                 _socketHandler.connectionAttempt();
 
             }
-          else // TODO: popup credentials invalides
+            else if (userName == null | userName == "")
             {
-                //
+                _events.PublishOnUIThread(new appWarningEvent("The username should not be blank "));
+            }
+            else if (password == null | password == "")
+            {
+                _events.PublishOnUIThread(new appWarningEvent("The password should not be blank "));
             }
         }
 
