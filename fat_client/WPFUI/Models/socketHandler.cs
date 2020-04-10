@@ -410,7 +410,7 @@ namespace WPFUI.Models
                     }
                 } else
                 {
-                    Console.WriteLine(jRF.feedback.log_message);
+                    _events.PublishOnUIThread(new appWarningEvent(jRF.feedback.log_message));
                 }
             });
         }
@@ -432,6 +432,9 @@ namespace WPFUI.Models
                     this._userdata.currentGameRoom = room;
                     this._events.PublishOnUIThread(new waitingRoomEvent());
                     this.offCreateMatch();
+                } else
+                {
+                    _events.PublishOnUIThread(new appWarningEvent(json.feedback.log_message));
                 }
             });
         }
@@ -483,7 +486,7 @@ namespace WPFUI.Models
                     _events.PublishOnUIThread(new gameEvent());
                 } else
                 {
-                    Console.WriteLine((string)json.feedback.log_message);
+                    _events.PublishOnUIThread(new appWarningEvent((string)json.feedback.log_message));
                 }
             });
 
@@ -491,6 +494,7 @@ namespace WPFUI.Models
             {
                 this._events.PublishOnUIThread(new joinGameEvent());
                 this.offWaitingRoom();
+                _events.PublishOnUIThread(new appWarningEvent("Unexpected match leave"));
             });
         }
 
@@ -552,6 +556,7 @@ namespace WPFUI.Models
             {
                 this._events.PublishOnUIThread(new joinGameEvent());
                 this.offMatch();
+                _events.PublishOnUIThread(new appWarningEvent("Unexpected match leave"));
             });
         }
 

@@ -33,6 +33,7 @@ namespace WPFUI.Views
         public partieJeuView()
         {
             InitializeComponent();
+            firstEndTurn = true;
         }
 
         
@@ -66,6 +67,7 @@ namespace WPFUI.Views
                 drawingEditingPanel.Visibility = Visibility.Visible;
                 sendMessage.IsEnabled = false;
                 sendGuess.IsEnabled = false;
+                firstEndTurn = false;
 
             } else
             {
@@ -79,9 +81,9 @@ namespace WPFUI.Views
                 drawingEditingPanel.Visibility = Visibility.Collapsed;
                 sendMessage.IsEnabled = true;
                 sendGuess.IsEnabled = true;
+                firstEndTurn = false;
             }
             (this.DataContext as partieJeuViewModel).NotifyOfPropertyChange(null);
-            firstEndTurn = false;
         }
 
         public void Handle(startTurnRoutineEvent message)
