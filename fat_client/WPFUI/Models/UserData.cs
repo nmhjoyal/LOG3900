@@ -23,6 +23,7 @@ namespace WPFUI.Models
         private string _matchId;
         private int _nbRounds;
         private IEventAggregator _events;
+        private MatchMode _matchMode;
 
         public Room currentGameRoom
         {
@@ -94,6 +95,12 @@ namespace WPFUI.Models
         {
             get { return _nbRounds; }
             set { _nbRounds = value; }
+        }
+
+        public MatchMode matchMode
+        {
+            get { return _matchMode; }
+            set { _matchMode = value; }
         }
         public UserData(IEventAggregator events)
         {

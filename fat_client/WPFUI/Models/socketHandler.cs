@@ -28,6 +28,7 @@ namespace WPFUI.Models
         public bool _canConnect;
         private string _traitJSON;
         private string _roomToBeCreated;
+        private string baseURL;
 
 
         public bool canConnect
@@ -62,12 +63,13 @@ namespace WPFUI.Models
 
         public SocketHandler(IUserData userdata, IEventAggregator events)
         {
+            this.baseURL = "http://localhost:5000";
             _userdata = userdata;
             _events = events;
             _roomToBeCreated = null;
             // TestPOSTWebRequest(user);
             // TestGETWebRequest("Testing get...");
-            this._socket = IO.Socket("http://localhost:5000");
+            this._socket = IO.Socket(this.baseURL);
             _socket.On("user_signed_in", (signInFeedback) =>
             {
                 SignInFeedback feedback = JsonConvert.DeserializeObject<SignInFeedback>(signInFeedback.ToString());
@@ -221,7 +223,7 @@ namespace WPFUI.Models
         }
         public void TestPOSTWebRequest(Object obj, string url)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000" + url);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(this.baseURL + url);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
@@ -242,7 +244,7 @@ namespace WPFUI.Models
 
         public Object TestGETWebRequest(string url)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:5000" + url);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(this.baseURL + url);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "GET";
 
@@ -513,7 +515,7 @@ namespace WPFUI.Models
             this.socket.On("update_sprint", (new_update_sprint) =>
             {
                 UpdateSprint json = JsonConvert.DeserializeObject<UpdateSprint>(new_update_sprint.ToString());
-                startTurn.word = json.word;
+                startTurn.word = string.Concat(json.word.Select(letter => letter + " "));
                 startTurn.timeLimit = json.time;
                 endTurn.players = new BindableCollection<Player>(json.players.OrderByDescending(i => i.ScoreTotal));
                 // json.guess TODO
@@ -533,6 +535,12 @@ namespace WPFUI.Models
                 List<Player> players = JsonConvert.DeserializeObject<List<Player>>(Feedback.ToString());
                 _events.PublishOnUIThread(new endMatchEvent(new List<Player>(players.Where(player => !player.isVirtual))));
             });
+
+            this.socket.On("unexpected_leave", () =>
+            {
+                this.offMatch();
+                this._events.PublishOnUIThread(new joinGameEvent());
+            });
         }
 
         public void offMatch()
@@ -542,6 +550,7 @@ namespace WPFUI.Models
             this.socket.Off("update_sprint");
             this.socket.Off("guess_res");
             this.socket.Off("match_ended");
+            this.socket.Off("unexpected_leave");
         }
     }
 

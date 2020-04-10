@@ -46,10 +46,10 @@
 
 		</StackPanel>
 		<TextBlock Width="390" Text="Password: " Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="5" Foreground="DarkSlateGray"/>
-		<TextBox Width="390" Grid.Column="1" Grid.Row="6" x:Name="_password" Grid.ColumnSpan="5"  Margin="5" Foreground="#FF66CC00">
+		<TextBox Width="390" Grid.Column="1" Grid.Row="6" x:Name="password" Grid.ColumnSpan="5"  Margin="5" Foreground="#FF66CC00">
         </TextBox>
 		<TextBlock Width="390" Text="Username: " Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="5" Foreground="DarkSlateGray"/>
-		<TextBox Width="390" Grid.Column="1" Grid.Row="4" x:Name="_userName" Grid.ColumnSpan="5"  Margin="5" Foreground="#FF66CC00" MaxLength="20">
+		<TextBox Width="390" Grid.Column="1" Grid.Row="4" x:Name="userName" Grid.ColumnSpan="5"  Margin="5" Foreground="#FF66CC00" MaxLength="20">
         </TextBox>
 		<Button x:Name="logIn" Style="{DynamicResource MaterialDesignRaisedAccentButton}" Width ="180" Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="5" Margin="0,20,0,0" Foreground="White" Background="#FF01C853" BorderBrush="#FF519B07" HorizontalAlignment="Center">
 			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">

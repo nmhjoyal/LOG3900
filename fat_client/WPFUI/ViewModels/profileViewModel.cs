@@ -20,6 +20,7 @@ namespace WPFUI.ViewModels
 		private IUserData _userData;
 		private IEventAggregator _events;
 		private ISocketHandler _socketHandler;
+		private StatsClient statsClient;
 
 		private Rank _rank;
 
@@ -50,47 +51,32 @@ namespace WPFUI.ViewModels
 			_userData = userdata;
 			_events = events;
 			_socketHandler = socketHandler;
-			this._rank = new Rank("", 0);
-			
-			this.statsClient = new BindableCollection<StatsClient>();
-			this.showStats();
-			
+			this.statsClient = JsonConvert.DeserializeObject<StatsClient>(this._socketHandler.TestGETWebRequest("/profile/stats/" + this._userData.userName).ToString());
 		}
-
-		public void showStats()
+		public StatsClient StatsClient
 		{
-			StatsClient statsClient = JsonConvert.DeserializeObject<StatsClient>(this._socketHandler.TestGETWebRequest("/profile/stats/" + this._userData.userName + "/").ToString());
+			get { return this.statsClient; }
 		}
 		public string newConfirmedPassword
 		{
 			get { return _newConfirmedPassword; }
 			set { _newConfirmedPassword = value; }
 		}
-
-
-
 		public string newchangedPassword
 		{
 			get { return _newchangedPassword; }
 			set { _newchangedPassword = value; }
 		}
-
-
 		public string changedLastName
 		{
 			get { return _changedLastName; }
 			set { _changedLastName = value; }
 		}
-
-
 		public string changedUsername
 		{
 			get { return _changedUsername; }
 			set { _changedUsername = value; }
 		}
-
-		
-
 		public string changedFirstName
 		{
 			get { return _changedFirstName; }
@@ -101,13 +87,5 @@ namespace WPFUI.ViewModels
 		{
 			_events.PublishOnUIThread(new goBackMainEvent());
 		}
-
-		private BindableCollection<StatsClient> statsClient;
-
-		public BindableCollection<StatsClient> StatsClient
-		{
-			get { return this.statsClient; }
-		}
-
 	}
 }

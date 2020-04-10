@@ -34,7 +34,7 @@ namespace WPFUI.Models
         void offMatch();
         void sendMessage();
         void SignOut();
-        Object TestGETWebRequest(string request);
+        Object TestGETWebRequest(string url);
         void TestPOSTWebRequest(object obj, string url);
     }
 }

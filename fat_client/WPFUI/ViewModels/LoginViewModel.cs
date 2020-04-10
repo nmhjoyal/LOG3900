@@ -21,7 +21,9 @@ namespace WPFUI.ViewModels
         public string password
         {
             get { return _password; }
-            set { _password = value; }
+            set { _password = value;
+                  NotifyOfPropertyChange(() => password);
+            }
         }
 
 
@@ -39,41 +41,24 @@ namespace WPFUI.ViewModels
                 NotifyOfPropertyChange(() => userName);}
         }
 
-
-        public string ipAdress
-        {
-            get { return _ipAdress; }
-            set { _ipAdress = value;
-                  NotifyOfPropertyChange(() => ipAdress);}
-        }
-
         public void setUserName()
         {
             _userdata.userName = userName;
             _userdata.password = password;
         }
 
-        public void setIpAdress()
-        {
-            _userdata.ipAdress = ipAdress;
-        }
-
-        public bool loginOk()
-        {
-            return (userName != null & ipAdress !=null);
-        }
         public void logIn()
         {   
-           
+          if (userName != null & userName != "" & password != null & password != "")
+            {
                 setUserName();
-                
-                
                 _socketHandler.connectionAttempt();
-              
-            
-            //ajouter dans la condition
-            
 
+            }
+          else // TODO: popup credentials invalides
+            {
+                //
+            }
         }
 
         public void signUp()

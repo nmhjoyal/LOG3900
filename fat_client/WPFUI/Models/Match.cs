@@ -60,8 +60,6 @@ namespace WPFUI.Models
                         return "Sprint solo";
                     case Models.MatchMode.sprintCoop:
                         return "Sprint coopératif";
-                    case Models.MatchMode.inverted:
-                        return "Mode inversé";
                     default:
                         return "";
                 }
@@ -88,7 +86,6 @@ namespace WPFUI.Models
         sprintSolo,
         sprintCoop,
         oneVsOne,
-        inverted
     }
 
     public class PublicProfile
@@ -241,6 +238,7 @@ namespace WPFUI.Models
             if(!isDrawer)
             {
                 this.word = string.Concat(startTurn.word.Select(letter => letter + " "));
+                Console.WriteLine(this.word);
             }
             this.timeLimit = startTurn.timeLimit;
         }

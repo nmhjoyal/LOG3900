@@ -46,5 +46,13 @@ namespace WPFUI.Views
             }
 
         }
+
+        public void Button_Click(object sender, MouseButtonEventArgs e)
+        {
+            if ((e.ClickCount == 1))
+            {
+                _viewModel.start();
+            }
+        }
     }
 }
