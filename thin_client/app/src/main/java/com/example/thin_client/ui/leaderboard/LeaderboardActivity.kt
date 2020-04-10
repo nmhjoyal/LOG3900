@@ -11,7 +11,7 @@ import androidx.fragment.app.FragmentManager
 import com.example.thin_client.R
 import com.example.thin_client.data.app_preferences.PreferenceHandler
 import com.example.thin_client.data.game.MatchMode
-import com.example.thin_client.data.model.Rank
+import com.example.thin_client.data.model.RankClient
 import com.example.thin_client.data.server.HTTPRequest
 import com.example.thin_client.ui.helpers.DEFAULT_INTERVAL
 import com.google.android.material.tabs.TabLayout
@@ -91,7 +91,7 @@ class LeaderboardActivity : AppCompatActivity() {
     private fun getRankings() {
         val httpClient = OkHttpRequest(okhttp3.OkHttpClient())
         httpClient.GET(
-            HTTPRequest.BASE_URL + HTTPRequest.URL_PRIVATE + PreferenceHandler(applicationContext).getUser() + MatchMode.SOLO,
+            HTTPRequest.BASE_URL + HTTPRequest.URL_RANKING + PreferenceHandler(applicationContext).getUser() + MatchMode.SOLO,
             object : okhttp3.Callback {
                 //N'entre pas dans le on failure
                 override fun onFailure(call: Call, e: IOException) {
@@ -99,10 +99,10 @@ class LeaderboardActivity : AppCompatActivity() {
 
                 override fun onResponse(call: Call, response: okhttp3.Response) {
                     val responseData = response.body?.charStream()
-                    val soloRankingInfo = Gson().fromJson(responseData, Array<Rank>::class.java)
+                    val soloRankingInfo = Gson().fromJson(responseData, Array<RankClient>::class.java)
                     runOnUiThread(({
                         for (rank in soloRankingInfo) {
-                            if (!LeaderboardManager.soloRankingList.contains(rank)) {
+                            if (!LeaderboardManager.soloRankingList.contains(rank) && LeaderboardManager.soloRankingList.size <= 10) {
                                 LeaderboardManager.soloRankingList.add(rank)
                             }
                         }
@@ -110,7 +110,7 @@ class LeaderboardActivity : AppCompatActivity() {
                 }
             })
         httpClient.GET(
-            HTTPRequest.BASE_URL + HTTPRequest.URL_PRIVATE + PreferenceHandler(applicationContext).getUser() + MatchMode.COLLABORATIVE,
+            HTTPRequest.BASE_URL + HTTPRequest.URL_RANKING + PreferenceHandler(applicationContext).getUser() + MatchMode.COLLABORATIVE,
             object : okhttp3.Callback {
                 //N'entre pas dans le on failure
                 override fun onFailure(call: Call, e: IOException) {
@@ -118,10 +118,10 @@ class LeaderboardActivity : AppCompatActivity() {
 
                 override fun onResponse(call: Call, response: okhttp3.Response) {
                     val responseData = response.body?.charStream()
-                    val collabRankingInfo = Gson().fromJson(responseData, Array<Rank>::class.java)
+                    val collabRankingInfo = Gson().fromJson(responseData, Array<RankClient>::class.java)
                     runOnUiThread(({
                         for (rank in collabRankingInfo) {
-                            if (!LeaderboardManager.collabRankingList.contains(rank)) {
+                            if (!LeaderboardManager.collabRankingList.contains(rank) && LeaderboardManager.collabRankingList.size <=10) {
                                 LeaderboardManager.collabRankingList.add(rank)
                             }
                         }
@@ -129,7 +129,7 @@ class LeaderboardActivity : AppCompatActivity() {
                 }
             })
         httpClient.GET(
-            HTTPRequest.BASE_URL + HTTPRequest.URL_PRIVATE + PreferenceHandler(applicationContext).getUser() + MatchMode.ONE_ON_ONE,
+            HTTPRequest.BASE_URL + HTTPRequest.URL_RANKING + PreferenceHandler(applicationContext).getUser() + MatchMode.ONE_ON_ONE,
             object : okhttp3.Callback {
                 //N'entre pas dans le on failure
                 override fun onFailure(call: Call, e: IOException) {
@@ -137,10 +137,10 @@ class LeaderboardActivity : AppCompatActivity() {
 
                 override fun onResponse(call: Call, response: okhttp3.Response) {
                     val responseData = response.body?.charStream()
-                    val oneVsOneRankingInfo = Gson().fromJson(responseData, Array<Rank>::class.java)
+                    val oneVsOneRankingInfo = Gson().fromJson(responseData, Array<RankClient>::class.java)
                     runOnUiThread(({
                         for (rank in oneVsOneRankingInfo) {
-                            if (!LeaderboardManager.oneVsOneRankingList.contains(rank)) {
+                            if (!LeaderboardManager.oneVsOneRankingList.contains(rank) && LeaderboardManager.oneVsOneRankingList.size <= 10) {
                                 LeaderboardManager.oneVsOneRankingList.add(rank)
                             }
                         }
@@ -148,7 +148,7 @@ class LeaderboardActivity : AppCompatActivity() {
                 }
             })
         httpClient.GET(
-            HTTPRequest.BASE_URL + HTTPRequest.URL_PRIVATE + PreferenceHandler(applicationContext).getUser() + MatchMode.FREE_FOR_ALL,
+            HTTPRequest.BASE_URL + HTTPRequest.URL_RANKING + PreferenceHandler(applicationContext).getUser() + MatchMode.FREE_FOR_ALL,
             object : okhttp3.Callback {
                 //N'entre pas dans le on failure
                 override fun onFailure(call: Call, e: IOException) {
@@ -156,10 +156,10 @@ class LeaderboardActivity : AppCompatActivity() {
 
                 override fun onResponse(call: Call, response: okhttp3.Response) {
                     val responseData = response.body?.charStream()
-                    val freeForAllrankingInfo = Gson().fromJson(responseData, Array<Rank>::class.java)
+                    val freeForAllrankingInfo = Gson().fromJson(responseData, Array<RankClient>::class.java)
                     runOnUiThread(({
                         for (rank in freeForAllrankingInfo) {
-                            if (!LeaderboardManager.freeForAllRankingList.contains(rank)) {
+                            if (!LeaderboardManager.freeForAllRankingList.contains(rank) && LeaderboardManager.freeForAllRankingList.size<=10) {
                                 LeaderboardManager.freeForAllRankingList.add(rank)
                             }
                         }
@@ -170,7 +170,7 @@ class LeaderboardActivity : AppCompatActivity() {
 
 }
 
-class LeaderboardItem(val ranking: Rank) : Item<GroupieViewHolder>() {
+class LeaderboardItem(val ranking:RankClient) : Item<GroupieViewHolder>() {
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.text_view_ranking_username.text = ranking.username

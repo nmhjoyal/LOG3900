@@ -1,17 +1,17 @@
 package com.example.thin_client.ui.leaderboard
 
 import com.example.thin_client.data.model.MatchInfos
-import com.example.thin_client.data.model.Rank
+import com.example.thin_client.data.model.RankClient
 
 
 object LeaderboardManager {
 
     val leaderboardTabNames = arrayListOf("Collaborative" ,"Free-for-all", "One-on-one","Solo")
 
-    var soloRankingList =  ArrayList<Rank>()
-    var collabRankingList =  ArrayList<Rank>()
-    var oneVsOneRankingList = ArrayList<Rank>()
-    var freeForAllRankingList = ArrayList<Rank>()
+    var soloRankingList =  ArrayList<RankClient>()
+    var collabRankingList =  ArrayList<RankClient>()
+    var oneVsOneRankingList = ArrayList<RankClient>()
+    var freeForAllRankingList = ArrayList<RankClient>()
 
 
     fun resetRankingLists() {

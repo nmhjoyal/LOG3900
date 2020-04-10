@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.thin_client.R
 import com.example.thin_client.data.game.MatchMode
-import com.example.thin_client.data.model.Rank
+
 import com.example.thin_client.data.server.HTTPRequest
 import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
