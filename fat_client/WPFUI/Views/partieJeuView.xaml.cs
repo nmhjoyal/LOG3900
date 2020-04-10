@@ -28,6 +28,8 @@ namespace WPFUI.Views
     {
         private partieJeuViewModel _viewModel;
         private Boolean isMouseDown = false;
+        private Boolean firstEndTurn = true;
+        private Boolean youAreDrawer = false;
         public partieJeuView()
         {
             InitializeComponent();
@@ -51,11 +53,15 @@ namespace WPFUI.Views
             Console.WriteLine(JsonConvert.SerializeObject(message));
             if (((dynamic)message.EndTurnFeedBack).nextIsYou)
             {
+                youAreDrawer = true;
                 roundFinishedMessage.Text = "Round " + ((dynamic)message.EndTurnFeedBack).currentRound;
                 nextPlayerMessage.Text = "Next player to chose is " + ((dynamic)message.EndTurnFeedBack).drawer;
-                endTurnBox.Visibility = Visibility.Visible;
-                await Task.Delay(3000);
-                endTurnBox.Visibility = Visibility.Hidden;
+                if (!firstEndTurn)
+                {
+                    endTurnBox.Visibility = Visibility.Visible;
+                    await Task.Delay(3000);
+                    endTurnBox.Visibility = Visibility.Hidden;
+                }
                 selectNextDrawingBox.Visibility = Visibility.Visible;
                 drawingEditingPanel.Visibility = Visibility.Visible;
                 sendMessage.IsEnabled = false;
@@ -63,22 +69,30 @@ namespace WPFUI.Views
 
             } else
             {
+                youAreDrawer = false;
                 roundFinishedMessage.Text = "Round " + ((dynamic)message.EndTurnFeedBack).currentRound;
                 nextPlayerMessage.Text = "Next player to chose is " + ((dynamic)message.EndTurnFeedBack).drawer;
-                endTurnBox.Visibility = Visibility.Visible;
+                if (!firstEndTurn)
+                {
+                    endTurnBox.Visibility = Visibility.Visible;
+                }
                 drawingEditingPanel.Visibility = Visibility.Collapsed;
                 sendMessage.IsEnabled = true;
                 sendGuess.IsEnabled = true;
             }
             (this.DataContext as partieJeuViewModel).NotifyOfPropertyChange(null);
+            firstEndTurn = false;
         }
 
         public void Handle(startTurnRoutineEvent message)
         {
             selectNextDrawingBox.Visibility = Visibility.Hidden;
             endTurnBox.Visibility = Visibility.Hidden;
-            sendMessage.IsEnabled = true;
-            sendGuess.IsEnabled = true;
+            if (!youAreDrawer)
+            {
+                sendMessage.IsEnabled = true;
+                sendGuess.IsEnabled = true;
+            }
             (this.DataContext as partieJeuViewModel).NotifyOfPropertyChange(null);
         }
 
