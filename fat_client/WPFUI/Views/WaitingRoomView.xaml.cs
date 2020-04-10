@@ -30,10 +30,6 @@ namespace WPFUI.Views
         {
             InitializeComponent();
         }
-        private void refocus(object sender, RoutedEventArgs e)
-        {
-            currentMessage.Focus();
-        }
 
         private void OnLoad(object sender, RoutedEventArgs e)
         {
