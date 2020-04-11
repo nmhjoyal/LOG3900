@@ -5,19 +5,19 @@
     android:layout_height="match_parent"
     android:background="@color/color_white">
     <FrameLayout
-        android:layout_width="0dp"
+        android:id="@+id/draw_view_container_frame"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/chat_guideline"
         app:layout_constraintStart_toEndOf="@id/user_points_toolbar"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
         <androidx.cardview.widget.CardView
             android:id="@+id/draw_view_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_width="600dp"
+            android:layout_height="500dp" />
         <androidx.cardview.widget.CardView
             android:id="@+id/user_block"
-            android:layout_width="match_parent"
+            android:layout_width="600dp"
             android:layout_height="match_parent"
             android:clickable="false"
             android:focusable="false">
@@ -138,15 +138,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1"
-        app:layout_constraintStart_toStartOf="@+id/chat_guideline" >
+        app:layout_constraintStart_toEndOf="@id/draw_view_container_frame" >
     </androidx.cardview.widget.CardView>
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/chat_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.65" />
 
     <RelativeLayout
         android:id="@+id/toolbar"
@@ -155,7 +149,7 @@
         app:layout_constraintTop_toBottomOf="@id/one_vs_one_title"
         app:layout_constrainedWidth="true"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/chat_guideline">
+        app:layout_constraintEnd_toEndOf="@id/draw_view_container_frame">
         <LinearLayout
             android:id="@+id/timer"
             android:layout_width="wrap_content"

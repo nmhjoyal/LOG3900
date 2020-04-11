@@ -10,12 +10,14 @@ import android.os.Looper
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageButton
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.RecyclerView
 import com.example.thin_client.R
 import com.example.thin_client.data.AvatarID
 import com.example.thin_client.data.Feedback
@@ -401,13 +403,14 @@ class ProfileActivity : AppCompatActivity() {
                             for (match in stats.matchesHistory) {
                                 adapter.add(MatchHistoryHolder(match))
                             }
-                            adapter.setOnItemClickListener(({ item, view ->
-                                if (extras.isVisible) {
-                                    extras.visibility = View.GONE
-                                    player_list.visibility = View.GONE
+                            adapter.setOnItemClickListener(({ _, view ->
+                                val extrasLayout = view.findViewById<RelativeLayout>(R.id.extras)
+                                val playerList = view.findViewById<RecyclerView>(R.id.player_list)
+                                if (extrasLayout.isVisible) {
+                                    extrasLayout.visibility = View.GONE
+                                    playerList.visibility = View.GONE
                                 } else {
-                                    extras.visibility = View.VISIBLE
-                                    player_list.visibility = View.VISIBLE
+                                    extrasLayout.visibility = View.VISIBLE
                                 }
                             }))
                             match_history.adapter = adapter

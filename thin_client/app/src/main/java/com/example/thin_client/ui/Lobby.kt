@@ -72,7 +72,7 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
 
     override fun startGame() {
         if (!GameManager.isGameStarted) {
-            val intent = Intent(this, GameActivity::class.java)
+            val intent = Intent(applicationContext, GameActivity::class.java)
             startActivity(intent)
             GameManager.isGameStarted = true
         }

@@ -83,11 +83,13 @@ class WaitingRoom : Fragment() {
                     val feedback = Gson().fromJson(data.first().toString(), Feedback::class.java)
                     if(!feedback.status){
                         Handler(Looper.getMainLooper()).post(Runnable {
-                            Toast.makeText(
-                                context,
-                                feedback.log_message,
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            if (context != null) {
+                                Toast.makeText(
+                                    context,
+                                    feedback.log_message,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         })
                     }
                 }))
