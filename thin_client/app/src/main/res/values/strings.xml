@@ -46,6 +46,7 @@
     <string name="end_time">End time:</string>
     <string name="winner">Winner:</string>
     <string name="my_score">My score</string>
+    <string name="get_hint">Need a hint?</string>
 
     <!-- Strings related to login -->
     <string name="prompt_password">Password</string>

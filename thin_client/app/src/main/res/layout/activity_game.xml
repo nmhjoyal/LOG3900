@@ -74,6 +74,19 @@
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
     </FrameLayout>
+    <Button
+        android:id="@+id/get_hint_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_guess_selector"
+        android:text="@string/get_hint"
+        android:visibility="gone"
+        android:enabled="false"
+        android:padding="4dp"
+        android:layout_margin="4dp"
+        android:textColor="@color/color_white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/chatrooms_container"/>
     <RelativeLayout
         android:id="@+id/user_points_toolbar"
         android:layout_width="wrap_content"

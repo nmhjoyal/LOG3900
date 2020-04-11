@@ -27,7 +27,7 @@ namespace WPFUI.Models
         void onCreateMatch();
         void onDrawing(StrokeCollection Traits, Dictionary<Stroke, int> strokes);
         void onLobby(BindableCollection<Match> matches);
-        void onMatch(StartTurn startTurn, EndTurn endTurn);
+        void onMatch(StartTurn startTurn, EndTurn endTurn, GuessesLeft guessesLeft);
         void onWaitingRoom(BindableCollection<Player> players);
         void sendMessage();
         void SignOut();
