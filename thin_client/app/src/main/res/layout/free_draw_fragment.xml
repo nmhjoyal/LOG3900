@@ -39,7 +39,7 @@
         app:layout_constrainedHeight="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/colour_options">
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageButton
             android:id="@+id/crayon"
@@ -178,14 +178,14 @@
 
     <LinearLayout
         android:id="@+id/colour_options"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:gravity="center"
         app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toStartOf="@id/drawing_options">
 
         <ImageButton
             android:id="@+id/red"
@@ -194,8 +194,7 @@
             android:background="@color/colorPrimary"
             android:contentDescription="@string/crayon_cd"
             android:padding="8dp"
-            app:srcCompat="@drawable/circle_red">
-        </ImageButton>
+            app:srcCompat="@drawable/circle_red"></ImageButton>
 
         <ImageButton
             android:id="@+id/orange"
@@ -204,8 +203,7 @@
             android:background="@color/colorPrimary"
             android:contentDescription="@string/crayon_cd"
             android:padding="8dp"
-            app:srcCompat="@drawable/circle_orange">
-        </ImageButton>
+            app:srcCompat="@drawable/circle_orange"></ImageButton>
 
         <ImageButton
             android:id="@+id/yellow"
@@ -214,8 +212,7 @@
             android:background="@color/colorPrimary"
             android:contentDescription="@string/crayon_cd"
             android:padding="8dp"
-            app:srcCompat="@drawable/circle_yellow">
-        </ImageButton>
+            app:srcCompat="@drawable/circle_yellow"></ImageButton>
 
         <ImageButton
             android:id="@+id/green"
@@ -224,8 +221,7 @@
             android:background="@color/colorPrimary"
             android:contentDescription="@string/crayon_cd"
             android:padding="8dp"
-            app:srcCompat="@drawable/circle_green">
-        </ImageButton>
+            app:srcCompat="@drawable/circle_green"></ImageButton>
 
         <ImageButton
             android:id="@+id/blue"
@@ -234,8 +230,7 @@
             android:background="@color/colorPrimary"
             android:contentDescription="@string/crayon_cd"
             android:padding="8dp"
-            app:srcCompat="@drawable/circle_blue">
-        </ImageButton>
+            app:srcCompat="@drawable/circle_blue"></ImageButton>
 
         <ImageButton
             android:id="@+id/purple"
@@ -244,8 +239,7 @@
             android:background="@color/colorPrimary"
             android:contentDescription="@string/crayon_cd"
             android:padding="8dp"
-            app:srcCompat="@drawable/circle_purple">
-        </ImageButton>
+            app:srcCompat="@drawable/circle_purple"></ImageButton>
 
         <ImageButton
             android:id="@+id/pink"
@@ -254,8 +248,7 @@
             android:background="@color/colorPrimary"
             android:contentDescription="@string/crayon_cd"
             android:padding="8dp"
-            app:srcCompat="@drawable/circle_pink">
-        </ImageButton>
+            app:srcCompat="@drawable/circle_pink"></ImageButton>
 
         <ImageButton
             android:id="@+id/white"
@@ -264,8 +257,7 @@
             android:background="@color/colorPrimary"
             android:contentDescription="@string/crayon_cd"
             android:padding="8dp"
-            app:srcCompat="@drawable/circle_white">
-        </ImageButton>
+            app:srcCompat="@drawable/circle_white"></ImageButton>
 
         <ImageButton
             android:id="@+id/grey"
@@ -274,8 +266,7 @@
             android:background="@color/colorPrimary"
             android:contentDescription="@string/crayon_cd"
             android:padding="8dp"
-            app:srcCompat="@drawable/circle_grey">
-        </ImageButton>
+            app:srcCompat="@drawable/circle_grey"></ImageButton>
 
         <ImageButton
             android:id="@+id/brown"
@@ -284,8 +275,7 @@
             android:background="@color/colorPrimary"
             android:contentDescription="@string/crayon_cd"
             android:padding="8dp"
-            app:srcCompat="@drawable/circle_brown">
-        </ImageButton>
+            app:srcCompat="@drawable/circle_brown"></ImageButton>
 
         <ImageButton
             android:id="@+id/black"
@@ -294,8 +284,7 @@
             android:background="@color/colorPrimaryDark"
             android:contentDescription="@string/crayon_cd"
             android:padding="8dp"
-            app:srcCompat="@drawable/circle_black">
-        </ImageButton>
+            app:srcCompat="@drawable/circle_black"></ImageButton>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
