@@ -528,25 +528,12 @@ export default abstract class Match {
         };
     }
 
-    protected createStartTurn(word: string, isDrawer: boolean): StartTurn {
+    protected createStartTurn(word: string): StartTurn {
         return { 
             timeLimit: this.timeLimit,
-            word: isDrawer? word: word.replace(/[a-z]/gi, '_ ')
-        };
-    }
+            word: word.replace(/[a-z]/gi, '_')
 
-    protected getScores(): Score[] {
-        let scores: Score[] = [];
-        this.scores.forEach((updateScore: UpdateScore, username: string) => {
-            const avatar: string = this.getAvatar(username);
-            if(avatar) {}
-            scores.push({
-                username: username,
-                avatar: this.getAvatar(username),
-                updateScore: updateScore
-            })
-        });
-        return scores;
+        };
     }
 
     protected createEndTurn(): EndTurn {
