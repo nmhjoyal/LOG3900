@@ -508,6 +508,7 @@ namespace WPFUI.ViewModels
         public void Handle(startTurnRoutineEvent message)
         {
             this.HintEnabled = false;
+            this.OutilSelectionne = "crayon";
             this.AttributsDessin.Color = (System.Windows.Media.Color)ColorConverter.ConvertFromString("#FFFFFF");
             this.AttributsDessin.Width = 1;
             this.AttributsDessin.Height = 1;
@@ -534,6 +535,7 @@ namespace WPFUI.ViewModels
             endTurn.drawer = this.endTurn.drawer;
             endTurn.nextIsYou = this.endTurn.drawer == this._userData.userName;
             this.canDraw = false;
+            this.OutilSelectionne = "crayon";
             this.AttributsDessin.Color = (System.Windows.Media.Color)ColorConverter.ConvertFromString("#FFFFFF");
             this.AttributsDessin.Width = 1;
             this.AttributsDessin.Height = 1;
