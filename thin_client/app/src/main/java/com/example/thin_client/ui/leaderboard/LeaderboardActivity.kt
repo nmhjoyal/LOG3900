@@ -13,7 +13,7 @@ import androidx.fragment.app.FragmentManager
 import com.example.thin_client.R
 import com.example.thin_client.data.app_preferences.PreferenceHandler
 import com.example.thin_client.data.game.MatchMode
-import com.example.thin_client.data.model.RankClient
+import com.example.thin_client.data.model.Rank
 import com.example.thin_client.data.server.HTTPRequest
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
@@ -100,7 +100,7 @@ class LeaderboardActivity : AppCompatActivity() {
 
                 override fun onResponse(call: Call, response: okhttp3.Response) {
                     val responseData = response.body?.charStream()
-                    val soloRankingInfo = Gson().fromJson(responseData, Array<RankClient>::class.java)
+                    val soloRankingInfo = Gson().fromJson(responseData, Array<Rank>::class.java)
                     LeaderboardManager.soloRankingList.clear()
                     LeaderboardManager.soloRankingList.addAll(soloRankingInfo)
                     LeaderboardManager.soloRankingList.sortBy(({ it.pos.toInt() }))
@@ -120,7 +120,7 @@ class LeaderboardActivity : AppCompatActivity() {
 
                 override fun onResponse(call: Call, response: okhttp3.Response) {
                     val responseData = response.body?.charStream()
-                    val collabRankingInfo = Gson().fromJson(responseData, Array<RankClient>::class.java)
+                    val collabRankingInfo = Gson().fromJson(responseData, Array<Rank>::class.java)
                     LeaderboardManager.collabRankingList.clear()
                     LeaderboardManager.collabRankingList.addAll(collabRankingInfo)
                     LeaderboardManager.collabRankingList.sortBy(({ it.pos.toInt() }))
@@ -140,7 +140,7 @@ class LeaderboardActivity : AppCompatActivity() {
 
                 override fun onResponse(call: Call, response: okhttp3.Response) {
                     val responseData = response.body?.charStream()
-                    val oneVsOneRankingInfo = Gson().fromJson(responseData, Array<RankClient>::class.java)
+                    val oneVsOneRankingInfo = Gson().fromJson(responseData, Array<Rank>::class.java)
                     LeaderboardManager.oneVsOneRankingList.clear()
                     LeaderboardManager.oneVsOneRankingList.addAll(oneVsOneRankingInfo)
                     LeaderboardManager.oneVsOneRankingList.sortBy(({ it.pos.toInt() }))
@@ -160,7 +160,7 @@ class LeaderboardActivity : AppCompatActivity() {
 
                 override fun onResponse(call: Call, response: okhttp3.Response) {
                     val responseData = response.body?.charStream()
-                    val freeForAllrankingInfo = Gson().fromJson(responseData, Array<RankClient>::class.java)
+                    val freeForAllrankingInfo = Gson().fromJson(responseData, Array<Rank>::class.java)
                     LeaderboardManager.freeForAllRankingList.clear()
                     LeaderboardManager.freeForAllRankingList.addAll(freeForAllrankingInfo)
                     LeaderboardManager.freeForAllRankingList.sortBy(({ it.pos.toInt() }))
@@ -175,7 +175,7 @@ class LeaderboardActivity : AppCompatActivity() {
 
 }
 
-class LeaderboardItem(val ranking: RankClient) : Item<GroupieViewHolder>() {
+class LeaderboardItem(val ranking: Rank) : Item<GroupieViewHolder>() {
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.position.text = ranking.pos.toString()

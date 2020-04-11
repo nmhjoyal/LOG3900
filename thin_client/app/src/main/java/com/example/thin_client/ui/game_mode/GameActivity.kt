@@ -278,7 +278,6 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                 .off(SocketEvent.TURN_STARTED)
                 .off(SocketEvent.MATCH_LEFT)
                 .off(SocketEvent.MATCH_STARTED)
-                .off(SocketEvent.UPDATE_SPRINT)
         }
     }
 
