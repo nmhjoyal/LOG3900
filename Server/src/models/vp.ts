@@ -228,20 +228,20 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
     [
         LADY_WATERMELON,
         {
-            startMatch: "TODO",
+            startMatch: "Let's get this started then, tea time is soon!",
             endTurn: [
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO"
+                "The Queen of England's dogs could've done better love.",
+                "I must admit, quite an entertaining round that was.",
+                "Blimey! Jolly good show my darlings.",
+                "Nicely done dear.",
+                "It's about time we've finished. I'm simply knackered.",
+                "Well done! Let's get this bloody game over with already...",
+                "Right then, I need to see a man about a dog now. On with it!",
+                "Blimey! Done already?",
+                "This is simply bollocks, time just does not seem to be on my side.",
+                "Brilliant darling, simply brilliant."
             ],
-            hint: "TODO" + INSERT_HINT
+            hint: "There's no need to get cheeky, have a gander at this then: " + INSERT_HINT
         },
     ],
     [
@@ -323,20 +323,20 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
     [
         LITTLE_APPLE,
         {
-            startMatch: "TODO",
+            startMatch: "Yay! I'm so excited to play! Let's win!",
             endTurn: [
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO"
+                "I don't understand, I thought I had more time :(",
+                "Wow, you type soooo fast!",
+                "My mom said I could play for only 5 more minutes. Let's hurry!",
+                "During nap time I had a dream I would win this game.",
+                "My daddy said that if you close your eyes and count to 10 you won't feel angry anymore!",
+                "My friend Eddie told me dogs with floppy ears can fly if they shake their heads SUPER SUPER FAST! Like a helicopter.",
+                "Are we done yet? I'm boredddd",
+                "My mommy said she loves me thiiiiiis much. Do you have a mommy?",
+                "My cat Skittle scratched my big brother on the arm and there was BLOOD",
+                "That was sooo fun, let's play again!"
             ],
-            hint: "TODO" + INSERT_HINT
+            hint: "I asked my mommy, she said it's something like this: " + INSERT_HINT
         },
     ],
     [
@@ -363,7 +363,7 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
         {
             startMatch: "Quickly, let's start! I have a patient coming in 15 minutes.",
             endTurn: [
-                "I'm getting sick... of losing againt a bunch of parasites like you.",
+                "I'm getting sick... of losing against a bunch of parasites like you.",
                 "Did you know that winning makes you feel better?",
                 "Did everyone get their 8 hours of sleep? Because you seem a little slow..",
                 "I COMPLETELY FORGOT ABOUT THE PATIENT WAITING IN THE ROOM NEXT TO ME!",
