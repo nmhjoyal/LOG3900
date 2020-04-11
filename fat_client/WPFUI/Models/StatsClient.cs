@@ -83,7 +83,41 @@ namespace WPFUI.Models
         public BindableCollection<string> playerNames;
         public Rank winner;
         public int myScore;
+       
 
+        public long StartTime
+        {
+            get { return this.startTime; }
+           
+        }
+
+        public long EndTime
+        {
+            get { return this.endTime; }
+
+        }
+        public MatchMode MatchMode
+        {
+            get { return this.matchMode; }
+
+        }
+
+        public BindableCollection<string> PlayerNames
+        {
+            get { return this.playerNames; }
+
+        }
+
+        public Rank Winner
+        {
+            get { return this.winner; }
+
+        }
+        public int MyScore
+        {
+            get { return this.myScore; }
+
+        }
         public MatchHistory(long startTime, long endTime, MatchMode matchMode, BindableCollection<string> playerNames, Rank winner, int myScore)
         {
             this.startTime = startTime;
