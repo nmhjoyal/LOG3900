@@ -292,7 +292,6 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         if (SocketHandler.socket != null) {
             SocketHandler.socket!!
                 .on(SocketEvent.UPDATE_SPRINT, ({data ->
-                    isTurnStarted = true
                     val sprintParams = Gson().fromJson(data.first().toString(), UpdateSprint::class.java)
                     getNonVirtualPlayers(sprintParams.players)
                     Handler(Looper.getMainLooper()).post(({
@@ -311,12 +310,6 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                         nbTries = sprintParams.guess.toInt()
                         nb_guesses.text = sprintParams.guess.toString()
                         message.text = sprintParams.word
-                        for (player in sprintParams.players) {
-                            if (player.isVirtual) {
-                                currentDrawer = player.user.username
-                                break
-                            }
-                        }
                     }))
                 }))
                 .on(SocketEvent.TURN_ENDED, ({ data ->
@@ -390,6 +383,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                             toolbar.visibility = View.VISIBLE
                             if (GameManager.currentGameMode == MatchMode.SOLO ||
                                 GameManager.currentGameMode == MatchMode.COLLABORATIVE) {
+                                isTurnStarted = true
                                 showObserverFragment()
                             } else {
                                 user_block.bringToFront()
@@ -403,7 +397,10 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                     }
                 }))
                 .on(SocketEvent.MATCH_ENDED, ({ data ->
+                    val playersRefresh = Gson().fromJson(data.first().toString(), Array<Player>::class.java)
                     Handler(Looper.getMainLooper()).post(Runnable {
+                        getNonVirtualPlayers(playersRefresh)
+                        refreshPlayerPointsToolbar()
                         turnOffSocketEvents()
                         user_block.bringToFront()
                         user_points.visibility = View.GONE
