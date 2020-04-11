@@ -75,7 +75,6 @@ namespace WPFUI.Views
                 }
 
             }
-            Console.WriteLine(chatBoxState);
 
         }
 
@@ -108,7 +107,6 @@ namespace WPFUI.Views
             if (!chatBoxAnimating)
             {
                 chatBoxAnimating = true;
-                Console.WriteLine("log out avec chatBox " + chatBoxState);
                 Storyboard sb = mainGrid.FindResource("hideTopMenu") as Storyboard;
                 sb.Begin();
                 if (chatBoxState == "Visible")

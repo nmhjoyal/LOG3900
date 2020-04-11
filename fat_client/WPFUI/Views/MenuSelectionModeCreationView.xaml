@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WPFUI.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="1080" d:DesignWidth="1600"
+             d:DesignHeight="800" d:DesignWidth="600"
               FontFamily="Microsoft JhengHei UI Light">
     <Grid Background="White">
         <Grid.ColumnDefinitions>
@@ -15,7 +15,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="60"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="10"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="10"/>
@@ -27,6 +27,7 @@
         <Button  Foreground="#D6EFE9" Background="#018577"  BorderBrush="{x:Null}" x:Name="manuel2" Content="Manual" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="1" MaxWidth="200" Margin="0,30,0,0"/>
         <Button  Foreground="#D6EFE9" Background="#018577"  BorderBrush="{x:Null}" x:Name="assiste1" Content="Assisted" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="1" MaxWidth="200"/>
 
-        <TextBlock HorizontalAlignment="Center" FontSize="40"  Foreground="#00584C" Grid.Column="1" Grid.Row="1">Select your game creation mode</TextBlock>
+        <TextBlock HorizontalAlignment="Center" FontSize="40" TextWrapping="Wrap"
+				   Foreground="#00584C" Grid.Column="1" Grid.Row="1">Select your game creation mode</TextBlock>
     </Grid>
 </UserControl>

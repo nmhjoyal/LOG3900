@@ -30,8 +30,6 @@ namespace WPFUI.Views
 
         private void Ellipse_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            // _events.PublishOnUIThread()
-            Console.WriteLine("click");
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)

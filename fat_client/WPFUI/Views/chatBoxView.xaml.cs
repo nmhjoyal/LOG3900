@@ -87,13 +87,11 @@ namespace WPFUI.Views
         {
             if (!message.visible)
             {
-                Console.WriteLine("message.visible = false");
                 channelsMode.IsEnabled = false;
                 ChannelText.Text = "Talk to your friends !";
             }
             else
             {
-                Console.WriteLine("message.visible = true");
                 channelsMode.IsEnabled = true;
 
                 Binding myBinding = new Binding();

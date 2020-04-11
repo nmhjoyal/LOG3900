@@ -73,7 +73,7 @@ namespace WPFUI.Views
 
         private void surfaceDessin_StrokeCollected(object sender, InkCanvasStrokeCollectedEventArgs e)
         {
-            Console.WriteLine("collected");
+
         }
         private void surfaceDessin_MouseUp(object sender, MouseButtonEventArgs e)
         {

@@ -123,7 +123,6 @@ namespace WPFUI.Models
                 _avatars.Add(new Avatar("/Resources/pineapple.png", "PINEAPPLE"));
                 _avatars.Add(new Avatar("/Resources/strawberry.png", "STRAWBERRY"));
                 _avatars.Add(new Avatar("/Resources/watermelon.png", "WATERMELON"));
-                Console.WriteLine("***" + this.avatar);
                 return _avatars.Single(i => i.name == this.avatar).source;
             }
         }
@@ -238,7 +237,6 @@ namespace WPFUI.Models
             if(!isDrawer)
             {
                 this.word = string.Concat(startTurn.word.Select(letter => letter + " "));
-                Console.WriteLine(this.word);
             }
             this.timeLimit = startTurn.timeLimit;
         }

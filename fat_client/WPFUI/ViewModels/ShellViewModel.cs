@@ -59,6 +59,10 @@ namespace WPFUI.ViewModels
 					_events.Unsubscribe(((screen as partieJeuViewModel).GetView()) as partieJeuView);
 					(screen as partieJeuViewModel).Unsubscribe();
 					break;
+				case "WPFUI.ViewModels.chatBoxViewModel":
+					_events.Unsubscribe(((screen as chatBoxViewModel).GetView()) as chatBoxView);
+					_events.Unsubscribe(screen as chatBoxViewModel);
+					break;
 
 				default:
 					break;
@@ -204,7 +208,6 @@ namespace WPFUI.ViewModels
 		public void Handle(gameEvent message)
 		{
 			_countHelper++;
-			Console.WriteLine("view change svm: " + _countHelper);
 			FirstSubViewModel = _container.GetInstance<partieJeuViewModel>();
 			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}

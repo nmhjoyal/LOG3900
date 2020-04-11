@@ -136,7 +136,6 @@ namespace WPFUI.ViewModels
                 this._socketHandler.socket.Emit("erase_stroke");
             } else if(this.OutilSelectionne == "efface_segment")
             {
-                Console.WriteLine("should emit");
                 this._socketHandler.socket.Emit("erase_point");
             }
         }

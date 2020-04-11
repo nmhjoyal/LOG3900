@@ -5,17 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WPFUI.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="800" d:DesignWidth="800"
+             d:DesignHeight="800" d:DesignWidth="600"
 			 FontFamily="Microsoft JhengHei UI Light" Background="#FFF1F2F1" FontSize="16">
     <Grid >
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100"/>
-           
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="100" />
+			<ColumnDefinition Width="20"/>
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="20" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -25,98 +25,87 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="100"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
-		<StackPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,0,0,20">
-            <TextBlock FontSize="40" Foreground="#00584C" Margin="0,0,10,0" >Update Profile</TextBlock>
-			<Image Source="/Resources/logo.ico" Height="35"></Image>
+		<StackPanel Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" 
+					Orientation="Horizontal"
+					VerticalAlignment="Center">
+			<TextBlock FontSize="35" Foreground="#00584C">Edit Profile</TextBlock>
 		</StackPanel>
-		<StackPanel Grid.Column="0" Grid.Row="2" Orientation="Horizontal" Grid.ColumnSpan="3" HorizontalAlignment="Center" Width="300">
-			<TextBlock Text="New username:"/>
-			<TextBox x:Name="userName" Width="200" Foreground="#FF66CC00" Margin="2,0,0,0"/>
-		</StackPanel>
-
-		<StackPanel Grid.Column="0" Grid.Row="3" Orientation="Horizontal" Grid.ColumnSpan="3" HorizontalAlignment="Center" Width="300">
-			<TextBlock Text="New first name:"/>
-			<TextBox  x:Name="firstName" Width="200" Foreground="#FF66CC00" Margin="2,0,0,0"/>
+		<StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Width="250">
+			<TextBlock Text="New username:" VerticalAlignment="Center"/>
+			<TextBox x:Name="userName" Width="200" Foreground="#FF66CC00" Margin="2,0,0,0" VerticalAlignment="Center"/>
 		</StackPanel>
 
-		<StackPanel Grid.Column="0" Grid.Row="4" Orientation="Horizontal" Grid.ColumnSpan="3" HorizontalAlignment="Center" Width="300">
-			<TextBlock Text="New last name:"/>
-			<TextBox x:Name="lastName" Width="200" Foreground="#FF66CC00" Margin="2,0,0,0"/>
+		<StackPanel Grid.Column="1" Grid.Row="3" Orientation="Horizontal"  HorizontalAlignment="Center" Width="250">
+			<TextBlock Text="New first name:" VerticalAlignment="Center"/>
+			<TextBox  x:Name="firstName" Width="200" Foreground="#FF66CC00" Margin="2,0,0,0" VerticalAlignment="Center"/>
 		</StackPanel>
 
-		<StackPanel Grid.Column="0" Grid.Row="5" Orientation="Horizontal" Grid.ColumnSpan="3" HorizontalAlignment="Center" Width="300">
-			<TextBlock Text="New password:"/>
-			<TextBox x:Name="password" Width="200" Foreground="#FF66CC00" Margin="2,0,0,0"/>
+		<StackPanel Grid.Column="1" Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Center" Width="250">
+			<TextBlock Text="New last name:" VerticalAlignment="Center"/>
+			<TextBox x:Name="lastName" Width="200" Foreground="#FF66CC00" Margin="2,0,0,0" VerticalAlignment="Center"/>
 		</StackPanel>
 
-		<StackPanel Grid.Column="0" Grid.Row="6" Orientation="Horizontal" Grid.ColumnSpan="3" HorizontalAlignment="Center" Width="300">
-			<TextBlock Text="Confirm new password:"/>
-			<TextBox x:Name="confirmedPassword" Width="130" Foreground="#FF66CC00" Margin="2,0,0,0"/>
+		<StackPanel Grid.Column="1" Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Center" Width="250">
+			<TextBlock Text="New password:" VerticalAlignment="Center"/>
+			<TextBox x:Name="password" Width="200" Foreground="#FF66CC00" Margin="2,0,0,0" VerticalAlignment="Center"/>
 		</StackPanel>
 
-		<StackPanel Grid.Column="0" Grid.Row="7" Orientation="Horizontal" Grid.ColumnSpan="3" HorizontalAlignment="Center" Width="300">
-			<TextBlock Text="New avatar:"/>
+		<StackPanel Grid.Column="1" Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Center" Width="250">
+			<TextBlock Text="Confirm new password:" VerticalAlignment="Center"/>
+			<TextBox x:Name="confirmedPassword" Width="130" Foreground="#FF66CC00" Margin="2,0,0,0" VerticalAlignment="Center"/>
 		</StackPanel>
 
-        <Button x:Name="saveProfileChanges" Content="Save Changes" Grid.Row="8" Grid.ColumnSpan="3" 
-				MaxWidth="200" Click="saveProfileChanges_Click" Height="Auto" BorderBrush="#018677" Background="#018677" Foreground="White" Margin="0,10,0,0"/>
+		<StackPanel Grid.Column="1" Grid.Row="7" Orientation="Horizontal"  HorizontalAlignment="Center" Width="250">
+			<TextBlock Text="New avatar:" VerticalAlignment="Center"/>
+		</StackPanel>
 
-        <StackPanel Grid.Column="0" Grid.Row="9" Grid.ColumnSpan="5" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,20,0,20">
-            <TextBlock FontSize="40" Foreground="#00584C" Margin="0,0,10,0" >Profile Stats</TextBlock>
+        <Button x:Name="saveProfileChanges" Content="Save Changes" Grid.Row="8" Grid.Column="1" 
+				MaxWidth="180" Click="saveProfileChanges_Click" Height="30" BorderBrush="#018677" Background="#018677" Foreground="White" Margin="0,10,0,0"/>
 
-        </StackPanel>
-        <StackPanel Grid.Column="0" Grid.Row="10" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
-            <TextBlock Text="Username:"/>
-            <TextBlock Text="{Binding StatsClient.Username}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
-        </StackPanel>
-
-        <StackPanel Grid.Column="0" Grid.Row="11" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
-            <TextBlock Text="Match Count:"/>
-            <TextBlock Text="{Binding StatsClient.MatchCount}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+        <StackPanel Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,20,0,20" VerticalAlignment="Center">
+			<TextBlock FontSize="35" Foreground="#00584C" Margin="0,0,10,0" >Stats</TextBlock>
+		</StackPanel>
+		<StackPanel Grid.Column="2" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Width="250">
+			<TextBlock Text="Username:" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding StatsClient.Username}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="10,0,0,0" HorizontalAlignment="Left"/>
         </StackPanel>
 
-        <StackPanel Grid.Column="0" Grid.Row="12" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
-            <TextBlock Text="Victory Percentage:"/>
-            <TextBlock Text="{Binding StatsClient.VictoryPerc}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+		<StackPanel Grid.Column="2" Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Width="250">
+			<TextBlock Text="Match Count:" VerticalAlignment="Center"/>
+			<TextBlock Text="{Binding StatsClient.MatchCount}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="10,0,0,0" HorizontalAlignment="Left"/>
         </StackPanel>
 
-        <StackPanel Grid.Column="0" Grid.Row="13" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
-            <TextBlock Text="Average Time:"/>
-            <TextBlock Text="{Binding StatsClient.AverageTime}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+		<StackPanel Grid.Column="2" Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Center" Width="250">
+			<TextBlock Text="Victory Percentage:" VerticalAlignment="Center"/>
+			<TextBlock Text="{Binding StatsClient.VictoryPerc}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="10,0,0,0" HorizontalAlignment="Left"/>
         </StackPanel>
 
-        <StackPanel Grid.Column="0" Grid.Row="14" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
-            <TextBlock Text="Total Time:"/>
-            <TextBlock Text="{Binding StatsClient.TotalTime}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+		<StackPanel Grid.Column="2" Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Center" Width="250">
+			<TextBlock Text="Average Time:" VerticalAlignment="Center"/>
+			<TextBlock Text="{Binding StatsClient.AverageTime}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="10,0,0,0" HorizontalAlignment="Left"/>
         </StackPanel>
 
-        <StackPanel Grid.Column="0" Grid.Row="15" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
-            <TextBlock Text="Best solo sprint score:"/>
-            <TextBlock Text="{Binding StatsClient.BestSSS}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+		<StackPanel Grid.Column="2" Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Center" Width="250">
+			<TextBlock Text="Total Time:" VerticalAlignment="Center"/>
+			<TextBlock Text="{Binding StatsClient.TotalTime}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="10,0,0,0" HorizontalAlignment="Left"/>
         </StackPanel>
 
-        <StackPanel Grid.Column="0" Grid.Row="16" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
+		<StackPanel Grid.Column="2" Grid.Row="7" Orientation="Horizontal" HorizontalAlignment="Center" Width="250" Height="30">
+			<TextBlock Text="Best solo sprint score:" VerticalAlignment="Center"/>
+			<TextBlock Text="{Binding StatsClient.BestSSS}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="10,0,0,0" HorizontalAlignment="Left"/>
+        </StackPanel>
+
+		<StackPanel Grid.Column="2" Grid.Row="8" Orientation="Horizontal" HorizontalAlignment="Center" Width="250" Height="60">
             <TextBlock Text="Connections:"/>
-            <ScrollViewer Margin="0,0,0,0.333" Width="200" MaxHeight="40">
+            <ScrollViewer Margin="0,0,0,0.333" Width="200" >
                 <ItemsControl ItemsSource="{Binding StatsClient.Connections}" Grid.Column="8" Grid.Row="8">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Vertical">
-
-                                <TextBlock Text="{Binding}" Foreground="#FF8AD63E" TextAlignment="Left"></TextBlock>
+							<StackPanel Orientation="Vertical">
+								<TextBlock Text="{Binding}" Foreground="#FF8AD63E" TextAlignment="Left" Margin="10,0,0,0"></TextBlock>
                             </StackPanel>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -124,15 +113,14 @@
             </ScrollViewer>
             
         </StackPanel>
-        <StackPanel Grid.Column="0" Grid.Row="17" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
+		<StackPanel Grid.Column="2" Grid.Row="9" Orientation="Horizontal" HorizontalAlignment="Center" Width="250" Height="60">
             <TextBlock Text="Disconnections:"/>
-            <ScrollViewer Margin="0,0,0,0.333" Width="180" MaxHeight="40">
+            <ScrollViewer Margin="0,0,0,0.333" Width="180">
                 <ItemsControl ItemsSource="{Binding StatsClient.Disconnections}" Grid.Column="8" Grid.Row="8">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Vertical">
-
-                                <TextBlock Text="{Binding}" Foreground="#FF8AD63E" TextAlignment="Left"></TextBlock>
+							<StackPanel Orientation="Vertical">
+								<TextBlock Text="{Binding}" Foreground="#FF8AD63E" TextAlignment="Left" Margin="10,0,0,0"></TextBlock>
                             </StackPanel>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -142,12 +130,15 @@
             
         </StackPanel>
        
-        <StackPanel Grid.Column="0" Grid.Row="19" Orientation="Horizontal"  HorizontalAlignment="Center" Grid.ColumnSpan="3">
+        <StackPanel Grid.Column="2" Grid.Row="10" Orientation="Horizontal"  HorizontalAlignment="Center" Margin="0,10,0,0">
             <Button BorderBrush="{x:Null}" Background="#D6EFE9" FontSize="12" Foreground="#00584C" Content="See Matches History" Click="matchHistory"/>
         </StackPanel>
 
-        <Border Width="620" Visibility="Hidden" HorizontalAlignment="Center" Name="border" Background="#00584C" Grid.Column="0" Grid.Row="2" CornerRadius="15" BorderBrush="Black" Opacity="0.9" Grid.ColumnSpan="3" Grid.RowSpan="19" Height="549" Margin="0,0.333,0,0" VerticalAlignment="Top" >
-            <Grid Visibility="Hidden" Name="selectNextDrawingBox" >
+        <Border Visibility="Hidden" HorizontalAlignment="Center"
+				Name="border" Background="#00584C" Grid.Column="0" Grid.Row="0" 
+				CornerRadius="15" BorderBrush="Black" Grid.ColumnSpan="4" 
+				Grid.RowSpan="12" VerticalAlignment="Center" >
+            <Grid Visibility="Visible" Name="selectNextDrawingBox" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="10"/>
                     <ColumnDefinition Width="100"/>
@@ -269,8 +260,6 @@
 
             </Grid>
         </Border>
-        
-        
 
     </Grid>
     

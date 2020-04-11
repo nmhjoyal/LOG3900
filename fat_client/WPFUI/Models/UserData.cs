@@ -116,7 +116,6 @@ namespace WPFUI.Models
 
         public void changeChannel(string roomID)
         {
-            Console.WriteLine("changing channel in userdata: " + roomID);
             this.currentRoomId = roomID;
             try
             {
@@ -132,9 +131,7 @@ namespace WPFUI.Models
 
         public void Handle(roomsRetrievedEvent message)
         {
-            Console.WriteLine("roomsRetrievedEvent Handled");
             this.selectablePublicRooms.Clear();
-            Console.WriteLine(message._publicRooms.Length);
             foreach (string channelID in message._publicRooms)
             {
                 this.selectablePublicRooms.Add(new SelectableRoom(new Room(channelID, null, null)));
@@ -204,6 +201,7 @@ namespace WPFUI.Models
                         messagesToUpdate = null;
                         // TODO: faire un popup approprie
                         Console.WriteLine("message sent to unjoigned room");
+                        _events.PublishOnUIThread(new appWarningEvent("a message was sent to an unjoigned room"));
                     }
 
                 }

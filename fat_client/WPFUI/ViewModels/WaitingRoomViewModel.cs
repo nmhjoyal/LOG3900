@@ -89,7 +89,6 @@ namespace WPFUI.ViewModels
 
         public void sendMessage(string content = null)
         {
-            Console.WriteLine("message sending attempted");
             if (content != null)
             {
                 _userData.currentMessage = content;
@@ -129,7 +128,6 @@ namespace WPFUI.ViewModels
 
         public void Handle(addMessageEvent message)
         {
-            Console.WriteLine("hello");
             this._messages.Add(message.message);
             NotifyOfPropertyChange(() => messages);
         }

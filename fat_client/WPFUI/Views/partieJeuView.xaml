@@ -181,14 +181,14 @@
                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
 						   MouseMove="surfaceDessin_MouseMove" PreviewMouseDown="surfaceDessin_PreviewMouseDown" MouseUp="surfaceDessin_MouseUp" StrokeCollected="surfaceDessin_StrokeCollected"
                            Strokes="{Binding Path=Traits, Mode=OneTime}" EditingMode="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurModeEdition}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                           DefaultDrawingAttributes="{Binding Path=AttributsDessin, Mode=OneTime}" Grid.Row="1" Width="600" Height="600"/>
+                           DefaultDrawingAttributes="{Binding Path=AttributsDessin, Mode=OneTime}" Grid.Row="1" Width="600" Height="500"/>
 				</Canvas>
 			</Grid>
 
 			<!-- End of the xaml of the drawing section -->
 
 		<ScrollViewer Grid.Column="1" Grid.Row="6" Grid.RowSpan="6" Grid.ColumnSpan="7" 
-					  VerticalScrollBarVisibility="Hidden" Background="White" FontSize="18" >
+					  VerticalScrollBarVisibility="Hidden" Background="White" FontSize="18" Height="500" VerticalAlignment="Top">
 			<ItemsControl x:Name="joueurs">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
@@ -204,8 +204,8 @@
 			</ItemsControl>
 		</ScrollViewer>
 
-			<ScrollViewer Grid.Column="11" Grid.Row="5" Grid.ColumnSpan="3" VerticalScrollBarVisibility="Visible" 
-					  Name="messagesUI" Background="#FFEBF3F3" FontSize="18" Grid.RowSpan="4" Margin="0,19.8,0.4,0.4">
+			<ScrollViewer Grid.Column="11" Grid.Row="6" Grid.ColumnSpan="3" VerticalScrollBarVisibility="Visible" 
+					  Name="messagesUI" Background="#FFEBF3F3" FontSize="18" Grid.RowSpan="4" Height="500" VerticalAlignment="Top">
 				<ItemsControl x:Name="messages">
 					<ItemsControl.ItemTemplate>
 						<DataTemplate>

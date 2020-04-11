@@ -61,7 +61,6 @@ namespace WPFUI.ViewModels
 
             if (_userData.matchId != null)
             {
-                Console.WriteLine("----------------LEFT MATCH ------------------");
                 leaveMatchRoutine();
                 _events.PublishOnUIThread(new goBackMainEvent());
                 this._events.BeginPublishOnUIThread(new changeChatOptionsEvent(true));
@@ -73,7 +72,6 @@ namespace WPFUI.ViewModels
 
         public void leaveMatchRoutine()
         {
-            Console.WriteLine(_userData.matchId);
             _socketHandler.socket.Emit("leave_chat_room", _userData.matchId);
             _socketHandler.socket.Emit("leave_match");
             _userData.matchId = null;

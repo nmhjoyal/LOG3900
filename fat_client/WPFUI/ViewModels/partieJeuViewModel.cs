@@ -50,7 +50,6 @@ namespace WPFUI.ViewModels
         public partieJeuViewModel(IEventAggregator events, ISocketHandler socketHandler, IUserData userdata)
         {
             now = DateTime.Now.ToString();
-            Console.WriteLine("creation d'une vm de jeu a: " + now);
             editeur.PropertyChanged += new PropertyChangedEventHandler(EditeurProprieteModifiee);
             _events = events;
             _events.Unsubscribe(this);
@@ -440,7 +439,6 @@ namespace WPFUI.ViewModels
         }
         public void sendGuess()
         {
-            Console.WriteLine("SEND GUESS VUE");
             if (guessBox != null & guessBox != "")
             {
                 _socketHandler.socket.Emit("guess", guessBox);
@@ -525,7 +523,6 @@ namespace WPFUI.ViewModels
         {
             this.HintEnabled = false;
             _countHelper++;
-            Console.WriteLine("endTurn VM " + _countHelper + " created le : "+ now);
             _timer.Stop();
             this.newScores();
             // fillPlayers();

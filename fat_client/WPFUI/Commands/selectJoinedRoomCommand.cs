@@ -22,8 +22,6 @@ namespace WPFUI.Commands
 
         public void Execute(object parameter)
         {
-            Console.WriteLine("Joined Room clicked");
-
             _events.PublishOnUIThread(new refreshRoomsEvent((string)parameter, true));
         }
 

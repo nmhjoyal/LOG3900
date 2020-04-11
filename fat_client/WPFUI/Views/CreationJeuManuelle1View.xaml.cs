@@ -53,7 +53,6 @@ namespace WPFUI.Views
             
             this.canContainer.Children.Add(dynamicTextBox);
             
-            Console.WriteLine(dynamicTextBox.Name);
 
 
         }

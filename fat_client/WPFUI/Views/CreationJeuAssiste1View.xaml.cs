@@ -39,16 +39,12 @@ namespace WPFUI.Views
         {
 
             TextBox dynamicTextBox = new TextBox();
-            Console.WriteLine("allo");
 
             // Grid.SetRow(dynamicTextBox, 3);
             // Grid.SetColumn(dynamicTextBox, 7);
 
             this.canContainer.Children.Add(dynamicTextBox);
             dynamicTextBox.Name = "indice" + this.canContainer.Children.Count;
-            Console.WriteLine(dynamicTextBox.Name);
-
-            Console.WriteLine(this.canContainer.Children.Count);
 
 
         }
@@ -66,7 +62,6 @@ namespace WPFUI.Views
             {
                 option = (this.Options.Children[0] as ComboBox).SelectedIndex;
             }
-            Console.WriteLine(JsonConvert.SerializeObject(clues));
             (this.DataContext as CreationJeuAssiste1ViewModel).createGame(this.Word.Text, clues, this.Level.SelectedIndex, this.Mode.SelectedIndex, option, this.fileName.Text, (int)this.imageTransformee.ActualWidth, (int)this.imageTransformee.ActualHeight);
         }
 
@@ -82,7 +77,6 @@ namespace WPFUI.Views
 
         private void elementSelectionne(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine(this.Mode.SelectedIndex);
             ComboBox comboBox = new ComboBox();
             TextBlock text = new TextBlock();
             text.Text = "Options:";
