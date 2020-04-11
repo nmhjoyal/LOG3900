@@ -120,7 +120,8 @@
 					<StackPanel Orientation="Horizontal" Margin="0,2,0,2" Width="220" HorizontalAlignment="Center">
 						<TextBox Width="210" Margin="5,0,5,1" 
 								 HorizontalContentAlignment="Center"
-								 HorizontalAlignment="Center" CaretBrush="#FF1A695E" Foreground="#FF8E8E8E"></TextBox>
+								 HorizontalAlignment="Center" CaretBrush="#FF1A695E" 
+								 Foreground="#FF8E8E8E" x:Name="searchBarText"></TextBox>
 					</StackPanel>
 
 				</Border>
