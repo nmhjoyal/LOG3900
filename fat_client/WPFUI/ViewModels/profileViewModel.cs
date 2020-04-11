@@ -46,6 +46,12 @@ namespace WPFUI.ViewModels
 
 		}
 
+		public BindableCollection<MatchHistory> accesseur
+		{
+			get{
+				return statsClient.matchesHistory;
+			}
+		}
 		public profileViewModel(IUserData userdata, IEventAggregator events, ISocketHandler socketHandler)
 		{
 			_userData = userdata;
