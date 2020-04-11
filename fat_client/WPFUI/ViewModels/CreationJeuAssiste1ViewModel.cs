@@ -169,7 +169,7 @@ namespace WPFUI.ViewModels
             }
             catch (Exception)
             {
-                Console.WriteLine("This file provided is invalid (bmp, jpg, png)");
+                _events.PublishOnUIThread(new appWarningEvent("This file provided is invalid (bmp, jpg, png)"));
             }
         }
 
@@ -182,7 +182,7 @@ namespace WPFUI.ViewModels
             }
             catch (Exception)
             {
-                Console.WriteLine("This file provided is invalid (bmp, jpg, png)");
+                _events.PublishOnUIThread(new appWarningEvent("This file provided is invalid (bmp, jpg, png)"));
             }
         }
         public void preventDrawing(Stroke stroke)

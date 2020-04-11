@@ -19,15 +19,15 @@ export default class MatchHandler {
     // Used for free draw testing.
     private drawer: string;         // Socket id
     private observers: string[];    // Socket ids
-    private top: number;
     private previews: Map<string, VirtualDrawing>; // Key : socket.id or roomId, Value : virtual drawing
+    private top: number;
 
     public constructor() {
         this.currentMatches = new Map<string, Match>();
         this.observers = [];
         this.chatHandler = new ChatHandler();
-        this.top = 0;
         this.previews = new Map<string, VirtualDrawing>();
+        this.top = 0;
     }
     
     public async createMatch(io: SocketIO.Server, socket: SocketIO.Socket, 
@@ -51,7 +51,7 @@ export default class MatchHandler {
                         createMatchFeedback.feedback.log_message = "Match created successfully.";
                         createMatchFeedback.matchId = matchId;
                     } else {
-                        createMatchFeedback.feedback.log_message = "The number of rounds has to be in between 1 and 10.";
+                        createMatchFeedback.feedback.log_message = "The number of rounds has to be in between " + NB_ROUNDS_MIN + " and " + NB_ROUNDS_MAX + " 10.";
                     }
                 } else {
                     createMatchFeedback.feedback.log_message = "The time limit has to be in between 30 seconds and 2 minutes.";
@@ -151,7 +151,9 @@ export default class MatchHandler {
                 if (startMatchFeedback.feedback.status) {
                     io.in(match.matchId).emit("match_started", JSON.stringify(startMatchFeedback));
                     io.emit("update_matches", JSON.stringify(this.getAvailableMatches()));
-                    match.endTurn(io);
+                    setTimeout(() => {
+                        match.endTurn(io);
+                    }, 500);
                 } else {
                     socket.emit("match_started", JSON.stringify(startMatchFeedback));
                 }
@@ -165,7 +167,7 @@ export default class MatchHandler {
         return startMatchFeedback;
     }
 
-    public startTurn(io: SocketIO.Server, word: string, user: PrivateProfile | undefined): void {
+    public startTurn(io: SocketIO.Server, socket: SocketIO.Socket, word: string, user: PrivateProfile | undefined): void {
         if (user) {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if(match) {

@@ -16,7 +16,10 @@ export class VirtualDrawing {
     }
 
     public async draw(socketIO: SocketIO.Server | SocketIO.Socket, drawing: Stroke[], level: Level): Promise<void> {
+        const maxPoints: number = 2000;
         // let start: number = Date.now();
+        const totalPoints: number = this.totalPoints(drawing);
+        const factor: number = Math.ceil(totalPoints / maxPoints);
         this.clear(socketIO);
         let timeStamp: number = 0;
         let deltaT: number = (this.time * 1000) / (this.totalPoints(drawing) * Math.pow(2, 2 - level));
@@ -30,16 +33,19 @@ export class VirtualDrawing {
                     socketIO.emit("new_stroke", JSON.stringify(drawing[i]));
                 }
             }, timeStamp));
+            timeStamp += deltaT;
             for(let j: number = 0; j < drawing[i].StylusPoints.length; j++) {
-                this.timeouts.push(setTimeout(() => {
-                    // console.log("stroke " + i + " point " + j + " time " + (Date.now() - start));
-                    if(this.roomId) {
-                        socketIO.in(this.roomId).emit("new_point", JSON.stringify(drawing[i].StylusPoints[j]));
-                    } else  {
-                        socketIO.emit("new_point", JSON.stringify(drawing[i].StylusPoints[j]));
-                    }
-                }, timeStamp));
-                timeStamp += deltaT;
+                if(j % 1 == 0) {
+                    this.timeouts.push(setTimeout(() => {
+                        // console.log("stroke " + i + " point " + j + " time " + (Date.now() - start));
+                        if(this.roomId) {
+                            socketIO.in(this.roomId).emit("new_point", JSON.stringify(drawing[i].StylusPoints[j]));
+                        } else  {
+                            socketIO.emit("new_point", JSON.stringify(drawing[i].StylusPoints[j]));
+                        }
+                    }, timeStamp));
+                    timeStamp += deltaT;
+                }
             }
         }
         // console.log(Date.now() - start);
@@ -53,7 +59,7 @@ export class VirtualDrawing {
     private totalPoints(drawing: Stroke[]): number {
         let totalPoints: number = 0;
         drawing.forEach((line: Stroke) => {
-            totalPoints += line.StylusPoints.length;
+            totalPoints += line.StylusPoints.length + 1;
         });
         return totalPoints;
     }

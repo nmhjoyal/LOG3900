@@ -63,8 +63,6 @@ namespace WPFUI.ViewModels
             _coopPos = new BindableCollection<Ranking>();
             _solo2Pos = new BindableCollection<Ranking>();
 
-            getFakeScores();
-
             _socketHandler = socketHandler;
             _events = events;
           
@@ -72,22 +70,6 @@ namespace WPFUI.ViewModels
         public void goBack()
         {
             _events.PublishOnUIThread(new goBackMainEvent());
-        }
-
-        public void getFakeScores()
-        {
-            soloPos.Add(new Ranking("karima", 1));
-            soloPos.Add(new Ranking("nicole", 2));
-            soloPos.Add(new Ranking("hubert", 3));
-            soloPos.Add(new Ranking("olivierG", 4));
-            soloPos.Add(new Ranking("sebG", 5));
-            soloPos.Add(new Ranking("log3000", 6));
-            soloPos.Add(new Ranking("log2410", 7));
-            soloPos.Add(new Ranking("log2610", 8));
-            soloPos.Add(new Ranking("tanguy", 9));
-            soloPos.Add(new Ranking("covid-19", 10));
-            soloPos.Add(new Ranking("h1n1", 11));
-            soloPos.Add(new Ranking("vacheFolle", 12));
         }
     }
 

@@ -29,5 +29,17 @@ namespace WPFUI.Views
         {
 
         }
+
+        private void matchHistory(object sender, RoutedEventArgs e)
+        {
+            this.border.Visibility = Visibility.Visible;
+            this.selectNextDrawingBox.Visibility = Visibility.Visible;
+        }
+
+        private void close(object sender, RoutedEventArgs e)
+        {
+            this.border.Visibility = Visibility.Hidden;
+            this.selectNextDrawingBox.Visibility = Visibility.Hidden;
+        }
     }
 }

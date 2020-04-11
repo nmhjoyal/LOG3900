@@ -62,7 +62,6 @@ namespace WPFUI.Views
             }
             (this.DataContext as CreationJeuManuelle2ViewModel).createGame(this.Word.Text, clues, this.Level.SelectedIndex, this.Mode.SelectedIndex, option);
             
-            Console.WriteLine(JsonConvert.SerializeObject(clues));
         }
 
         private void preview(object sender, RoutedEventArgs e)
@@ -76,7 +75,6 @@ namespace WPFUI.Views
         }
         private void elementSelectionne(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine(this.Mode.SelectedIndex);
             ComboBox comboBox = new ComboBox();
             TextBlock text = new TextBlock();
             text.Text = "Options:";

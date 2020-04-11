@@ -24,6 +24,11 @@ namespace WPFUI.ViewModels
             fillAvatars();
         }
 
+        public IEventAggregator events
+        {
+            get { return _events; }
+        }
+
         public string username
         {
             get { return _userdata.userName; }
@@ -33,7 +38,6 @@ namespace WPFUI.ViewModels
         public void logOut()
         {
             _socketHandler.SignOut();
-            _events.PublishOnUIThread(new logOutEvent());
         }
         public void viewProfile()
         {

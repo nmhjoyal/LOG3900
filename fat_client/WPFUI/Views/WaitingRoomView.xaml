@@ -6,15 +6,16 @@
               xmlns:gif="http://wpfanimatedgif.codeplex.com"
              xmlns:local="clr-namespace:WPFUI.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="700" d:DesignWidth="900"
-             FontFamily="Microsoft JhengHei UI Light">
+             d:DesignHeight="900" d:DesignWidth="800"
+             FontFamily="Microsoft JhengHei UI Light"
+			 Loaded="OnLoad">
     <Grid Background="#FFF5F5F6" >
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="40"/>
+            <ColumnDefinition Width="4*"/>
             <ColumnDefinition Width="10"/>
             <ColumnDefinition Width="50" />
             <ColumnDefinition Width="10"/>
-            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="10" />
             <ColumnDefinition Width="10"/>
             <ColumnDefinition Width="100" />
@@ -22,21 +23,21 @@
             <ColumnDefinition Width="10" />
             <ColumnDefinition Width="10" />
             <ColumnDefinition Width="3*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="40" />
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="4*" />
 
 
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="1.5*"/>
             <RowDefinition Height="60"/>
             <RowDefinition Height="10"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="10"/>
             <RowDefinition Height="20"/>
             <RowDefinition Height="10"/>
-            <RowDefinition Height="20"/>
             <RowDefinition Height="10"/>
-            <RowDefinition Height="10"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="6*"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="5"/>
             <RowDefinition Height="20"/>
@@ -44,87 +45,58 @@
             <RowDefinition Height="40"/>
             <RowDefinition Height="10"/>
             <RowDefinition Height="40"/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="3*"/>
 
         </Grid.RowDefinitions>
-        <TextBlock  FontSize="40"  Foreground="#FF66CC00" Text="Salle d'attente" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="14" TextAlignment="Center"/>
+        <TextBlock  FontSize="40"  Foreground="#00584C" Text="Waiting Room" 
+					Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="14" TextAlignment="Center"
+					/>
 
 
-        <Border BorderBrush="Black"  Background="#FF00CCCC" BorderThickness="2" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="7" Grid.RowSpan="5"/>
-        <TextBlock Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="6" Grid.RowSpan="5" Text="Joueurs présents" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25"/>
-        <Border  Background="#FF00CCCC" BorderBrush="Black" BorderThickness="2" Grid.Column="11" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="5"/>
-        
-       
-        <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" Grid.RowSpan="5" Grid.Column="11" Grid.Row="2" HorizontalAlignment="Center">
-            <Image HorizontalAlignment="Center" VerticalAlignment="Center" Width="70" gif:ImageBehavior.AnimatedSource="/Resources/chat.gif" Height="50"/>
-            <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontSize="25" Text="Discute avec tes amis!" HorizontalAlignment="Center"/>
-        </StackPanel>
+        <Border BorderBrush="Black"  Background="#018677" BorderThickness="2" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="12" Grid.RowSpan="4"/>
+		<TextBlock Foreground="#D6EFE9" Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="11" Grid.RowSpan="4" Text="Current Players" 
+				   VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25"/>
+
+
+
 
         <TextBlock FontSize="14" Grid.Row="5" TextAlignment="Center" Grid.Column="9" Name="word"/>
 
-		<Border  BorderBrush="Black" Grid.ColumnSpan="2" BorderThickness="2" Grid.Column="11" Grid.Row="8" Grid.RowSpan="2"/>
-
-
-		<Border  BorderBrush="Black" BorderThickness="2" Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="7" Grid.RowSpan="2"/>
-        <ScrollViewer Grid.Column="1" Grid.Row="8" Grid.RowSpan="2" Grid.ColumnSpan="7" VerticalScrollBarVisibility="Visible">
-            <ItemsControl ItemsSource="{Binding Players}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Vertical" Margin="0,20,0,0">
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <TextBlock Text="{Binding Username}" Height="30" FontSize="20" VerticalAlignment="Center" Foreground="DarkSlateGray"/>
-                                <Image Source="{Binding Avatar}" Height="30" VerticalAlignment="Center" Margin="20,0,0,0"></Image>
-                            </StackPanel>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
-        <Button  x:Name="goBack"  Grid.Column="12" Grid.Row="1" MaxWidth="100" HorizontalAlignment="Right"  Background="#FFBF0B0B" BorderBrush="#FFBF0B0B">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Foreground="White">Retour</TextBlock>
-                <Image Source="/Resources/logout.png" Height="22" Margin="5,0,0,0"></Image>
-            </StackPanel>
-        </Button>
-
-        <ScrollViewer Grid.Column="11" Grid.Row="8" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Hidden" Name="messagesUI" FontSize="18">
-            <ItemsControl x:Name="messages">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-						<StackPanel Orientation="Vertical" Margin="20,0,0,0">
-							<StackPanel Orientation="Horizontal">
-								<Image Source="account_circle_grey_72x72.png" MaxHeight="25" VerticalAlignment="Center"></Image>
-								<TextBlock Text="{Binding senderName}" Foreground="DarkSlateGray" VerticalAlignment="Center"/>
+		<Border  BorderBrush="Black" BorderThickness="2" Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="12" Grid.RowSpan="2"/>
+		<ScrollViewer Grid.Column="1" Grid.Row="8" Grid.RowSpan="2" Grid.ColumnSpan="12" VerticalScrollBarVisibility="Visible">
+			<ItemsControl ItemsSource="{Binding Players}">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<StackPanel Orientation="Vertical" Margin="0,20,0,0">
+							<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+								<TextBlock Text="{Binding Username}" Height="30" FontSize="20" VerticalAlignment="Center" Foreground="DarkSlateGray"/>
+								<Image Source="{Binding Avatar}" Height="30" VerticalAlignment="Center" Margin="20,0,0,0"></Image>
 							</StackPanel>
-							<TextBlock Text="{Binding content}" Foreground="Black" TextWrapping="Wrap" Margin="0,0,0,0"/>
-							<TextBlock Text="{Binding formattedTimeStamp}" Foreground="DarkSlateGray" HorizontalAlignment="Left" FontSize="12" Margin="10,0,0,10"/>
 						</StackPanel>
 					</DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
-        <TextBox x:Name ="currentMessage" Grid.Column="11" Grid.Row="9" Foreground="DarkSlateGray" BorderBrush="Black" BorderThickness="2" Background="White" KeyDown="currentMessage_KeyDown"/>
-        <Button x:Name ="sendMessage" BorderBrush="#FCBA03" Grid.Column="12" Grid.Row="9" Background="#FCBA03" Foreground="White" Click="refocus" 
-				Height="auto">
-            Envoyer
-        </Button>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+		</ScrollViewer>
+
+
         
-        <Border BorderBrush="Black" BorderThickness="1" Grid.ColumnSpan="1" Grid.Row="15" Grid.Column="11"/>
-        <Button x:Name="start" BorderBrush="{x:Null}" Background="#FC038C" Grid.Column="12" Grid.Row="15" Content="Commencer " 
-				Foreground="White" Height="auto"/>
-        <StackPanel Grid.Row="15" Grid.Column="11" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Image Width="40" gif:ImageBehavior.AnimatedSource="/Resources/party.gif"/>
-            <TextBlock  VerticalAlignment="Center" TextAlignment="Center" Text="Tout le monde est là?" Margin="0,0,10,0"/>
+        <Border BorderBrush="Black" BorderThickness="1" Grid.ColumnSpan="5" Grid.Row="15" Grid.Column="7"/>
+        <Button BorderBrush="{x:Null}" Background="#01C853" Grid.Column="12" Grid.Row="15" Content="Start " 
+				Foreground="White" Height="auto" PreviewMouseDown="Button_Click" Margin="10,0,0,0"/>
+        <StackPanel Grid.Row="15" Grid.Column="7" Orientation="Horizontal" HorizontalAlignment="Right" Grid.ColumnSpan="5">
+           
+            <TextBlock  VerticalAlignment="Center" TextAlignment="Center" Text="Everyone's ready?" Margin="0,0,10,0"/>
         </StackPanel>
 
         
        
-        <Border BorderBrush="Black" BorderThickness="1" Grid.ColumnSpan="1" Grid.Row="13" Grid.Column="11"/>
-        <TextBlock Text="Pas assez de gens à ton goût? Ajoute des joueurs virtuels!" Grid.Column="11" Grid.Row="13" 
-				   VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+        <Border BorderBrush="Black" BorderThickness="1" Grid.ColumnSpan="5" Grid.Row="13" Grid.Column="7" />
+        <TextBlock Text="Feel a little lonely? Add virtual players!" Grid.Column="7" Grid.Row="13" 
+				   VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"
+				   Grid.ColumnSpan="5"/>
         <StackPanel Orientation="Horizontal" Grid.Column="12" Grid.Row="13"  Height="auto" HorizontalAlignment="Right">
-            <Button x:Name="addVirtualPlayer" Content="+" Height="auto" Width="auto" />
-            <Button x:Name="removeVirtualPlayer" Content="-" Margin="5,0,0,0" Height="auto" />
+            <Button Background="#D6EFE9" BorderBrush="#D6EFE9" x:Name="addVirtualPlayer" Content="+" Height="auto" Width="auto" />
+            <Button Background="#D6EFE9" BorderBrush="#D6EFE9" x:Name="removeVirtualPlayer" Content="-" Margin="5,0,0,0" Height="auto" />
         </StackPanel>
     </Grid>
 </UserControl>

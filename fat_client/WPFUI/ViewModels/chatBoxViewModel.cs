@@ -12,7 +12,7 @@ using WPFUI.Models;
 namespace WPFUI.ViewModels
 {
     public class chatBoxViewModel: Screen, IHandle<refreshMessagesEvent>, IHandle<addMessageEvent>, IHandle<createTheRoomEvent>,
-                                   IHandle<refreshRoomsEvent>
+                                   IHandle<refreshRoomsEvent>, IHandle<resetToGeneralEvent>
     {
         private IEventAggregator _events;
         private IUserData _userData;
@@ -28,6 +28,16 @@ namespace WPFUI.ViewModels
         private string _currentRoomId;
         private string _selectedAvailableRoom;
         private string _selectedJoinedRoom;
+
+        public IEventAggregator events
+        {
+            get { return _events; }
+        }
+
+        public IUserData userdata
+        {
+            get { return _userData; }
+        }
 
         public string currentMessage
         {
@@ -48,7 +58,9 @@ namespace WPFUI.ViewModels
         public string currentRoomId
         {
             get { return _currentRoomId; }
-            set { _currentRoomId = value; }
+            set { _currentRoomId = value;
+                  NotifyOfPropertyChange(() => currentRoomId);
+            }
         }
 
 
@@ -111,7 +123,6 @@ namespace WPFUI.ViewModels
         /* Methods ---------------------------------------------------------------------------------------------------*/
         public void sendMessage(string content = null)
         {
-            Console.WriteLine("message sending attempted");
             if (content != null)
             {
                 _userData.currentMessage = content;
@@ -154,7 +165,6 @@ namespace WPFUI.ViewModels
 
         public void joinRoom()
         {
-            Console.WriteLine("1");
             _socketHandler.joinRoom(_selectedAvailableRoom);
         }
 
@@ -190,7 +200,14 @@ namespace WPFUI.ViewModels
                     sR.menuVisibility = "Collapsed";
                 }
 
-                int selectedRoomIndex = _joinedRooms.IndexOf(_joinedRooms.Single(i => i.id == message.selectedRoomId));
+                int selectedRoomIndex = 0;
+                try
+                {
+                    selectedRoomIndex = _joinedRooms.IndexOf(_joinedRooms.Single(i => i.id == message.selectedRoomId));
+                } catch {
+                    selectedRoomIndex = _joinedRooms.IndexOf(_joinedRooms.Where(x => x.id == message.selectedRoomId).ToList()[0]);
+                  }
+
                 _joinedRooms[selectedRoomIndex].changeColor("Black");
                 _joinedRooms[selectedRoomIndex].menuVisibility = "Visible";
                 _selectedJoinedRoom = message.selectedRoomId;
@@ -201,18 +218,29 @@ namespace WPFUI.ViewModels
 
         public void Handle(refreshMessagesEvent message)
         {
-            this._messages = message._messages;
-            this._currentRoomId = message._currentRoomId;
-            NotifyOfPropertyChange(() => currentRoomId);
-            NotifyOfPropertyChange(() => messages);
+            this.messages = message._messages;
+            this.currentRoomId = message._currentRoomId;
         }
 
         public void Handle(addMessageEvent message)
         {
-            Console.WriteLine("hello");
             this._messages.Add(message.message);
             NotifyOfPropertyChange(() => messages);
         }
+
+        public void Handle(resetToGeneralEvent message)
+        {
+            _userData.matchId = null;
+            _userData.currentGameRoom = null;
+            Room general = _userData.selectableJoinedRooms[0].room;
+            _userData.messages = new BindableCollection<Models.Message>(general.messages);
+            _userData.currentRoomId = general.roomName;
+
+            this.messages = _userData.messages;
+            this.currentRoomId = _userData.currentRoomId;
+            _events.PublishOnUIThread(new changeChatOptionsEvent(true));
+        }
+
     }
 
 }

@@ -14,6 +14,7 @@ export default class RandomWordGenerator {
         words.push(RandomWordGenerator.getRandomWord(Difficulty.Easy));
         words.push(RandomWordGenerator.getRandomWord(Difficulty.Medium));
         words.push(RandomWordGenerator.getRandomWord(Difficulty.Hard));
+        console.log(words);
         return words;
     }
     private static getRandomWord(difficulty: Difficulty): string {

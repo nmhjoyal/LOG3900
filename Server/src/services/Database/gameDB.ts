@@ -44,6 +44,7 @@ class GameDB {
     }
 
     public async getGame(word: string): Promise<Game> {
+        console.log(word);
         const gameDB: any = await this.mongoDB.db("Games").collection("games")
             .findOne({word: { $eq: word}});
         const game: Game = {

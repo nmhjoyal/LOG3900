@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Caliburn.Micro;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WPFUI.ViewModels;
+using WPFUI.EventModels;
 
 namespace WPFUI.Views
 {
@@ -28,14 +30,11 @@ namespace WPFUI.Views
         {
             InitializeComponent();
         }
-        private void refocus(object sender, RoutedEventArgs e)
-        {
-            currentMessage.Focus();
-        }
 
         private void OnLoad(object sender, RoutedEventArgs e)
         {
             _viewModel = DataContext as WaitingRoomViewModel;
+            _viewModel.events.PublishOnUIThread(new changeChatOptionsEvent(false));
         }
 
         private void currentMessage_KeyDown(object sender, KeyEventArgs e)
@@ -45,6 +44,14 @@ namespace WPFUI.Views
                 //  _viewModel.sendMessage(currentMessage.Text);
             }
 
+        }
+
+        public void Button_Click(object sender, MouseButtonEventArgs e)
+        {
+            if ((e.ClickCount == 1))
+            {
+                _viewModel.start();
+            }
         }
     }
 }

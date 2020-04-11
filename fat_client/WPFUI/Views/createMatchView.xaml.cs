@@ -27,13 +27,17 @@ namespace WPFUI.Views
             InitializeComponent();
         }
 
-        private void createMatch(object sender, RoutedEventArgs e)
+        private void createMatch(object sender, MouseButtonEventArgs e)
         {
-            MatchMode matchMode = (MatchMode)this.modecomboBox.SelectedIndex;
-            int nbRounds = int.Parse(this.roundcomboBox.Text);
-            int timeLimit = int.Parse(this.timecomboBox.Text.Substring(0, this.timecomboBox.Text.Length - 8));
-            (this.DataContext as createMatchViewModel).createMatch(matchMode, nbRounds, timeLimit);
-        }
+            if ((e.ClickCount == 1))
+            {
+                /*TODO: Traduire le contenu des comboBox, envoyer les bonnes valeurs */
+                MatchMode matchMode = (MatchMode)this.modecomboBox.SelectedIndex;
+                int nbRounds = int.Parse(this.roundcomboBox.Text);
+                int timeLimit = int.Parse(this.timecomboBox.Text.Substring(0, this.timecomboBox.Text.Length - 8));
+                (this.DataContext as createMatchViewModel).createMatch(matchMode, nbRounds, timeLimit);
+            }
 
+        }
     }
 }

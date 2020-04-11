@@ -19,10 +19,17 @@ namespace WPFUI.Models
         private BindableCollection<Message> _messages;
         private BindableCollection<SelectableRoom> _selectablePublicRooms;
         private BindableCollection<SelectableRoom> _selectableJoinedRooms;
+        private Room _currentGameRoom;
         private string _matchId;
         private int _nbRounds;
         private IEventAggregator _events;
-        private EndTurn _firstRound;
+        private MatchMode _matchMode;
+
+        public Room currentGameRoom
+        {
+            get { return _currentGameRoom; }
+            set { _currentGameRoom = value; }
+        }
 
         public string avatarName
         {
@@ -90,10 +97,10 @@ namespace WPFUI.Models
             set { _nbRounds = value; }
         }
 
-        public EndTurn firstRound
+        public MatchMode matchMode
         {
-            get { return _firstRound; }
-            set { _firstRound = value; }
+            get { return _matchMode; }
+            set { _matchMode = value; }
         }
         public UserData(IEventAggregator events)
         {
@@ -103,22 +110,28 @@ namespace WPFUI.Models
             _selectableJoinedRooms = new BindableCollection<SelectableRoom>();
             _selectablePublicRooms = new BindableCollection<SelectableRoom>();
             _currentRoomId = null;
+            _currentGameRoom = null;
             _avatarName = null;
         }
 
         public void changeChannel(string roomID)
         {
-            Console.WriteLine("changing channel in userdata: " + roomID);
             this.currentRoomId = roomID;
-            this.messages = new BindableCollection<Message>((this.selectableJoinedRooms.Single(i => i.id == roomID)).room.messages);
+            try
+            {
+                this.messages = new BindableCollection<Message>((this.selectableJoinedRooms.Single(i => i.id == roomID)).room.messages);
+            }
+            catch
+            {
+                this.messages = new BindableCollection<Message>(this.selectableJoinedRooms.Where(x => x.id == roomID).ToList()[0].room.messages);
+            }
+
             _events.PublishOnUIThread(new refreshMessagesEvent(this.messages, roomID));
         }
 
         public void Handle(roomsRetrievedEvent message)
         {
-            Console.WriteLine("roomsRetrievedEvent Handled");
             this.selectablePublicRooms.Clear();
-            Console.WriteLine(message._publicRooms.Length);
             foreach (string channelID in message._publicRooms)
             {
                 this.selectablePublicRooms.Add(new SelectableRoom(new Room(channelID, null, null)));
@@ -142,6 +155,11 @@ namespace WPFUI.Models
             selectableJoinedRooms.Add(new SelectableRoom(room));
         }
 
+        public void addGameRoom(Room room)
+        {
+            currentGameRoom = room;
+        }
+
         public void addPublicRoom(Room room)
         {
             selectablePublicRooms.Add(new SelectableRoom(room));
@@ -149,18 +167,54 @@ namespace WPFUI.Models
 
         public void addMessage(Message message)
         {
-            Message[] messagesToUpdate = this.selectableJoinedRooms.Single(i => i.id == message.roomId).room.messages;
+            Message[] messagesToUpdate;
+            SelectableRoom roomToBeUpdated;
 
-            if (messagesToUpdate != null)
+            if (message.roomId == currentRoomId)
             {
-                if (message.roomId == currentRoomId)
-                {
-                    _events.PublishOnUIThread(new addMessageEvent(message));
-                }
-                List<Message> list = new List<Message>(messagesToUpdate);
-                list.Add(message);
-                this.selectableJoinedRooms.Single(i => i.id == message.roomId).room.messages = list.ToArray();
+                _messages.Add(message);
+                _events.PublishOnUIThread(new scrollDownEvent());
             }
+
+            if (message.roomId == matchId)
+            {
+                List<Message> list = new List<Message>(currentGameRoom.messages);
+                list.Add(message);
+                currentGameRoom.messages = list.ToArray();
+            } else
+            {
+                try
+                {
+                    roomToBeUpdated = this.selectableJoinedRooms.Single(i => i.id == message.roomId);
+                    messagesToUpdate = roomToBeUpdated.room.messages;
+                }
+                catch
+                {
+                    try
+                    {
+                        roomToBeUpdated = this.selectableJoinedRooms.Where(x => x.id == message.roomId).ToList()[0];
+                        messagesToUpdate = roomToBeUpdated.room.messages;
+                    }
+                    catch
+                    {
+                        roomToBeUpdated = null;
+                        messagesToUpdate = null;
+                        // TODO: faire un popup approprie
+                        Console.WriteLine("message sent to unjoigned room");
+                        _events.PublishOnUIThread(new appWarningEvent("a message was sent to an unjoigned room"));
+                    }
+
+                }
+
+                if (messagesToUpdate != null)
+                {
+                    List<Message> list = new List<Message>(messagesToUpdate);
+                    list.Add(message);
+                    this.selectableJoinedRooms[selectableJoinedRooms.IndexOf(roomToBeUpdated)].room.messages = list.ToArray();
+                }
+
+            }
+
         }
     }
 }

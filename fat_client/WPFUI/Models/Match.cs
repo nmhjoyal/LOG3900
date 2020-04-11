@@ -60,8 +60,6 @@ namespace WPFUI.Models
                         return "Sprint solo";
                     case Models.MatchMode.sprintCoop:
                         return "Sprint coopératif";
-                    case Models.MatchMode.inverted:
-                        return "Mode inversé";
                     default:
                         return "";
                 }
@@ -88,13 +86,18 @@ namespace WPFUI.Models
         sprintSolo,
         sprintCoop,
         oneVsOne,
-        inverted
     }
 
     public class PublicProfile
     {
         public string username;
         public string avatar;
+
+        public PublicProfile(string username, string avatar)
+        {
+            this.username = username;
+            this.avatar = avatar;
+        }
 
         public string Username
         {
@@ -120,7 +123,6 @@ namespace WPFUI.Models
                 _avatars.Add(new Avatar("/Resources/pineapple.png", "PINEAPPLE"));
                 _avatars.Add(new Avatar("/Resources/strawberry.png", "STRAWBERRY"));
                 _avatars.Add(new Avatar("/Resources/watermelon.png", "WATERMELON"));
-                Console.WriteLine("***" + this.avatar);
                 return _avatars.Single(i => i.name == this.avatar).source;
             }
         }
@@ -129,9 +131,8 @@ namespace WPFUI.Models
     public class Player
     {
         public PublicProfile user;
-        public Boolean isHost;
-        public Boolean isVirtual;
-        public int score;
+        public bool isVirtual;
+        public UpdateScore score;
 
         public string Username
         {
@@ -148,6 +149,23 @@ namespace WPFUI.Models
                 return user.Avatar;
             }
         }
+
+        public string ScoreTotal
+        {
+            get
+            {
+                return isVirtual? "" : score.scoreTotal.ToString();
+            }
+
+        }
+        public string ScoreTurn
+        {
+            get
+            {
+                return isVirtual ? "" : score.scoreTurn.ToString();
+            }
+        }
+
     }
 
     public class CreateMatch
@@ -169,27 +187,85 @@ namespace WPFUI.Models
         public int currentRound;
         public List<string> choices;
         public string drawer;
-        public List<UsernameUpdateScore> scores;
+        public BindableCollection<Player> players;
 
-        public EndTurn(int currentRound, List<string> choices, string drawer, List<UsernameUpdateScore> scores)
+        public BindableCollection<Player> HumanPlayers
+        {
+            get { return new BindableCollection<Player>(this.players.Where(player => !player.isVirtual)); }
+        }
+        public EndTurn(int currentRound, List<string> choices, string drawer, BindableCollection<Player> players)
         {
             this.currentRound = currentRound;
             this.choices = new List<string>(choices);
             this.drawer = drawer;
-            this.scores = new List<UsernameUpdateScore>(scores);
+            this.players = new BindableCollection<Player>(players);
+        }
+
+        public void set(EndTurn endTurn)
+        {
+            this.currentRound = endTurn.currentRound;
+            this.choices = endTurn.choices;
+            this.drawer = endTurn.drawer;
+            this.players = new BindableCollection<Player>(endTurn.players.OrderByDescending(i => i.ScoreTotal));
         }
     }
-    public class UsernameUpdateScore
+    public class UpdateScore
     {
-        public string username;
         public int scoreTotal;
         public int scoreTurn;
 
-        public UsernameUpdateScore(string username, int scoreTotal, int scoreTurn)
+        public UpdateScore(int scoreTotal, int scoreTurn)
         {
-            this.username = username;
             this.scoreTotal = scoreTotal;
             this.scoreTurn = scoreTurn;
+        }
+    }
+
+    public class StartTurn
+    {
+        public string word;
+        public int timeLimit;
+
+        public StartTurn(string word, int timeLimit)
+        {
+            this.word = word;
+            this.timeLimit = timeLimit;
+        }
+
+        public void set(StartTurn startTurn, bool isDrawer)
+        {
+            if(!isDrawer)
+            {
+                this.word = string.Concat(startTurn.word.Select(letter => letter + " "));
+            }
+            this.timeLimit = startTurn.timeLimit;
+        }
+    }
+
+    public class UpdateSprint
+    {
+        public int guess;
+        public int time;
+        public string word;
+        public BindableCollection<Player> players;
+        public BindableCollection<Player> HumanPlayers
+        {
+            get { return new BindableCollection<Player>(this.players.Where(player => !player.isVirtual)); }
+        }
+        public UpdateSprint(int guess, int time, string word, BindableCollection<Player> players)
+        {
+            this.guess = guess;
+            this.time = time;
+            this.word = word;
+            this.players = new BindableCollection<Player>(players);
+        }
+
+        public void set(UpdateSprint updateSprint)
+        {
+            this.guess = updateSprint.guess;
+            this.time = updateSprint.time;
+            this.word = updateSprint.word;
+            this.players = new BindableCollection<Player>(updateSprint.players.OrderByDescending(i => i.ScoreTotal));
         }
     }
 }

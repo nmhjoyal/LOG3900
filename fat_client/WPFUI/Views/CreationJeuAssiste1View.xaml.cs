@@ -39,16 +39,12 @@ namespace WPFUI.Views
         {
 
             TextBox dynamicTextBox = new TextBox();
-            Console.WriteLine("allo");
 
             // Grid.SetRow(dynamicTextBox, 3);
             // Grid.SetColumn(dynamicTextBox, 7);
 
             this.canContainer.Children.Add(dynamicTextBox);
             dynamicTextBox.Name = "indice" + this.canContainer.Children.Count;
-            Console.WriteLine(dynamicTextBox.Name);
-
-            Console.WriteLine(this.canContainer.Children.Count);
 
 
         }
@@ -66,7 +62,6 @@ namespace WPFUI.Views
             {
                 option = (this.Options.Children[0] as ComboBox).SelectedIndex;
             }
-            Console.WriteLine(JsonConvert.SerializeObject(clues));
             (this.DataContext as CreationJeuAssiste1ViewModel).createGame(this.Word.Text, clues, this.Level.SelectedIndex, this.Mode.SelectedIndex, option, this.fileName.Text, (int)this.imageTransformee.ActualWidth, (int)this.imageTransformee.ActualHeight);
         }
 
@@ -82,7 +77,6 @@ namespace WPFUI.Views
 
         private void elementSelectionne(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine(this.Mode.SelectedIndex);
             ComboBox comboBox = new ComboBox();
             TextBlock text = new TextBlock();
             text.Text = "Options:";
@@ -93,10 +87,10 @@ namespace WPFUI.Views
             if (this.Mode.SelectedIndex == 2)
             {
                 this.optionBlock.Children.Add(text);
-                comboBox.Items.Add("De gauche à droite");
-                comboBox.Items.Add("De droite à gauche");
-                comboBox.Items.Add("De haut en bas");
-                comboBox.Items.Add("De bas en haut");
+                comboBox.Items.Add("left to right");
+                comboBox.Items.Add("right to left");
+                comboBox.Items.Add("top to bottom");
+                comboBox.Items.Add("bottom to top");
                 comboBox.SelectedIndex = 0;
                 this.Options.Children.Add(comboBox);
             }
@@ -104,8 +98,8 @@ namespace WPFUI.Views
             else if (this.Mode.SelectedIndex == 3)
             {
                 this.optionBlock.Children.Add(text);
-                comboBox.Items.Add("De l'intérieur vers l'extérieur");
-                comboBox.Items.Add("Del'extérieur vers l'intérieur");
+                comboBox.Items.Add("From inside out");
+                comboBox.Items.Add("From outside in");
                 comboBox.SelectedIndex = 0;
                 this.Options.Children.Add(comboBox);
             }
@@ -115,6 +109,16 @@ namespace WPFUI.Views
         private void imageTransformee_StrokeCollected(object sender, InkCanvasStrokeCollectedEventArgs e)
         {
             (this.DataContext as CreationJeuAssiste1ViewModel).preventDrawing(e.Stroke);
+        }
+        private void close(object sender, RoutedEventArgs e)
+        {
+            border.Visibility = Visibility.Hidden;
+            selectNextDrawingBox.Visibility = Visibility.Hidden;
+        }
+        private void draw(object sender, RoutedEventArgs e)
+        {
+            border.Visibility = Visibility.Visible;
+            selectNextDrawingBox.Visibility = Visibility.Visible;
         }
     }
 }

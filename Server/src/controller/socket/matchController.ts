@@ -24,12 +24,12 @@ export default class MatchController {
     }
 
     @OnMessage("stroke")
-    public start_trace(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() stroke: Stroke) {
+    public stroke(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() stroke: Stroke) {
         serverHandler.stroke(socket, stroke);
     }
 
     @OnMessage("point")
-    public drawTest(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() point: StylusPoint) {
+    public point(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() point: StylusPoint) {
         serverHandler.point(socket, point);
     }
 

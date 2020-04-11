@@ -33,9 +33,13 @@ namespace WPFUI.ViewModels
             _events.Subscribe(this);
             _socketHandler = socketHandler;
             _userData = userdata;
-            userdata.messages = new BindableCollection<Models.Message>(userdata.selectableJoinedRooms.Single<SelectableRoom>(i => i.id == _userData.matchId).room.messages);
+            userdata.messages = new BindableCollection<Models.Message>(userdata.currentGameRoom.messages);
+            userdata.currentRoomId = userdata.matchId;
+            _events.PublishOnUIThread(new refreshMessagesEvent(userdata.messages, userdata.currentRoomId));
             this._messages = userdata.messages;
             this.players = new BindableCollection<Player>();
+            this._socketHandler.offLobby();
+            this._socketHandler.offCreateMatch();
             this._socketHandler.onWaitingRoom(this.players);
             this._socketHandler.socket.Emit("get_players", this._userData.matchId);
         }
@@ -59,6 +63,11 @@ namespace WPFUI.ViewModels
                 NotifyOfPropertyChange(() => messages);
             }
         }
+
+        public IEventAggregator events
+        {
+            get { return _events; }
+        }
         public void keyDown(ActionExecutionContext context)
         {
             var keyArgs = context.EventArgs as KeyEventArgs;
@@ -80,7 +89,6 @@ namespace WPFUI.ViewModels
 
         public void sendMessage(string content = null)
         {
-            Console.WriteLine("message sending attempted");
             if (content != null)
             {
                 _userData.currentMessage = content;
@@ -120,7 +128,6 @@ namespace WPFUI.ViewModels
 
         public void Handle(addMessageEvent message)
         {
-            Console.WriteLine("hello");
             this._messages.Add(message.message);
             NotifyOfPropertyChange(() => messages);
         }

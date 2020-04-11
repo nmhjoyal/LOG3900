@@ -8,16 +8,23 @@
             xmlns:local="clr-namespace:WPFUI.Views"
             xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit" x:Class="WPFUI.Views.FenetreDessinView"
             mc:Ignorable="d"
-            Background="#FFF1F2F1"
-    >
+            Background="#FFF1F2F1" 
+	        d:DesignHeight="700" d:DesignWidth="600">
     <UserControl.Resources>
         <convertisseurs:ConvertisseurBordure x:Key="convertisseurBordure" />
         <convertisseurs:ConvertisseurCouleurFond x:Key="convertisseurCouleurFond" />
         <convertisseurs:ConvertisseurModeEdition x:Key="convertisseurModeEdition" />
     </UserControl.Resources>
-    <StackPanel>
-        <Border BorderThickness="0,0,0,0.5" BorderBrush="#77000000">
-            <StackPanel Orientation="Horizontal" Height="60" Background="#FF00867A">
+    <Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"></ColumnDefinition>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="auto"></RowDefinition>
+			<RowDefinition Height="*"></RowDefinition>
+		</Grid.RowDefinitions>
+		<Border Grid.Row="0" Grid.Column="0" BorderThickness="0,0,0,0.5" BorderBrush="#77000000" Background="#FF018577">
+            <StackPanel Orientation="Horizontal" Height="60"  Background="#FF018577" HorizontalAlignment="Center">
 
                 <Button Name="crayon" Width="40" Height="40" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="10,0,0,0"
                         BorderBrush="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurBordure}, ConverterParameter=crayon, UpdateSourceTrigger=PropertyChanged}" 
@@ -63,33 +70,34 @@
                         TickFrequency="10" TickPlacement="BottomRight" IsSnapToTickEnabled="False">
                 </Slider>
                 <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Click="Button_Click" Content="Capture Image" Width="120" Margin="20,0,0,0" FontSize="12" BorderBrush="{x:Null}" Background="#FFCFD1D0" Foreground="White"/>
-                    <Button Click="Button_Click_1" Content="Save To Disk" Width="120" Margin="10,0,0,0" FontSize="12" BorderBrush="{x:Null}" Background="#FFCFD1D0" Foreground="White"/>
-                    <Button Click="Get_Drawing" Content="Get Drawing" Width="120" Margin="10,0,0,0" FontSize="12" BorderBrush="{x:Null}" Background="#FFCFD1D0" Foreground="White"/>
-                    <Button x:Name="mainMenu" Style="{DynamicResource MaterialDesignRaisedAccentButton}" FontSize="12" MaxWidth =" 100" Margin="10,0,0,0" Content="Go Back" Background="#FFB4745C" BorderBrush="{x:Null}" Foreground="White"/>
+                    
+                    <Button Click="Button_Click_1" Content="Save To Disk" Width="120" Margin="20,0,0,0" FontSize="12" BorderBrush="{x:Null}" Background="#FFD81A60" Foreground="White"/>
                 </StackPanel>
-
+    
             </StackPanel>
 
         </Border>
 
-        <Grid DockPanel.Dock="Left" Margin="0,1,0,0">
+        <Grid Grid.Row="1" Grid.Column="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Name="colonne" Width="550" />
-                <ColumnDefinition Width="6" />
+                <ColumnDefinition Name="colonne" Width="*" />
+                <ColumnDefinition Width="0" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Name="ligne" Height="310" />
-                <RowDefinition Height="6" />
+                <RowDefinition Name="ligne" Height="*" />
+                <RowDefinition Height="0" />
             </Grid.RowDefinitions>
 
-            <Border BorderThickness="5,5,0,0">
-                <Canvas x:Name="PART_Canvas" Grid.Row="1" Grid.Column="0">
-                    <InkCanvas ClipToBounds="True" Grid.Column="0" Grid.Row="0" Name="surfaceDessin"
-                           HorizontalAlignment="Stretch" VerticalAlignment="Stretch"                                                                      
-                           Strokes="{Binding Path=Traits, Mode=OneTime}" MouseMove="surfaceDessin_MouseMove" PreviewMouseDown="surfaceDessin_PreviewMouseDown" MouseUp="surfaceDessin_MouseUp" StrokeCollected="surfaceDessin_StrokeCollected" StrokesReplaced="surfaceDessin_StrokesReplaced" EditingMode="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurModeEdition}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+			<Border BorderThickness="5,5,5,5" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch">
+                <DockPanel VerticalAlignment="Stretch" x:Name="PART_Canvas" HorizontalAlignment="Stretch">
+                    <InkCanvas  ClipToBounds="True" Name="surfaceDessin"
+                                                                                                 
+                           Strokes="{Binding Path=Traits, Mode=OneTime}" MouseMove="surfaceDessin_MouseMove" 
+						   PreviewMouseDown="surfaceDessin_PreviewMouseDown" MouseUp="surfaceDessin_MouseUp" 
+						   StrokeCollected="surfaceDessin_StrokeCollected" StrokesReplaced="surfaceDessin_StrokesReplaced" 
+						   EditingMode="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurModeEdition}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                            DefaultDrawingAttributes="{Binding Path=AttributsDessin, Mode=OneTime}"/>
-                </Canvas>
+                </DockPanel>
 
                 <Border.Effect>
                     <DropShadowEffect Opacity="0.3" BlurRadius="10"/>
@@ -98,5 +106,5 @@
             <Image x:Name="PART_Image" Grid.Row="1" Grid.Column="1" Stretch="None"/>
         </Grid>
 
-    </StackPanel>
+    </Grid>
 </UserControl>

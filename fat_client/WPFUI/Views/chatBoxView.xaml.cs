@@ -13,6 +13,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
+using WPFUI.EventModels;
+using WPFUI.Models;
 using WPFUI.ViewModels;
 
 namespace WPFUI.Views
@@ -20,10 +23,14 @@ namespace WPFUI.Views
     /// <summary>
     /// Logique d'interaction pour chatBoxView.xaml
     /// </summary>
-    public partial class chatBoxView : UserControl
+    public partial class chatBoxView : UserControl, IHandle<refreshMessagesEvent>, IHandle<scrollDownEvent>,
+                                       IHandle<changeChatOptionsEvent>
 
     {
         chatBoxViewModel _viewModel;
+        IEventAggregator _events;
+        IUserData _userdata;
+
         public chatBoxView()
         {
             InitializeComponent();
@@ -37,16 +44,12 @@ namespace WPFUI.Views
         private void OnLoad(object sender, RoutedEventArgs e)
         {
             _viewModel = DataContext as chatBoxViewModel;
+            _events = (DataContext as chatBoxViewModel).events;
+            _events.Subscribe(this);
+            _userdata = (DataContext as chatBoxViewModel).userdata;
+            messagesUI.ScrollToBottom();
         }
 
-        private void currentMessage_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-             //  _viewModel.sendMessage(currentMessage.Text);
-            }
-            
-        }
 
         private void channelsMode_Click(object sender, RoutedEventArgs e)
         {
@@ -67,8 +70,37 @@ namespace WPFUI.Views
 
         private void joinButton_click(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("HELLLO");
             (DataContext as chatBoxViewModel).joinRoom();
+        }
+
+        public void Handle(refreshMessagesEvent message)
+        {
+            messagesUI.ScrollToEnd();
+        }
+
+        public void Handle(scrollDownEvent message)
+        {
+            messagesUI.ScrollToEnd();
+        }
+
+        public void Handle(changeChatOptionsEvent message)
+        {
+            if (!message.visible)
+            {
+                channelsMode.IsEnabled = false;
+                ChannelText.Text = "Talk to your friends !";
+            }
+            else
+            {
+                channelsMode.IsEnabled = true;
+
+                Binding myBinding = new Binding();
+                myBinding.Source = DataContext as chatBoxViewModel;
+                myBinding.Path = new PropertyPath("currentRoomId");
+                myBinding.Mode = BindingMode.OneWay;
+                myBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+                BindingOperations.SetBinding(ChannelText, TextBlock.TextProperty, myBinding);
+            }
         }
     }
 }

@@ -21,7 +21,9 @@ namespace WPFUI.ViewModels
         public string password
         {
             get { return _password; }
-            set { _password = value; }
+            set { _password = value;
+                  NotifyOfPropertyChange(() => password);
+            }
         }
 
 
@@ -30,6 +32,7 @@ namespace WPFUI.ViewModels
             _userdata = userdata;
             _socketHandler = socketHandler;
             _events = events;
+            _events.Subscribe(this);
         }
 
         public string userName
@@ -39,46 +42,38 @@ namespace WPFUI.ViewModels
                 NotifyOfPropertyChange(() => userName);}
         }
 
-
-        public string ipAdress
-        {
-            get { return _ipAdress; }
-            set { _ipAdress = value;
-                  NotifyOfPropertyChange(() => ipAdress);}
-        }
-
         public void setUserName()
         {
             _userdata.userName = userName;
             _userdata.password = password;
         }
 
-        public void setIpAdress()
-        {
-            _userdata.ipAdress = ipAdress;
-        }
-
-        public bool loginOk()
-        {
-            return (userName != null & ipAdress !=null);
-        }
         public void logIn()
         {   
-           
+          if (userName != null & userName != "" & password != null & password != "")
+            {
                 setUserName();
-                
-                
                 _socketHandler.connectionAttempt();
-              
-            
-            //ajouter dans la condition
-            
 
+            }
+            else if (userName == null | userName == "")
+            {
+                _events.PublishOnUIThread(new appWarningEvent("The username should not be blank "));
+            }
+            else if (password == null | password == "")
+            {
+                _events.PublishOnUIThread(new appWarningEvent("The password should not be blank "));
+            }
         }
 
         public void signUp()
         {
             _events.PublishOnUIThread(new signUpEvent());
+        }
+
+        public void Unsubscribe()
+        {
+            _events.Unsubscribe(this);
         }
 
     }

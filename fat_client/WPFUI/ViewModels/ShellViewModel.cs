@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using WPFUI.EventModels;
 using WPFUI.Models;
+using WPFUI.Views;
 
 namespace WPFUI.ViewModels
 {
-    class ShellViewModel: Conductor<Screen>.Collection.AllActive, IHandle<LogInEvent>, IHandle<logOutEvent>, IHandle<joinChatEvent>,
+    class ShellViewModel: Conductor<Screen>.Collection.AllActive, IHandle<LogInEvent>, IHandle<logOutEvent>,
 						  IHandle<DisconnectEvent>, IHandle<userNameTakenEvent>,IHandle<signUpEvent>, IHandle<goBackEvent>,
 						  IHandle<passwordMismatchEvent>, IHandle<viewProfileEvent>, IHandle<goBackMainEvent>,
 						  IHandle<joinGameEvent>, IHandle<ManuelIEvent>, IHandle<ManuelleIIEvent>, IHandle<createGameEvent>,IHandle<freeDrawEvent>, 
@@ -24,6 +25,10 @@ namespace WPFUI.ViewModels
 		private SimpleContainer _container;
 		private IWindowManager _windowManager;
 		private ISocketHandler _socketHandler;
+		private Screen _firstVM;
+		private Screen _secondVM;
+		private Screen _topmenuVM;
+		private int _countHelper;
 
 		public ShellViewModel(IWindowManager windowManager, IEventAggregator events, SimpleContainer container, ISocketHandler socketHandler)
 		{
@@ -31,142 +36,144 @@ namespace WPFUI.ViewModels
 			_container = container;
 			_events = events;
 			_events.Subscribe(this);
-			Items.Add(_container.GetInstance<LoginViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
+			_firstVM = _container.GetInstance<LoginViewModel>();
+			_secondVM = _container.GetInstance<EmptyViewModel>();
+			_topmenuVM = _container.GetInstance<topMenuViewModel>();
 			this._socketHandler = socketHandler;
+			_countHelper = 0;
+		}
+
+		public IEventAggregator events
+		{
+			get { return _events; }
+		}
+
+		public void deactivator(string vmType, Screen screen)
+		{
+			switch (vmType)
+			{
+				case "WPFUI.ViewModels.LoginViewModel":
+					(screen as LoginViewModel).Unsubscribe();
+					break;
+				case "WPFUI.ViewModels.partieJeuViewModel":
+					_events.Unsubscribe(((screen as partieJeuViewModel).GetView()) as partieJeuView);
+					(screen as partieJeuViewModel).Unsubscribe();
+					break;
+				case "WPFUI.ViewModels.chatBoxViewModel":
+					_events.Unsubscribe(((screen as chatBoxViewModel).GetView()) as chatBoxView);
+					_events.Unsubscribe(screen as chatBoxViewModel);
+					break;
+
+				default:
+					break;
+			}
+
 		}
 
 		public Screen FirstSubViewModel
 		{
-			get { return Items.ElementAt(0); }
+			get { return _firstVM; }
+			set {
+				    deactivator(_firstVM.GetType().ToString(), _firstVM);
+					_firstVM = value;
+					NotifyOfPropertyChange(() => FirstSubViewModel);
+				}
 		}
 
 		public Screen SecondSubViewModel
 		{
-			get { return Items.ElementAt(1); }
+			get { return _secondVM; }
+			set {
+					deactivator(_secondVM.GetType().ToString(), _secondVM);
+					_secondVM = value;
+					NotifyOfPropertyChange(() => SecondSubViewModel);
+				}
+		}
+
+		public Screen topMenu
+		{
+			get { return _topmenuVM; }
+			set { _topmenuVM = null;
+				  _topmenuVM = value;
+				  NotifyOfPropertyChange(() => topMenu);
+				}
 		}
 
 		public void Handle(LogInEvent message)
 		{
-			Items.Clear();
-			Items.Add(_container.GetInstance<MainMenuViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
-			NotifyOfPropertyChange(() => FirstSubViewModel);
-			NotifyOfPropertyChange(() => SecondSubViewModel);
+			FirstSubViewModel = _container.GetInstance<MainMenuViewModel>();
+			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 
 		public void Handle(viewProfileEvent message)
 		{
-			Items.Clear();
-			Items.Add(_container.GetInstance<profileViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
-			NotifyOfPropertyChange(() => FirstSubViewModel);
-			NotifyOfPropertyChange(() => SecondSubViewModel);
+			FirstSubViewModel = _container.GetInstance<profileViewModel>();
+			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 
 		public void Handle(ManuelIEvent message)
 		{
-			Items.Clear();
-			Items.Add(_container.GetInstance<CreationJeuManuelle1ViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
-			NotifyOfPropertyChange(() => FirstSubViewModel);
-			NotifyOfPropertyChange(() => SecondSubViewModel);
+			FirstSubViewModel = _container.GetInstance<CreationJeuManuelle1ViewModel>();
+			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 
 		public void Handle(AssisteIEvent message)
 		{
-			Items.Clear();
-			Items.Add(_container.GetInstance<CreationJeuAssiste1ViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
-			NotifyOfPropertyChange(() => FirstSubViewModel);
-			NotifyOfPropertyChange(() => SecondSubViewModel);
+			FirstSubViewModel = _container.GetInstance<CreationJeuAssiste1ViewModel>();
+			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 		public void Handle(ManuelleIIEvent message)
 		{
-			Items.Clear();
-			Items.Add(_container.GetInstance<CreationJeuManuelle2ViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
-			NotifyOfPropertyChange(() => FirstSubViewModel);
-			NotifyOfPropertyChange(() => SecondSubViewModel);
+			FirstSubViewModel = _container.GetInstance<CreationJeuManuelleViewModel>();
+			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 
 		public void Handle(LeaderboardEvent message)
 		{
-			Items.Clear();
-			Items.Add(_container.GetInstance<LeaderboardViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
-			NotifyOfPropertyChange(() => FirstSubViewModel);
-			NotifyOfPropertyChange(() => SecondSubViewModel);
+			FirstSubViewModel = _container.GetInstance<ClassementViewModel>();
+			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 
 		public void Handle(goBackCreationMenuEvent message)
 		{
-			Items.Clear();
-			Items.Add(_container.GetInstance<MenuSelectionModeCreationViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
-			NotifyOfPropertyChange(() => FirstSubViewModel);
-			NotifyOfPropertyChange(() => SecondSubViewModel);
+			FirstSubViewModel = _container.GetInstance<MenuSelectionModeCreationViewModel>();
+			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 
 		public void Handle(goBackEvent message)
 		{
-			//ActivateItem(_container.GetInstance<LoginViewModel>());
-			Items.Clear();
-			Items.Add(_container.GetInstance<LoginViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
-			NotifyOfPropertyChange(() => FirstSubViewModel);
-			NotifyOfPropertyChange(() => SecondSubViewModel);
+			FirstSubViewModel = _container.GetInstance<LoginViewModel>();
+			SecondSubViewModel = _container.GetInstance<EmptyViewModel>();
 		}
 
 		public void Handle(goBackMainEvent message)
 		{
-			//ActivateItem(_container.GetInstance<MainMenuViewModel>());
-			Items.Clear();
-			Items.Add(_container.GetInstance<MainMenuViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
-			NotifyOfPropertyChange(() => FirstSubViewModel);
-			NotifyOfPropertyChange(() => SecondSubViewModel);
+			FirstSubViewModel = _container.GetInstance<MainMenuViewModel>();
+			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 
 		public void Handle(signUpEvent message)
 		{
-			Items.Clear();
-			Items.Add(_container.GetInstance<NewUserViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
-			NotifyOfPropertyChange(() => FirstSubViewModel);
-			NotifyOfPropertyChange(() => SecondSubViewModel);
+			FirstSubViewModel = _container.GetInstance<NewUserViewModel>();
+			SecondSubViewModel = _container.GetInstance<EmptyViewModel>();
 		}
 
 		public void Handle(createGameEvent message)
 		{
-			Items.Clear();
-			Items.Add(_container.GetInstance<MenuSelectionModeCreationViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
-			NotifyOfPropertyChange(() => FirstSubViewModel);
-			NotifyOfPropertyChange(() => SecondSubViewModel);
+			FirstSubViewModel = _container.GetInstance<MenuSelectionModeCreationViewModel>();
+			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 
 		public void Handle(logOutEvent message)
 		{
-			Items.Clear();
-			Items.Add(_container.GetInstance<LoginViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
-			NotifyOfPropertyChange(() => FirstSubViewModel);
-			NotifyOfPropertyChange(() => SecondSubViewModel);
+			FirstSubViewModel = _container.GetInstance<LoginViewModel>();
+			SecondSubViewModel = _container.GetInstance<EmptyViewModel>();
 		}
 
-		public void Handle(joinChatEvent message)
-		{
-			//ActivateItem(_container.GetInstance<chatBoxViewModel>());
-		}
-
 		public void Handle(joinChatroomEvent message)
 		{
-			Items.Clear();
-			Items.Add(_container.GetInstance<chatBoxViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
-			NotifyOfPropertyChange(() => FirstSubViewModel);
-			NotifyOfPropertyChange(() => SecondSubViewModel);
+			FirstSubViewModel = _container.GetInstance<chatBoxViewModel>();
+			SecondSubViewModel = _container.GetInstance<EmptyViewModel>();
 		}
 
 		public void Handle(DisconnectEvent message)
@@ -195,43 +202,29 @@ namespace WPFUI.ViewModels
 
 		public void Handle(joinGameEvent message)
 		{
-			Items.Clear();
-			Items.Add(_container.GetInstance<ChoseGameViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
-			NotifyOfPropertyChange(() => FirstSubViewModel);
-			NotifyOfPropertyChange(() => SecondSubViewModel);
+			FirstSubViewModel = _container.GetInstance<ChoseGameViewModel>();
+			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 		public void Handle(gameEvent message)
 		{
-			Items.Clear();
-			Items.Add(_container.GetInstance<partieJeuViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
-			NotifyOfPropertyChange(() => FirstSubViewModel);
-			NotifyOfPropertyChange(() => SecondSubViewModel);
+			_countHelper++;
+			FirstSubViewModel = _container.GetInstance<partieJeuViewModel>();
+			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 		public void Handle(waitingRoomEvent message)
 		{
-			Items.Clear();
-			Items.Add(_container.GetInstance<WaitingRoomViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
-			NotifyOfPropertyChange(() => FirstSubViewModel);
-			NotifyOfPropertyChange(() => SecondSubViewModel);
+			FirstSubViewModel = _container.GetInstance<WaitingRoomViewModel>();
+			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 		public void Handle(createMatchEvent message)
 		{
-			Items.Clear();
-			Items.Add(_container.GetInstance<createMatchViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
-			NotifyOfPropertyChange(() => FirstSubViewModel);
-			NotifyOfPropertyChange(() => SecondSubViewModel);
+			FirstSubViewModel = _container.GetInstance<createMatchViewModel>();
+			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 		public void Handle(freeDrawEvent message)
 		{
-			Items.Clear();
-			Items.Add(_container.GetInstance<FenetreDessinViewModel>());
-			Items.Add(_container.GetInstance<EmptyViewModel>());
-			NotifyOfPropertyChange(() => FirstSubViewModel);
-			NotifyOfPropertyChange(() => SecondSubViewModel);
+			FirstSubViewModel = _container.GetInstance<FenetreDessinViewModel>();
+			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 	}
 }
