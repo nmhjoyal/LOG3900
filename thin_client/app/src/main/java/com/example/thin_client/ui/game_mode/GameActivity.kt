@@ -285,16 +285,23 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         if (SocketHandler.socket != null) {
             SocketHandler.socket!!
                 .on(SocketEvent.UPDATE_SPRINT, ({data ->
+                    isTurnStarted = true
                     val sprintParams = Gson().fromJson(data.first().toString(), UpdateSprint::class.java)
                     getNonVirtualPlayers(sprintParams.players)
                     Handler(Looper.getMainLooper()).post(({
+                        draw_view_container.bringToFront()
                         refreshPlayerPointsToolbar()
-                        showObserverFragment()
+                        if (timer != null) {
+                            timer?.cancel()
+                            timer?.onFinish()
+                        }
                         startCountdown(sprintParams.time.toLong() * SECOND_INTERVAL)
                         if(sprintParams.guess == 0){
                             GameManager.canGuess = false
                             nb_guesses.text = ""
                         }
+                        GameManager.canGuess = true
+                        nbTries = sprintParams.guess.toInt()
                         nb_guesses.text = sprintParams.guess.toString()
                         message.text = sprintParams.word
                     }))
@@ -368,7 +375,12 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                         isGameStarted = true
                         Handler(Looper.getMainLooper()).post(Runnable {
                             toolbar.visibility = View.VISIBLE
-                            user_block.bringToFront()
+                            if (GameManager.currentGameMode == MatchMode.SOLO ||
+                                GameManager.currentGameMode == MatchMode.COLLABORATIVE) {
+                                showObserverFragment()
+                            } else {
+                                user_block.bringToFront()
+                            }
                         })
                     } else {
                         Handler(Looper.getMainLooper()).post(Runnable {
