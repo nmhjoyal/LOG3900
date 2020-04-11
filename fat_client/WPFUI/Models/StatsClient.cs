@@ -47,6 +47,20 @@ namespace WPFUI.Models
         {
             get { return this.bestSSS; }
         }
+        public BindableCollection<long> Connections
+        {
+            get { 
+                
+                return this.connections; }
+        }
+        public BindableCollection<long> Disconnections
+        {
+            get { return this.disconnections; }
+        }
+        public BindableCollection<MatchHistory> MatchesHistory
+        {
+            get { return this.matchesHistory; }
+        }
         public StatsClient(string username, int matchCount, int victoryPerc, int averageTime, int totalTime, int bestSSS, BindableCollection<long> connections, BindableCollection<long> disconnections, BindableCollection<MatchHistory> matchesHistory)
         {
             this.username = username;

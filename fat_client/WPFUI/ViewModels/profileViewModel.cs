@@ -10,8 +10,8 @@ using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    class profileViewModel: Screen
-    {
+	class profileViewModel : Screen
+	{
 		private string _changedUsername;
 		private string _changedFirstName;
 		private string _changedLastName;
@@ -35,7 +35,7 @@ namespace WPFUI.ViewModels
 		public StatsClient Stats
 		{
 			get { return this.stats; }
-			
+
 		}
 
 		private MatchHistory _matchHistory;
@@ -52,6 +52,7 @@ namespace WPFUI.ViewModels
 			_events = events;
 			_socketHandler = socketHandler;
 			this.statsClient = JsonConvert.DeserializeObject<StatsClient>(this._socketHandler.TestGETWebRequest("/profile/stats/" + this._userData.userName).ToString());
+			Console.WriteLine("CONNECTIONS STATS CLIENT:"+this.statsClient.Connections[0].ToString());
 		}
 		public StatsClient StatsClient
 		{

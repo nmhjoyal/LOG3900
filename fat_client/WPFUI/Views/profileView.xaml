@@ -10,10 +10,7 @@
     <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100"/>
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
+           
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="100" />
         </Grid.ColumnDefinitions>
@@ -113,15 +110,13 @@
 
         <StackPanel Grid.Column="1" Grid.Row="16" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
             <TextBlock Text="Connections:"/>
-            <ScrollViewer Margin="0,0,0,0.333" Width="122">
-                <ItemsControl ItemsSource="{Binding StatsClient}" FontSize="16">
+            <ScrollViewer Margin="0,0,0,0.333" Width="200" MaxHeight="40">
+                <ItemsControl ItemsSource="{Binding StatsClient.Connections}" Grid.Column="8" Grid.Row="8">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding connections}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+                            <StackPanel Orientation="Vertical">
 
-                                </StackPanel>
+                                <TextBlock Text="{Binding}" Foreground="#FF8AD63E" TextAlignment="Left"></TextBlock>
                             </StackPanel>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -131,31 +126,30 @@
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="17" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
             <TextBlock Text="Disconnections:"/>
-            <ScrollViewer Margin="0,0,0,0.333" Width="187">
-                <ItemsControl ItemsSource="{Binding StatsClient}" FontSize="16">
+            <ScrollViewer Margin="0,0,0,0.333" Width="180" MaxHeight="40">
+                <ItemsControl ItemsSource="{Binding StatsClient.Disconnections}" Grid.Column="8" Grid.Row="8">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding disconnections}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+                            <StackPanel Orientation="Vertical">
 
-                                </StackPanel>
+                                <TextBlock Text="{Binding}" Foreground="#FF8AD63E" TextAlignment="Left"></TextBlock>
                             </StackPanel>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+           
             </ScrollViewer>
             
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="18" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
             <TextBlock Text="Matches History:"/>
             <ScrollViewer  Width="182" Margin="0,0,0,0.333">
-                <ItemsControl ItemsSource="{Binding StatsClient}" FontSize="16" Width="200">
+                <ItemsControl ItemsSource="{Binding StatsClient.MatchesHistory}" FontSize="16" Width="200">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Width="200"  Text="{Binding matchesHistory}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+                                    <TextBlock Width="200"  Text="{Binding }" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
 
                                 </StackPanel>
                             </StackPanel>
@@ -165,6 +159,35 @@
             </ScrollViewer>
             
         </StackPanel>
+        <StackPanel Grid.Column="1" Grid.Row="19" Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center" Width="300">
+            <Button Content="See Matches History" Click="matchHistory"/>
+        </StackPanel>
+
+        <Border  Visibility="Visible" Name="border" Background="#00584C" Grid.Column="1" Grid.Row="2" CornerRadius="15" BorderBrush="Black" Opacity="0.9" Grid.RowSpan="18" >
+            <Grid Visibility="Visible" Name="selectNextDrawingBox" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="500"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="5" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="7*"/>
+                    <RowDefinition Height="20"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="1" Grid.Row="0" Text="Matches History" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="22"
+							   Name="roundFinishedMessage"  Foreground="White"/>
+               
+
+
+                
+               
+                <Button Grid.Column="2" Grid.Row="0" FontSize="12" Foreground="White" Background="#D81A60" BorderBrush="#D81A60" Click="close" Content="Close" MaxWidth="100"/>
+
+            </Grid>
+        </Border>
 
 
     </Grid>
