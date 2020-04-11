@@ -185,7 +185,7 @@
 
                 <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Vertical"  >
                     <ScrollViewer Grid.Column="1" Grid.Row="1" MinHeight="415">
-                        <ItemsControl ItemsSource="{Binding StatsClient.MatchesHistory}" Grid.Column="8" Grid.Row="8">
+                        <ItemsControl  ItemsSource="{Binding StatsClient.MatchesHistory}"  Grid.Column="8" Grid.Row="8">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
@@ -199,7 +199,7 @@
 
                 <StackPanel Grid.Column="2" Grid.Row="2" Orientation="Vertical"  >
                     <ScrollViewer Grid.Column="2" Grid.Row="1" MinHeight="415">
-                        <ItemsControl ItemsSource="{Binding StatsClient.MatchesHistory}" Grid.Column="8" Grid.Row="8">
+                        <ItemsControl  ItemsSource="{Binding accesseur}" Grid.Column="8" Grid.Row="8">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
@@ -213,7 +213,7 @@
 
                 <StackPanel Grid.Column="3" Grid.Row="2" Orientation="Vertical"  >
                     <ScrollViewer Grid.Column="3" Grid.Row="1" MinHeight="415">
-                        <ItemsControl ItemsSource="{Binding StatsClient.MatchesHistory}" Grid.Column="8" Grid.Row="8">
+                        <ItemsControl ItemsSource="{Binding StatsClient.MatchesHistory}"  Grid.Column="8" Grid.Row="8">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
@@ -241,7 +241,7 @@
 
                 <StackPanel Grid.Column="5" Grid.Row="2" Orientation="Vertical"  >
                     <ScrollViewer Grid.Column="5" Grid.Row="1" MinHeight="415">
-                    <ItemsControl ItemsSource="{Binding StatsClient.MatchesHistory}" Grid.Column="8" Grid.Row="8">
+                        <ItemsControl ItemsSource="{Binding StatsClient.MatchesHistory}" Grid.Column="8" Grid.Row="8">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Vertical">
