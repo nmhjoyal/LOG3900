@@ -86,6 +86,10 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
             }
         }))
 
+        get_hint_button.setOnClickListener(({
+            SocketHandler.askHint()
+        }))
+
         if (GameManager.currentGameMode == MatchMode.FREE_FOR_ALL ||
                 GameManager.currentGameMode == MatchMode.ONE_ON_ONE) {
             attempts.visibility = View.GONE
@@ -171,6 +175,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         transaction.replace(R.id.draw_view_container, drawerFragment)
         transaction.addToBackStack(null)
         transaction.commitAllowingStateLoss()
+        get_hint_button.visibility = View.GONE
         draw_view_container.bringToFront()
     }
 
@@ -180,6 +185,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         transaction.replace(R.id.draw_view_container, observerFragment)
         transaction.addToBackStack(null)
         transaction.commitAllowingStateLoss()
+        get_hint_button.visibility = View.VISIBLE
         if (!isTurnStarted) {
             showUserChoosingWord()
         }
@@ -403,9 +409,20 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                         refreshPlayerPointsToolbar()
                         turnOffSocketEvents()
                         user_block.bringToFront()
+                        get_hint_button.visibility = View.GONE
                         user_points.visibility = View.GONE
                         message.text = resources.getText(R.string.game_over)
                         back_to_lobby.visibility = View.VISIBLE
+                    })
+                }))
+                .on(SocketEvent.HINT_ENABLE, ({
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        get_hint_button.isEnabled = true
+                    })
+                }))
+                .on(SocketEvent.HINT_DISABLE, ({
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        get_hint_button.isEnabled = false
                     })
                 }))
                 .on(SocketEvent.UNEXPECTED_LEAVE, ({

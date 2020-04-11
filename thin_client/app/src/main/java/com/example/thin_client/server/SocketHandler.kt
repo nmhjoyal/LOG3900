@@ -182,5 +182,8 @@ object SocketHandler {
         socket!!.emit(SocketEvent.REMOVE_VP)
     }
 
+    fun askHint() {
+        socket!!.emit(SocketEvent.HINT)
+    }
 
 }
