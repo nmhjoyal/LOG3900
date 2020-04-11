@@ -102,5 +102,29 @@ namespace WPFUI.Views
                 BindingOperations.SetBinding(ChannelText, TextBlock.TextProperty, myBinding);
             }
         }
+
+        private void inviteButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if(this.invitesGrid.Visibility == Visibility.Visible)
+            {
+                this.invitesGrid.Visibility = Visibility.Hidden;
+            } else
+            {
+                this.newChannelGrid.Visibility = Visibility.Hidden;
+                this.invitesGrid.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void newChannelButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (this.newChannelGrid.Visibility == Visibility.Visible)
+            {
+                this.newChannelGrid.Visibility = Visibility.Hidden;
+            } else
+            {
+                this.invitesGrid.Visibility = Visibility.Hidden;
+                this.newChannelGrid.Visibility = Visibility.Visible;
+            }
+        }
     }
 }

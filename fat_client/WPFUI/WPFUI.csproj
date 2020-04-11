@@ -524,6 +524,8 @@
     <Content Include="Resources\banana.svg" />
     <Resource Include="Resources\cherry.png" />
     <Resource Include="Resources\chat.gif" />
+    <Resource Include="Resources\chatBox\plus.png" />
+    <Resource Include="Resources\chatBox\invite.png" />
     <Content Include="Resources\cherry.svg" />
     <Resource Include="Resources\grape.png" />
     <Resource Include="Resources\duck.gif" />
