@@ -145,6 +145,7 @@
     <Compile Include="EventModels\goBackEvent.cs" />
     <Compile Include="EventModels\goBackMainEvent.cs" />
     <Compile Include="EventModels\guessResponseEvent.cs" />
+    <Compile Include="EventModels\hintEvent.cs" />
     <Compile Include="EventModels\joinChatEvent.cs" />
     <Compile Include="EventModels\joinChatroomEvent.cs" />
     <Compile Include="EventModels\joinedRoomReceived.cs" />

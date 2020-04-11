@@ -20,7 +20,7 @@ namespace WPFUI.ViewModels
 {
     class partieJeuViewModel : Screen, INotifyPropertyChanged, IHandle<refreshMessagesEvent>, IHandle<addMessageEvent>,
                               IHandle<wordSelectedEvent>, IHandle<startTurnRoutineEvent>, IHandle<endTurnRoutineVMEvent>,
-                              IHandle<guessResponseEvent>, IHandle<endMatchEvent>
+                              IHandle<guessResponseEvent>, IHandle<endMatchEvent>, IHandle<hintEvent>
     {
         private Editeur editeur = new Editeur();
         private IEventAggregator _events;
@@ -39,6 +39,7 @@ namespace WPFUI.ViewModels
         private string _guessFeedBackSource;
         private string _guessFeedBackText;
         private string _winnerMessage;
+        private bool hintEnabled;
         private int _countHelper;
         string now;
 
@@ -90,6 +91,7 @@ namespace WPFUI.ViewModels
             ChoisirPointe = new RelayCommand<string>(editeur.ChoisirPointe);
             ChoisirOutil = new RelayCommand<string>(editeur.ChoisirOutil);
 
+            this.HintEnabled = false;
             this._socketHandler.onDrawing(this.Traits, this.strokes);
             this.startTurn = new StartTurn("", 0);
             this.endTurn = new EndTurn(0, new List<string>(), "", new BindableCollection<Player>());
@@ -150,6 +152,16 @@ namespace WPFUI.ViewModels
             {
                 _guessFeedBackText = value;
                 NotifyOfPropertyChange(() => guessFeedBackText);
+            }
+        }
+
+        public bool HintEnabled
+        {
+            get { return this.hintEnabled; }
+            set
+            {
+                this.hintEnabled = value;
+                NotifyOfPropertyChange(() => HintEnabled);
             }
         }
 
@@ -436,6 +448,12 @@ namespace WPFUI.ViewModels
             guessBox = "";
         }
 
+        public void requestHint()
+        {
+            this.HintEnabled = false;
+            this._socketHandler.socket.Emit("hint");
+        }
+
         public void sendPoint(int x, int y)
         {
             if(this.canDraw)
@@ -492,7 +510,8 @@ namespace WPFUI.ViewModels
 
         public void Handle(startTurnRoutineEvent message)
         {
-            if(this.endTurn.drawer == this._userData.userName)
+            this.HintEnabled = false;
+            if (this.endTurn.drawer == this._userData.userName)
             {
                 this.AttributsDessin.Color = (System.Windows.Media.Color)ColorConverter.ConvertFromString("#000000");
                 this.AttributsDessin.Width = 5;
@@ -504,6 +523,7 @@ namespace WPFUI.ViewModels
 
         public void Handle(endTurnRoutineVMEvent message)
         {
+            this.HintEnabled = false;
             _countHelper++;
             Console.WriteLine("endTurn VM " + _countHelper + " created le : "+ now);
             _timer.Stop();
@@ -570,6 +590,11 @@ namespace WPFUI.ViewModels
             matchScores.Refresh();
             NotifyOfPropertyChange(() => matchScores);
             this._timer.Stop();
+        }
+
+        public void Handle(hintEvent message)
+        {
+            this.HintEnabled = message.HintEnable;
         }
     }
 }
