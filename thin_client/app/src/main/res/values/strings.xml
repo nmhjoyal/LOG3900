@@ -46,6 +46,7 @@
     <string name="end_time">End time:</string>
     <string name="winner">Winner:</string>
     <string name="my_score">My score</string>
+    <string name="get_hint">Need a hint?</string>
 
     <!-- Strings related to login -->
     <string name="prompt_password">Password</string>
@@ -167,6 +168,7 @@
     <string name="points">Points</string>
     <string name="time_up">Times up!</string>
     <string name="game_over">Game over</string>
+    <string name="unexpected_leave">Match no longer meets requirements.</string>
     <string name="back_to_lobby">Exit</string>
     <string name="one_vs_one_title">%1$s vs. %2$s</string>
 

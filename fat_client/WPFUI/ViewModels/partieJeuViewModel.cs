@@ -42,6 +42,7 @@ namespace WPFUI.ViewModels
         private bool hintEnabled;
         private int _countHelper;
         string now;
+        private GuessesLeft guessesLeft;
 
         // Commandes sur lesquels la vue pourra se connecter.
         public RelayCommand<string> ChoisirPointe { get; set; }
@@ -90,12 +91,13 @@ namespace WPFUI.ViewModels
             ChoisirPointe = new RelayCommand<string>(editeur.ChoisirPointe);
             ChoisirOutil = new RelayCommand<string>(editeur.ChoisirOutil);
 
+            this.guessesLeft = new GuessesLeft(0, this._userData.matchMode == Models.MatchMode.sprintSolo || this._userData.matchMode == Models.MatchMode.sprintCoop);
             this.HintEnabled = false;
             this._socketHandler.onDrawing(this.Traits, this.strokes);
             this.startTurn = new StartTurn("", 0);
             this.endTurn = new EndTurn(0, new List<string>(), "", new BindableCollection<Player>());
             this._socketHandler.offWaitingRoom();
-            this._socketHandler.onMatch(this.startTurn, this.endTurn);
+            this._socketHandler.onMatch(this.startTurn, this.endTurn, this.guessesLeft);
             _countHelper = 0;
         }
 
@@ -276,6 +278,12 @@ namespace WPFUI.ViewModels
             set { _guessBox = value;
                 NotifyOfPropertyChange(() => guessBox);
             }
+        }
+
+        public GuessesLeft GuessesLeft
+        {
+            get { return this.guessesLeft; }
+            set { this.guessesLeft = value; NotifyOfPropertyChange(() => this.GuessesLeft); }
         }
 
         public BindableCollection<dynamic> wordChoices
@@ -556,6 +564,8 @@ namespace WPFUI.ViewModels
                 guessFeedBackSource = "/Resources/good guess.png";
             } else
             {
+                if(this.guessesLeft.isVisible) this.guessesLeft.guess--;
+                this.NotifyOfPropertyChange(() => this.GuessesLeft);
                 guessFeedBackText = "Bad Guess !";
                 guessFeedBackSource = "/Resources/bad guess.png";
             }

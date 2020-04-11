@@ -86,6 +86,15 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
             }
         }))
 
+        get_hint_button.setOnClickListener(({
+            SocketHandler.askHint()
+        }))
+
+        if (GameManager.currentGameMode == MatchMode.FREE_FOR_ALL ||
+                GameManager.currentGameMode == MatchMode.ONE_ON_ONE) {
+            attempts.visibility = View.GONE
+        }
+
         draw_view_container.bringToFront()
     }
 
@@ -166,6 +175,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         transaction.replace(R.id.draw_view_container, drawerFragment)
         transaction.addToBackStack(null)
         transaction.commitAllowingStateLoss()
+        get_hint_button.visibility = View.GONE
         draw_view_container.bringToFront()
     }
 
@@ -175,6 +185,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         transaction.replace(R.id.draw_view_container, observerFragment)
         transaction.addToBackStack(null)
         transaction.commitAllowingStateLoss()
+        get_hint_button.visibility = View.VISIBLE
         if (!isTurnStarted) {
             showUserChoosingWord()
         }
@@ -278,6 +289,8 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                 .off(SocketEvent.TURN_STARTED)
                 .off(SocketEvent.MATCH_LEFT)
                 .off(SocketEvent.MATCH_STARTED)
+                .off(SocketEvent.UPDATE_SPRINT)
+                .off(SocketEvent.UNEXPECTED_LEAVE)
         }
     }
 
@@ -285,7 +298,6 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         if (SocketHandler.socket != null) {
             SocketHandler.socket!!
                 .on(SocketEvent.UPDATE_SPRINT, ({data ->
-                    isTurnStarted = true
                     val sprintParams = Gson().fromJson(data.first().toString(), UpdateSprint::class.java)
                     getNonVirtualPlayers(sprintParams.players)
                     Handler(Looper.getMainLooper()).post(({
@@ -377,6 +389,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                             toolbar.visibility = View.VISIBLE
                             if (GameManager.currentGameMode == MatchMode.SOLO ||
                                 GameManager.currentGameMode == MatchMode.COLLABORATIVE) {
+                                isTurnStarted = true
                                 showObserverFragment()
                             } else {
                                 user_block.bringToFront()
@@ -390,11 +403,34 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                     }
                 }))
                 .on(SocketEvent.MATCH_ENDED, ({ data ->
+                    val playersRefresh = Gson().fromJson(data.first().toString(), Array<Player>::class.java)
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        getNonVirtualPlayers(playersRefresh)
+                        refreshPlayerPointsToolbar()
+                        turnOffSocketEvents()
+                        user_block.bringToFront()
+                        get_hint_button.visibility = View.GONE
+                        user_points.visibility = View.GONE
+                        message.text = resources.getText(R.string.game_over)
+                        back_to_lobby.visibility = View.VISIBLE
+                    })
+                }))
+                .on(SocketEvent.HINT_ENABLE, ({
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        get_hint_button.isEnabled = true
+                    })
+                }))
+                .on(SocketEvent.HINT_DISABLE, ({
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        get_hint_button.isEnabled = false
+                    })
+                }))
+                .on(SocketEvent.UNEXPECTED_LEAVE, ({
                     Handler(Looper.getMainLooper()).post(Runnable {
                         turnOffSocketEvents()
                         user_block.bringToFront()
                         user_points.visibility = View.GONE
-                        message.text = resources.getText(R.string.game_over)
+                        message.text = resources.getText(R.string.unexpected_leave)
                         back_to_lobby.visibility = View.VISIBLE
                     })
                 }))
