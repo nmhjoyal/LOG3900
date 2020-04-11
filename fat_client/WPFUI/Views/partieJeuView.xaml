@@ -231,8 +231,10 @@
             <Button x:Name ="sendGuess"  Grid.Column="13" Grid.Row="11" BorderBrush="{x:Null}" Background="#D6EFE9" Foreground="#018677" Click="refocus" Height="auto" Width="auto" >
 			Guess
 		</Button>
+            <TextBlock x:Name="guessesLeft" FontSize="14" Grid.Row="10" TextAlignment="Right" VerticalAlignment="Center" Grid.Column="9" Text="{Binding GuessesLeft.Text}" Visibility="{Binding GuessesLeft.Visibility}"  Grid.ColumnSpan="2" Margin="0.2,0.2,9.4,10.2" Grid.RowSpan="2"/>
+            
             <Button x:Name ="requestHint" IsEnabled="{Binding HintEnabled}" Background="#01C853" Grid.Column="13" Grid.Row="13" Content="Hint" Foreground="White" BorderBrush="{x:Null}" Height="auto" Grid.ColumnSpan="1"/>
-
+	
 			<Canvas Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="13" Grid.RowSpan="13" Name="mainUIFilter" Margin="0.4,30,0.4,0"></Canvas>
 			<Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="13" Grid.RowSpan="13" Visibility="Hidden" Name="endTurnBox" Margin="0.4,30,0.4,0">
 				<Grid.ColumnDefinitions>

@@ -268,4 +268,24 @@ namespace WPFUI.Models
             this.players = new BindableCollection<Player>(updateSprint.players.OrderByDescending(i => i.ScoreTotal));
         }
     }
+
+    public class GuessesLeft
+    {
+        public int guess;
+        public bool isVisible;
+
+        public string Text
+        {
+            get { return "You have " + this.guess + " more guess(es)"; }
+        }
+        public string Visibilty
+        {
+            get { return this.isVisible ? "Visible" : "Hidden"; }
+        }
+        public GuessesLeft(int guess, bool isVisible)
+        {
+            this.guess = guess;
+            this.isVisible = isVisible;
+        }
+    }
 }

@@ -310,9 +310,12 @@ namespace WPFUI.Models
                 if (drawersTool == "crayon")
                 {
                     StylusPoint stylusPoint = new StylusPoint((int)json.X, (int)json.Y);
-                    this.Dispatcher.Invoke(() =>
+                    try
+                    {
+                        this.Dispatcher.Invoke(() =>
                         Traits[currentStrokeIndex].StylusPoints.Add(stylusPoint)
                     );
+                    } catch(Exception e) { _events.PublishOnUIThread(new appWarningEvent("New_point error")); }
                 }
                 else if (drawersTool == "efface_trait" || drawersTool == "efface_segment")
                 {
@@ -349,7 +352,7 @@ namespace WPFUI.Models
                 }
             });
 
-            this._socket.On(("new_clear"), () =>
+            this._socket.On("new_clear", () =>
             {
                 this.Dispatcher.Invoke(() =>
                 {
@@ -492,7 +495,7 @@ namespace WPFUI.Models
             this.socket.Off("unexpected_leave");
         }
 
-        public void onMatch(StartTurn startTurn, EndTurn endTurn)
+        public void onMatch(StartTurn startTurn, EndTurn endTurn, GuessesLeft guessesLeft)
         {
             this.socket.On("turn_ended", (new_endTurn) =>
             {
@@ -514,7 +517,7 @@ namespace WPFUI.Models
                 startTurn.word = string.Concat(json.word.Select(letter => letter + " "));
                 startTurn.timeLimit = json.time;
                 endTurn.players = new BindableCollection<Player>(json.players.OrderByDescending(i => i.ScoreTotal));
-                // json.guess TODO
+                guessesLeft.guess = json.guess;
                 _events.PublishOnUIThread(new startTurnRoutineEvent(startTurn.timeLimit));
             });
 
