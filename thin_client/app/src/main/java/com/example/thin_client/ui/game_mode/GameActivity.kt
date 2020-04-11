@@ -86,6 +86,11 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
             }
         }))
 
+        if (GameManager.currentGameMode == MatchMode.FREE_FOR_ALL ||
+                GameManager.currentGameMode == MatchMode.ONE_ON_ONE) {
+            attempts.visibility = View.GONE
+        }
+
         draw_view_container.bringToFront()
     }
 
@@ -278,6 +283,8 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                 .off(SocketEvent.TURN_STARTED)
                 .off(SocketEvent.MATCH_LEFT)
                 .off(SocketEvent.MATCH_STARTED)
+                .off(SocketEvent.UPDATE_SPRINT)
+                .off(SocketEvent.UNEXPECTED_LEAVE)
         }
     }
 
@@ -304,6 +311,12 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                         nbTries = sprintParams.guess.toInt()
                         nb_guesses.text = sprintParams.guess.toString()
                         message.text = sprintParams.word
+                        for (player in sprintParams.players) {
+                            if (player.isVirtual) {
+                                currentDrawer = player.user.username
+                                break
+                            }
+                        }
                     }))
                 }))
                 .on(SocketEvent.TURN_ENDED, ({ data ->
@@ -395,6 +408,15 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                         user_block.bringToFront()
                         user_points.visibility = View.GONE
                         message.text = resources.getText(R.string.game_over)
+                        back_to_lobby.visibility = View.VISIBLE
+                    })
+                }))
+                .on(SocketEvent.UNEXPECTED_LEAVE, ({
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        turnOffSocketEvents()
+                        user_block.bringToFront()
+                        user_points.visibility = View.GONE
+                        message.text = resources.getText(R.string.unexpected_leave)
                         back_to_lobby.visibility = View.VISIBLE
                     })
                 }))

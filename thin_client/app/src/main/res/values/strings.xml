@@ -167,6 +167,7 @@
     <string name="points">Points</string>
     <string name="time_up">Times up!</string>
     <string name="game_over">Game over</string>
+    <string name="unexpected_leave">Match no longer meets requirements.</string>
     <string name="back_to_lobby">Exit</string>
     <string name="one_vs_one_title">%1$s vs. %2$s</string>
 

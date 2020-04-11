@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.game_mode.free_draw.FreeDrawActivity"
-    android:background="@color/default_background">
+    android:background="@color/colorPrimaryDark">
 
     <com.example.thin_client.ui.game_mode.free_draw.DrawView
         android:id="@+id/draw_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="600dp"
+        android:layout_height="500dp"
         app:layout_constrainedWidth="true"
         app:layout_constrainedHeight="true"
         android:background="@color/default_background"
