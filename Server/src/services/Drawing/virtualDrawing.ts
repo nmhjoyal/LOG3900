@@ -16,10 +16,10 @@ export class VirtualDrawing {
     }
 
     public async draw(socketIO: SocketIO.Server | SocketIO.Socket, drawing: Stroke[], level: Level): Promise<void> {
-        const maxPoints: number = 2000;
+        //const maxPoints: number = 2000;
         // let start: number = Date.now();
-        const totalPoints: number = this.totalPoints(drawing);
-        const factor: number = Math.ceil(totalPoints / maxPoints);
+        //const totalPoints: number = this.totalPoints(drawing);
+        //const factor: number = Math.ceil(totalPoints / maxPoints);
         this.clear(socketIO);
         let timeStamp: number = 0;
         let deltaT: number = (this.time * 1000) / (this.totalPoints(drawing) * Math.pow(2, 2 - level));

@@ -406,7 +406,7 @@ export default abstract class Match {
     }
 
     protected calculateScore(isSprint: boolean): number {
-        return Math.round(this.timeLeft()) * 10 + ((isSprint) ? 0 : (1 - (this.getPlayerGuessCount()/this.getNbHumanPlayers())) * 100);
+        return Math.round(this.timeLeft() * 10 + ((isSprint) ? 0 : (1 - (this.getPlayerGuessCount()/this.getNbHumanPlayers())) * 100));
     }
 
     protected assignDrawer() {
