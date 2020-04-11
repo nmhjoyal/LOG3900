@@ -33,19 +33,32 @@ namespace WPFUI.ViewModels
             _events.PublishOnUIThread(new viewProfileEvent());
         }
 
+        public void offSocket()
+        {
+            _socketHandler.offLobby();
+            _socketHandler.offCreateMatch();
+            _socketHandler.offWaitingRoom();
+            _socketHandler.offMatch();
+            _socketHandler.offDrawing();
+            _socketHandler.offPreviewing();
+        }
+
         public void disconnect()
         {
+            offSocket();
+
             if ((_userData.matchId != null))
             {
                 _socketHandler.socket.Emit("leave_chat_room", _userData.matchId);
                 _socketHandler.socket.Emit("leave_match");
-                _socketHandler.offMatch();
             }
             _socketHandler.SignOut();
         }
 
         public void goToMenu()
         {
+            offSocket();
+
             if (_userData.matchId != null)
             {
                 Console.WriteLine("----------------LEFT MATCH ------------------");
@@ -63,7 +76,6 @@ namespace WPFUI.ViewModels
             Console.WriteLine(_userData.matchId);
             _socketHandler.socket.Emit("leave_chat_room", _userData.matchId);
             _socketHandler.socket.Emit("leave_match");
-            _socketHandler.offMatch();
             _userData.matchId = null;
             _userData.currentGameRoom = null;
             Room general = _userData.selectableJoinedRooms[0].room;
@@ -71,7 +83,5 @@ namespace WPFUI.ViewModels
             _userData.currentRoomId = general.roomName;
             _events.PublishOnUIThread(new refreshMessagesEvent(_userData.messages, _userData.currentRoomId));
         }
-
-
     }
 }

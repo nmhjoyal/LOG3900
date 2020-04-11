@@ -38,6 +38,8 @@ namespace WPFUI.ViewModels
             _events.PublishOnUIThread(new refreshMessagesEvent(userdata.messages, userdata.currentRoomId));
             this._messages = userdata.messages;
             this.players = new BindableCollection<Player>();
+            this._socketHandler.offLobby();
+            this._socketHandler.offCreateMatch();
             this._socketHandler.onWaitingRoom(this.players);
             this._socketHandler.socket.Emit("get_players", this._userData.matchId);
         }

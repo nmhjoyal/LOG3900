@@ -45,6 +45,7 @@ namespace WPFUI.Views
         private void OnLoad(object sender, RoutedEventArgs e)
         {
             _viewModel = DataContext as partieJeuViewModel;
+            (DataContext as partieJeuViewModel).events.Unsubscribe(this);
             (DataContext as partieJeuViewModel).events.Subscribe(this);
             messagesUI.ScrollToEnd();
         }
@@ -151,6 +152,8 @@ namespace WPFUI.Views
         {
             endMatchBox.Visibility = Visibility.Visible;
         }
+
+        
     }
 
 }

@@ -45,7 +45,6 @@ namespace WPFUI.ViewModels
             this.userdata = userdata;
             _socketHandler = socketHandler;
             this.matches = new BindableCollection<Match>();
-            // this._socketHandler.onLobby(this.matches);
             this._socketHandler.onLobby(this.matches);
             this._socketHandler.socket.Emit("get_matches");
         }

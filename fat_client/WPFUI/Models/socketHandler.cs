@@ -83,7 +83,8 @@ namespace WPFUI.Models
                     Console.WriteLine(_userdata.avatarName);
                     _events.PublishOnUIThread(new LogInEvent());
 
-                } else
+                }
+                else
                 {
                     _events.PublishOnUIThread(new appWarningEvent(feedback.feedback.log_message));
                 }
@@ -138,7 +139,8 @@ namespace WPFUI.Models
                     {
                         Console.WriteLine(fb.feedback.log_message);
                     }
-                } else
+                }
+                else
                 {
                     Console.WriteLine(magic);
                     Console.WriteLine(magic.feedback.log_message);
@@ -391,7 +393,8 @@ namespace WPFUI.Models
 
         public void onLobby(BindableCollection<Match> matches)
         {
-            this.socket.On("update_matches", (new_matches) => {
+            this.socket.On("update_matches", (new_matches) =>
+            {
                 matches.Clear();
                 matches.AddRange(JsonConvert.DeserializeObject<BindableCollection<Match>>(new_matches.ToString()));
             });
@@ -399,7 +402,7 @@ namespace WPFUI.Models
             this.socket.On("match_joined", (joinRoomFeedback) =>
             {
                 JoinRoomFeedBack jRF = JsonConvert.DeserializeObject<JoinRoomFeedBack>(joinRoomFeedback.ToString());
-                if(jRF.feedback.status)
+                if (jRF.feedback.status)
                 {
                     if (jRF.isPrivate)
                     {
@@ -408,7 +411,8 @@ namespace WPFUI.Models
                         this._userdata.currentGameRoom = jRF.room_joined;
                         this._events.PublishOnUIThread(new waitingRoomEvent());
                     }
-                } else
+                }
+                else
                 {
                     _events.PublishOnUIThread(new appWarningEvent(jRF.feedback.log_message));
                 }
@@ -418,6 +422,7 @@ namespace WPFUI.Models
         public void offLobby()
         {
             this.socket.Off("update_matches");
+            this.socket.Off("match_joined");
         }
 
         public void onCreateMatch()
@@ -431,8 +436,8 @@ namespace WPFUI.Models
                     Room room = new Room(this._userdata.matchId, new Message[0], new Dictionary<string, string>());
                     this._userdata.currentGameRoom = room;
                     this._events.PublishOnUIThread(new waitingRoomEvent());
-                    this.offCreateMatch();
-                } else
+                }
+                else
                 {
                     _events.PublishOnUIThread(new appWarningEvent(json.feedback.log_message));
                 }
@@ -459,7 +464,7 @@ namespace WPFUI.Models
                 Console.WriteLine("match_left " + _userdata.userName);
                 dynamic json = JsonConvert.DeserializeObject(feedback.ToString());
                 Console.WriteLine(json);
-                if((Boolean)json.status)
+                if ((Boolean)json.status)
                 {
                     this._events.PublishOnUIThread(new goBackMainEvent());
                     this.offWaitingRoom();
@@ -478,13 +483,15 @@ namespace WPFUI.Models
 
             this.socket.On("match_started", (startMatchFeedback) =>
             {
+                Console.WriteLine("onWaitingRoom match_started");
                 dynamic json = JsonConvert.DeserializeObject(startMatchFeedback.ToString());
                 Console.WriteLine(startMatchFeedback);
-                if((Boolean)json.feedback.status)
+                if ((Boolean)json.feedback.status)
                 {
                     this._userdata.nbRounds = (int)json.nbRounds;
                     _events.PublishOnUIThread(new gameEvent());
-                } else
+                }
+                else
                 {
                     _events.PublishOnUIThread(new appWarningEvent((string)json.feedback.log_message));
                 }
@@ -492,8 +499,8 @@ namespace WPFUI.Models
 
             this.socket.On("unexpected_leave", () =>
             {
-                this._events.PublishOnUIThread(new joinGameEvent());
                 this.offWaitingRoom();
+                this._events.PublishOnUIThread(new joinGameEvent());
                 _events.PublishOnUIThread(new appWarningEvent("Unexpected match leave"));
             });
         }
@@ -505,7 +512,7 @@ namespace WPFUI.Models
             this.socket.Off("vp_added");
             this.socket.Off("vp_removed");
             this.socket.Off("match_started");
-            this.socket.Off("turn_ended");
+            this.socket.Off("unexpected_leave");
         }
 
         public void onMatch(StartTurn startTurn, EndTurn endTurn)
@@ -552,8 +559,8 @@ namespace WPFUI.Models
 
             this.socket.On("unexpected_leave", () =>
             {
-                this._events.PublishOnUIThread(new joinGameEvent());
                 this.offMatch();
+                this._events.PublishOnUIThread(new joinGameEvent());
                 _events.PublishOnUIThread(new appWarningEvent("Unexpected match leave"));
             });
         }
@@ -567,6 +574,7 @@ namespace WPFUI.Models
             this.socket.Off("match_ended");
             this.socket.Off("unexpected_leave");
         }
+
     }
 
 }

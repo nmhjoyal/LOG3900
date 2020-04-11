@@ -32,6 +32,7 @@ namespace WPFUI.ViewModels
             _userdata = userdata;
             _socketHandler = socketHandler;
             _events = events;
+            _events.Subscribe(this);
         }
 
         public string userName
@@ -68,6 +69,11 @@ namespace WPFUI.ViewModels
         public void signUp()
         {
             _events.PublishOnUIThread(new signUpEvent());
+        }
+
+        public void Unsubscribe()
+        {
+            _events.Unsubscribe(this);
         }
 
     }

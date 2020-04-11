@@ -1,6 +1,5 @@
 ﻿using Caliburn.Micro;
 using Quobject.SocketIoClientDotNet.Client;
-using System;
 using System.Collections.Generic;
 using System.Windows.Ink;
 
@@ -19,22 +18,20 @@ namespace WPFUI.Models
         void disconnect();
         void getPublicChannels();
         void joinRoom(string roomID);
+        void offCreateMatch();
         void offDrawing();
+        void offLobby();
+        void offMatch();
         void offPreviewing();
+        void offWaitingRoom();
+        void onCreateMatch();
         void onDrawing(StrokeCollection Traits, Dictionary<Stroke, int> strokes);
         void onLobby(BindableCollection<Match> matches);
-        void offLobby();
-        void onCreateMatch();
-        void offCreateMatch();
-        void onWaitingRoom(BindableCollection<Player> players);
-        void offWaitingRoom();
-
         void onMatch(StartTurn startTurn, EndTurn endTurn);
-
-        void offMatch();
+        void onWaitingRoom(BindableCollection<Player> players);
         void sendMessage();
         void SignOut();
-        Object TestGETWebRequest(string url);
+        object TestGETWebRequest(string url);
         void TestPOSTWebRequest(object obj, string url);
     }
 }

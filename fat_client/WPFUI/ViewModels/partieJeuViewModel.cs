@@ -39,6 +39,8 @@ namespace WPFUI.ViewModels
         private string _guessFeedBackSource;
         private string _guessFeedBackText;
         private string _winnerMessage;
+        private int _countHelper;
+        string now;
 
         // Commandes sur lesquels la vue pourra se connecter.
         public RelayCommand<string> ChoisirPointe { get; set; }
@@ -46,8 +48,11 @@ namespace WPFUI.ViewModels
 
         public partieJeuViewModel(IEventAggregator events, ISocketHandler socketHandler, IUserData userdata)
         {
+            now = DateTime.Now.ToString();
+            Console.WriteLine("creation d'une vm de jeu a: " + now);
             editeur.PropertyChanged += new PropertyChangedEventHandler(EditeurProprieteModifiee);
             _events = events;
+            _events.Unsubscribe(this);
             _events.Subscribe(this);
             _socketHandler = socketHandler;
             _userData = userdata;
@@ -90,6 +95,12 @@ namespace WPFUI.ViewModels
             this.endTurn = new EndTurn(0, new List<string>(), "", new BindableCollection<Player>());
             this._socketHandler.offWaitingRoom();
             this._socketHandler.onMatch(this.startTurn, this.endTurn);
+            _countHelper = 0;
+        }
+
+        public void Unsubscribe()
+        {
+            _events.Unsubscribe(this);
         }
 
         public string winnerMessage
@@ -493,7 +504,8 @@ namespace WPFUI.ViewModels
 
         public void Handle(endTurnRoutineVMEvent message)
         {
-            Console.WriteLine("endTurn VM");
+            _countHelper++;
+            Console.WriteLine("endTurn VM " + _countHelper + " created le : "+ now);
             _timer.Stop();
             this.newScores();
             // fillPlayers();
