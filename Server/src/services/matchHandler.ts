@@ -204,6 +204,19 @@ export default class MatchHandler {
         }
     }
 
+    public hint(io: SocketIO.Server, user: PrivateProfile | undefined): void {
+        if (user) {
+            const match: Match | undefined = this.getMatchFromPlayer(user.username);
+            if (match) {
+                match.hint(io);
+            } else {
+                console.log("This match does not exist anymore.");
+            }
+        } else {
+            console.log("You are not signed in.");
+        }
+    }
+
     public stroke(socket: SocketIO.Socket, stroke: Stroke, user: PrivateProfile | undefined): void {
         if (user) {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);

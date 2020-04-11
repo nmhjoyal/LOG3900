@@ -22,12 +22,15 @@ export default class FreeForAll extends Match {
             const game: Game = await gameDB.getGame(word);
             this.hints = game.clues;
             this.virtualDrawing.draw(io, game.drawing, game.level);
+            this.timeouts.push(setTimeout(() =>{
+                io.in(this.matchId).emit("hint_enable");
+            }, this.timeLimit * 1000 * 0.5));
         }
         
         this.timer = Date.now();
-        this.timeout = setTimeout(() => {
+        this.timeouts.push(setTimeout(() => {
             this.endTurn(io);
-        }, this.timeLimit * 1000);
+        }, this.timeLimit * 1000));
     }
 
     public async endTurn(io: SocketIO.Server): Promise<void> {
@@ -53,7 +56,7 @@ export default class FreeForAll extends Match {
                 let word: string;
                 setTimeout(() => {
                     this.startTurn(io, word);
-                }, 5000);
+                }, 10000);
                 word = await gameDB.getRandomWord();
             }
             // else we wait for the drawer to send his choice of word in the "start_turn" event.
@@ -67,7 +70,7 @@ export default class FreeForAll extends Match {
         const score: number = this.calculateScore(false);
         this.updateScore(username, score);
         if (!this.drawer.isVirtual) 
-            this.updateScore(this.drawer.user.username, Math.round(score / this.players.length));
+            this.updateScore(this.drawer.user.username, Math.round(score / this.getNbHumanPlayers()));
 
         io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
 
