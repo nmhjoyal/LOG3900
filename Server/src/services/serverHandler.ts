@@ -269,6 +269,10 @@ class ServerHandler {
         this.matchHandler.guess(io, socket, guess, this.getUser(socket.id));
     }
 
+    public hint(io: SocketIO.Server, socket: SocketIO.Socket): void {
+        this.matchHandler.hint(io, this.getUser(socket.id));
+    }
+
     public stroke(socket: SocketIO.Socket, stroke: Stroke): void {
         this.matchHandler.stroke(socket, stroke, this.getUser(socket.id));
     }

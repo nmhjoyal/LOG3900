@@ -34,10 +34,10 @@ class StatsDB {
     }
     
     public async updateMatchStats(players: Player[], matchMode: MatchMode, startTime: number): Promise<void> {
-        if(matchMode == MatchMode.sprintSolo) {
+        if (matchMode == MatchMode.sprintSolo) {
             await this.mongoDB.db("Stats").collection("stats").updateOne(
                 { username: players[0].user.username },
-                { $max: { score: players[0].score.scoreTotal } }
+                { $max: { bestSSS: players[0].score.scoreTotal } }
             );
         }
         

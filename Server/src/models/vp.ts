@@ -342,20 +342,20 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
     [
         MISS_LEMON,
         {
-            startMatch: "Buongiorno, I wish you guys a good game, the winner will get my beautiful lasagna.",
+            startMatch: "Buongiorno, I wish you guys a good match, the winner will get my beautiful lasagna.",
             endTurn: [
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO"
+                "I wish you would all come to Italia, life is good here in Sicilia.",
+                "I would love to guide you trough Venezia, it is a beautiful city to discover.",
+                "I don't understand the point of this game, at least the winner is going to get my lasagna.",
+                "Guys tell me about Montreal, I would love to come visit you one day.",
+                "My son lives in Montreal he told me the Little Italy district is great.",
+                "My country has a great history, you must have heard of the Roman Empire.",
+                "I have to leave soon the mercato is closing in an hour and I need bread.",
+                "I heard the weather is not great in Montreal, here in Italia it is always sunny.",
+                "I hope my lasagna doesn't burn while I play this game with you guys.",
+                "I love cooking for my friends, I would love for you to taste my dishes"
             ],
-            hint: "TODO" + INSERT_HINT
+            hint: "The hint is " + INSERT_HINT + ". I will make sure my lasagna is not burning."
         },
     ],
     [

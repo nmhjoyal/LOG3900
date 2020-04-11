@@ -34,7 +34,7 @@ export default abstract class Match {
 
     // During the match
     protected timer: number;
-    protected timeout: NodeJS.Timeout;          // setTimeout will be used for emitting end_turn and we will cancel it 
+    protected timeouts: NodeJS.Timeout[];         // setTimeout will be used for emitting end_turn and we will cancel it 
                                                 // if there is an unexpected leave of a room or stoppage of a turn
     protected round: number;                    // In one round each player will draw one time
     protected drawer: Player;                   // Username 
@@ -81,7 +81,7 @@ export default abstract class Match {
                     io.in(this.matchId).emit("update_players", JSON.stringify(this.players));
                     joinRoomFeedback.feedback.log_message = "You joined the match.";
                 } else {
-                    joinRoomFeedback.feedback.log_message = "You can not have more than" + this.ms.MAX_NB_HP + "human players in this mode.";
+                    joinRoomFeedback.feedback.log_message = "You can not have more than " + this.ms.MAX_NB_HP + " human players in this mode.";
                 }
             } else {
                 joinRoomFeedback.feedback.log_message = "The maximum number of player is " + this.ms.MAX_NB_PLAYERS;
@@ -105,6 +105,7 @@ export default abstract class Match {
                         this.endTurn(io);
                     }
                 } else {
+                    console.log("unexpected_leave")
                     io.in(this.matchId).emit("unexpected_leave");
                     deleteMatch = true;
                 }
@@ -136,7 +137,7 @@ export default abstract class Match {
                         feedback.status = true;
                         feedback.log_message = "A virtual player was added.";
                     } else {
-                        feedback.log_message = "You can not have more than" + this.ms.MAX_NB_VP + "virtual players in this mode.";
+                        feedback.log_message = "You can not have more than " + this.ms.MAX_NB_VP + " virtual players in this mode.";
                     }
                 } else {
                     feedback.log_message = "The maximum number of player is " + this.ms.MAX_NB_PLAYERS;
@@ -163,7 +164,7 @@ export default abstract class Match {
                     feedback.status = true;
                     feedback.log_message = "A virtual player was removed."
                 } else {
-                    feedback.log_message = "You can not have less than" + this.ms.MIN_NB_VP + "virtual players in this mode."
+                    feedback.log_message = "You can not have less than " + this.ms.MIN_NB_VP + " virtual players in this mode."
                 }
             } else {
                 feedback.log_message = "You are not the host. Only the host can remove a virtual player.";
@@ -238,6 +239,23 @@ export default abstract class Match {
             socket.emit("guess_res", JSON.stringify(feedback));
     }
 
+    public hint(io: SocketIO.Server) {
+        if (this.drawer.isVirtual) {
+            io.in(this.matchId).emit("hint_disable");
+
+            if (this.hints.length > 0) {
+                const hint: string = this.hints.splice(Math.floor(Math.random() * (Math.floor(this.hints.length))), 1)[0];
+                io.in(this.matchId).emit("new_message", this.virtualPlayer.getHintMessage(this.vp, hint, this.matchId));
+
+                if (this.hints.length > 0) {
+                    this.timeouts.push(setTimeout(() => {
+                        io.in(this.matchId).emit("hint_enable");
+                    }, 3000));
+                }
+            }
+        }
+    }
+
     protected async endMatch(io: SocketIO.Server): Promise<void> {
         // compile game stats for the players and the standings.
         await rankingDB.updateRanks(this.players, this.mode);
@@ -257,7 +275,7 @@ export default abstract class Match {
     }
 
     protected reset(io: SocketIO.Server): void {
-        clearTimeout(this.timeout)
+        this.timeouts.forEach(clearTimeout);
         this.virtualDrawing.clear(io);
         this.drawing.reset(io);
     }
@@ -303,6 +321,8 @@ export default abstract class Match {
     }
 
     protected initMatch(io: SocketIO.Server): void {
+        this.timeouts = [];
+        this.hints = [];
         this.startTime = Date.now();
         this.isStarted = true;
         this.drawing = new Drawing(this.matchId);
@@ -337,7 +357,7 @@ export default abstract class Match {
     }
 
     protected noMoreGuess(): boolean {
-        return this.guessCounter == -1;
+        return this.guessCounter == 0;
     }
 
     protected matchIsEnded(): boolean {

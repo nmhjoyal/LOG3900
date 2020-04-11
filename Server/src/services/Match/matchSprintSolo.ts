@@ -35,11 +35,14 @@ export default class SprintSolo extends Match {
         io.in(this.matchId).emit("update_sprint", JSON.stringify(updateSprint));
 
         this.virtualDrawing.draw(io, game.drawing, this.gameLevel);
+        this.timeouts.push(setTimeout(() =>{
+            io.in(this.matchId).emit("hint_enable");
+        }, this.timeLimit * 1000 * 0.25));
         
         this.timer = Date.now();
-        this.timeout = setTimeout(async () => {
+        this.timeouts.push(setTimeout(async () => {
             await this.endMatch(io);
-        }, this.timeLimit * 1000);
+        }, this.timeLimit * 1000));
     }
 
     public async endTurn(io: SocketIO.Server): Promise<void> {
