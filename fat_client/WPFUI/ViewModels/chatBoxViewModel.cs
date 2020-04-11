@@ -21,6 +21,7 @@ namespace WPFUI.ViewModels
         private ISocketHandler _socketHandler;
         private BindableCollection<SelectableRoom> _availableRooms;
         private BindableCollection<SelectableRoom> _joinedRooms;
+        private string _searchBarText;
         public IchangeChannelCommand _changeChannelCommand { get; set; }
         public IselectAvailableRoomCommand _selectAvailableRoomCommand { get; set; }
         public IselectJoinedRoomCommand _selectJoinedRoomCommand { get; set; }
@@ -77,13 +78,28 @@ namespace WPFUI.ViewModels
 
         public BindableCollection<SelectableRoom> availableRooms
         {
-            get { return _availableRooms; }
+            get { return filterAvailableRooms(); }
             set
             {
                 _availableRooms = value;
                 NotifyOfPropertyChange(() => availableRooms);
             }
         }
+
+        public BindableCollection<SelectableRoom> filterAvailableRooms()
+        {
+            if (searchBarText != "" & searchBarText != null)
+            {
+                return new BindableCollection<SelectableRoom>(_availableRooms.Where(room => room.id.StartsWith(searchBarText)));
+            } else
+            {
+                return _availableRooms;
+            }
+            
+
+        }
+
+        
 
         public BindableCollection<SelectableRoom> joinedRooms
         {
@@ -103,14 +119,24 @@ namespace WPFUI.ViewModels
             getPublicChannels();
             _userData = userdata;
             messages = userdata.messages;
-            availableRooms = userdata.selectablePublicRooms;
-            joinedRooms = userdata.selectableJoinedRooms;
+            _availableRooms = userdata.selectablePublicRooms;
+            _joinedRooms = userdata.selectableJoinedRooms;
             currentRoomId = userdata.currentRoomId;
             _changeChannelCommand = new changeChannelCommand(userdata);
             _selectAvailableRoomCommand = new selectAvailableRoomCommand(events);
             _selectJoinedRoomCommand = new selectJoinedRoomCommand(events);
             _selectedJoinedRoom = null;
             _selectedAvailableRoom = null;
+            _searchBarText = null;
+        }
+
+        public string searchBarText
+        {
+            get { return _searchBarText; }
+            set { _searchBarText = value;
+                  NotifyOfPropertyChange(() => searchBarText);
+                  NotifyOfPropertyChange(() => availableRooms);
+            }
         }
 
         public string welcomeMessage

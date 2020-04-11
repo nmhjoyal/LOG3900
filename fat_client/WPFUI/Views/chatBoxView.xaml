@@ -71,18 +71,18 @@
 			Send
 		</Button>
 		<StackPanel Grid.Row="1" Grid.Column="6" Orientation="Horizontal" HorizontalAlignment="Right">
-			
-			<Button Background="#FFD81A60" BorderBrush="{x:Null}" x:Name ="channelsMode" Margin="5,0,0,0" Click="channelsMode_Click">
+
+			<Button Background="#FF00584C" BorderBrush="#FF00584C" x:Name ="channelsMode" Margin="5,0,20,0" Click="channelsMode_Click">
 				<StackPanel Orientation="Horizontal">
 					<TextBlock Foreground="White" VerticalAlignment="Center"> Options</TextBlock>
-					<Image Source="/Resources/chat.png" Height="20" Margin="10,0,0,0"></Image>
+					<!--<Image Source="/Resources/chat.png" Height="20" Margin="10,0,0,0"></Image> -->
 				</StackPanel>
 			</Button>
 
 
 		</StackPanel>
 
-		<Grid Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="6" Name="channelsGrid" Visibility="Hidden">
+		<Grid Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="6" Name="channelsGrid" Visibility="Visible">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="20" />
@@ -94,32 +94,43 @@
 				<ColumnDefinition Width="20" />
 			</Grid.ColumnDefinitions>
 			<Grid.RowDefinitions>
-				<RowDefinition Height="20"/>
+				<RowDefinition Height="0"/>
 				<RowDefinition Height="auto"/>
 				<RowDefinition Height="auto"/>
-				<RowDefinition Height="2*"/>
+				<RowDefinition Height="auto"/>
 				<RowDefinition Height="auto"/>
 				<RowDefinition Height="3*"/>
-				<RowDefinition Height="*"/>
-				<RowDefinition Height="20"/>
+				<RowDefinition Height="10"/>
+				<RowDefinition Height="10"/>
 			</Grid.RowDefinitions>
 			<Canvas Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="5" Grid.RowSpan="6" Background="#FF00584C" Opacity="0.9"></Canvas>
-			<StackPanel Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="4" Orientation="Vertical" HorizontalAlignment="Stretch">
-				<TextBox Text="{Binding createdRoomName}" BorderBrush="#FF686868" Margin="20,10,20,0" HorizontalContentAlignment="Center"/>
-				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,15">
-					<Button x:Name="createRoom" Content="New Room" Height="auto" Background="#FF31AF91" 
-					Foreground="#DDFFFFFF" BorderBrush="{x:Null}" HorizontalAlignment="Center" 
-					VerticalContentAlignment="Center"/>
-					<CheckBox Content="private" VerticalAlignment="Center" FontSize="16" Margin="10,0,0,0"
-							  VerticalContentAlignment="Center"></CheckBox>
-					
-				</StackPanel>
+
+			<Canvas Grid.Row="1" Grid.Column="2" Background="#FF00584C"></Canvas>
+			<TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center"
+					   Foreground="White" FontSize="18"> Rooms</TextBlock>
+			<StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,10,10,10">
+				<Image Source="/Resources/chatBox/invite.png" Height="18"
+					   Name="inviteButton" PreviewMouseDown="inviteButton_PreviewMouseDown"></Image>
+				<Image Source="/Resources/chatBox/plus.png" Height="16" Margin="15,0,8,0" Name="newChannelButton" PreviewMouseDown="newChannelButton_PreviewMouseDown"></Image>
 			</StackPanel>
-			<StackPanel Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="4" HorizontalAlignment="Center" Orientation="Horizontal">
-				<TextBlock Foreground="White"> Public Rooms</TextBlock>
+
+			<StackPanel Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="4" HorizontalAlignment="Center" Orientation="Vertical" Margin="0,10,0,0">
+				<TextBlock Foreground="White" FontSize="12" HorizontalAlignment="Center">Search Public Rooms</TextBlock>
+				<Border Background="White" CornerRadius="5" Margin="20,10,20,15" >
+					<StackPanel Orientation="Horizontal" Margin="0,2,0,2" Width="220" HorizontalAlignment="Center">
+						<TextBox Width="210" Margin="5,0,5,1" 
+								 HorizontalContentAlignment="Center"
+								 HorizontalAlignment="Center" CaretBrush="#FF1A695E" 
+								 Foreground="#FF8E8E8E" x:Name="searchBarText"></TextBox>
+					</StackPanel>
+
+				</Border>
+
+
+
 			</StackPanel>
 			<ScrollViewer Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="4"
-						  VerticalScrollBarVisibility="Hidden" Margin="10,10,10,10">
+						  VerticalScrollBarVisibility="Hidden" Margin="10,10,10,10" MaxHeight="140">
 				<ItemsControl ItemsSource="{Binding availableRooms}" Foreground="White">
 					<ItemsControl.ItemTemplate>
 						<DataTemplate>
@@ -129,48 +140,158 @@
 									AncestorType={x:Type ItemsControl}}, Path=DataContext._selectAvailableRoomCommand}" CommandParameter="{Binding id}">
 									</MouseBinding>
 								</StackPanel.InputBindings>
-								<StackPanel Orientation="Horizontal">
-									<TextBlock Text="{Binding id}" Foreground="{Binding backgroundColor}" 
-										   Margin="5,0,0,0" FontSize="20"/>
-									<Button Visibility="{Binding menuVisibility}" Background="#FF31AF91" 
-											Foreground="#DDFFFFFF" BorderBrush="{x:Null}" Margin="10,0,0,0" Height="20" FontSize="10" VerticalContentAlignment="Center" 
-											Name="joinButton" Click="joinButton_click">Join</Button>
-								</StackPanel>
+
+								<Border Background="White" CornerRadius="5" Margin="20,5,20,5">
+									<StackPanel Orientation="Horizontal" Margin="0,5,0,5" Width="220" HorizontalAlignment="Center">
+										<TextBlock Text="{Binding id}" Foreground="{Binding backgroundColor}" 
+										   Margin="5,0,0,0" FontSize="16" VerticalAlignment="Center" MaxWidth="150"/>
+										<Button Visibility="{Binding menuVisibility}" Background="#FF00584C" 
+											Foreground="#DDFFFFFF" BorderBrush="{x:Null}" Margin="10,0,5,0" Height="20" FontSize="10" VerticalContentAlignment="Center" 
+											Name="joinButton" Click="joinButton_click" >Join</Button>
+									</StackPanel>
+								</Border>
 							</StackPanel>
 						</DataTemplate>
 					</ItemsControl.ItemTemplate>
 				</ItemsControl>
 			</ScrollViewer>
-			
-			<TextBlock Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" Grid.ColumnSpan="4" Foreground="White"> Joined Rooms</TextBlock>
+
+			<TextBlock Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" Grid.ColumnSpan="4" Foreground="White" FontSize="12"> Joined Rooms</TextBlock>
 			<ScrollViewer Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="5" Grid.RowSpan="2" Margin="10,10,10,10" VerticalScrollBarVisibility="Hidden">
 				<ItemsControl ItemsSource="{Binding joinedRooms}" Foreground="White">
 					<ItemsControl.ItemTemplate>
 						<DataTemplate>
 							<StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-									<StackPanel.InputBindings>
-										<MouseBinding Gesture="LeftClick" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor,
+								<Border Background="White" CornerRadius="5" Margin="20,5,20,5">
+									<StackPanel Orientation="Vertical" Margin="0,5,0,5" Width="220" HorizontalAlignment="Center">
+										<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5,0,0,0">
+											<StackPanel.InputBindings>
+												<MouseBinding Gesture="LeftClick" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor,
 										AncestorType={x:Type ItemsControl}}, Path=DataContext._selectJoinedRoomCommand}" CommandParameter="{Binding id}">
-										</MouseBinding>
-									</StackPanel.InputBindings>
-									<TextBlock Text="{Binding id}" Foreground="{Binding backgroundColor}" FontSize="20"/>
-								</StackPanel>
-								<StackPanel Orientation="Horizontal" Visibility="{Binding menuVisibility}" HorizontalAlignment="Center">
-									<Button Content="+" Margin="0,0,0,0" BorderBrush="{x:Null}" Background="#FF31AF91">
-									</Button>
-									<Button Content="view" Margin="5,0,0,0" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext._changeChannelCommand}"
-									CommandParameter="{Binding id}" BorderBrush="{x:Null}" Background="#FF31AF91">
-									</Button>
-									<Button Content="leave" Margin="5,0,0,0" Background="#FF31AF91" BorderBrush="{x:Null}">
-									</Button>
-								</StackPanel>
+												</MouseBinding>
+											</StackPanel.InputBindings>
+											<TextBlock Text="{Binding id}" Foreground="{Binding backgroundColor}" FontSize="16"/>
+										</StackPanel>
+										<StackPanel Orientation="Horizontal" Visibility="{Binding menuVisibility}" HorizontalAlignment="Left" Margin="5,0,0,0">
+											<Button Content="+" Margin="0,0,0,0" BorderBrush="{x:Null}" Background="#FF31AF91" FontSize="10">
+											</Button>
+											<Button Content="view" Margin="5,0,0,0" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext._changeChannelCommand}"
+													CommandParameter="{Binding id}" BorderBrush="{x:Null}" Background="#FF31AF91" FontSize="10">
+											</Button>
+											<Button Content="leave" Margin="5,0,0,0" Background="#FFD81A60" BorderBrush="{x:Null}" FontSize="10">
+											</Button>
+										</StackPanel>
+									</StackPanel>
+								</Border>
 							</StackPanel>
 						</DataTemplate>
 					</ItemsControl.ItemTemplate>
 				</ItemsControl>
 			</ScrollViewer>
 		</Grid>
+
+		<Grid Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="6" Name="newChannelGrid" Visibility="Hidden">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="1.5*"/>
+			</Grid.RowDefinitions>
+
+			<Border Grid.Row="1" Grid.Column="1" Background="#FF00584C" CornerRadius="15" ></Border>
+			<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
+				<Border Background="White" CornerRadius="15" Margin="20,30,20,15">
+					<StackPanel Orientation="Horizontal" Margin="0,2,0,2">
+						<TextBlock Width="160" Margin="5,0,0,0"></TextBlock>
+						<CheckBox Margin="0,0,2,0" VerticalContentAlignment="Center">
+						</CheckBox>
+						<TextBlock FontSize="8" VerticalAlignment="Center" Margin="0,0,8,0">Private Room</TextBlock>
+					</StackPanel>
+
+				</Border>
+
+
+				<Button Background="#FF1A695E" BorderBrush="{x:Null}" Height="30" Width="150" Margin="0,0,0,15">
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Foreground="White" VerticalAlignment="Center" FontSize="14"> Create Room</TextBlock>
+						<!--<Image Source="/Resources/chat.png" Height="20" Margin="10,0,0,0"></Image> -->
+					</StackPanel>
+				</Button>
+			</StackPanel>
+
+		</Grid>
+		<Grid Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="6" Name="addPlayersGrid" Visibility="Hidden">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="1.5*"/>
+			</Grid.RowDefinitions>
+
+			<Border Grid.Row="1" Grid.Column="1" Background="#FF00584C" CornerRadius="15" ></Border>
+			<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
+				<TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,10,0,0" FontSize="18"> Add Players</TextBlock>
+				<Border Background="White" CornerRadius="15" Margin="20,10,20,15" MaxHeight="300" MaxWidth="250">
+					<StackPanel Orientation="Horizontal" Margin="0,2,0,2">
+						<TextBlock Width="160" Margin="5,0,0,0"></TextBlock>
+					</StackPanel>
+
+				</Border>
+
+
+				<Button Background="#FF1A695E" BorderBrush="{x:Null}" Height="30" Width="100" Margin="0,0,0,15">
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Foreground="White" VerticalAlignment="Center" FontSize="14"> I'm done </TextBlock>
+						<!--<Image Source="/Resources/chat.png" Height="20" Margin="10,0,0,0"></Image> -->
+					</StackPanel>
+				</Button>
+			</StackPanel>
+
+		</Grid>
+		<Grid Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="6" Name="invitesGrid" Visibility="Hidden">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="1.5*"/>
+			</Grid.RowDefinitions>
+
+			<Border Grid.Row="1" Grid.Column="1" Background="#FF00584C" CornerRadius="15" ></Border>
+			<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
+				<TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,10,0,0" FontSize="18"> Invites </TextBlock>
+				<Border Background="White" CornerRadius="15" Margin="20,10,20,15" MaxHeight="300" MaxWidth="250">
+					<StackPanel Orientation="Horizontal" Margin="0,2,0,2">
+						<TextBlock Width="160" Margin="5,0,0,0"></TextBlock>
+					</StackPanel>
+
+				</Border>
+
+
+				<Button Background="#FF1A695E" BorderBrush="{x:Null}" Height="30" Width="100" Margin="0,0,0,15">
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Foreground="White" VerticalAlignment="Center" FontSize="14"> I'm done</TextBlock>
+						<!--<Image Source="/Resources/chat.png" Height="20" Margin="10,0,0,0"></Image> -->
+					</StackPanel>
+				</Button>
+			</StackPanel>
+
+		</Grid>
+
 
 	</Grid>
 </UserControl>
