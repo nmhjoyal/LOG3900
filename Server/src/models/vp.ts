@@ -361,39 +361,39 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
     [
         DRE_CHERRY,
         {
-            startMatch: "TODO",
+            startMatch: "Quickly, let's start! I have a patient coming in 15 minutes.",
             endTurn: [
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO"
+                "I'm getting sick... of losing againt a bunch of parasites like you.",
+                "Did you know that winning makes you feel better?",
+                "Did everyone get their 8 hours of sleep? Because you seem a little slow..",
+                "I COMPLETELY FORGOT ABOUT THE PATIENT WAITING IN THE ROOM NEXT TO ME!",
+                "So how's allergy season treating everyone?",
+                "Did you know that searching for your symptoms on Google won't reassure you?",
+                "I hope everyone is washing their hands!",
+                "I've been so busy with this app lately. I've been playing for 3 hours now and my shift started 4 hours ago...",
+                "Can we stop and discuss the ongoing pandemic?",
+                "I should really be working on my 'saving lives' skills.."
             ],
-            hint: "TODO" + INSERT_HINT
+            hint: "No, you won't die if you lose. Take this hint, it will make you feel better: " + INSERT_HINT
         },
     ],
     [
         PIRATE_PEAR,
         {
-            startMatch: "TODO",
+            startMatch: "Yo ho ho matey, we're ready to sail.",
             endTurn: [
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO"
+                "The sea is dangerous but I hope I never get to visit Davy Jones's Locker.",
+                "If I don't win this game, the one who dared disrespecting me will walk the plank.",
+                "When I win, i'm not sharing the treasure.",
+                "Arr, next round i'll crush ye bernacles!",
+                "Blimey, I'd rather be marooned than losing to a bunch of landlubbers like you!",
+                "I swear you'll feed the fish if you keep this up. ",
+                "Hearties, we will celebrate my victory with a clap of thunder!",
+                "I'm an old salt, you won't believe the things i saw at sea.",
+                "Corsairs couldn't defeat me. What makes you believe you can? ",
+                "Arrrrrr! You can't horneswaggle me!"
             ],
-            hint: "TODO" + INSERT_HINT
+            hint: "Aye, navigating through troubled water? Let me help with this hint: " + INSERT_HINT
         },
     ],
 ]);
