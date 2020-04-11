@@ -500,7 +500,6 @@ namespace WPFUI.ViewModels
 
         public void Handle(wordSelectedEvent message)
         {
-            this.canDraw = true;
             /* TODO envoyer le mot au serveur */
             this.startTurn.word = message.word;
             _socketHandler.socket.Emit("start_turn", message.word);
@@ -509,11 +508,16 @@ namespace WPFUI.ViewModels
         public void Handle(startTurnRoutineEvent message)
         {
             this.HintEnabled = false;
+            this.OutilSelectionne = "crayon";
+            this.AttributsDessin.Color = (System.Windows.Media.Color)ColorConverter.ConvertFromString("#FFFFFF");
+            this.AttributsDessin.Width = 1;
+            this.AttributsDessin.Height = 1;
             if (this.endTurn.drawer == this._userData.userName)
             {
                 this.AttributsDessin.Color = (System.Windows.Media.Color)ColorConverter.ConvertFromString("#000000");
                 this.AttributsDessin.Width = 5;
                 this.AttributsDessin.Height = 5;
+                this.canDraw = true;
             }
             timerContent = message.turnTime;
             _timer.Start();
@@ -531,6 +535,7 @@ namespace WPFUI.ViewModels
             endTurn.drawer = this.endTurn.drawer;
             endTurn.nextIsYou = this.endTurn.drawer == this._userData.userName;
             this.canDraw = false;
+            this.OutilSelectionne = "crayon";
             this.AttributsDessin.Color = (System.Windows.Media.Color)ColorConverter.ConvertFromString("#FFFFFF");
             this.AttributsDessin.Width = 1;
             this.AttributsDessin.Height = 1;
