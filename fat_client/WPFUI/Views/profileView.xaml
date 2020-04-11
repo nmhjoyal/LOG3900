@@ -134,7 +134,7 @@
             <Button BorderBrush="{x:Null}" Background="#D6EFE9" FontSize="12" Foreground="#00584C" Content="See Matches History" Click="matchHistory"/>
         </StackPanel>
 
-        <Border Visibility="Hidden" HorizontalAlignment="Center"
+        <Border Visibility="Visible" HorizontalAlignment="Center"
 				Name="border" Background="#00584C" Grid.Column="0" Grid.Row="0" 
 				CornerRadius="15" BorderBrush="Black" Grid.ColumnSpan="4" 
 				Grid.RowSpan="12" VerticalAlignment="Center" >

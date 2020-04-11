@@ -46,6 +46,13 @@ namespace WPFUI.ViewModels
 
 		}
 
+		public string winnername
+		{
+			get
+			{
+				return this.matchHistory.winner.username;
+			}
+		}
 		public BindableCollection<MatchHistory> accesseur
 		{
 			get{
