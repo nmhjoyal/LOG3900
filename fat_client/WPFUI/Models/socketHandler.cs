@@ -63,7 +63,7 @@ namespace WPFUI.Models
 
         public SocketHandler(IUserData userdata, IEventAggregator events)
         {
-            this.baseURL = "http://localhost:5000";
+            this.baseURL = "http://988c1c32.ngrok.io";
             _userdata = userdata;
             _events = events;
             _roomToBeCreated = null;
@@ -434,7 +434,7 @@ namespace WPFUI.Models
                     this.offCreateMatch();
                 } else
                 {
-                    _events.PublishOnUIThread(new appWarningEvent(json.feedback.log_message));
+                    _events.PublishOnUIThread(new appWarningEvent((string)json.feedback.log_message));
                 }
             });
         }
@@ -513,7 +513,6 @@ namespace WPFUI.Models
             this.socket.On("turn_ended", (new_endTurn) =>
             {
                 Console.WriteLine("onMatch turn_ended");
-                /* TODO: Find why the emit is not catched here */
                 EndTurn json = JsonConvert.DeserializeObject<EndTurn>(new_endTurn.ToString());
                 endTurn.set(json);
                 _events.PublishOnUIThread(new endTurnRoutineVMEvent());
@@ -522,7 +521,6 @@ namespace WPFUI.Models
             this.socket.On("turn_started", (new_startTurn) =>
             {
                 Console.WriteLine("onMatch turn_started");
-                /* TODO: transmit the turn time to the viewmodel */
                 StartTurn json = JsonConvert.DeserializeObject<StartTurn>(new_startTurn.ToString());
                 startTurn.set(json, endTurn.drawer == this._userdata.userName);
                 _events.PublishOnUIThread(new startTurnRoutineEvent(startTurn.timeLimit));
@@ -558,6 +556,23 @@ namespace WPFUI.Models
                 this.offMatch();
                 _events.PublishOnUIThread(new appWarningEvent("Unexpected match leave"));
             });
+
+            this.socket.On("update_players", (new_players) =>
+            {
+                List<Player> players = JsonConvert.DeserializeObject<List<Player>>(new_players.ToString());
+                endTurn.players.Clear();
+                endTurn.players.AddRange(players.OrderByDescending(i => i.ScoreTotal));
+            });
+
+            this.socket.On("hint_enable", () =>
+            {
+                this._events.PublishOnUIThread(new hintEvent(true));
+            });
+
+            this.socket.On("hint_disable", () =>
+            {
+                this._events.PublishOnUIThread(new hintEvent(false));
+            });
         }
 
         public void offMatch()
@@ -568,6 +583,9 @@ namespace WPFUI.Models
             this.socket.Off("guess_res");
             this.socket.Off("match_ended");
             this.socket.Off("unexpected_leave");
+            this.socket.Off("update_players");
+            this.socket.Off("hint_enable");
+            this.socket.Off("hint_disable");
         }
     }
 

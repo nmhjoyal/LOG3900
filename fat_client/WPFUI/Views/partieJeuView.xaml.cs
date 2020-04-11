@@ -51,7 +51,7 @@ namespace WPFUI.Views
 
         public async void Handle(endTurnRoutineEvent message)
         {
-            Console.WriteLine(JsonConvert.SerializeObject(message));
+            Console.WriteLine("endTurn vue.cs " + JsonConvert.SerializeObject(message));
             if (((dynamic)message.EndTurnFeedBack).nextIsYou)
             {
                 youAreDrawer = true;
