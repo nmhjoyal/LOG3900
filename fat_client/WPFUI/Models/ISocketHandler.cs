@@ -15,7 +15,7 @@ namespace WPFUI.Models
 
         void connectionAttempt();
         void createRoom(string roomID, bool isPrivate);
-        void createUser(PrivateProfile privateProfile);
+        object createUser(PrivateProfile privateProfile);
         void deleteRoom(string roomID);
         void disconnect();
         void getPublicChannels();
@@ -37,6 +37,6 @@ namespace WPFUI.Models
         void SignOut();
         object TestDELETEWebRequest(string url);
         object TestGETWebRequest(string url);
-        void TestPOSTWebRequest(object obj, string url);
+        object TestPOSTWebRequest(object obj, string url);
     }
 }

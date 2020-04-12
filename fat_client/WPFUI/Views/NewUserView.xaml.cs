@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WPFUI.ViewModels;
 
 namespace WPFUI.Views
 {
@@ -20,9 +21,33 @@ namespace WPFUI.Views
     /// </summary>
     public partial class NewUserView : UserControl
     {
+        NewUserViewModel vm; 
         public NewUserView()
         {
             InitializeComponent();
+        }
+
+        private void rightArrow_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            vm.rightArrowAvatarChange();
+        }
+
+        private void leftArrow_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            vm.leftArrowAvatarChange();
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            vm = (DataContext as NewUserViewModel);
+        }
+
+        private void StackPanel_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            vm.confirmedPassword = confirmedPassword.Password;
+            vm.password = password.Password;
+            vm.createUser();
+
         }
     }
 }

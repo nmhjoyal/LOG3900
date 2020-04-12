@@ -361,16 +361,16 @@ namespace WPFUI.Models
             }
         }
 
-        public void createUser(PrivateProfile privateProfile)
+        public Object createUser(PrivateProfile privateProfile)
         {
-            TestPOSTWebRequest(privateProfile, "/profile/create/");
+            return TestPOSTWebRequest(privateProfile, "/profile/create/");
         }
 
         public void getPublicChannels()
         {
             _socket.Emit("get_rooms");
         }
-        public void TestPOSTWebRequest(Object obj, string url)
+        public Object TestPOSTWebRequest(Object obj, string url)
         {
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(this.baseURL + url);
             httpWebRequest.ContentType = "application/json";
@@ -387,6 +387,7 @@ namespace WPFUI.Models
             using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
             {
                 var result = streamReader.ReadToEnd();
+                return result;
             }
         }
 

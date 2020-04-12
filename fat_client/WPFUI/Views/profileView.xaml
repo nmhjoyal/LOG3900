@@ -256,7 +256,7 @@
 			</Grid>
 		</Border>
 
-		<Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="16" Grid.RowSpan="16" x:Name="editProfileGrid" Visibility="Hidden">
+		<Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="16" Grid.RowSpan="16" x:Name="editProfileGrid" Visibility="Visible">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"></ColumnDefinition>
 				<ColumnDefinition Width="320"></ColumnDefinition>
