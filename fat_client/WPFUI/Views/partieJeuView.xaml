@@ -231,7 +231,7 @@
             <Button x:Name ="sendGuess"  Grid.Column="13" Grid.Row="11" BorderBrush="{x:Null}" Background="#D6EFE9" Foreground="#018677" Click="refocus" Height="auto" Width="auto" >
 			Guess
 		</Button>
-            <TextBlock x:Name="guessesLeft" FontSize="14" Grid.Row="10" TextAlignment="Right" VerticalAlignment="Center" Grid.Column="9" Text="{Binding GuessesLeft.Text}" Visibility="{Binding GuessesLeft.Visibility}"  Grid.ColumnSpan="2" Margin="0.2,0.2,9.4,10.2" Grid.RowSpan="2"/>
+            <TextBlock x:Name="guessesLeft" FontSize="14" Grid.Row="10" TextAlignment="Right" VerticalAlignment="Center" Grid.Column="9" Text="{Binding GuessesLeft.Text}" Visibility="{Binding GuessesLeft.Visibility, Converter={StaticResource BooleanToVisibilityConverter}}"  Grid.ColumnSpan="2" Margin="0.2,0.2,9.4,10.2" Grid.RowSpan="2"/>
             
             <Button x:Name ="requestHint" IsEnabled="{Binding HintEnabled}" Background="#01C853" Grid.Column="13" Grid.Row="13" Content="Hint" Foreground="White" BorderBrush="{x:Null}" Height="auto" Grid.ColumnSpan="1"/>
 	
