@@ -13,7 +13,7 @@ using WPFUI.Models;
 namespace WPFUI.ViewModels
 {
     public class chatBoxViewModel: Screen, IHandle<refreshMessagesEvent>, IHandle<addMessageEvent>,
-                                   IHandle<refreshRoomsEvent>, IHandle<resetToGeneralEvent>
+                                   IHandle<refreshRoomsEvent>, IHandle<resetToGeneralEvent>, IHandle<refreshInvitesEvent>
     {
         private IEventAggregator _events;
         private IUserData _userData;
@@ -159,7 +159,7 @@ namespace WPFUI.ViewModels
                 {
                     return "Hidden";
                 }
-                 }
+                }
         }
 
         public string searchBarText
@@ -235,6 +235,9 @@ namespace WPFUI.ViewModels
 
         public void joinInvitedRoom( string invitedRoomId)
         {
+            _userData.invites = new BindableCollection<Invitation>(_userData.invites.Where(x => x.id != invitedRoomId));
+            invites = _userData.invites;
+            invites.Refresh();
             _socketHandler.joinRoom(invitedRoomId);
         }
 
@@ -310,11 +313,17 @@ namespace WPFUI.ViewModels
             dynamic invitation = new System.Dynamic.ExpandoObject();
             invitation.id = roomID;
             invitation.username = player;
-
+            Console.WriteLine(JsonConvert.SerializeObject(invitation));
             _socketHandler.socket.Emit("send_invite", JsonConvert.SerializeObject(invitation));
 
         }
 
+        public void Handle(refreshInvitesEvent message)
+        {
+            Console.WriteLine("invites refreshed");
+            invites = _userData.invites;
+            invites.Refresh();
+        }
     }
 
 }
