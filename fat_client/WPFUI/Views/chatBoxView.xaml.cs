@@ -136,20 +136,19 @@ namespace WPFUI.Views
 
         private void createRoom_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Console.WriteLine(newRoomTB.Text);
-            Console.WriteLine(privateCheckBox.IsChecked);
-            if ((newRoomTB.Text != null) & (newRoomTB.Text != ""))
+            string newRoomName = newRoomTB.Text;
+            if ((newRoomName != null) & (newRoomName != ""))
             {
                 if ((Boolean) privateCheckBox.IsChecked)
                 {
                     // create private room
-                    _viewModel.createRoom(newRoomTB.Text, true);
+                    _viewModel.createRoom(newRoomName, true);
                     newRoomTB.Text = "";
                     privateCheckBox.IsChecked = false;
                 } else
                 {
                     // create public room
-                    _viewModel.createRoom(newRoomTB.Text, false);
+                    _viewModel.createRoom(newRoomName, false);
                     newRoomTB.Text = "";
                     privateCheckBox.IsChecked = false;
                 }
@@ -170,7 +169,6 @@ namespace WPFUI.Views
         {
             if (invitedPlayerName.Text != null & invitedPlayerName.Text != "")
             {
-                Console.WriteLine("invite sent in view");
                 _viewModel.sendInvite(_roomSelectedToInvite, invitedPlayerName.Text);
                 _roomSelectedToInvite = null;
                 this.addPlayersGrid.Visibility = Visibility.Hidden;

@@ -125,20 +125,10 @@ namespace WPFUI.Models
                     {
                         if (fb.isPrivate)
                         {
-                            List<Message> messages = fb.room_joined.messages.ToList();
-                            // TODO: Mettre le bon timestamp
-                            messages.Add(new Message("Admin", _userdata.userName + " joigned the room.", 0, fb.room_joined.id));
-                            fb.room_joined.messages = messages.ToArray();
-                            /* TODO: Ajouter l'avatar du user dans le dictionnaire */
                             _userdata.addJoinedRoom(fb.room_joined, true);
                         }
                         else
                         {
-                            List<Message> messages = fb.room_joined.messages.ToList();
-                            // TODO: Mettre le bon timestamp
-                            messages.Add(new Message("Admin", _userdata.userName + " joigned the room.", 0, fb.room_joined.id));
-                            fb.room_joined.messages = messages.ToArray();
-                            /* TODO: Ajouter l'avatar du user dans le dictionnaire */
                             _userdata.addJoinedRoom(fb.room_joined, false);
                         }
                     }
@@ -214,6 +204,7 @@ namespace WPFUI.Models
                 if (_userdata.invites.Where(x => x.id == invite.id).Count() == 0)
                 {
                     _userdata.invites.Add(invite);
+                    _events.PublishOnUIThread(new refreshInvitesEvent());
                 }
 
             });

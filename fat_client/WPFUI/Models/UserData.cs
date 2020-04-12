@@ -9,7 +9,7 @@ using WPFUI.EventModels;
 
 namespace WPFUI.Models
 {
-    public class UserData : IHandle<roomsRetrievedEvent>, IHandle<joinedRoomReceived>, IUserData
+    public class UserData : IHandle<roomsRetrievedEvent>, IHandle<joinedRoomReceived>, IHandle<refreshInvitesEvent>, IUserData
     {
         private string _userName;
         private string _password;
@@ -17,7 +17,7 @@ namespace WPFUI.Models
         private string _currentMessage;
         private string _currentRoomId;
         private string _avatarName;
-        private BindableCollection<Invitation> _invites;
+        public BindableCollection<Invitation> _invites;
         private BindableCollection<Message> _messages;
         private BindableCollection<SelectableRoom> _selectablePublicRooms;
         private BindableCollection<SelectableRoom> _selectableJoinedRooms;
@@ -403,6 +403,11 @@ namespace WPFUI.Models
                 }
 
             }
+        }
+
+        public void Handle(refreshInvitesEvent message)
+        {
+            //
         }
     }
 }
