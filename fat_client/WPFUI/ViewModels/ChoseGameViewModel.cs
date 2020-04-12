@@ -10,22 +10,25 @@ using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    class ChoseGameViewModel:Screen
+    class ChoseGameViewModel : Screen, IHandle<updateMatchesEvent>
     {
         private IEventAggregator _events;
         private ISocketHandler _socketHandler;
         private IUserData userdata;
         public BindableCollection<Match> matches;
+        public BindableCollection<Match> filteredMatches;
         public Boolean _addClicked;
-
+        private int index;
         public BindableCollection<Match> Matches
         {
-            get
-            {
-                return this.matches;
-            }
+            get { return this.filteredMatches; }
         }
 
+        public int Index
+        {
+            get { return this.index; }
+            set { this.index = value; }
+        }
         public IUserData userData
         {
             get { return userdata; }
@@ -44,6 +47,8 @@ namespace WPFUI.ViewModels
             _events.Subscribe(this);
             this.userdata = userdata;
             _socketHandler = socketHandler;
+            this.index = 0;
+            this.filteredMatches = new BindableCollection<Match>();
             this.matches = new BindableCollection<Match>();
             this._socketHandler.onLobby(this.matches);
             this._socketHandler.socket.Emit("get_matches");
@@ -74,6 +79,35 @@ namespace WPFUI.ViewModels
                 _events.PublishOnUIThread(new createMatchEvent());
                 _addClicked = false;
             }
+        }
+
+        private MatchMode getMatchMode(int index)
+        {
+            switch(index)
+            {
+                case 0:
+                    return MatchMode.freeForAll;
+                case 1:
+                    return MatchMode.sprintCoop;
+                case 2:
+                    return MatchMode.oneVsOne;
+                default:
+                    return MatchMode.sprintSolo;
+            }
+        }
+
+        public void Handle(updateMatchesEvent message)
+        {
+            this.matches.Clear();
+            this.matches.AddRange(message.matches);
+            this.updateMatches();
+        }
+
+        // When selection changes
+        public void updateMatches()
+        {
+            this.filteredMatches.Clear();
+            this.filteredMatches.AddRange(this.matches.Where(match => match.matchMode == this.getMatchMode(this.Index)));
         }
     }
 }

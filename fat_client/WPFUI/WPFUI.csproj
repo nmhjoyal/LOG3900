@@ -171,6 +171,7 @@
     <Compile Include="EventModels\signUpEvent.cs" />
     <Compile Include="EventModels\startTurnRoutineEvent.cs" />
     <Compile Include="EventModels\testEvent.cs" />
+    <Compile Include="EventModels\updateMatchesEvent.cs" />
     <Compile Include="EventModels\userNameTakenEvent.cs" />
     <Compile Include="EventModels\viewProfileEvent.cs" />
     <Compile Include="EventModels\waitingRoomEvent.cs" />
