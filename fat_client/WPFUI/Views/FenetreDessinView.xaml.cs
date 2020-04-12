@@ -54,6 +54,8 @@ namespace WPFUI.Views
             PART_Image.Source = RenderVisualService.RenderToPNGImageSource(PART_Canvas);
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             //saveFileDialog.FileName = txtEditor.Text;
+            saveFileDialog.FileName = "My_drawing";
+            saveFileDialog.Filter = "Png Image (.png)|*.png|JPG Image (.jpg)|*.jpg|Bitmap Image (.bmp)|*.bmp";
             if (saveFileDialog.ShowDialog() == true)
             {
                 RenderVisualService.RenderToPNGFile(PART_Canvas, saveFileDialog.FileName);

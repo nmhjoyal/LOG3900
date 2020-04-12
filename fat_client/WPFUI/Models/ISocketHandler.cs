@@ -25,12 +25,13 @@ namespace WPFUI.Models
         void offDrawing();
         void offLobby();
         void offMatch();
-        void offPreviewing();
+        void offPreview();
         void offWaitingRoom();
         void onCreateMatch();
         void onDrawing(StrokeCollection Traits, Dictionary<Stroke, int> strokes);
         void onLobby(BindableCollection<Match> matches);
         void onMatch(StartTurn startTurn, EndTurn endTurn, GuessesLeft guessesLeft);
+        void onPreview();
         void onWaitingRoom(BindableCollection<Player> players);
         void sendMessage();
         void SignOut();

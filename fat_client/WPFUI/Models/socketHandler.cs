@@ -462,6 +462,7 @@ namespace WPFUI.Models
                 if (drawersTool == "crayon")
                 {
                     StylusPoint stylusPoint = new StylusPoint((int)json.X, (int)json.Y);
+                    // Console.WriteLine(stylusPoint.X + " & " + stylusPoint.Y);
                     try
                     {
                         this.Dispatcher.Invoke(() =>
@@ -524,7 +525,16 @@ namespace WPFUI.Models
             this._socket.Off("clear");
         }
 
-        public void offPreviewing()
+        public void onPreview()
+        {
+            this._socket.On("preview_done", () =>
+            {
+                Console.WriteLine("preview_done");
+                this._events.PublishOnUIThread(new previewDoneEvent());
+            });
+        }
+
+        public void offPreview()
         {
             this._socket.Off("preview_done");
         }

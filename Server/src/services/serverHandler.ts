@@ -86,6 +86,15 @@ class ServerHandler {
         if (user) {
             if (user.username == updatedProfile.username) {
                 try {
+                    if(updatedProfile.password == "" || !updatedProfile.password) {
+                        updatedProfile.password = user.password;
+                    }
+                    if(updatedProfile.firstname == "" || !updatedProfile.firstname) {
+                        updatedProfile.firstname = user.firstname;
+                    }
+                    if(updatedProfile.lastname == "" || !updatedProfile.lastname) {
+                        updatedProfile.lastname = user.lastname;
+                    }
                     // Updating rooms_joined array
                     updatedProfile.rooms_joined = (user as PrivateProfile).rooms_joined;
                     await profileDB.updateProfile(updatedProfile);
