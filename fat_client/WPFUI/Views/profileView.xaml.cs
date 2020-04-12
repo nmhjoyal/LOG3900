@@ -39,7 +39,21 @@ namespace WPFUI.Views
         {
             this.border.Visibility = Visibility.Hidden;
             this.selectNextDrawingBox.Visibility = Visibility.Hidden;
+            
         }
+        private void close1(object sender, RoutedEventArgs e)
+        {
+            
+            this.borderconnection.Visibility = Visibility.Hidden;
+            this.connectdisconnect.Visibility = Visibility.Hidden;
+        }
+        private void openconnectdisconnect(object sender, RoutedEventArgs e)
+        {
+            
+            this.borderconnection.Visibility = Visibility.Visible;
+            this.connectdisconnect.Visibility = Visibility.Visible;
+        }
+
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {

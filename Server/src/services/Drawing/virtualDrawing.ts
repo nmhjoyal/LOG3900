@@ -7,14 +7,12 @@ export class VirtualDrawing {
     private roomId: string | null;
     private time: number;
     private timeouts: NodeJS.Timeout[];
-    private currentPreview: Stroke[];
 
     public constructor (roomId: string | null, time: number) {
         this.roomId = roomId;
         // if(roomId) -> Server , else -> Socket
         this.time = time;
         this.timeouts = [];
-        this.currentPreview = [];
     }
 
     public async draw(socketIO: SocketIO.Server | SocketIO.Socket, drawing: Stroke[], level: Level): Promise<void> {
@@ -39,8 +37,8 @@ export class VirtualDrawing {
                     } else  {
                         socketIO.emit("new_point", JSON.stringify(drawing[i].StylusPoints[j]));
                     }
-                    if(i == drawing.length - 1 && j == drawing[i].StylusPoints.length - 1) {
-                        this.currentPreview = [];
+                    if(i == drawing.length - 1 && j == drawing[i].StylusPoints.length - 1 && !this.roomId) {
+                        socketIO.emit("preview_done");
                     }
                 }, timeStamp));
                 timeStamp += deltaT;
@@ -48,12 +46,9 @@ export class VirtualDrawing {
         }
     }
 
-    public async preview(socket: SocketIO.Socket, gamePreview: GamePreview) {
-        if(this.currentPreview.length == 0) {
-            this.currentPreview = gamePreview.drawing;
-        }
-        Utils.sort(this.currentPreview, gamePreview.mode, gamePreview.option);
-        await this.draw(socket, this.currentPreview, Level.Hard);
+    public async preview(socket: SocketIO.Socket, gamePreview: GamePreview): Promise<void> {
+        Utils.sort(gamePreview.drawing, gamePreview.mode, gamePreview.option);
+        await this.draw(socket, gamePreview.drawing, Level.Hard);
     }
 
     public clear(socketIO: SocketIO.Server | SocketIO.Socket): void {

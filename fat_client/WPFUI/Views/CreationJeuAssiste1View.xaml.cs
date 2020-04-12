@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WPFUI.EventModels;
 using WPFUI.Models;
 using WPFUI.ViewModels;
 
@@ -22,7 +23,7 @@ namespace WPFUI.Views
     /// <summary>
     /// Logique d'interaction pour CreationJeuAssiste1View.xaml
     /// </summary>
-    public partial class CreationJeuAssiste1View : UserControl
+    public partial class CreationJeuAssiste1View : UserControl, IHandle<previewDoneEvent>
     {
         public CreationJeuAssiste1View()
         {
@@ -62,7 +63,7 @@ namespace WPFUI.Views
             {
                 option = (this.Options.Children[0] as ComboBox).SelectedIndex;
             }
-            (this.DataContext as CreationJeuAssiste1ViewModel).createGame(this.Word.Text, clues, this.Level.SelectedIndex, this.Mode.SelectedIndex, option, this.fileName.Text, (int)this.imageTransformee.ActualWidth, (int)this.imageTransformee.ActualHeight);
+            (this.DataContext as CreationJeuAssiste1ViewModel).createGame(this.Word.Text, clues, this.Level.SelectedIndex, this.Mode.SelectedIndex, option, this.fileName.Text, (int)this.imageTransformee.ActualWidth, (int)this.imageTransformee.ActualHeight, (int)this.Thickness.Value, this.ColorPicker.SelectedColor);
         }
 
         private void preview(object sender, RoutedEventArgs e)
@@ -72,7 +73,8 @@ namespace WPFUI.Views
             {
                 option = (this.Options.Children[0] as ComboBox).SelectedIndex;
             }
-            (this.DataContext as CreationJeuAssiste1ViewModel).preview(this.fileName.Text, this.Mode.SelectedIndex, option, (int)this.imageTransformee.ActualWidth, (int)this.imageTransformee.ActualHeight);
+            this.PreviewButton.IsEnabled = false;
+            (this.DataContext as CreationJeuAssiste1ViewModel).preview(this.fileName.Text, this.Mode.SelectedIndex, option, (int)this.imageTransformee.ActualWidth, (int)this.imageTransformee.ActualHeight, (int)this.Thickness.Value, this.ColorPicker.SelectedColor);
         }
 
         private void elementSelectionne(object sender, RoutedEventArgs e)
@@ -119,6 +121,15 @@ namespace WPFUI.Views
         {
             border.Visibility = Visibility.Visible;
             selectNextDrawingBox.Visibility = Visibility.Visible;
+        }
+        public void Handle(previewDoneEvent message)
+        {
+            this.PreviewButton.IsEnabled = true;
+        }
+
+        private void onLoad(object sender, RoutedEventArgs e)
+        {
+            (this.DataContext as CreationJeuAssiste1ViewModel).events.Subscribe(this);
         }
     }
 }

@@ -9,6 +9,7 @@
             xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit" 
             mc:Ignorable="d"
             d:DesignHeight="900" d:DesignWidth="1100"
+            Loaded="onLoad"
 			FontFamily="Microsoft JhengHei UI Light" Background="White">
     <UserControl.Resources>
         <convertisseurs:ConvertisseurBordure x:Key="convertisseurBordure" />
@@ -94,6 +95,12 @@
 				<Button  BorderBrush="{x:Null}" Background="#00584C" FontSize="12" Foreground="#D6EFE9" Click="createGame" Content="Create Game" Grid.Column="6" Grid.Row="11" HorizontalAlignment="Right" Width="120"  Margin="0,0,0,10"/>
 			</StackPanel>
 
+            <TextBlock Grid.Row="11" Grid.Column="1" Text="Thickness" DockPanel.Dock="Right" VerticalAlignment="Center" TextAlignment="Center" />
+            <Slider Grid.Row="11" Grid.Column="3" Maximum="10" Minimum="1" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" VerticalAlignment="Center" x:Name="Thickness" />
+
+            <TextBlock Grid.Row="12" Grid.Column="1" Text="Color" DockPanel.Dock="Right" VerticalAlignment="Top" TextAlignment="Center" />
+            <toolkit:ColorPicker Name="ColorPicker" Grid.Column="3" Grid.Row="12" Height="30" VerticalAlignment="Top" DisplayColorAndName="True" AvailableColorsSortingMode="HueSaturationBrightness" SelectedColor="Black" ></toolkit:ColorPicker>
+
             <Border  Visibility="Hidden" Name="border" Background="#00584C" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderBrush="Black"  Grid.ColumnSpan="6" Grid.RowSpan="12" Margin="0,0,0,20">
                 <Grid Visibility="Hidden" Name="selectNextDrawingBox" >
                     <Grid.ColumnDefinitions>
@@ -115,9 +122,8 @@
 
 
 
-                    <Button VerticalAlignment="Top" Grid.Column="2" Grid.Row="1" FontSize="12" Foreground="#00584C" Background="#D6EFE9" BorderBrush="#D6EFE9" Click="preview" Content="Preview" MaxWidth="100"/>
+                    <Button VerticalAlignment="Top" Grid.Column="2" Grid.Row="1" FontSize="12" Foreground="#00584C" Background="#D6EFE9" BorderBrush="#D6EFE9" x:Name="PreviewButton" Click="preview" Content="Preview" MaxWidth="100"/>
                     <Button Grid.Column="2" Grid.Row="0" FontSize="12" Foreground="White" Background="#D81A60" BorderBrush="#D81A60" Click="close" Content="Close" MaxWidth="100"/>
-
 
                 </Grid>
 			</Border>
