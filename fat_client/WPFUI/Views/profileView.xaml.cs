@@ -80,5 +80,10 @@ namespace WPFUI.Views
             passwordTB.Password = vm.initialPP.password;
             password2TB.Password = vm.initialPP.password;
         }
+
+        private void deleteProfileButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            vm.deleteAccount();
+        }
     }
 }

@@ -107,6 +107,20 @@ namespace WPFUI.ViewModels
 										 _initialPP.lastname, _initialPP.password,_initialPP.avatar);
 		}
 
+		public void deleteAccount()
+		{
+			Feedback fb = JsonConvert.DeserializeObject<Feedback>(_socketHandler.TestDELETEWebRequest("/profile/" + _userData.userName).ToString());
+			if (fb.status)
+			{
+				_events.PublishOnUIThread(new appWarningEvent(fb.log_message));
+				_events.PublishOnUIThread(new logOutEvent());
+			} else
+			{
+				_events.PublishOnUIThread(new appWarningEvent(fb.log_message));
+			}
+
+		}
+
 		public void resetNewPP()
 		{
 			_newlPP = new PrivateProfile(_initialPP.firstname, _initialPP.firstname,

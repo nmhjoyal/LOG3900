@@ -35,6 +35,7 @@ namespace WPFUI.Models
         void onWaitingRoom(BindableCollection<Player> players);
         void sendMessage();
         void SignOut();
+        object TestDELETEWebRequest(string url);
         object TestGETWebRequest(string url);
         void TestPOSTWebRequest(object obj, string url);
     }
