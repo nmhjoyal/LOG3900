@@ -94,13 +94,15 @@
 				</DataTemplate>
 			</ItemsControl.ItemTemplate>
 		</ItemsControl>
-		<ItemsControl ItemsSource="{Binding Matches}" Grid.Column="11" Grid.Row="8">
+		<ItemsControl ItemsSource="{Binding Matches.Players}" Grid.Column="11" Grid.Row="8">
 			<ItemsControl.ItemTemplate>
 				<DataTemplate>
+                    
 					<StackPanel Orientation="Vertical">
-						<TextBlock Text="{Binding Players}" Height="40" TextAlignment="Center"></TextBlock>
+						<TextBlock Text="{Binding}" Height="40" TextAlignment="Center"></TextBlock>
 					</StackPanel>
-				</DataTemplate>
+                    
+                </DataTemplate>
 			</ItemsControl.ItemTemplate>
 		</ItemsControl>
 		<ItemsControl ItemsSource ="{Binding Matches}" Grid.Column="14" Grid.Row="8">
