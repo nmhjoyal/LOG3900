@@ -32,7 +32,6 @@ export class VirtualDrawing {
             timeStamp += deltaT;
             for(let j: number = 0; j < drawing[i].StylusPoints.length; j++) {
                 this.timeouts.push(setTimeout(() => {
-                    console.log(JSON.stringify(drawing[i].StylusPoints[j]));
                     if(this.roomId) {
                         socketIO.in(this.roomId).emit("new_point", JSON.stringify(drawing[i].StylusPoints[j]));
                     } else  {
