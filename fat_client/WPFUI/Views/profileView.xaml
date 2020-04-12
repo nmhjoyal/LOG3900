@@ -372,7 +372,7 @@
                         </StackPanel>
                     </ScrollViewer>
                 </StackPanel>
-                <Button HorizontalAlignment="Right" Grid.Column="2" Grid.Row="0" FontSize="12" Foreground="White" Background="#D81A60" BorderBrush="#D81A60" Click="close" Content="Close" MaxWidth="70"/>
+                <Button HorizontalAlignment="Right" Grid.Column="2" Grid.Row="0" FontSize="12" Foreground="White" Background="#D81A60" BorderBrush="#D81A60" Click="close1" Content="Close" MaxWidth="70"/>
 
             </Grid>
         </Border>
