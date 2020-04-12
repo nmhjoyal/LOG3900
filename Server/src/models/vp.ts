@@ -171,20 +171,20 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
     [
         MR_AVOCADO,
         {
-            startMatch: "TODO",
+            startMatch: "Hello Everyone, I hope you are all doing great and ready to make friends :) ",
             endTurn: [
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO"
+                "Aww, Too bad! I'm sure you'll do better next time.",
+                "Well done, don't lose hope. You are great!",
+                "Don't worry, everything will be alright.",
+                "It's okay to lose sometimes. You know what they say: one step back, two steps forward",
+                "You might have lost the round, but you definitely won a friend.",
+                "It's just a game. You are worth more than that",
+                "Can we still be friends ?",
+                "You make me smile.",
+                "What do you say we go for coffee after this game ?",
+                "I got your back"
             ],
-            hint: "TODO" + INSERT_HINT
+            hint: "You know, it's only because I consider you a friend. There you go :" + INSERT_HINT
         },
     ],
     [
