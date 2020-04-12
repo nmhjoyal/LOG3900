@@ -51,7 +51,9 @@ export default class MatchHandler {
                         createMatchFeedback.feedback.log_message = "Match created successfully.";
                         createMatchFeedback.matchId = matchId;
                     } else {
-                        createMatchFeedback.feedback.log_message = "The number of rounds has to be in between " + NB_ROUNDS_MIN + " and " + NB_ROUNDS_MAX + " 10.";
+                        (NB_ROUNDS_MIN === NB_ROUNDS_MAX) ?
+                        createMatchFeedback.feedback.log_message = "The number of rounds has to be exactly " + NB_ROUNDS_MIN :
+                        createMatchFeedback.feedback.log_message = "The number of rounds has to be in between " + NB_ROUNDS_MIN + " and " + NB_ROUNDS_MAX;
                     }
                 } else {
                     createMatchFeedback.feedback.log_message = "The time limit has to be in between 30 seconds and 2 minutes.";
