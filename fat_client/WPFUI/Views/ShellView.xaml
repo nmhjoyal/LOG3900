@@ -112,7 +112,7 @@
 					<StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
 								Margin="0,10,0,0" HorizontalAlignment="Center">
 						<Image Source="/Resources/shellView/stop.png" Height="80" VerticalAlignment="Center"></Image>
-						<TextBlock Text="Oups !" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="35"
+						<TextBlock Text="Oops !" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="35"
 							       Margin="0,10,0,20" Foreground="White"/>
 						<Image Source="/Resources/shellView/stop.png" Height="80" VerticalAlignment="Center"></Image>
 					</StackPanel>
