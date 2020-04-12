@@ -32,7 +32,7 @@
         <Border Background="#018577" BorderThickness="5" Grid.ColumnSpan="1" Grid.Column="1" Grid.Row="3" CornerRadius="10" Height="40">
             <TextBlock FontSize="14" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="3"><Run Text="Match"/><Run Text=" mode:"/></TextBlock>
         </Border>
-        <ComboBox Width="auto" Grid.Column="2" Grid.Row="3"  Name="modecomboBox" Margin="10,0,10,0">
+        <ComboBox Width="auto" Grid.Column="2" Grid.Row="3" SelectionChanged="SelectionChanged" Name="modecomboBox" Margin="10,0,10,0">
             <ComboBoxItem Content="Free For All"/>
             <ComboBoxItem Content="Sprint solo"/>
             <ComboBoxItem Content="Sprint coop"/>

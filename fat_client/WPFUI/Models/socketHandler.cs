@@ -553,7 +553,6 @@ namespace WPFUI.Models
         {
             this._socket.On("preview_done", () =>
             {
-                Console.WriteLine("preview_done");
                 this._events.PublishOnUIThread(new previewDoneEvent());
             });
         }
