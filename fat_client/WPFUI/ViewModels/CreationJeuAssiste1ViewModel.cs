@@ -57,7 +57,10 @@ namespace WPFUI.ViewModels
         public RelayCommand<string> ChoisirPointe { get; set; }
         public RelayCommand<string> ChoisirOutil { get; set; }
 
-
+        public IEventAggregator events
+        {
+            get { return this._events; }
+        }
         /// <summary>
         /// Constructeur de VueModele
         /// On récupère certaines données initiales du modèle et on construit les commandes
@@ -87,6 +90,7 @@ namespace WPFUI.ViewModels
             ChoisirOutil = new RelayCommand<string>(editeur.ChoisirOutil);
 
             this._socketHandler.onDrawing(this.Traits, this.strokes);
+            this._socketHandler.onPreview();
         }
 
         /// <summary>
@@ -150,6 +154,7 @@ namespace WPFUI.ViewModels
         {
             this._socketHandler.socket.Emit("clear");
             this._socketHandler.offDrawing();
+            this._socketHandler.offPreview();
             _events.PublishOnUIThread(new goBackMainEvent());
         }
 
@@ -157,14 +162,15 @@ namespace WPFUI.ViewModels
         {
             this._socketHandler.socket.Emit("clear");
             this._socketHandler.offDrawing();
+            this._socketHandler.offPreview();
             _events.PublishOnUIThread(new goBackCreationMenuEvent());
         }
 
-        public void createGame(string word, List<string> clues, int level, int mode, int option, string fileName, int width, int height)
+        public void createGame(string word, List<string> clues, int level, int mode, int option, string fileName, int width, int height, int thickness, System.Windows.Media.Color? color)
         {
             try
             {
-                CreateGame game = new CreateGame(word, Potrace.Converter.exec(fileName, width, height), clues, (Level)level, (Mode)mode, option);
+                CreateGame game = new CreateGame(word, Potrace.Converter.exec(fileName, width, height, thickness, color), clues, (Level)level, (Mode)mode, option);
                 this._socketHandler.TestPOSTWebRequest(game, "/game/create");
             }
             catch (Exception)
@@ -173,15 +179,16 @@ namespace WPFUI.ViewModels
             }
         }
 
-        public void preview(string fileName, int mode, int option, int width, int height)
+        public void preview(string fileName, int mode, int option, int width, int height, int thickness, System.Windows.Media.Color? color)
         {
             try
             {
-                GamePreview gamePreview = new GamePreview(Potrace.Converter.exec(fileName, width, height), (Mode)mode, option);
+                GamePreview gamePreview = new GamePreview(Potrace.Converter.exec(fileName, width, height, thickness, color), (Mode)mode, option);
                 this._socketHandler.socket.Emit("preview", JsonConvert.SerializeObject(gamePreview));
             }
             catch (Exception)
             {
+                this._events.PublishOnUIThread(new previewDoneEvent());
                 _events.PublishOnUIThread(new appWarningEvent("This file provided is invalid (bmp, jpg, png)"));
             }
         }

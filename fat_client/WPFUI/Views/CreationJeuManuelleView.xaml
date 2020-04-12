@@ -9,6 +9,7 @@
             xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit" 
             mc:Ignorable="d"
              d:DesignHeight="850" d:DesignWidth="1200"
+             Loaded="onLoad"
              
 			 FontFamily="Microsoft JhengHei UI Light" Background="White">
     <UserControl.Resources>
@@ -152,7 +153,7 @@
                         TickFrequency="10" TickPlacement="BottomRight" IsSnapToTickEnabled="False">
                         </Slider>
                     </StackPanel>
-                    <Button Grid.Column="2" Grid.Row="1" FontSize="12" Foreground="#00584C" Background="#D6EFE9" BorderBrush="#D6EFE9" Click="preview" Content="Preview" MaxWidth="100"/>
+                    <Button Grid.Column="2" Grid.Row="1" FontSize="12" Foreground="#00584C" Background="#D6EFE9" BorderBrush="#D6EFE9" x:Name="PreviewButton" Click="preview" Content="Preview" MaxWidth="100"/>
                     <Button Grid.Column="2" Grid.Row="0" FontSize="12" Foreground="White" Background="#D81A60" BorderBrush="#D81A60" Click="close" Content="Close" MaxWidth="100"/>
 
                 </Grid>

@@ -151,8 +151,6 @@ namespace WPFUI.Views
         {
             endMatchBox.Visibility = Visibility.Visible;
         }
-
-        
     }
 
 }

@@ -82,7 +82,7 @@
 
 		</StackPanel>
 
-		<Grid Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="6" Name="channelsGrid" Visibility="Visible">
+		<Grid Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="6" Name="channelsGrid" Visibility="Hidden">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="20" />

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Caliburn.Micro;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WPFUI.EventModels;
 using WPFUI.ViewModels;
 
 namespace WPFUI.Views
@@ -20,7 +22,7 @@ namespace WPFUI.Views
     /// <summary>
     /// Logique d'interaction pour CreationJeuManuelleView.xaml
     /// </summary>
-    public partial class CreationJeuManuelleView : UserControl
+    public partial class CreationJeuManuelleView : UserControl, IHandle<previewDoneEvent>
     {
         public CreationJeuManuelleView()
         {
@@ -66,6 +68,7 @@ namespace WPFUI.Views
             {
                 option = (this.Options.Children[0] as ComboBox).SelectedIndex;
             }
+            this.PreviewButton.IsEnabled = false;
             (this.DataContext as CreationJeuManuelleViewModel).preview(this.Mode.SelectedIndex, option);
         }
         private void elementSelectionne(object sender, RoutedEventArgs e)
@@ -108,6 +111,16 @@ namespace WPFUI.Views
         {
             border.Visibility = Visibility.Visible;
             selectNextDrawingBox.Visibility = Visibility.Visible;
+        }
+
+        public void Handle(previewDoneEvent message)
+        {
+            this.PreviewButton.IsEnabled = true;
+        }
+
+        private void onLoad(object sender, RoutedEventArgs e)
+        {
+            (this.DataContext as CreationJeuManuelleViewModel).events.Subscribe(this);
         }
     }
 }

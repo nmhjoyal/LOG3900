@@ -127,6 +127,7 @@
     <Compile Include="Commands\selectAvatarCommand.cs" />
     <Compile Include="Converters\Converters.cs" />
     <Compile Include="EventModels\addMessageEvent.cs" />
+    <Compile Include="EventModels\appSuccessEvent.cs" />
     <Compile Include="EventModels\appWarningEvent.cs" />
     <Compile Include="EventModels\AssisteIEvent.cs" />
     <Compile Include="EventModels\avatarUpdated.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="EventModels\ManuelIEvent.cs" />
     <Compile Include="EventModels\ManuelleIIEvent.cs" />
     <Compile Include="EventModels\passwordMismatchEvent.cs" />
+    <Compile Include="EventModels\previewDoneEvent.cs" />
     <Compile Include="EventModels\privateProfileConfirmedEvent.cs" />
     <Compile Include="EventModels\refreshInvitesEvent.cs" />
     <Compile Include="EventModels\refreshRoomsEvent.cs" />
@@ -576,6 +578,8 @@
     <Resource Include="Resources\shellView\stop.png" />
     <Resource Include="Resources\profileView\arrow_left.png" />
     <Resource Include="Resources\profileView\arrow_right.png" />
+    <Resource Include="Resources\signUp\create_account_banner.png" />
+    <Resource Include="Resources\shellView\sucess.png" />
     <Content Include="Resources\strawberry.svg" />
     <Resource Include="Resources\watermelon.png" />
     <Resource Include="Resources\trophy.gif" />

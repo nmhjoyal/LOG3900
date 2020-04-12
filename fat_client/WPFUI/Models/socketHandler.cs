@@ -361,16 +361,16 @@ namespace WPFUI.Models
             }
         }
 
-        public void createUser(PrivateProfile privateProfile)
+        public Object createUser(PrivateProfile privateProfile)
         {
-            TestPOSTWebRequest(privateProfile, "/profile/create/");
+            return TestPOSTWebRequest(privateProfile, "/profile/create/");
         }
 
         public void getPublicChannels()
         {
             _socket.Emit("get_rooms");
         }
-        public void TestPOSTWebRequest(Object obj, string url)
+        public Object TestPOSTWebRequest(Object obj, string url)
         {
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(this.baseURL + url);
             httpWebRequest.ContentType = "application/json";
@@ -387,6 +387,7 @@ namespace WPFUI.Models
             using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
             {
                 var result = streamReader.ReadToEnd();
+                return result;
             }
         }
 
@@ -485,6 +486,7 @@ namespace WPFUI.Models
                 if (drawersTool == "crayon")
                 {
                     StylusPoint stylusPoint = new StylusPoint((int)json.X, (int)json.Y);
+                    // Console.WriteLine(stylusPoint.X + " & " + stylusPoint.Y);
                     try
                     {
                         this.Dispatcher.Invoke(() =>
@@ -547,7 +549,16 @@ namespace WPFUI.Models
             this._socket.Off("clear");
         }
 
-        public void offPreviewing()
+        public void onPreview()
+        {
+            this._socket.On("preview_done", () =>
+            {
+                Console.WriteLine("preview_done");
+                this._events.PublishOnUIThread(new previewDoneEvent());
+            });
+        }
+
+        public void offPreview()
         {
             this._socket.Off("preview_done");
         }

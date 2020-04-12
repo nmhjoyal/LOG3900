@@ -40,7 +40,7 @@ namespace WPFUI.ViewModels
             _socketHandler.offWaitingRoom();
             _socketHandler.offMatch();
             _socketHandler.offDrawing();
-            _socketHandler.offPreviewing();
+            _socketHandler.offPreview();
         }
 
         public void disconnect()

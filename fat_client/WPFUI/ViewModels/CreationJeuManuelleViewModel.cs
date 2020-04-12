@@ -49,6 +49,11 @@ namespace WPFUI.ViewModels
             set { editeur.TailleTrait = value; }
         }
 
+        public IEventAggregator events
+        {
+            get { return this._events; }
+        }
+
         public StrokeCollection Traits { get; set; }
 
         public Dictionary<Stroke, int> strokes { get; set; }
@@ -89,6 +94,7 @@ namespace WPFUI.ViewModels
             ChoisirOutil = new RelayCommand<string>(editeur.ChoisirOutil);
 
             this._socketHandler.onDrawing(this.Traits, this.strokes);
+            this._socketHandler.onPreview();
         }
 
         /// <summary>
@@ -152,6 +158,7 @@ namespace WPFUI.ViewModels
         {
             this._socketHandler.socket.Emit("clear");
             this._socketHandler.offDrawing();
+            this._socketHandler.offPreview();
             _events.PublishOnUIThread(new goBackMainEvent());
         }
 
@@ -159,6 +166,7 @@ namespace WPFUI.ViewModels
         {
             this._socketHandler.socket.Emit("clear");
             this._socketHandler.offDrawing();
+            this._socketHandler.offPreview();
             _events.PublishOnUIThread(new goBackCreationMenuEvent());
         }
         public void createGame(string word, List<string> clues, int level, int mode, int option)

@@ -113,7 +113,7 @@ namespace WPFUI.ViewModels
 			if (fb.status)
 			{
 				_events.PublishOnUIThread(new appWarningEvent(fb.log_message));
-				_events.PublishOnUIThread(new logOutEvent());
+				_socketHandler.SignOut();
 			} else
 			{
 				_events.PublishOnUIThread(new appWarningEvent(fb.log_message));

@@ -19,7 +19,14 @@ class RankingFreeForAllMode : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        for (ranking in LeaderboardManager.freeForAllRankingList) {
+            if(ranking.username == PreferenceHandler(context!!).getUser().username){
+                linearLayout.visibility= View.VISIBLE
+                text_view_freeforall_current_username.text = LeaderboardManager.freeforallCurrentPlayer.username
+                freeforall_current_user_position.text = LeaderboardManager.freeforallCurrentPlayer.pos.toString()
+                text_view_freeforall_ranking_score.text = LeaderboardManager.freeforallCurrentPlayer.score.toString()
+            }
+        }
         refreshRankingAdapter()
         freeforall_rankinglist.adapter = adapter
     }
@@ -42,14 +49,7 @@ class RankingFreeForAllMode : Fragment() {
     private fun refreshRankingAdapter() {
         adapter.clear()
         for (ranking in LeaderboardManager.freeForAllRankingList) {
-            if(ranking.username == PreferenceHandler(context!!).getUser().username){
-                linearLayout.visibility= View.VISIBLE
-                text_view_freeforall_current_username.text = ranking.username
-                freeforall_current_user_position.text = ranking.pos.toString()
-                text_view_freeforall_ranking_score.text = ranking.score.toString()
-            } else {
                 adapter.add(LeaderboardItem(ranking))
-            }
         }
     }
 

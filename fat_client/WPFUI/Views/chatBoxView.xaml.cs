@@ -58,14 +58,13 @@ namespace WPFUI.Views
             if (channelsGrid.Visibility == Visibility.Hidden)
             {
                 channelsGrid.Visibility = Visibility.Visible;
-                //channelsGrid.Focus();
-                messagesUI.Opacity = 0.5;
             }
             else
             {
+                this.addPlayersGrid.Visibility = Visibility.Hidden;
+                this.newChannelGrid.Visibility = Visibility.Hidden;
+                this.invitesGrid.Visibility = Visibility.Hidden;
                 channelsGrid.Visibility = Visibility.Hidden;
-                //this.Focus();
-                messagesUI.Opacity = 1;
             }
 
         }

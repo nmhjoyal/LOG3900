@@ -90,7 +90,7 @@
 
 			<Border BorderThickness="5,5,5,5" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch">
                 <DockPanel VerticalAlignment="Stretch" x:Name="PART_Canvas" HorizontalAlignment="Stretch">
-                    <InkCanvas  ClipToBounds="True" Name="surfaceDessin"
+                    <InkCanvas  ClipToBounds="True" Name="surfaceDessin" Height="500" Width="600"
                                                                                                  
                            Strokes="{Binding Path=Traits, Mode=OneTime}" MouseMove="surfaceDessin_MouseMove" 
 						   PreviewMouseDown="surfaceDessin_PreviewMouseDown" MouseUp="surfaceDessin_MouseUp" 

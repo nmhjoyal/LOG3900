@@ -15,7 +15,7 @@ namespace WPFUI.Models
 
         void connectionAttempt();
         void createRoom(string roomID, bool isPrivate);
-        void createUser(PrivateProfile privateProfile);
+        object createUser(PrivateProfile privateProfile);
         void deleteRoom(string roomID);
         void disconnect();
         void getPublicChannels();
@@ -26,17 +26,18 @@ namespace WPFUI.Models
         void offDrawing();
         void offLobby();
         void offMatch();
-        void offPreviewing();
+        void offPreview();
         void offWaitingRoom();
         void onCreateMatch();
         void onDrawing(StrokeCollection Traits, Dictionary<Stroke, int> strokes);
         void onLobby(BindableCollection<Match> matches);
         void onMatch(StartTurn startTurn, EndTurn endTurn, GuessesLeft guessesLeft);
+        void onPreview();
         void onWaitingRoom(BindableCollection<Player> players);
         void sendMessage();
         void SignOut();
         object TestDELETEWebRequest(string url);
         object TestGETWebRequest(string url);
-        void TestPOSTWebRequest(object obj, string url);
+        object TestPOSTWebRequest(object obj, string url);
     }
 }

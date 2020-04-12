@@ -24,7 +24,7 @@ namespace WPFUI.Views
     /// </summary>
     public partial class ShellView : Window, IHandle<LogInEvent>, IHandle<gameEvent>, 
                                     IHandle<goBackMainEvent>, IHandle<logOutEvent>, IHandle<joinGameEvent>,
-                                    IHandle<appWarningEvent>
+                                    IHandle<appWarningEvent>, IHandle<appSuccessEvent> 
     {
         private string chatBoxState = "Visible";
         private Boolean chatBoxAnimating = false;
@@ -139,10 +139,22 @@ namespace WPFUI.Views
             errorBox.Visibility = Visibility.Visible;
         }
 
+        public void Handle(appSuccessEvent message)
+        {
+            confirmationMessageTB.Text = message.messageContent;
+            confirmationMessageBox.Visibility = Visibility.Visible;
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             errorBox.Visibility = Visibility.Hidden;
             errorMessageTB.Text = "";
+        }
+
+        private void Button_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            confirmationMessageBox.Visibility = Visibility.Hidden;
+            confirmationMessageTB.Text = "";
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,15 +11,16 @@ using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-	class NewUserViewModel : Screen, IHandle<refreshUIEvent>
+	class NewUserViewModel : Screen
 	{
 		private string _userName;
 		private IUserData _userData;
 		private IEventAggregator _events;
 		private ISocketHandler _socketHandler;
 		private BindableCollection<Avatar> _avatars;
-		private string _selectedAvatar;
-		public IselectAvatarCommand _selectAvatarCommand { get; set; }
+		private int _selectedAvatarIndex;
+		private int nbAvatars;
+
 		public NewUserViewModel(IUserData userdata, IEventAggregator events, ISocketHandler socketHandler)
 		{
 			_userData = userdata;
@@ -27,8 +29,8 @@ namespace WPFUI.ViewModels
 			_socketHandler = socketHandler;
 			_avatars = new BindableCollection<Avatar>();
 			fillAvatars();
-			_selectAvatarCommand = new selectAvatarCommand(events);
-			_selectedAvatar = null;
+			_selectedAvatarIndex = 0;
+			nbAvatars = avatars.Count();
 			//_events.PublishOnUIThread(new signUpEvent());
 		}
 
@@ -53,6 +55,27 @@ namespace WPFUI.ViewModels
 			get { return _avatars; }
 			set { _avatars = value;
 				  NotifyOfPropertyChange(() => avatars); }
+		}
+
+		public string selectedAvatarSource
+		{
+			get { return _avatars[_selectedAvatarIndex].source; }
+		}
+
+		public string selectedAvatarName
+		{
+			get { return _avatars[_selectedAvatarIndex].name; }
+		}
+
+		public int selectedAvatarIndex
+		{
+			get { return _selectedAvatarIndex; }
+			set
+			{
+				_selectedAvatarIndex = value;
+				NotifyOfPropertyChange(() => selectedAvatarIndex);
+				NotifyOfPropertyChange(() => selectedAvatarSource);
+			}
 		}
 		public string userName
 		{
@@ -99,8 +122,23 @@ namespace WPFUI.ViewModels
 				_userData.userName = _userName;
 				_userData.password = _password;
 
-				_socketHandler.createUser(new PrivateProfile(_userName, _firstName, _lastName, _password, ""+_selectedAvatar));
+				object obj = _socketHandler.createUser(new PrivateProfile(_userName, _firstName, _lastName, _password, selectedAvatarName));
+				Feedback fb = JsonConvert.DeserializeObject<Feedback>(obj.ToString());
 
+				if (fb.status)
+				{
+					_events.PublishOnUIThread(new appSuccessEvent(fb.log_message));
+					_events.PublishOnUIThread(new goBackEvent());
+				}
+				else
+				{
+					_events.PublishOnUIThread(new appWarningEvent(fb.log_message));
+					//print error
+				}
+			} else
+			{
+				// print donnes invalides
+				_events.PublishOnUIThread(new appWarningEvent("Please make sure no fields are empty and that your passwords match"));
 			}
 		}
 
@@ -119,7 +157,7 @@ namespace WPFUI.ViewModels
 
 		public Boolean fieldsAreNotEmpty()
 		{
-			return (_userName != "" & _firstName != "" & _lastName != "" & _password != "" & _confirmedPassword != "" & _selectedAvatar != null);
+			return (_userName != "" & _firstName != "" & _lastName != "" & _password != "" & _confirmedPassword != "");
 
 		}
 
@@ -131,7 +169,6 @@ namespace WPFUI.ViewModels
 			}
 			else
 			{
-				_events.PublishOnUIThread(new passwordMismatchEvent());
 				return false;
 			}
 		}
@@ -141,18 +178,30 @@ namespace WPFUI.ViewModels
 			_events.PublishOnUIThread(new goBackEvent());
 		}
 
-		public void Handle(refreshUIEvent message)
+
+		public void leftArrowAvatarChange()
 		{
-			foreach (Avatar a in avatars)
+			if (selectedAvatarIndex >= 0 & selectedAvatarIndex < nbAvatars - 1)
 			{
-				a.resetColor();
+				selectedAvatarIndex++;
 			}
-			
-			int avatarIndex = avatars.IndexOf(avatars.Single(i => i._name == message.fruitSelected));
-			_selectedAvatar = message.fruitSelected;
-			avatars[avatarIndex].changeColor("Black");
-			avatars.Refresh();
-			NotifyOfPropertyChange(null);
+			else if (selectedAvatarIndex == nbAvatars - 1)
+			{
+				selectedAvatarIndex = 0;
+			}
+		}
+
+		public void rightArrowAvatarChange()
+		{
+			if (selectedAvatarIndex > 0 & selectedAvatarIndex <= nbAvatars - 1)
+			{
+				selectedAvatarIndex--;
+			}
+			else if (selectedAvatarIndex == 0)
+			{
+				selectedAvatarIndex = nbAvatars - 1;
+			}
+
 		}
 	}
 }

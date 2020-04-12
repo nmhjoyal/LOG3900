@@ -21,6 +21,14 @@ class RankingOneVsOneMode : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         refreshRankingAdapter()
+        for (ranking in LeaderboardManager.freeForAllRankingList) {
+            if(ranking.username == PreferenceHandler(context!!).getUser().username){
+                linearLayout.visibility= View.VISIBLE
+                text_view_onevsone_current_username.text = LeaderboardManager.onevsoneCurrentPlayer.username
+                onevsone_current_user_position.text = LeaderboardManager.onevsoneCurrentPlayer.pos.toString()
+                text_view_onevsone_ranking_score.text = LeaderboardManager.onevsoneCurrentPlayer.score.toString()
+            }
+        }
         onevsone_rankinglist.adapter =adapter
     }
 
@@ -42,14 +50,7 @@ class RankingOneVsOneMode : Fragment() {
     private fun refreshRankingAdapter() {
         adapter.clear()
         for (ranking in LeaderboardManager.oneVsOneRankingList) {
-            if(ranking.username == PreferenceHandler(context!!).getUser().username){
-                linearLayout.visibility= View.VISIBLE
-                text_view_onevsone_current_username.text = ranking.username
-                onevsone_current_user_position.text = ranking.pos.toString()
-                text_view_onevsone_ranking_score.text = ranking.score.toString()
-            } else {
-                adapter.add(LeaderboardItem(ranking))
-            }
+            adapter.add(LeaderboardItem(ranking))
         }
     }
 
