@@ -75,6 +75,7 @@ namespace WPFUI.Models
                 foreach(PublicProfile player in this.players)
                 {
                     playerNames.Add(player.username);
+                    Console.WriteLine(player.username);
                 }
                 return playerNames;
             }
