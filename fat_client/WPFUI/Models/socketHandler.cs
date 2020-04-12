@@ -300,7 +300,8 @@ namespace WPFUI.Models
                 {
                     _userdata.avatarName = avatarChangePending;
                     _events.PublishOnUIThread(new avatarUpdated());
-                } else
+                }
+                else
                 {
                     _events.PublishOnUIThread(new appWarningEvent((string)json.log_message));
                 }

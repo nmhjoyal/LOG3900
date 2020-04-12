@@ -43,16 +43,22 @@
 			<Image Source="{Binding userAvatarSource, Mode=OneWay}"></Image>
 		</Grid>
 
-		<Button Content="Edit Profile" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Center" x:Name="editProfileButton"
-				MaxWidth="180" Height="30" BorderBrush="#018677" Background="#018677" Foreground="White" Margin="0,10,0,0"
-				PreviewMouseDown="editProfileButton_PreviewMouseDown"/>
+
 
 
 		<TextBlock Grid.Row="5" Grid.Column="1" TextWrapping="Wrap"
 				   HorizontalAlignment="Center" FontSize="20" Margin="0,10,0,0" x:Name="userName"></TextBlock>
-		
 
-        <StackPanel Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,20,0,20" VerticalAlignment="Center">
+		<TextBlock Grid.Row="6" Grid.Column="1" TextWrapping="Wrap"
+				   HorizontalAlignment="Center" FontSize="20" Margin="0,10,0,0" x:Name="fullName"></TextBlock>
+
+
+		<Button Content="Edit Profile" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Center" x:Name="editProfileButton"
+				MaxWidth="180" Height="30" BorderBrush="#018677" Background="#018677" Foreground="White" Margin="0,10,0,0"
+				PreviewMouseDown="editProfileButton_PreviewMouseDown"/>
+
+
+		<StackPanel Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,20,0,20" VerticalAlignment="Center">
 			<TextBlock  MinHeight="40"  FontSize="30" Foreground="#00584C" Margin="0,0,10,0" >Stats</TextBlock>
 		</StackPanel>
         <StackPanel Grid.Column="2" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Width="450">
@@ -246,7 +252,7 @@
 			</Grid>
 		</Border>
 
-		<Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="16" Grid.RowSpan="16" x:Name="editProfileGrid" Visibility="Hidden">
+		<Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="16" Grid.RowSpan="16" x:Name="editProfileGrid" Visibility="Visible">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"></ColumnDefinition>
 				<ColumnDefinition Width="320"></ColumnDefinition>
@@ -255,7 +261,7 @@
 
 			<Grid.RowDefinitions>
 				<RowDefinition Height="*"></RowDefinition>
-				<RowDefinition Height="2*"></RowDefinition>
+				<RowDefinition Height="4*"></RowDefinition>
 				<RowDefinition Height="*"></RowDefinition>
 			</Grid.RowDefinitions>
 
@@ -272,7 +278,15 @@
 						<RowDefinition Height="*"></RowDefinition>
 						<RowDefinition Height="10"></RowDefinition>
 					</Grid.RowDefinitions>
-					<StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Margin="0,10,0,0">
+					<StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Margin="0,5,0,0" VerticalAlignment="Center">
+						<TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Foreground="White"> New First Name</TextBlock>
+						<Border Height="30" Width="230" CornerRadius="10" Background="White" Margin="0,10,0,5">
+							<TextBox Margin="7,2,7,2" x:Name="newFirstNameBox" HorizontalContentAlignment="Center"></TextBox>
+						</Border>
+						<TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Foreground="White"> New Last Name</TextBlock>
+						<Border Height="30" Width="230" CornerRadius="10" Background="White" Margin="0,10,0,5">
+							<TextBox Margin="7,2,7,2" x:Name="newLastNameBox" HorizontalContentAlignment="Center"></TextBox>
+						</Border>
 						<TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Foreground="White"> New Password</TextBlock>
 						<Border Height="30" Width="230" CornerRadius="10" Background="White" Margin="0,10,0,0">
 							<PasswordBox Margin="7,2,7,2" x:Name="passwordTB" HorizontalContentAlignment="Center" Password=""></PasswordBox>
@@ -282,7 +296,7 @@
 							<PasswordBox Margin="7,2,7,2" x:Name="password2TB" HorizontalContentAlignment="Center" Password=""></PasswordBox>
 						</Border>
 						<TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Margin="0,10,0,0" Foreground="White"> New Avatar </TextBlock>
-						<Grid Height="100" HorizontalAlignment="Center" Margin="0,20,0,0">
+						<Grid Height="100" HorizontalAlignment="Center" Margin="0,10,0,0">
 							<Ellipse Fill="#FF00584C"></Ellipse>
 							<Image Source="{Binding selectedAvatarSource}" x:Name="selectionAvatar"></Image>
 							<Image Source="/Resources/profileView/arrow_left.png" x:Name="leftArrow"

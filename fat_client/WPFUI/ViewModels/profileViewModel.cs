@@ -21,7 +21,23 @@ namespace WPFUI.ViewModels
 		private StatsClient statsClient;
 		private int _selectedAvatarIndex;
 		private int nbAvatars;
+		private PrivateProfile _initialPP;
+		private PrivateProfile _newlPP;
+		private PrivateProfile _ppToBeConfirmed;
 
+		public IEventAggregator events
+		{
+			get { return _events; }
+		}
+		public PrivateProfile initialPP
+		{
+			get { return _initialPP; }
+		}
+
+		public PrivateProfile ppToBeConfirmed
+		{
+			get { return _ppToBeConfirmed; }
+		}
 		public string userName
 		{
 			get { return _userData.userName; }
@@ -86,26 +102,67 @@ namespace WPFUI.ViewModels
 			fillAvatars();
 			nbAvatars = _avatars.Count();
 			_selectedAvatarIndex = 0;
+			_initialPP = JsonConvert.DeserializeObject<PrivateProfile>(socketHandler.TestGETWebRequest("/profile/private/" + userdata.userName).ToString());
+			_newlPP = new PrivateProfile(_initialPP.firstname, _initialPP.firstname,
+										 _initialPP.lastname, _initialPP.password,_initialPP.avatar);
 		}
 
-		public void saveChanges(string passwordTB, string password2TB)
+		public void resetNewPP()
+		{
+			_newlPP = new PrivateProfile(_initialPP.firstname, _initialPP.firstname,
+							             _initialPP.lastname, _initialPP.password, _initialPP.avatar);
+			NotifyOfPropertyChange(null);
+		}
+
+		public string newFirstNameBox
+		{
+			get { return _newlPP.firstname; }
+			set { _newlPP.firstname = value; }
+		}
+
+		public string newLastNameBox
+		{
+			get { return _newlPP.lastname; }
+			set { _newlPP.lastname = value; }
+		}
+
+		public string fullName
+		{
+			get { return _initialPP.firstname + " " + _initialPP.lastname; }
+		}
+
+		public void saveChanges(string passwordTB, string password2TB, string newFirst, string newLast)
 		{
 			_socketHandler.avatarChangePending = _avatars[_selectedAvatarIndex].name;
-			if ((passwordTB != password2TB))
+
+			if(newFirst == null | newFirst == "")
+			{
+				_events.PublishOnUIThread(new appWarningEvent("The new firstname is empty"));
+				resetNewPP();
+			}
+			else if (newLast == null | newLast == "")
+			{
+				_events.PublishOnUIThread(new appWarningEvent("The new lastname is empty"));
+				resetNewPP();
+			}
+			else if ((passwordTB != password2TB))
 			{
 				_events.PublishOnUIThread(new appWarningEvent("The new passwords don't match"));
+				resetNewPP();
 			}
 			else if( passwordTB == "" | passwordTB == null)
 			{
 				Console.WriteLine("no new pass");
-				PrivateProfile newPP = new PrivateProfile(_userData.userName, null, null, null, _avatars[_selectedAvatarIndex].name);
+				PrivateProfile newPP = new PrivateProfile(_userData.userName, newFirst, newLast, _initialPP.password, _avatars[_selectedAvatarIndex].name);
 				_socketHandler.socket.Emit("update_profile", JsonConvert.SerializeObject(newPP));
+				_ppToBeConfirmed = newPP;
 				selectedAvatarIndex = 0;
 			} else
 			{
 				Console.WriteLine("new pass");
-				PrivateProfile newPP = new PrivateProfile(_userData.userName, null, null, passwordTB, _avatars[_selectedAvatarIndex].name);
+				PrivateProfile newPP = new PrivateProfile(_userData.userName, newFirst, newLast, passwordTB, _avatars[_selectedAvatarIndex].name);
 				_socketHandler.socket.Emit("update_profile", JsonConvert.SerializeObject(newPP));
+				_ppToBeConfirmed = newPP;
 				selectedAvatarIndex = 0;
 			}
 		}
@@ -153,8 +210,14 @@ namespace WPFUI.ViewModels
 
 		public void Handle(avatarUpdated message)
 		{
-			NotifyOfPropertyChange(() => userAvatarSource);
+			if (_ppToBeConfirmed != null)
+			{
+				_initialPP = _ppToBeConfirmed;
+				NotifyOfPropertyChange(null);
+				_ppToBeConfirmed = null;
+			}
 		}
+
 
 		public BindableCollection<Avatar> avatars
 		{

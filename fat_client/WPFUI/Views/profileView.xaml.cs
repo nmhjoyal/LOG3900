@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Caliburn.Micro;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,13 +14,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WPFUI.ViewModels;
+using WPFUI.EventModels;
 
 namespace WPFUI.Views
 {
     /// <summary>
     /// Logique d'interaction pour profileView.xaml
     /// </summary>
-    public partial class profileView : UserControl
+    public partial class profileView : UserControl, IHandle<avatarUpdated>
     {
         profileViewModel vm;
         public profileView()
@@ -42,14 +44,14 @@ namespace WPFUI.Views
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             vm = (DataContext as profileViewModel);
+            vm.events.Subscribe(this);
+            passwordTB.Password = vm.initialPP.password;
+            password2TB.Password = vm.initialPP.password;
         }
 
         private void saveChangesButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            vm.saveChanges(passwordTB.Password, password2TB.Password);
-            passwordTB.Password = "";
-            password2TB.Password = "";
-            editProfileButton_PreviewMouseDown(sender, e);
+            vm.saveChanges(passwordTB.Password, password2TB.Password, newFirstNameBox.Text, newLastNameBox.Text);
         }
 
         private void rightArrow_PreviewMouseDown(object sender, MouseButtonEventArgs e)
@@ -71,6 +73,12 @@ namespace WPFUI.Views
             {
                 editProfileGrid.Visibility = Visibility.Visible;
             }
+        }
+
+        public void Handle(avatarUpdated message)
+        {
+            passwordTB.Password = vm.initialPP.password;
+            password2TB.Password = vm.initialPP.password;
         }
     }
 }

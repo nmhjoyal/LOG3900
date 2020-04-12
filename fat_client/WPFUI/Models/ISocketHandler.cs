@@ -19,6 +19,7 @@ namespace WPFUI.Models
         void deleteRoom(string roomID);
         void disconnect();
         void getPublicChannels();
+        long getUnixTimeStamp();
         void joinRoom(string roomID);
         void leaveRoom(string roomID);
         void offCreateMatch();
