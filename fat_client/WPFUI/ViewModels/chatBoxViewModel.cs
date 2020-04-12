@@ -11,7 +11,7 @@ using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    public class chatBoxViewModel: Screen, IHandle<refreshMessagesEvent>, IHandle<addMessageEvent>, IHandle<createTheRoomEvent>,
+    public class chatBoxViewModel: Screen, IHandle<refreshMessagesEvent>, IHandle<addMessageEvent>,
                                    IHandle<refreshRoomsEvent>, IHandle<resetToGeneralEvent>
     {
         private IEventAggregator _events;
@@ -176,12 +176,9 @@ namespace WPFUI.ViewModels
             _socketHandler.getPublicChannels();
         }
 
-        public void createRoom()
+        public void createRoom(string roomID, Boolean isPrivate)
         {
-            if (createdRoomName != null & createdRoomName != "")
-            {
-                _socketHandler.createRoom(createdRoomName);
-            }
+            _socketHandler.createRoom(roomID, isPrivate);
         }
 
         public void goBack()
@@ -195,12 +192,6 @@ namespace WPFUI.ViewModels
         }
 
         /* Handlers -----------------------------------------------------------------------------------------------*/
-        public void Handle(createTheRoomEvent message)
-        {
-            Room newRoom = new Room(createdRoomName, new Models.Message[0], new Dictionary<string, string>());
-            _userData.addJoinedRoom(newRoom);
-            createdRoomName = "";
-        }
 
         public void Handle(refreshRoomsEvent message)
         {

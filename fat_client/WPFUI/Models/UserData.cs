@@ -134,7 +134,10 @@ namespace WPFUI.Models
             this.selectablePublicRooms.Clear();
             foreach (string channelID in message._publicRooms)
             {
-                this.selectablePublicRooms.Add(new SelectableRoom(new Room(channelID, null, null)));
+                if (channelID != null)
+                {
+                    this.selectablePublicRooms.Add(new SelectableRoom(new Room(channelID, null, null)));
+                }
             }
         }
 
@@ -143,16 +146,25 @@ namespace WPFUI.Models
             this.selectableJoinedRooms = new BindableCollection<SelectableRoom>();
             foreach (Room r in message._joinedRooms)
             {
-                this.selectableJoinedRooms.Add(new SelectableRoom(r));
+                if (r.id != null)
+                {
+                    this.selectableJoinedRooms.Add(new SelectableRoom(r));
+                }
             }
 
             this.currentRoomId = this.selectableJoinedRooms[0].id;
             this.messages = new BindableCollection<Message>(this.selectableJoinedRooms[0].room.messages);
         }
 
-        public void addJoinedRoom(Room room)
+        public void addJoinedRoom(Room room, Boolean isPrivate)
         {
-            selectableJoinedRooms.Add(new SelectableRoom(room));
+            BindableCollection<SelectableRoom> roomAlreadyExists = new BindableCollection<SelectableRoom>(this.selectableJoinedRooms.Where(x => x.id == room.id));
+            if (roomAlreadyExists.Count() == 0)
+            {
+                SelectableRoom sR = new SelectableRoom(room);
+                sR.isPrivate = isPrivate;
+                selectableJoinedRooms.Add(sR);
+            }
         }
 
         public void addGameRoom(Room room)
@@ -162,7 +174,11 @@ namespace WPFUI.Models
 
         public void addPublicRoom(Room room)
         {
-            selectablePublicRooms.Add(new SelectableRoom(room));
+            BindableCollection<SelectableRoom> roomAlreadyExists = new BindableCollection<SelectableRoom>(this.selectablePublicRooms.Where(x => x.id == room.id));
+            if (roomAlreadyExists.Count() == 0)
+            {
+                selectablePublicRooms.Add(new SelectableRoom(room));
+            }
         }
 
         public void addMessage(Message message)
@@ -181,7 +197,8 @@ namespace WPFUI.Models
                 List<Message> list = new List<Message>(currentGameRoom.messages);
                 list.Add(message);
                 currentGameRoom.messages = list.ToArray();
-            } else
+            }
+            else
             {
                 try
                 {

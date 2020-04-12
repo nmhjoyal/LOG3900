@@ -11,12 +11,32 @@ namespace WPFUI.Models
         private Room _room;
         private string _backgroundColor;
         private string _menuVisibility;
+        private Boolean _isPrivate;
 
         public SelectableRoom(Room room)
         {
             _room = room;
             _backgroundColor = "#FF66CC2F";
             _menuVisibility = "Collapsed";
+            _isPrivate = false;
+        }
+
+        public Boolean isPrivate
+        {
+            get { return _isPrivate; }
+            set { _isPrivate = value; }
+        }
+
+        public string privateVisibility
+        {
+            get { 
+                if (_isPrivate) { 
+                    return "Visible";
+                 } else
+                {
+                    return "Hidden";
+                }
+                 }
         }
 
         public Room room

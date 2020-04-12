@@ -126,5 +126,25 @@ namespace WPFUI.Views
                 this.newChannelGrid.Visibility = Visibility.Visible;
             }
         }
+
+        private void createRoom_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Console.WriteLine(newRoomTB.Text);
+            Console.WriteLine(privateCheckBox.IsChecked);
+            if ((newRoomTB.Text != null) & (newRoomTB.Text != ""))
+            {
+                if ((Boolean) privateCheckBox.IsChecked)
+                {
+                    // create private room
+                    _viewModel.createRoom(newRoomTB.Text, true);
+                } else
+                {
+                    // create public room
+                    _viewModel.createRoom(newRoomTB.Text, false);
+                }
+
+            }
+
+        }
     }
 }
