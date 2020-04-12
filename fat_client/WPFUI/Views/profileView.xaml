@@ -188,7 +188,7 @@
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Vertical">
-                                            <TextBlock Width="120" Height="20" FontSize="12" Text="{Binding StartTime}" Foreground="Black" TextAlignment="Center"></TextBlock>
+                                            <TextBlock Width="120" Height="20" FontSize="10" Text="{Binding StartTime}" Foreground="Black" TextAlignment="Center"></TextBlock>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -198,7 +198,7 @@
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Vertical">
-                                            <TextBlock Width="120"  Height="20" FontSize="12" Text="{Binding EndTime}" Foreground="Black" TextAlignment="Center"></TextBlock>
+                                            <TextBlock Width="120"  Height="20" FontSize="10" Text="{Binding EndTime}" Foreground="Black" TextAlignment="Center"></TextBlock>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -208,7 +208,7 @@
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Vertical">
-                                            <TextBlock  Width="120" Height="20" FontSize="12"  Text="{Binding MatchMode}" Foreground="Black" TextAlignment="Center"></TextBlock>
+                                            <TextBlock  Width="120" Height="20" FontSize="10"  Text="{Binding MatchMode}" Foreground="Black" TextAlignment="Center"></TextBlock>
                                             </StackPanel>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
@@ -220,7 +220,7 @@
                                     <DataTemplate>
                                         <StackPanel Orientation="Vertical">
                                             <ScrollViewer VerticalScrollBarVisibility="Hidden">
-                                                <TextBlock  Height="20" FontSize="12" Width="120" Text="{Binding PlayerNames }" Foreground="Black" TextAlignment="Center"></TextBlock>
+                                                <TextBlock  Height="20" FontSize="10" Width="120" Text="{Binding PlayerNames }" Foreground="Black" TextAlignment="Center"></TextBlock>
                                             </ScrollViewer>
                                         </StackPanel>
                                     </DataTemplate>
@@ -231,7 +231,7 @@
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Vertical">
-                                            <TextBlock  Height="20" FontSize="12" Width="120" Text="{Binding Winner}" Foreground="Black" TextAlignment="Center"></TextBlock>
+                                            <TextBlock  Height="20" FontSize="10" Width="120" Text="{Binding Winner}" Foreground="Black" TextAlignment="Center"></TextBlock>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -242,7 +242,7 @@
                                     <DataTemplate>
 
                                         <StackPanel Orientation="Vertical">
-                                            <TextBlock Width="120" Height="20" FontSize="12" Text="{Binding MyScore}" Foreground="Black" TextAlignment="Center"></TextBlock>
+                                            <TextBlock Width="120" Height="20" FontSize="10" Text="{Binding MyScore}" Foreground="Black" TextAlignment="Center"></TextBlock>
                                         </StackPanel>
 
                                     </DataTemplate>

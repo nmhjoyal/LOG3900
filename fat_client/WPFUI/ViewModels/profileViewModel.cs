@@ -45,7 +45,7 @@ namespace WPFUI.ViewModels
 			get { return this._matchHistory; }
 
 		}
-
+		
 		public BindableCollection<MatchHistory> accesseur
 		{
 			get{
