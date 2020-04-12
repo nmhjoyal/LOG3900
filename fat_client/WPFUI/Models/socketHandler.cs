@@ -28,8 +28,10 @@ namespace WPFUI.Models
         public bool _canConnect;
         private string _traitJSON;
         private string _roomToBeCreated;
+        private string roomToBeDeleted;
         private Boolean _isRoomToBeCreatedPrivate;
         private string baseURL;
+        private string roomToBeLeft;
 
 
         public bool canConnect
@@ -173,7 +175,8 @@ namespace WPFUI.Models
                         messages[0] = new Message("Admin", _userdata.userName + " joigned the room.", 0, _roomToBeCreated);
                         /* TODO: Ajouter l'avatar du user dans le dictionnaire */
                         _userdata.addJoinedRoom(new Room(_roomToBeCreated, messages, new Dictionary<string, string>()), true);
-                    } else
+                    }
+                    else
                     {
                         getPublicChannels();
                         Message[] messages = new Message[1];
@@ -184,10 +187,11 @@ namespace WPFUI.Models
                     }
                     _roomToBeCreated = null;
                     _isRoomToBeCreatedPrivate = false;
-                } else
+                }
+                else
                 {
                     _events.PublishOnUIThread(new appWarningEvent(json.log_message));
-                } 
+                }
             });
 
             _socket.On("user_sent_invite", (feedback) =>
@@ -197,7 +201,73 @@ namespace WPFUI.Models
                 {
                     _events.PublishOnUIThread(new appWarningEvent((string)json.log_message));
                 }
-                
+
+            });
+
+            _socket.On("receive_invite", (feedback) =>
+            {
+                dynamic json = JsonConvert.DeserializeObject(feedback.ToString());
+                if (_userdata.invites.Where(x => x.uid == ((Invitation)json).uid).Count() == 0)
+                {
+                    _userdata.invites.Add((Invitation)json);
+                }
+
+            });
+
+            _socket.On("user_left_room", (feedback) =>
+            {
+                dynamic json = JsonConvert.DeserializeObject(feedback.ToString());
+                if ((Boolean)json.status)
+                {
+                    IEnumerable<SelectableRoom> enumRoom = _userdata.selectableJoinedRooms.Where(x => x.id == roomToBeLeft);
+                    BindableCollection<SelectableRoom> roomsTobeDeleted = new BindableCollection<SelectableRoom>(enumRoom);
+
+                    foreach (SelectableRoom s in roomsTobeDeleted)
+                    {
+                        _userdata.selectableJoinedRooms.Remove(s);
+                    }
+                    _userdata.selectableJoinedRooms.Refresh();
+                }
+                else
+                {
+                    roomToBeLeft = null;
+                    _events.PublishOnUIThread(new appWarningEvent((string)json.log_message));
+                }
+
+
+            });
+
+            _socket.On("room_deleted", (feedback) =>
+            {
+                dynamic json = JsonConvert.DeserializeObject(feedback.ToString());
+                if ((Boolean)json.status)
+                {
+                    IEnumerable<SelectableRoom> enumRoomJoigned = _userdata.selectableJoinedRooms.Where(x => x.id == roomToBeDeleted);
+                    BindableCollection<SelectableRoom> joignedRoomsTobeDeleted = new BindableCollection<SelectableRoom>(enumRoomJoigned);
+
+                    IEnumerable<SelectableRoom> enumRoomPublic = _userdata.selectablePublicRooms.Where(x => x.id == roomToBeDeleted);
+                    BindableCollection<SelectableRoom> publicRoomsTobeDeleted = new BindableCollection<SelectableRoom>(enumRoomPublic);
+
+                    foreach (SelectableRoom s in joignedRoomsTobeDeleted)
+                    {
+                        _userdata.selectableJoinedRooms.Remove(s);
+                    }
+
+
+                    foreach (SelectableRoom s in publicRoomsTobeDeleted)
+                    {
+                        _userdata.selectablePublicRooms.Remove(s);
+                    }
+                    _userdata.selectablePublicRooms.Refresh();
+                    _userdata.selectableJoinedRooms.Refresh();
+                }
+                else
+                {
+                    roomToBeDeleted = null;
+                    _events.PublishOnUIThread(new appWarningEvent((string)json.log_message));
+                }
+
+
             });
         }
 
@@ -207,6 +277,18 @@ namespace WPFUI.Models
             _isRoomToBeCreatedPrivate = isPrivate;
             CreateRoom cR = new CreateRoom(roomID, isPrivate);
             _socket.Emit("create_chat_room", JsonConvert.SerializeObject(cR));
+        }
+
+        public void leaveRoom(string roomID)
+        {
+            roomToBeLeft = roomID;
+            _socket.Emit("leave_chat_room", roomID);
+        }
+
+        public void deleteRoom(string roomID)
+        {
+            roomToBeDeleted = roomID;
+            _socket.Emit("delete_chat_room", roomID);
         }
 
         public void joinRoom(string roomID)

@@ -181,5 +181,37 @@ namespace WPFUI.Views
             _roomSelectedToInvite = null;
             this.addPlayersGrid.Visibility = Visibility.Hidden;
         }
+
+        private void joinInvitedButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            string _roomSelectedToJoin = (string)(sender as Button).Tag;
+            _viewModel.joinInvitedRoom(_roomSelectedToJoin);
+            Invitation inviteToDelete = null;
+            foreach (Invitation i in _viewModel.invites)
+            {
+                if (i.id == _roomSelectedToJoin)
+                {
+                    inviteToDelete = i;
+                }
+            }
+
+            if (inviteToDelete != null)
+            {
+                _viewModel.invites.RemoveAt(_viewModel.invites.IndexOf(inviteToDelete));
+                _viewModel.invites.Refresh();
+            }
+
+        }
+
+        private void leaveButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            string _roomToLeave = (string)(sender as Button).Tag;
+            _viewModel.leaveRoom(_roomToLeave);
+        }
+
+        private void deleteButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            _viewModel.deleteRoom();
+        }
     }
 }

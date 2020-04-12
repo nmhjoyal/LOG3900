@@ -9,6 +9,7 @@ namespace WPFUI.Models
         Room currentGameRoom { get; set; }
         string currentMessage { get; set; }
         string currentRoomId { get; set; }
+        BindableCollection<Invitation> invites { get; set; }
         string ipAdress { get; set; }
         string matchId { get; set; }
         MatchMode matchMode { get; set; }

@@ -21,6 +21,7 @@ namespace WPFUI.ViewModels
         private string _currentMessage;
         private ISocketHandler _socketHandler;
         private BindableCollection<SelectableRoom> _availableRooms;
+        private BindableCollection<Invitation> _invites;
         private BindableCollection<SelectableRoom> _joinedRooms;
         private string _searchBarText;
         public IchangeChannelCommand _changeChannelCommand { get; set; }
@@ -91,7 +92,8 @@ namespace WPFUI.ViewModels
         {
             if (searchBarText != "" & searchBarText != null)
             {
-                return new BindableCollection<SelectableRoom>(_availableRooms.Where(room => room.id.StartsWith(searchBarText)));
+                return new BindableCollection<SelectableRoom>(_availableRooms.
+                    Where(room => room.id.ToLower().StartsWith(searchBarText.ToLower())));
             } else
             {
                 return _availableRooms;
@@ -122,6 +124,7 @@ namespace WPFUI.ViewModels
             messages = userdata.messages;
             _availableRooms = userdata.selectablePublicRooms;
             _joinedRooms = userdata.selectableJoinedRooms;
+            _invites = userdata.invites;
             currentRoomId = userdata.currentRoomId;
             _changeChannelCommand = new changeChannelCommand(userdata);
             _selectAvailableRoomCommand = new selectAvailableRoomCommand(events);
@@ -129,6 +132,34 @@ namespace WPFUI.ViewModels
             _selectedJoinedRoom = null;
             _selectedAvailableRoom = null;
             _searchBarText = null;
+        }
+
+        public BindableCollection<Invitation> invites
+        {
+            get { return _invites; }
+            set { _invites = value;
+                  NotifyOfPropertyChange(() => invites);
+                  NotifyOfPropertyChange(() => nbInvites);
+                  NotifyOfPropertyChange(() => nbInvitesVisibility);
+            }
+        }
+
+        public int nbInvites
+        {
+            get { return _invites.Count(); }
+        }
+
+        public string nbInvitesVisibility
+        {
+            get {
+                if (_invites.Count() > 0)
+                {
+                    return "Visible";
+                } else
+                {
+                    return "Hidden";
+                }
+                 }
         }
 
         public string searchBarText
@@ -190,6 +221,21 @@ namespace WPFUI.ViewModels
         public void joinRoom()
         {
             _socketHandler.joinRoom(_selectedAvailableRoom);
+        }
+
+        public void deleteRoom()
+        {
+            _socketHandler.deleteRoom(_selectedAvailableRoom);
+        }
+
+        public void leaveRoom(string roomID)
+        {
+            _socketHandler.leaveRoom(roomID);
+        }
+
+        public void joinInvitedRoom( string invitedRoomId)
+        {
+            _socketHandler.joinRoom(invitedRoomId);
         }
 
         /* Handlers -----------------------------------------------------------------------------------------------*/

@@ -16,6 +16,7 @@ namespace WPFUI.Models
         private string _currentMessage;
         private string _currentRoomId;
         private string _avatarName;
+        private BindableCollection<Invitation> _invites;
         private BindableCollection<Message> _messages;
         private BindableCollection<SelectableRoom> _selectablePublicRooms;
         private BindableCollection<SelectableRoom> _selectableJoinedRooms;
@@ -25,6 +26,11 @@ namespace WPFUI.Models
         private IEventAggregator _events;
         private MatchMode _matchMode;
 
+        public BindableCollection<Invitation> invites
+        {
+            get { return _invites; }
+            set { _invites = value; }
+        }
         public Room currentGameRoom
         {
             get { return _currentGameRoom; }
@@ -112,6 +118,7 @@ namespace WPFUI.Models
             _currentRoomId = null;
             _currentGameRoom = null;
             _avatarName = null;
+            _invites = new BindableCollection<Invitation>();
         }
 
         public void changeChannel(string roomID)
