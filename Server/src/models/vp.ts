@@ -355,7 +355,7 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
                 "I hope my lasagna doesn't burn while I play this game with you guys.",
                 "I love cooking for my friends, I would love for you to taste my dishes"
             ],
-            hint: "The hint is " + INSERT_HINT + ". I will make sure my lasagna is not burning."
+            hint: "The hint is " + INSERT_HINT + ". Now, just let me make sure my lasagna is not burning."
         },
     ],
     [
