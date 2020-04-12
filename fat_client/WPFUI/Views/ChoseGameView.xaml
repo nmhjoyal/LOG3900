@@ -45,7 +45,7 @@
 			<RowDefinition Height="*"/>
 
 		</Grid.RowDefinitions>
-        <TextBlock  FontSize="40"  Foreground="#00584C" Text="Choose your game" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="17" TextAlignment="Center"/>
+        <TextBlock  FontSize="40"  Foreground="#00584C" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="17" TextAlignment="Center"><Run Text="Choose your "/><Run Text="match"/></TextBlock>
         <Border Background="#018677" BorderThickness="5" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="3" CornerRadius="10">
 			<TextBlock FontSize="14" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Choose the mode" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="3"/>
 		</Border>
@@ -117,6 +117,6 @@
 		</ItemsControl>
         <Button  BorderBrush="{x:Null}" Background="#01C853" FontSize="12" Foreground="White" x:Name="createGame" Content="Create your match" Grid.ColumnSpan="4" Grid.Column="11" Grid.Row="11" HorizontalAlignment="Right"/>
 		<Image gif:ImageBehavior.AnimatedSource="/Resources/mad.gif" Grid.Column="1" Grid.Row="11" Grid.ColumnSpan="2" Margin="10.333,0,111,0" />
-		<TextBlock Grid.Column="2" Grid.Row="11" VerticalAlignment="Center" Grid.ColumnSpan="4" TextAlignment="Center">You don't find a game you like?</TextBlock>
-	</Grid>
+        <TextBlock Grid.Column="2" Grid.Row="11" VerticalAlignment="Center" Grid.ColumnSpan="4" TextAlignment="Center"><Run Text="You don't find a "/><Run Text="match "/><Run Text="you like?"/></TextBlock>
+    </Grid>
 </UserControl>
