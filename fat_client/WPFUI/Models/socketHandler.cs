@@ -210,9 +210,10 @@ namespace WPFUI.Models
             _socket.On("receive_invite", (feedback) =>
             {
                 dynamic json = JsonConvert.DeserializeObject(feedback.ToString());
-                if (_userdata.invites.Where(x => x.uid == ((Invitation)json).uid).Count() == 0)
+                Invitation invite = new Invitation((string)json.id, (string)json.username);
+                if (_userdata.invites.Where(x => x.id == invite.id).Count() == 0)
                 {
-                    _userdata.invites.Add((Invitation)json);
+                    _userdata.invites.Add(invite);
                 }
 
             });

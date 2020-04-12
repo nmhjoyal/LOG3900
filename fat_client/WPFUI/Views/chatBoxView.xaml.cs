@@ -160,7 +160,7 @@ namespace WPFUI.Views
 
         private void addPlayerButton_Click(object sender, RoutedEventArgs e)
         {
-            string _roomSelectedToInvite = (string)(sender as Button).Tag;
+            _roomSelectedToInvite = (string)(sender as Button).Tag;
             this.newChannelGrid.Visibility = Visibility.Hidden;
             this.invitesGrid.Visibility = Visibility.Hidden;
             this.addPlayersGrid.Visibility = Visibility.Visible;
@@ -172,6 +172,8 @@ namespace WPFUI.Views
             {
                 Console.WriteLine("invite sent in view");
                 _viewModel.sendInvite(_roomSelectedToInvite, invitedPlayerName.Text);
+                _roomSelectedToInvite = null;
+                this.addPlayersGrid.Visibility = Visibility.Hidden;
             }
 
         }
