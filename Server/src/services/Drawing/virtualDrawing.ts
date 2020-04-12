@@ -7,27 +7,25 @@ export class VirtualDrawing {
     private roomId: string | null;
     private time: number;
     private timeouts: NodeJS.Timeout[];
+    private currentPreview: Stroke[];
 
     public constructor (roomId: string | null, time: number) {
         this.roomId = roomId;
         // if(roomId) -> Server , else -> Socket
         this.time = time;
         this.timeouts = [];
+        this.currentPreview = [];
     }
 
     public async draw(socketIO: SocketIO.Server | SocketIO.Socket, drawing: Stroke[], level: Level): Promise<void> {
-        //const maxPoints: number = 2000;
-        // let start: number = Date.now();
-        //const totalPoints: number = this.totalPoints(drawing);
-        //const factor: number = Math.ceil(totalPoints / maxPoints);
         this.clear(socketIO);
+        const speed: number = 250; // points per second
+        drawing = Utils.uniform(drawing, speed * this.time);
         let timeStamp: number = 0;
-        let deltaT: number = (this.time * 1000) / (this.totalPoints(drawing) * Math.pow(2, 2 - level));
+        let deltaT: number = (this.time * 1000) / (Utils.totalPoints(drawing) * Math.pow(2, 2 - level));
         for(let i: number = 0; i < drawing.length; i++) {
             this.timeouts.push(setTimeout(() => {
-                // console.log("stroke " + i + " time " + (Date.now() - start));
                 if(this.roomId) {
-                    // Envoyer uniquement le premier point de la stroke
                     socketIO.in(this.roomId).emit("new_stroke", JSON.stringify(drawing[i]));
                 } else {
                     socketIO.emit("new_stroke", JSON.stringify(drawing[i]));
@@ -35,33 +33,27 @@ export class VirtualDrawing {
             }, timeStamp));
             timeStamp += deltaT;
             for(let j: number = 0; j < drawing[i].StylusPoints.length; j++) {
-                if(j % 1 == 0) {
-                    this.timeouts.push(setTimeout(() => {
-                        // console.log("stroke " + i + " point " + j + " time " + (Date.now() - start));
-                        if(this.roomId) {
-                            socketIO.in(this.roomId).emit("new_point", JSON.stringify(drawing[i].StylusPoints[j]));
-                        } else  {
-                            socketIO.emit("new_point", JSON.stringify(drawing[i].StylusPoints[j]));
-                        }
-                    }, timeStamp));
-                    timeStamp += deltaT;
-                }
+                this.timeouts.push(setTimeout(() => {
+                    if(this.roomId) {
+                        socketIO.in(this.roomId).emit("new_point", JSON.stringify(drawing[i].StylusPoints[j]));
+                    } else  {
+                        socketIO.emit("new_point", JSON.stringify(drawing[i].StylusPoints[j]));
+                    }
+                    if(i == drawing.length - 1 && j == drawing[i].StylusPoints.length - 1) {
+                        this.currentPreview = [];
+                    }
+                }, timeStamp));
+                timeStamp += deltaT;
             }
         }
-        // console.log(Date.now() - start);
     }
 
     public async preview(socket: SocketIO.Socket, gamePreview: GamePreview) {
-        Utils.sort(gamePreview.drawing, gamePreview.mode, gamePreview.option);
-        await this.draw(socket, gamePreview.drawing, Level.Hard);
-    }
-
-    private totalPoints(drawing: Stroke[]): number {
-        let totalPoints: number = 0;
-        drawing.forEach((line: Stroke) => {
-            totalPoints += line.StylusPoints.length + 1;
-        });
-        return totalPoints;
+        if(this.currentPreview.length == 0) {
+            this.currentPreview = gamePreview.drawing;
+        }
+        Utils.sort(this.currentPreview, gamePreview.mode, gamePreview.option);
+        await this.draw(socket, this.currentPreview, Level.Hard);
     }
 
     public clear(socketIO: SocketIO.Server | SocketIO.Socket): void {

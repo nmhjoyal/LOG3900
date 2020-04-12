@@ -111,6 +111,36 @@ export class Utils {
                 break;
         }
     }
+
+    public static totalPoints(drawing: Stroke[]): number {
+        let totalPoints: number = 0;
+        drawing.forEach((line: Stroke) => {
+            totalPoints += line.StylusPoints.length + 1;
+        });
+        return totalPoints;
+    }
+
+    public static uniform(drawing: Stroke[], uniformedPoints: number): Stroke[] {
+        const totalPoints: number = this.totalPoints(drawing);
+        if(uniformedPoints >= totalPoints || uniformedPoints < drawing.length) {
+            console.log("Not uniformed");
+            return drawing;
+        }
+        const step: number = this.totalPoints(drawing) / uniformedPoints;
+        const uniformedDrawing: Stroke[] = [];
+        for(let i: number = 0; i < drawing.length; i++) {
+            const stroke: Stroke = {
+                DrawingAttributes: drawing[i].DrawingAttributes,
+                StylusPoints: []
+            }
+            uniformedDrawing.push(stroke);
+            for(let j: number = 0; j < (drawing[i].StylusPoints.length) / step; j++) {
+                uniformedDrawing[i].StylusPoints.push(drawing[i].StylusPoints[Math.min(drawing[i].StylusPoints.length - 1, Math.round(j * step))]);
+            }
+        }
+        return uniformedDrawing;
+    }
+
     private static getDistance(a: StylusPoint, b: StylusPoint): number {
         return Math.hypot(a.X - b.X, a.Y - b.Y);
     }
