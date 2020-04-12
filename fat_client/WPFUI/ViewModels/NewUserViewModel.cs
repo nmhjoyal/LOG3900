@@ -127,6 +127,7 @@ namespace WPFUI.ViewModels
 
 				if (fb.status)
 				{
+					_events.PublishOnUIThread(new appSuccessEvent(fb.log_message));
 					_events.PublishOnUIThread(new goBackEvent());
 				}
 				else
