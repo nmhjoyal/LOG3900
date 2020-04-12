@@ -25,8 +25,7 @@ export default class MatchHandler {
         this.previews = new Map<string, VirtualDrawing>();
     }
     
-    public async createMatch(io: SocketIO.Server, socket: SocketIO.Socket, 
-                    createMatch: CreateMatch, user: PrivateProfile | undefined): Promise<CreateMatchFeedback> {
+    public async createMatch(io: SocketIO.Server, socket: SocketIO.Socket, createMatch: CreateMatch, user: PrivateProfile | undefined): Promise<CreateMatchFeedback> {
         let createMatchFeedback: CreateMatchFeedback = { feedback: { status: false, log_message: "" }, matchId: ""};
         const NB_ROUNDS_MAX: number = MatchInstance.getMaxNbRounds(createMatch.matchMode);
         const NB_ROUNDS_MIN: number = MatchInstance.getMinNbRounds(createMatch.matchMode);
