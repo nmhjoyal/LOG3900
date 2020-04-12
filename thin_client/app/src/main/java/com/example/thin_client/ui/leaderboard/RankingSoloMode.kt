@@ -7,9 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.thin_client.R
+import com.example.thin_client.data.app_preferences.PreferenceHandler
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
+import kotlinx.android.synthetic.main.collab_ranking_list.*
 import kotlinx.android.synthetic.main.solo_ranking_list.*
+import kotlinx.android.synthetic.main.solo_ranking_list.linearLayout
 
 class RankingSoloMode : Fragment() {
 
@@ -39,9 +42,16 @@ class RankingSoloMode : Fragment() {
     }
 
     private fun refreshRankingAdapter() {
-      adapter.clear()
-       for (ranking in LeaderboardManager.soloRankingList) {
-           adapter.add(LeaderboardItem(ranking))
+        adapter.clear()
+
+        for (ranking in LeaderboardManager.soloRankingList) {
+            if(ranking.username == PreferenceHandler(context!!).getUser().username){
+                linearLayout.visibility= View.VISIBLE
+                text_view_solo_current_username.text = ranking.username
+                solo_current_user_position.text = ranking.pos.toString()
+                text_view_solo_ranking_score.text = ranking.score.toString()
+            }
+            adapter.add(LeaderboardItem(ranking))
         }
     }
 
