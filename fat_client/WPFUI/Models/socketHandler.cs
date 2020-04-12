@@ -227,6 +227,11 @@ namespace WPFUI.Models
                         _userdata.selectableJoinedRooms.Remove(s);
                     }
                     _userdata.selectableJoinedRooms.Refresh();
+
+                    if (roomToBeLeft == userdata.currentRoomId)
+                    {
+                        _userdata.changeChannel("General");
+                    }
                 }
                 else
                 {
@@ -260,6 +265,11 @@ namespace WPFUI.Models
                     }
                     _userdata.selectablePublicRooms.Refresh();
                     _userdata.selectableJoinedRooms.Refresh();
+
+                    if (roomToBeDeleted == userdata.currentRoomId)
+                    {
+                        _userdata.changeChannel("General");
+                    }
                 }
                 else
                 {

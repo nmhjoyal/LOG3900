@@ -132,7 +132,7 @@ namespace WPFUI.Models
             {
                 this.messages = new BindableCollection<Message>(this.selectableJoinedRooms.Where(x => x.id == roomID).ToList()[0].room.messages);
             }
-
+            _currentRoomId = roomID;
             _events.PublishOnUIThread(new refreshMessagesEvent(this.messages, roomID));
         }
 
