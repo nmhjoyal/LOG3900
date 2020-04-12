@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -256,6 +257,16 @@ namespace WPFUI.ViewModels
             this.messages = _userData.messages;
             this.currentRoomId = _userData.currentRoomId;
             _events.PublishOnUIThread(new changeChatOptionsEvent(true));
+        }
+
+        public void sendInvite(string roomID, string player)
+        {
+            dynamic invitation = new System.Dynamic.ExpandoObject();
+            invitation.id = roomID;
+            invitation.username = player;
+
+            _socketHandler.socket.Emit("send_invite", JsonConvert.SerializeObject(invitation));
+
         }
 
     }

@@ -121,10 +121,20 @@ namespace WPFUI.Models
                     {
                         if (fb.isPrivate)
                         {
+                            List<Message> messages = fb.room_joined.messages.ToList();
+                            // TODO: Mettre le bon timestamp
+                            messages.Add(new Message("Admin", _userdata.userName + " joigned the room.", 0, fb.room_joined.id));
+                            fb.room_joined.messages = messages.ToArray();
+                            /* TODO: Ajouter l'avatar du user dans le dictionnaire */
                             _userdata.addJoinedRoom(fb.room_joined, true);
                         }
                         else
                         {
+                            List<Message> messages = fb.room_joined.messages.ToList();
+                            // TODO: Mettre le bon timestamp
+                            messages.Add(new Message("Admin", _userdata.userName + " joigned the room.", 0, fb.room_joined.id));
+                            fb.room_joined.messages = messages.ToArray();
+                            /* TODO: Ajouter l'avatar du user dans le dictionnaire */
                             _userdata.addJoinedRoom(fb.room_joined, false);
                         }
                     }
@@ -166,8 +176,6 @@ namespace WPFUI.Models
                     } else
                     {
                         getPublicChannels();
-                        // TODO: Trouver pourquoi ca join pas automatiquement
-                        //socket.Emit("join_chat_room", _roomToBeCreated);
                         Message[] messages = new Message[1];
                         // TODO: Mettre le bon timestamp
                         messages[0] = new Message("Admin", _userdata.userName + " joigned the room.", 0, _roomToBeCreated);
@@ -180,6 +188,16 @@ namespace WPFUI.Models
                 {
                     _events.PublishOnUIThread(new appWarningEvent(json.log_message));
                 } 
+            });
+
+            _socket.On("user_sent_invite", (feedback) =>
+            {
+                dynamic json = JsonConvert.DeserializeObject(feedback.ToString());
+                if (!(Boolean)json.status)
+                {
+                    _events.PublishOnUIThread(new appWarningEvent((string)json.log_message));
+                }
+                
             });
         }
 
