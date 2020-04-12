@@ -190,20 +190,20 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
     [
         LORD_BANANA,
         {
-            startMatch: "TODO",
+            startMatch: "First of all, you have to refer to me as Lord. Now let's play.",
             endTurn: [
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO"
+                "See? You should listen to me",
+                "The next time you don't follow the order, I will make sure you suffer from it.",
+                "1, 2, 3, 4. Praise the Lord Banana! 5, 6, 7, 8. I will listen to what he says!",
+                "I'm the one with all the answers!",
+                "Lord Banana is the King of the World and you should act like it!",
+                "You wish you could be me. I'm too charismatic.",
+                "Next wrong answer and you're out!",
+                "It is not truth that matters, but victory. - Lord Banana",
+                "If you win, you need not have to explain...If you lose, you should not be there to explain!",
+                "As in everything, Lord Banana is the best instructor."
             ],
-            hint: "TODO" + INSERT_HINT
+            hint: "Obstacles do not exist to be surrendered to, but only to be broken. So here's a hint:" + INSERT_HINT
         },
     ],
     [
