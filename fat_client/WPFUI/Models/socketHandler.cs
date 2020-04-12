@@ -69,6 +69,15 @@ namespace WPFUI.Models
             set { _traitJSON = value; }
         }
 
+        public long getUnixTimeStamp()
+        {
+            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            System.DateTime dtDateTimeNow = DateTime.UtcNow;
+            TimeSpan diff = dtDateTimeNow - dtDateTime;
+
+            return (long)diff.TotalMilliseconds;
+        }
+
         public Socket socket { get => this._socket; set => throw new NotImplementedException(); }
 
         public SocketHandler(IUserData userdata, IEventAggregator events)
@@ -164,8 +173,7 @@ namespace WPFUI.Models
                     {
                         getPublicChannels();
                         Message[] messages = new Message[1];
-                        // TODO: Mettre le bon timestamp
-                        messages[0] = new Message("Admin", _userdata.userName + " joigned the room.", 0, _roomToBeCreated);
+                        messages[0] = new Message("Admin", _userdata.userName + " joigned the room.", getUnixTimeStamp(), _roomToBeCreated);
                         /* TODO: Ajouter l'avatar du user dans le dictionnaire */
                         _userdata.addJoinedRoom(new Room(_roomToBeCreated, messages, new Dictionary<string, string>()), true);
                     }
@@ -173,8 +181,7 @@ namespace WPFUI.Models
                     {
                         getPublicChannels();
                         Message[] messages = new Message[1];
-                        // TODO: Mettre le bon timestamp
-                        messages[0] = new Message("Admin", _userdata.userName + " joigned the room.", 0, _roomToBeCreated);
+                        messages[0] = new Message("Admin", _userdata.userName + " joigned the room.", getUnixTimeStamp(), _roomToBeCreated);
                         /* TODO: Ajouter l'avatar du user dans le dictionnaire */
                         _userdata.addJoinedRoom(new Room(_roomToBeCreated, messages, new Dictionary<string, string>()), false);
                     }

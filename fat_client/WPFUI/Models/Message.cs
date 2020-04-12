@@ -54,7 +54,7 @@ namespace WPFUI.Models
         {
             get
             {
-                return "[" + UnixTimeToDateTime(_date).ToString("HH:mm:ss") + "]";
+                return "[" + UnixTimeToDateTime(_date).ToString("HH:mm") + "]";
             }
         }
 
