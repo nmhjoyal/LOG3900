@@ -37,7 +37,6 @@ class MatchList : Fragment() {
     }
 
     private var gameStartedListener: IGameStarter? = null
-    private var currentTab: Int = 0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -53,31 +52,7 @@ class MatchList : Fragment() {
                 showCreateMatchDialog(context)
             }
         }
-        setupTabs()
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                if (tab != null && tab.customView != null) {
-                    val tabName =
-                        tab.customView!!.findViewById(R.id.tab_name) as TextView
-                    tabName.setTextColor(Color.WHITE)
-                    tab.customView!!.setBackgroundResource(R.drawable.tab_background_selected)
-                    currentTab = tab.position
-                }
-            }
 
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                if (tab != null && tab.customView != null) {
-                    val tabName =
-                        tab.customView!!.findViewById(R.id.tab_name) as TextView
-                    tabName.setTextColor(ContextCompat.getColor(context!!, R.color.colorPrimaryDark))
-                    tab.customView!!.setBackgroundResource(R.drawable.tab_background)
-                    currentTab = 0
-                }
-            }
-        })
         SocketHandler.searchMatches()
     }
 
@@ -88,7 +63,6 @@ class MatchList : Fragment() {
             Toast.makeText(context, "Cannot start a new game at this time.", Toast.LENGTH_LONG).show()
         }
     }
-
     override fun onStop() {
         super.onStop()
         turnOffSocketEvents()
@@ -109,21 +83,6 @@ class MatchList : Fragment() {
 
     }
 
-   private fun setupTabs() {
-        for (i in 0 until tabLayout.tabCount) {
-            val customView = View.inflate(context,R.layout.tab_layout, null)
-            val tabName = customView.findViewById(R.id.tab_name) as TextView
-            tabName.text = tabNames[i]
-            if (i == currentTab) {
-                tabName.setTextColor(Color.WHITE)
-                customView.setBackgroundResource(R.drawable.tab_background_selected)
-            } else {
-                customView.setBackgroundResource(R.drawable.tab_background)
-            }
-            tabLayout.getTabAt(i)!!.customView = customView
-            tabLayout.getTabAt(i)!!.view.setPadding(0, 0, 0, -16)
-        }
-    }
 
     private fun showCreateMatchDialog(context: Context) {
         val alertBuilder = android.app.AlertDialog.Builder(context)
@@ -260,7 +219,7 @@ class MatchList : Fragment() {
                     }
                     Handler(Looper.getMainLooper()).post(({
                         viewpager.adapter?.notifyDataSetChanged()
-                        setupTabs()
+                        //setupTabs()
                     }))
                 }))
         }

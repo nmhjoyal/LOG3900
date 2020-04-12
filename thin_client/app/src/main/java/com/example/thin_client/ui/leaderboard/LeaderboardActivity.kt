@@ -26,7 +26,6 @@ import java.io.IOException
 
 class LeaderboardActivity : AppCompatActivity() {
 
-    private var currentTab: Int = 0
     private lateinit var manager: FragmentManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,37 +33,6 @@ class LeaderboardActivity : AppCompatActivity() {
         manager = supportFragmentManager
         setContentView(R.layout.activity_leaderboard)
         ranking_viewpager.adapter = MyLeaderboardPagerAdapter(supportFragmentManager)
-        setupTabs()
-        ranking_tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                if (tab != null && tab.customView != null) {
-                    val tabName =
-                        tab.customView!!.findViewById(R.id.tab_name) as TextView
-                    tabName.setTextColor(Color.WHITE)
-                    tab.customView!!.setBackgroundResource(R.drawable.tab_background_selected)
-                    currentTab = tab.position
-                }
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                if (tab != null && tab.customView != null) {
-                    val tabName =
-                        tab.customView!!.findViewById(R.id.tab_name) as TextView
-                    tabName.setTextColor(
-                        ContextCompat.getColor(
-                            applicationContext,
-                            R.color.colorPrimaryDark
-                        )
-                    )
-                    tab.customView!!.setBackgroundResource(R.drawable.tab_background)
-                    currentTab = 0
-                }
-            }
-        })
-
         getRankings()
         refresh_ranking.setOnClickListener{
             getRankings()
@@ -73,21 +41,6 @@ class LeaderboardActivity : AppCompatActivity() {
     }
 
 
-    private fun setupTabs() {
-        for (i in 0 until ranking_tabLayout.tabCount) {
-            val customView = View.inflate(applicationContext, R.layout.tab_layout, null)
-            val tabName = customView.findViewById(R.id.tab_name) as TextView
-            tabName.text = LeaderboardManager.leaderboardTabNames[i]
-            if (i == currentTab) {
-                tabName.setTextColor(Color.WHITE)
-                customView.setBackgroundResource(R.drawable.tab_background_selected)
-            } else {
-                customView.setBackgroundResource(R.drawable.tab_background)
-            }
-            ranking_tabLayout.getTabAt(i)!!.customView = customView
-            ranking_tabLayout.getTabAt(i)!!.view.setPadding(0, 0, 0, -16)
-        }
-    }
 
     private fun getRankings() {
         val httpClient = OkHttpRequest(okhttp3.OkHttpClient())

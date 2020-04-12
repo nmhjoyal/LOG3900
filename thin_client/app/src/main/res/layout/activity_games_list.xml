@@ -34,8 +34,10 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
+            app:tabTextColor="@color/colorPrimaryDark"
+            app:tabSelectedTextColor="@color/color_white"
             android:layout_height="wrap_content"
-            android:background="@color/default_background"
+            app:tabBackground="@drawable/tab_background_selector"
             android:layout_margin="0dp"
             app:tabIndicatorHeight="0dp"
             app:tabGravity="fill"
