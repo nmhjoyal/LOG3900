@@ -108,9 +108,9 @@ namespace WPFUI.Models
 
         }
 
-        public Rank Winner
+        public string Winner
         {
-            get { return this.winner; }
+            get { return this.winner.username; }
 
         }
         public int MyScore
