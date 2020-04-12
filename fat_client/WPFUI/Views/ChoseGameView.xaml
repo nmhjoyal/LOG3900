@@ -9,7 +9,7 @@
              d:DesignHeight="1080" d:DesignWidth="1600"
              FontFamily="Microsoft JhengHei UI Light"
 			 Loaded="UserControl_Loaded">
-	<Grid Background="#FFF5F5F6" >
+	<Grid Background="White" >
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="1.5*"/>
 			<ColumnDefinition Width="40"/>

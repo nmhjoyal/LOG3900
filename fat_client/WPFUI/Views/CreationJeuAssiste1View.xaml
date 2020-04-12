@@ -9,7 +9,7 @@
             xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit" 
             mc:Ignorable="d"
             d:DesignHeight="900" d:DesignWidth="1100"
-			FontFamily="Microsoft JhengHei UI Light" Background="#FFF5F5F6">
+			FontFamily="Microsoft JhengHei UI Light" Background="White">
     <UserControl.Resources>
         <convertisseurs:ConvertisseurBordure x:Key="convertisseurBordure" />
         <convertisseurs:ConvertisseurCouleurFond x:Key="convertisseurCouleurFond" />
@@ -17,7 +17,7 @@
     </UserControl.Resources>
 
 	<Viewbox Grid.Column="1" Grid.Row="0" >
-		<Grid Background="#FFF5F5F6" >
+		<Grid Background="White" >
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="20"/>
 				<ColumnDefinition Width="150" />

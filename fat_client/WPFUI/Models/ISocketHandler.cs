@@ -7,6 +7,7 @@ namespace WPFUI.Models
 {
     public interface ISocketHandler
     {
+        string avatarChangePending { get; set; }
         bool canConnect { get; set; }
         Socket socket { get; set; }
         string traitJSon { get; set; }

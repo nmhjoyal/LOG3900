@@ -35,6 +35,11 @@ namespace WPFUI.Models
             catch { return "/Resources/apple.png"; }
         }
 
+        public string userAvatarSource
+        {
+            get { return _avatarName; }
+        }
+
         public void fillAvatars()
         {
             _avatars.Add(new Avatar("/Resources/apple.png", "APPLE"));
