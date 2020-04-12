@@ -215,11 +215,13 @@
                                 </ItemsControl>
 
 
-                            <ItemsControl ItemsSource="{Binding MatchesHistory.PlayerNames}" Width="120" Grid.Column="4" Grid.Row="2">
+                            <ItemsControl ItemsSource="{Binding StatsClient.MatchesHistory}" Width="120" Grid.Column="4" Grid.Row="2">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Vertical">
-                                            <TextBlock  Height="20" FontSize="12" Width="120" Text="{Binding }" Foreground="Black" TextAlignment="Center"></TextBlock>
+                                            <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                                                <TextBlock  Height="20" FontSize="12" Width="120" Text="{Binding PlayerNames }" Foreground="Black" TextAlignment="Center"></TextBlock>
+                                            </ScrollViewer>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
