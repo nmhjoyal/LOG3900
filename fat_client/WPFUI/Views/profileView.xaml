@@ -181,7 +181,7 @@
 
                 
                 <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Vertical" Grid.ColumnSpan="6" >
-                    <ScrollViewer Grid.Column="6" Grid.Row="2" Grid.ColumnSpan="6" Height="350" >
+                    <ScrollViewer Grid.Column="6" Grid.Row="2" Grid.ColumnSpan="6" Height="350" VerticalScrollBarVisibility="Hidden">
                         <StackPanel Orientation="Horizontal">
                             
                             <ItemsControl  ItemsSource="{Binding StatsClient.MatchesHistory}"  Grid.Column="1" Grid.Row="2" Width="120">
