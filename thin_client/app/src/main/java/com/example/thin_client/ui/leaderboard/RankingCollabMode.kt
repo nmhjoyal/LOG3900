@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.thin_client.R
+import com.example.thin_client.data.app_preferences.PreferenceHandler
+import com.example.thin_client.data.model.RankClient
 
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -43,7 +45,15 @@ class RankingCollabMode : Fragment() {
     private fun refreshRankingAdapter() {
       adapter.clear()
        for (ranking in LeaderboardManager.collabRankingList) {
-           adapter.add(LeaderboardItem(ranking))
+           if(ranking.username == PreferenceHandler(context!!).getUser().username){
+               linearLayout.visibility= View.VISIBLE
+               text_view_collab_current_username.text = ranking.username
+               collab_current_user_position.text = ranking.pos.toString()
+               text_view_collab_ranking_score.text = ranking.score.toString()
+           } else {
+               adapter.add(LeaderboardItem(ranking))
+           }
+
         }
     }
 

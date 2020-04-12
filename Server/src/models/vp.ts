@@ -171,39 +171,39 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
     [
         MR_AVOCADO,
         {
-            startMatch: "TODO",
+            startMatch: "Hello Everyone, I hope you are all doing great and ready to make friends :) ",
             endTurn: [
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO"
+                "Aww, Too bad! I'm sure you'll do better next time.",
+                "Well done, don't lose hope. You are great!",
+                "Don't worry, everything will be alright.",
+                "It's okay to lose sometimes. You know what they say: one step back, two steps forward",
+                "You might have lost the round, but you definitely won a friend.",
+                "It's just a game. You are worth more than that",
+                "Can we still be friends ?",
+                "You make me smile.",
+                "What do you say we go for coffee after this game ?",
+                "I got your back"
             ],
-            hint: "TODO" + INSERT_HINT
+            hint: "You know, it's only because I consider you a friend. There you go :" + INSERT_HINT
         },
     ],
     [
         LORD_BANANA,
         {
-            startMatch: "TODO",
+            startMatch: "First of all, you have to refer to me as Lord. Now let's play.",
             endTurn: [
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO"
+                "See? You should listen to me",
+                "The next time you don't follow the order, I will make sure you suffer from it.",
+                "1, 2, 3, 4. Praise the Lord Banana! 5, 6, 7, 8. I will listen to what he says!",
+                "I'm the one with all the answers!",
+                "Lord Banana is the King of the World and you should act like it!",
+                "You wish you could be me. I'm too charismatic.",
+                "Next wrong answer and you're out!",
+                "It is not truth that matters, but victory. - Lord Banana",
+                "If you win, you need not have to explain...If you lose, you should not be there to explain!",
+                "As in everything, Lord Banana is the best instructor."
             ],
-            hint: "TODO" + INSERT_HINT
+            hint: "Obstacles do not exist to be surrendered to, but only to be broken. So here's a hint:" + INSERT_HINT
         },
     ],
     [
@@ -355,7 +355,7 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
                 "I hope my lasagna doesn't burn while I play this game with you guys.",
                 "I love cooking for my friends, I would love for you to taste my dishes"
             ],
-            hint: "The hint is " + INSERT_HINT + ". I will make sure my lasagna is not burning."
+            hint: "The hint is " + INSERT_HINT + ". Now, just let me make sure my lasagna is not burning."
         },
     ],
     [

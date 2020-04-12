@@ -19,6 +19,7 @@ namespace WPFUI.Models
         string password { get; set; }
         BindableCollection<SelectableRoom> selectableJoinedRooms { get; set; }
         BindableCollection<SelectableRoom> selectablePublicRooms { get; set; }
+        string userAvatarSource { get; }
         string userName { get; set; }
 
         void addGameRoom(Room room);
@@ -32,6 +33,7 @@ namespace WPFUI.Models
         void fixAllRooms(PublicProfile profile);
         string getAvatarSource(string avatarName);
         void Handle(joinedRoomReceived message);
+        void Handle(refreshInvitesEvent message);
         void Handle(roomsRetrievedEvent message);
     }
 }
