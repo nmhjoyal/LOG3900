@@ -158,6 +158,7 @@
     <Compile Include="EventModels\ManuelleIIEvent.cs" />
     <Compile Include="EventModels\passwordMismatchEvent.cs" />
     <Compile Include="EventModels\previewDoneEvent.cs" />
+    <Compile Include="EventModels\privateProfileConfirmedEvent.cs" />
     <Compile Include="EventModels\refreshInvitesEvent.cs" />
     <Compile Include="EventModels\refreshRoomsEvent.cs" />
     <Compile Include="EventModels\refreshMessagesEvent.cs" />

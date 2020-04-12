@@ -69,6 +69,15 @@ namespace WPFUI.Models
             set { _traitJSON = value; }
         }
 
+        public long getUnixTimeStamp()
+        {
+            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            System.DateTime dtDateTimeNow = DateTime.UtcNow;
+            TimeSpan diff = dtDateTimeNow - dtDateTime;
+
+            return (long)diff.TotalMilliseconds;
+        }
+
         public Socket socket { get => this._socket; set => throw new NotImplementedException(); }
 
         public SocketHandler(IUserData userdata, IEventAggregator events)
@@ -164,8 +173,7 @@ namespace WPFUI.Models
                     {
                         getPublicChannels();
                         Message[] messages = new Message[1];
-                        // TODO: Mettre le bon timestamp
-                        messages[0] = new Message("Admin", _userdata.userName + " joigned the room.", 0, _roomToBeCreated);
+                        messages[0] = new Message("Admin", _userdata.userName + " joigned the room.", getUnixTimeStamp(), _roomToBeCreated);
                         /* TODO: Ajouter l'avatar du user dans le dictionnaire */
                         _userdata.addJoinedRoom(new Room(_roomToBeCreated, messages, new Dictionary<string, string>()), true);
                     }
@@ -173,8 +181,7 @@ namespace WPFUI.Models
                     {
                         getPublicChannels();
                         Message[] messages = new Message[1];
-                        // TODO: Mettre le bon timestamp
-                        messages[0] = new Message("Admin", _userdata.userName + " joigned the room.", 0, _roomToBeCreated);
+                        messages[0] = new Message("Admin", _userdata.userName + " joigned the room.", getUnixTimeStamp(), _roomToBeCreated);
                         /* TODO: Ajouter l'avatar du user dans le dictionnaire */
                         _userdata.addJoinedRoom(new Room(_roomToBeCreated, messages, new Dictionary<string, string>()), false);
                     }
@@ -293,7 +300,8 @@ namespace WPFUI.Models
                 {
                     _userdata.avatarName = avatarChangePending;
                     _events.PublishOnUIThread(new avatarUpdated());
-                } else
+                }
+                else
                 {
                     _events.PublishOnUIThread(new appWarningEvent((string)json.log_message));
                 }
@@ -396,6 +404,21 @@ namespace WPFUI.Models
                 return result;
             }
         }
+
+        public Object TestDELETEWebRequest(string url)
+        {
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(this.baseURL + url);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "DELETE";
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                var result = streamReader.ReadToEnd();
+                return result;
+            }
+        }
+
         public void onDrawing(StrokeCollection Traits, Dictionary<Stroke, int> strokes)
         {
             string drawersTool = "";
@@ -639,13 +662,6 @@ namespace WPFUI.Models
                     _events.PublishOnUIThread(new appWarningEvent((string)json.feedback.log_message));
                 }
             });
-
-            this.socket.On("unexpected_leave", () =>
-            {
-                this.offWaitingRoom();
-                this._events.PublishOnUIThread(new joinGameEvent());
-                _events.PublishOnUIThread(new appWarningEvent("Unexpected match leave"));
-            });
         }
 
         public void offWaitingRoom()
@@ -655,7 +671,6 @@ namespace WPFUI.Models
             this.socket.Off("vp_added");
             this.socket.Off("vp_removed");
             this.socket.Off("match_started");
-            this.socket.Off("unexpected_leave");
         }
 
         public void onMatch(StartTurn startTurn, EndTurn endTurn, GuessesLeft guessesLeft)
@@ -700,8 +715,6 @@ namespace WPFUI.Models
             this.socket.On("unexpected_leave", () =>
             {
                 this.offMatch();
-                socket.Emit("leave_chat_room", _userdata.matchId);
-                socket.Emit("leave_match");
                 this._events.PublishOnUIThread(new joinGameEvent());
                 _events.PublishOnUIThread(new appWarningEvent("Unexpected match leave"));
             });

@@ -30,7 +30,7 @@
 
 
         <Border Background="#018577" BorderThickness="5" Grid.ColumnSpan="1" Grid.Column="1" Grid.Row="3" CornerRadius="10" Height="40">
-            <TextBlock FontSize="14" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Game mode:" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="3"/>
+            <TextBlock FontSize="14" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="3"><Run Text="Match"/><Run Text=" mode:"/></TextBlock>
         </Border>
         <ComboBox Width="auto" Grid.Column="2" Grid.Row="3"  Name="modecomboBox" Margin="10,0,10,0">
             <ComboBoxItem Content="Free For All"/>
@@ -65,6 +65,6 @@
         </ComboBox>
 
 		<Button HorizontalAlignment="Right" BorderBrush="{x:Null}" Background="#D6EFE9" Grid.Column="2" Grid.Row="9" Content="Lets go! " Foreground="#00584C" PreviewMouseDown="createMatch"/>
-		<TextBlock FontSize="40"  Foreground="#00584C" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">Create your game!</TextBlock>
+		<TextBlock FontSize="40"  Foreground="#00584C" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">Create your match!</TextBlock>
     </Grid>
 </UserControl>

@@ -13,6 +13,8 @@ import com.example.thin_client.data.model.RankClient
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.collab_ranking_list.*
+import kotlinx.android.synthetic.main.collab_ranking_list.linearLayout
+import kotlinx.android.synthetic.main.onevsone_ranking_list.*
 
 class RankingCollabMode : Fragment() {
 
@@ -21,7 +23,14 @@ class RankingCollabMode : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        for (ranking in LeaderboardManager.collabRankingList) {
+            if(ranking.username == PreferenceHandler(context!!).getUser().username){
+                linearLayout.visibility= View.VISIBLE
+                text_view_collab_current_username.text = LeaderboardManager.collabCurrentPlayer.username
+                collab_current_user_position.text = LeaderboardManager.collabCurrentPlayer.pos.toString()
+                text_view_collab_ranking_score.text = LeaderboardManager.collabCurrentPlayer.score.toString()
+            }
+        }
         refreshRankingAdapter()
         collab_rankinglist.adapter = adapter
 
@@ -45,13 +54,7 @@ class RankingCollabMode : Fragment() {
     private fun refreshRankingAdapter() {
       adapter.clear()
        for (ranking in LeaderboardManager.collabRankingList) {
-           if(ranking.username == PreferenceHandler(context!!).getUser().username){
-               linearLayout.visibility= View.VISIBLE
-               text_view_collab_current_username.text = ranking.username
-               collab_current_user_position.text = ranking.pos.toString()
-               text_view_collab_ranking_score.text = ranking.score.toString()
-           }
-           adapter.add(LeaderboardItem(ranking))
+               adapter.add(LeaderboardItem(ranking))
         }
     }
 
