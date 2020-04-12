@@ -28,7 +28,10 @@ namespace WPFUI.Models
         public bool _canConnect;
         private string _traitJSON;
         private string _roomToBeCreated;
+        private string roomToBeDeleted;
+        private Boolean _isRoomToBeCreatedPrivate;
         private string baseURL;
+        private string roomToBeLeft;
 
 
         public bool canConnect
@@ -93,12 +96,6 @@ namespace WPFUI.Models
                  _userdata.addMessage(newMessage);
              });
 
-            /*_socket.On("new_client", (socketId) =>
-            {
-                MessageModel newMessageModel = new MessageModel("Nouvelle connection de: " + socketId.ToString(), "Server");
-                _userdata.messages.Add(newMessageModel);
-                ///Console.WriteLine(socketId + " is connected");
-            });*/
 
             _socket.On("user_signed_out", (feedback) =>
             {
@@ -112,6 +109,7 @@ namespace WPFUI.Models
 
             _socket.On("user_joined_room", (feedback) =>
             {
+                Console.WriteLine("qqn a join une room");
                 dynamic magic = JsonConvert.DeserializeObject(feedback.ToString());
                 if (magic.room_joined != null & magic.isPrivate != null)
                 {
@@ -120,11 +118,21 @@ namespace WPFUI.Models
                     {
                         if (fb.isPrivate)
                         {
-                            _userdata.addJoinedRoom(fb.room_joined);
+                            List<Message> messages = fb.room_joined.messages.ToList();
+                            // TODO: Mettre le bon timestamp
+                            messages.Add(new Message("Admin", _userdata.userName + " joigned the room.", 0, fb.room_joined.id));
+                            fb.room_joined.messages = messages.ToArray();
+                            /* TODO: Ajouter l'avatar du user dans le dictionnaire */
+                            _userdata.addJoinedRoom(fb.room_joined, true);
                         }
                         else
                         {
-                            _userdata.addJoinedRoom(fb.room_joined);
+                            List<Message> messages = fb.room_joined.messages.ToList();
+                            // TODO: Mettre le bon timestamp
+                            messages.Add(new Message("Admin", _userdata.userName + " joigned the room.", 0, fb.room_joined.id));
+                            fb.room_joined.messages = messages.ToArray();
+                            /* TODO: Ajouter l'avatar du user dans le dictionnaire */
+                            _userdata.addJoinedRoom(fb.room_joined, false);
                         }
                     }
                     else
@@ -150,22 +158,153 @@ namespace WPFUI.Models
 
             _socket.On("room_created", (feedback) =>
             {
+                Console.WriteLine("qqn a create une room");
+                Console.WriteLine(feedback);
                 Feedback json = JsonConvert.DeserializeObject<Feedback>(feedback.ToString());
                 if (json.status & _roomToBeCreated != null)
                 {
-                    getPublicChannels();
-                    _userdata.addJoinedRoom(new Room(_roomToBeCreated, new Message[0], new Dictionary<string, string>()));
+                    if (_isRoomToBeCreatedPrivate)
+                    {
+                        getPublicChannels();
+                        Message[] messages = new Message[1];
+                        // TODO: Mettre le bon timestamp
+                        messages[0] = new Message("Admin", _userdata.userName + " joigned the room.", 0, _roomToBeCreated);
+                        /* TODO: Ajouter l'avatar du user dans le dictionnaire */
+                        _userdata.addJoinedRoom(new Room(_roomToBeCreated, messages, new Dictionary<string, string>()), true);
+                    }
+                    else
+                    {
+                        getPublicChannels();
+                        Message[] messages = new Message[1];
+                        // TODO: Mettre le bon timestamp
+                        messages[0] = new Message("Admin", _userdata.userName + " joigned the room.", 0, _roomToBeCreated);
+                        /* TODO: Ajouter l'avatar du user dans le dictionnaire */
+                        _userdata.addJoinedRoom(new Room(_roomToBeCreated, messages, new Dictionary<string, string>()), false);
+                    }
                     _roomToBeCreated = null;
-                    /* TODO: Ajouter l'avatar du user dans le dictionnaire */
+                    _isRoomToBeCreatedPrivate = false;
                 }
+                else
+                {
+                    _events.PublishOnUIThread(new appWarningEvent(json.log_message));
+                }
+            });
+
+            _socket.On("user_sent_invite", (feedback) =>
+            {
+                dynamic json = JsonConvert.DeserializeObject(feedback.ToString());
+                if (!(Boolean)json.status)
+                {
+                    _events.PublishOnUIThread(new appWarningEvent((string)json.log_message));
+                }
+
+            });
+
+            _socket.On("receive_invite", (feedback) =>
+            {
+                dynamic json = JsonConvert.DeserializeObject(feedback.ToString());
+                if (_userdata.invites.Where(x => x.uid == ((Invitation)json).uid).Count() == 0)
+                {
+                    _userdata.invites.Add((Invitation)json);
+                }
+
+            });
+
+            _socket.On("avatar_updated", (feedback) =>
+            {
+                Console.WriteLine(feedback);
+                dynamic json = JsonConvert.DeserializeObject(feedback.ToString());
+                Console.WriteLine("avatar update dans la room :" + (string)json.roomId);
+                PublicProfile pp = new PublicProfile((string)json.updatedProfile.username, (string)json.updatedProfile.avatar);
+                _userdata.addModifiedProfile(pp);
+
+            });
+
+            _socket.On("user_left_room", (feedback) =>
+            {
+                dynamic json = JsonConvert.DeserializeObject(feedback.ToString());
+                if ((Boolean)json.status)
+                {
+                    IEnumerable<SelectableRoom> enumRoom = _userdata.selectableJoinedRooms.Where(x => x.id == roomToBeLeft);
+                    BindableCollection<SelectableRoom> roomsTobeDeleted = new BindableCollection<SelectableRoom>(enumRoom);
+
+                    foreach (SelectableRoom s in roomsTobeDeleted)
+                    {
+                        _userdata.selectableJoinedRooms.Remove(s);
+                    }
+                    _userdata.selectableJoinedRooms.Refresh();
+
+                    if (roomToBeLeft == userdata.currentRoomId)
+                    {
+                        _userdata.changeChannel("General");
+                    }
+                }
+                else
+                {
+                    roomToBeLeft = null;
+                    _events.PublishOnUIThread(new appWarningEvent((string)json.log_message));
+                }
+
+
+            });
+
+            _socket.On("room_deleted", (feedback) =>
+            {
+                dynamic json = JsonConvert.DeserializeObject(feedback.ToString());
+                if ((Boolean)json.status)
+                {
+                    IEnumerable<SelectableRoom> enumRoomJoigned = _userdata.selectableJoinedRooms.Where(x => x.id == roomToBeDeleted);
+                    BindableCollection<SelectableRoom> joignedRoomsTobeDeleted = new BindableCollection<SelectableRoom>(enumRoomJoigned);
+
+                    IEnumerable<SelectableRoom> enumRoomPublic = _userdata.selectablePublicRooms.Where(x => x.id == roomToBeDeleted);
+                    BindableCollection<SelectableRoom> publicRoomsTobeDeleted = new BindableCollection<SelectableRoom>(enumRoomPublic);
+
+                    foreach (SelectableRoom s in joignedRoomsTobeDeleted)
+                    {
+                        _userdata.selectableJoinedRooms.Remove(s);
+                    }
+
+
+                    foreach (SelectableRoom s in publicRoomsTobeDeleted)
+                    {
+                        _userdata.selectablePublicRooms.Remove(s);
+                    }
+                    _userdata.selectablePublicRooms.Refresh();
+                    _userdata.selectableJoinedRooms.Refresh();
+
+                    if (roomToBeDeleted == userdata.currentRoomId)
+                    {
+                        _userdata.changeChannel("General");
+                    }
+                }
+                else
+                {
+                    roomToBeDeleted = null;
+                    _events.PublishOnUIThread(new appWarningEvent((string)json.log_message));
+                }
+
+
             });
         }
 
-        public void createRoom(string roomID)
+        public void createRoom(string roomID, Boolean isPrivate)
         {
             _roomToBeCreated = roomID;
-            CreateRoom cR = new CreateRoom(roomID, false);
+            _isRoomToBeCreatedPrivate = isPrivate;
+            CreateRoom cR = new CreateRoom(roomID, isPrivate);
             _socket.Emit("create_chat_room", JsonConvert.SerializeObject(cR));
+        }
+
+        public void leaveRoom(string roomID)
+        {
+            roomToBeLeft = roomID;
+            _socket.Emit("leave_chat_room", roomID);
+        }
+
+        public void deleteRoom(string roomID)
+        {
+            roomToBeDeleted = roomID;
+            _socket.Emit("delete_chat_room", roomID);
         }
 
         public void joinRoom(string roomID)
@@ -315,7 +454,8 @@ namespace WPFUI.Models
                         this.Dispatcher.Invoke(() =>
                         Traits[currentStrokeIndex].StylusPoints.Add(stylusPoint)
                     );
-                    } catch(Exception e) { _events.PublishOnUIThread(new appWarningEvent("New_point error")); }
+                    }
+                    catch (Exception e) { _events.PublishOnUIThread(new appWarningEvent("New_point error")); }
                 }
                 else if (drawersTool == "efface_trait" || drawersTool == "efface_segment")
                 {

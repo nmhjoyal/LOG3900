@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WPFUI.Commands;
 using WPFUI.EventModels;
 using WPFUI.Models;
 
@@ -16,11 +17,14 @@ namespace WPFUI.ViewModels
 		private string _changedFirstName;
 		private string _changedLastName;
 		private string _newchangedPassword;
+		private BindableCollection<Avatar> _avatars;
 		private string _newConfirmedPassword;
 		private IUserData _userData;
 		private IEventAggregator _events;
 		private ISocketHandler _socketHandler;
 		private StatsClient statsClient;
+		private string _selectedAvatar;
+		public IselectAvatarCommand _selectAvatarCommand { get; set; }
 
 		private Rank _rank;
 
@@ -45,7 +49,7 @@ namespace WPFUI.ViewModels
 			get { return this._matchHistory; }
 
 		}
-
+		
 		public BindableCollection<MatchHistory> accesseur
 		{
 			get{
@@ -58,6 +62,36 @@ namespace WPFUI.ViewModels
 			_events = events;
 			_socketHandler = socketHandler;
 			this.statsClient = JsonConvert.DeserializeObject<StatsClient>(this._socketHandler.TestGETWebRequest("/profile/stats/" + this._userData.userName).ToString());
+			_avatars = new BindableCollection<Avatar>();
+			fillAvatars();
+			_selectAvatarCommand = new selectAvatarCommand(events);
+			_selectedAvatar = null;
+		}
+
+		public void fillAvatars()
+		{
+			_avatars.Add(new Avatar("/Resources/apple.png", "APPLE"));
+			_avatars.Add(new Avatar("/Resources/avocado.png", "AVOCADO"));
+			_avatars.Add(new Avatar("/Resources/banana.png", "BANANA"));
+			_avatars.Add(new Avatar("/Resources/cherry.png", "CHERRY"));
+			_avatars.Add(new Avatar("/Resources/grape.png", "GRAPE"));
+			_avatars.Add(new Avatar("/Resources/kiwi.png", "KIWI"));
+			_avatars.Add(new Avatar("/Resources/lemon.png", "LEMON"));
+			_avatars.Add(new Avatar("/Resources/orange.png", "ORANGE"));
+			_avatars.Add(new Avatar("/Resources/pear.png", "PEAR"));
+			_avatars.Add(new Avatar("/Resources/pineapple.png", "PINEAPPLE"));
+			_avatars.Add(new Avatar("/Resources/strawberry.png", "STRAWBERRY"));
+			_avatars.Add(new Avatar("/Resources/watermelon.png", "WATERMELON"));
+		}
+
+		public BindableCollection<Avatar> avatars
+		{
+			get { return _avatars; }
+			set
+			{
+				_avatars = value;
+				NotifyOfPropertyChange(() => avatars);
+			}
 		}
 		public StatsClient StatsClient
 		{
@@ -92,6 +126,20 @@ namespace WPFUI.ViewModels
 		public void goBack()
 		{
 			_events.PublishOnUIThread(new goBackMainEvent());
+		}
+
+		public void Handle(refreshUIEvent message)
+		{
+			foreach (Avatar a in avatars)
+			{
+				a.resetColor();
+			}
+
+			int avatarIndex = avatars.IndexOf(avatars.Single(i => i._name == message.fruitSelected));
+			_selectedAvatar = message.fruitSelected;
+			avatars[avatarIndex].changeColor("Black");
+			avatars.Refresh();
+			NotifyOfPropertyChange(null);
 		}
 	}
 }

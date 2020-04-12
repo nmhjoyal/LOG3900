@@ -8,21 +8,9 @@ export default class MatchController {
 
     /**
      * 
-     * Draw test events
+     * Draw events
      * 
      */
-    @OnMessage("connect_free_draw")
-    public async connect_free_draw(@ConnectedSocket() socket: SocketIO.Socket) {
-        console.log("connected to free draw");
-        serverHandler.matchHandler.enterFreeDrawTestRoom(socket);
-    }
-
-    @OnMessage("disconnect_free_draw")
-    public async disconnect_free_draw(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
-        console.log("disconnected to free draw");
-        serverHandler.matchHandler.leaveFreeDrawTestRoom(io, socket);
-    }
-
     @OnMessage("stroke")
     public stroke(@ConnectedSocket() socket: SocketIO.Socket, @MessageBody() stroke: Stroke) {
         serverHandler.stroke(socket, stroke);
@@ -48,9 +36,14 @@ export default class MatchController {
         serverHandler.clear(socket);
     }
 
-    @OnMessage("get_drawing")
-    public async get_drawing(@SocketIO() io: SocketIO.Server) {
-        await serverHandler.matchHandler.getDrawing(io);
+    /**
+     * 
+     * Preview
+     * 
+     */
+    @OnMessage("preview")
+    public async preview(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() gamePreview: GamePreview) {
+        await serverHandler.matchHandler.preview(socket, gamePreview);
     }
 
     /**
@@ -111,15 +104,5 @@ export default class MatchController {
     @OnMessage("hint")
     public hint(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket) {
         serverHandler.hint(io, socket);
-    }
-
-    /**
-     * 
-     * Preview
-     * 
-     */
-    @OnMessage("preview")
-    public async preview(@SocketIO() io: SocketIO.Server, @ConnectedSocket() socket: SocketIO.Socket, @MessageBody() gamePreview: GamePreview) {
-        await serverHandler.matchHandler.preview(socket, gamePreview);
     }
 }

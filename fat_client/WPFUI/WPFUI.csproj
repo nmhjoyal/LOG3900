@@ -172,6 +172,7 @@
     <Compile Include="EventModels\waitingRoomEvent.cs" />
     <Compile Include="EventModels\wordSelectedEvent.cs" />
     <Compile Include="Models\CreateGame.cs" />
+    <Compile Include="Models\Invitation.cs" />
     <Compile Include="Models\ISocketHandler.cs" />
     <Compile Include="Models\IUserData.cs" />
     <Compile Include="Models\Match.cs" />
@@ -526,6 +527,8 @@
     <Resource Include="Resources\chat.gif" />
     <Resource Include="Resources\chatBox\plus.png" />
     <Resource Include="Resources\chatBox\invite.png" />
+    <Resource Include="Resources\chatBox\badge.png" />
+    <Resource Include="Resources\chatBox\robot.png" />
     <Content Include="Resources\cherry.svg" />
     <Resource Include="Resources\grape.png" />
     <Resource Include="Resources\duck.gif" />

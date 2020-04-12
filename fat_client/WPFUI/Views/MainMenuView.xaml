@@ -55,7 +55,7 @@
 
 		<Button x:Name="freeDraw" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="7" MaxWidth="200" Background="#FF018577" Margin="0,20,0,0" BorderBrush="{x:Null}">
 			<StackPanel Orientation="Horizontal">
-				<TextBlock Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Dessin Libre</TextBlock>
+				<TextBlock Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Free Draw</TextBlock>
 				<Image Source="/Resources/pen.png" Height="22"></Image>
 			</StackPanel>
 		</Button>
@@ -63,13 +63,13 @@
 
 		<Button x:Name="joinGame" Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="7" MaxWidth="200" Background="#FF01C853" Margin="0,20,0,0" BorderBrush="{x:Null}" Height="50">
 			<StackPanel Orientation="Horizontal">
-				<TextBlock Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Joindre une partie</TextBlock>
+				<TextBlock Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Join a match</TextBlock>
 				<Image Source="/Resources/joystick.png" Height="25"></Image>
 			</StackPanel>
 		</Button>
 		<Button x:Name="creationJeu" Grid.Column="0" Grid.Row="7" Grid.ColumnSpan="7" MaxWidth="200" Background="#FF018677" Margin="0,20,0,0" BorderBrush="{x:Null}">
 			<StackPanel Orientation="Horizontal">
-				<TextBlock Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Créer un jeu</TextBlock>
+				<TextBlock Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Create a game</TextBlock>
 				<Image Source="/Resources/add.png" Height="20"></Image>
 			</StackPanel>
 		</Button>

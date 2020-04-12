@@ -50,11 +50,11 @@
 			<TextBlock FontSize="14" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Choose the mode" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="3"/>
 		</Border>
 		<ComboBox Grid.ColumnSpan="4" Grid.Column="5" Grid.Row="3"  Name="comboBox"  Width="200">
-			<ComboBoxItem Content="Mode 1"/>
-			<ComboBoxItem Content="Mode 2"/>
-			<ComboBoxItem Content="Mode 3"/>
-			<ComboBoxItem Content="Mode 4"/>
-		</ComboBox>
+            <ComboBoxItem Content="Free For All"/>
+            <ComboBoxItem Content="Sprint solo"/>
+            <ComboBoxItem Content="Sprint coop"/>
+            <ComboBoxItem Content="1 vs 1"/>
+        </ComboBox>
 		<Border BorderBrush="Black" BorderThickness="4" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="15" Grid.RowSpan="5"/>
 		<Border BorderBrush="Black" BorderThickness="2" Grid.Column="2" Grid.Row="6" Grid.ColumnSpan="13" Grid.RowSpan="3"/>
 		<Border BorderBrush="Black" BorderThickness="1" Grid.Column="4" Grid.Row="6" Grid.ColumnSpan="3" Grid.RowSpan="3"/>

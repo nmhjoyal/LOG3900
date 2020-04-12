@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    public class chatBoxViewModel: Screen, IHandle<refreshMessagesEvent>, IHandle<addMessageEvent>, IHandle<createTheRoomEvent>,
+    public class chatBoxViewModel: Screen, IHandle<refreshMessagesEvent>, IHandle<addMessageEvent>,
                                    IHandle<refreshRoomsEvent>, IHandle<resetToGeneralEvent>
     {
         private IEventAggregator _events;
@@ -20,6 +21,7 @@ namespace WPFUI.ViewModels
         private string _currentMessage;
         private ISocketHandler _socketHandler;
         private BindableCollection<SelectableRoom> _availableRooms;
+        private BindableCollection<Invitation> _invites;
         private BindableCollection<SelectableRoom> _joinedRooms;
         private string _searchBarText;
         public IchangeChannelCommand _changeChannelCommand { get; set; }
@@ -90,7 +92,8 @@ namespace WPFUI.ViewModels
         {
             if (searchBarText != "" & searchBarText != null)
             {
-                return new BindableCollection<SelectableRoom>(_availableRooms.Where(room => room.id.StartsWith(searchBarText)));
+                return new BindableCollection<SelectableRoom>(_availableRooms.
+                    Where(room => room.id.ToLower().StartsWith(searchBarText.ToLower())));
             } else
             {
                 return _availableRooms;
@@ -121,6 +124,7 @@ namespace WPFUI.ViewModels
             messages = userdata.messages;
             _availableRooms = userdata.selectablePublicRooms;
             _joinedRooms = userdata.selectableJoinedRooms;
+            _invites = userdata.invites;
             currentRoomId = userdata.currentRoomId;
             _changeChannelCommand = new changeChannelCommand(userdata);
             _selectAvailableRoomCommand = new selectAvailableRoomCommand(events);
@@ -128,6 +132,34 @@ namespace WPFUI.ViewModels
             _selectedJoinedRoom = null;
             _selectedAvailableRoom = null;
             _searchBarText = null;
+        }
+
+        public BindableCollection<Invitation> invites
+        {
+            get { return _invites; }
+            set { _invites = value;
+                  NotifyOfPropertyChange(() => invites);
+                  NotifyOfPropertyChange(() => nbInvites);
+                  NotifyOfPropertyChange(() => nbInvitesVisibility);
+            }
+        }
+
+        public int nbInvites
+        {
+            get { return _invites.Count(); }
+        }
+
+        public string nbInvitesVisibility
+        {
+            get {
+                if (_invites.Count() > 0)
+                {
+                    return "Visible";
+                } else
+                {
+                    return "Hidden";
+                }
+                 }
         }
 
         public string searchBarText
@@ -176,12 +208,9 @@ namespace WPFUI.ViewModels
             _socketHandler.getPublicChannels();
         }
 
-        public void createRoom()
+        public void createRoom(string roomID, Boolean isPrivate)
         {
-            if (createdRoomName != null & createdRoomName != "")
-            {
-                _socketHandler.createRoom(createdRoomName);
-            }
+            _socketHandler.createRoom(roomID, isPrivate);
         }
 
         public void goBack()
@@ -194,13 +223,22 @@ namespace WPFUI.ViewModels
             _socketHandler.joinRoom(_selectedAvailableRoom);
         }
 
-        /* Handlers -----------------------------------------------------------------------------------------------*/
-        public void Handle(createTheRoomEvent message)
+        public void deleteRoom()
         {
-            Room newRoom = new Room(createdRoomName, new Models.Message[0], new Dictionary<string, string>());
-            _userData.addJoinedRoom(newRoom);
-            createdRoomName = "";
+            _socketHandler.deleteRoom(_selectedAvailableRoom);
         }
+
+        public void leaveRoom(string roomID)
+        {
+            _socketHandler.leaveRoom(roomID);
+        }
+
+        public void joinInvitedRoom( string invitedRoomId)
+        {
+            _socketHandler.joinRoom(invitedRoomId);
+        }
+
+        /* Handlers -----------------------------------------------------------------------------------------------*/
 
         public void Handle(refreshRoomsEvent message)
         {
@@ -265,6 +303,16 @@ namespace WPFUI.ViewModels
             this.messages = _userData.messages;
             this.currentRoomId = _userData.currentRoomId;
             _events.PublishOnUIThread(new changeChatOptionsEvent(true));
+        }
+
+        public void sendInvite(string roomID, string player)
+        {
+            dynamic invitation = new System.Dynamic.ExpandoObject();
+            invitation.id = roomID;
+            invitation.username = player;
+
+            _socketHandler.socket.Emit("send_invite", JsonConvert.SerializeObject(invitation));
+
         }
 
     }

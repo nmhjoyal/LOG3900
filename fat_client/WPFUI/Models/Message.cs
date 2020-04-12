@@ -13,6 +13,7 @@ namespace WPFUI.Models
         string _content;
         double _date;
         string _roomId;
+        string _avatarSource;
         public Message(string username,
         string content,
         double date,
@@ -71,6 +72,12 @@ namespace WPFUI.Models
             {
                 return "";
             }
+        }
+
+        public string avatarSource
+        {
+            get { return _avatarSource; }
+            set { _avatarSource = value; }
         }
 
     }

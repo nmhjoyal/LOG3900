@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace WPFUI.Models
 {
+
     public class StatsClient
     {
         public string username;
@@ -19,6 +20,21 @@ namespace WPFUI.Models
         public BindableCollection<long> disconnections;
         public BindableCollection<MatchHistory> matchesHistory;
 
+        //methode prise de: https://ourcodeworld.com/articles/read/865/how-to-convert-an-unixtime-to-datetime-class-and-viceversa-in-c-sharp
+        public  BindableCollection<DateTime> UnixTimeToDateTime(BindableCollection<long> unixtime)
+        {
+            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            BindableCollection<DateTime> tab = new BindableCollection<DateTime>();
+            foreach (long time in unixtime)
+            {
+                dtDateTime = dtDateTime.AddMilliseconds(time).ToLocalTime();
+                tab.Add(dtDateTime);
+                dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+
+            }
+            
+            return tab;
+        }
         public string Username {
             get { return this.username; }
         }
@@ -47,15 +63,16 @@ namespace WPFUI.Models
         {
             get { return this.bestSSS; }
         }
-        public BindableCollection<long> Connections
+        public BindableCollection<DateTime> Connections
         {
-            get { 
-                
-                return this.connections; }
+            get {
+
+                return UnixTimeToDateTime(this.connections); }
         }
-        public BindableCollection<long> Disconnections
+
+        public BindableCollection<DateTime> Disconnections
         {
-            get { return this.disconnections; }
+            get { return UnixTimeToDateTime(this.disconnections); }
         }
         public BindableCollection<MatchHistory> MatchesHistory
         {
@@ -83,17 +100,23 @@ namespace WPFUI.Models
         public BindableCollection<string> playerNames;
         public Rank winner;
         public int myScore;
-       
 
-        public long StartTime
+        //methode prise de: https://ourcodeworld.com/articles/read/865/how-to-convert-an-unixtime-to-datetime-class-and-viceversa-in-c-sharp
+        public DateTime UnixTimeToDateTime(long unixtime)
         {
-            get { return this.startTime; }
+            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            dtDateTime = dtDateTime.AddMilliseconds(unixtime).ToLocalTime();
+            return dtDateTime;
+        }
+        public DateTime StartTime
+        {
+            get { return UnixTimeToDateTime(this.startTime); }
            
         }
 
-        public long EndTime
+        public DateTime EndTime
         {
-            get { return this.endTime; }
+            get { return UnixTimeToDateTime(this.endTime); }
 
         }
         public MatchMode MatchMode
@@ -127,6 +150,7 @@ namespace WPFUI.Models
             this.winner = winner;
             this.myScore = myScore;
         }
+
     
     }
 
