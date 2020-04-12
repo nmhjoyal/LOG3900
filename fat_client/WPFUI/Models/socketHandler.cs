@@ -300,7 +300,8 @@ namespace WPFUI.Models
                 {
                     _userdata.avatarName = avatarChangePending;
                     _events.PublishOnUIThread(new avatarUpdated());
-                } else
+                }
+                else
                 {
                     _events.PublishOnUIThread(new appWarningEvent((string)json.log_message));
                 }
@@ -403,6 +404,21 @@ namespace WPFUI.Models
                 return result;
             }
         }
+
+        public Object TestDELETEWebRequest(string url)
+        {
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(this.baseURL + url);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "DELETE";
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                var result = streamReader.ReadToEnd();
+                return result;
+            }
+        }
+
         public void onDrawing(StrokeCollection Traits, Dictionary<Stroke, int> strokes)
         {
             string drawersTool = "";
