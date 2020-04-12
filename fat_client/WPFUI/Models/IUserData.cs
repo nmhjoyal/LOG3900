@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using System.Collections.Generic;
 using WPFUI.EventModels;
 
 namespace WPFUI.Models
@@ -23,8 +24,13 @@ namespace WPFUI.Models
         void addGameRoom(Room room);
         void addJoinedRoom(Room room, bool isPrivate);
         void addMessage(Message message);
+        void addModifiedProfile(PublicProfile profile);
         void addPublicRoom(Room room);
         void changeChannel(string roomID);
+        void fillAvatars();
+        Dictionary<string, string> findTheMap(string roomID);
+        void fixAllRooms(PublicProfile profile);
+        string getAvatarSource(string avatarName);
         void Handle(joinedRoomReceived message);
         void Handle(roomsRetrievedEvent message);
     }

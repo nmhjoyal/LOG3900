@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +21,36 @@ namespace WPFUI.Models
         private BindableCollection<Message> _messages;
         private BindableCollection<SelectableRoom> _selectablePublicRooms;
         private BindableCollection<SelectableRoom> _selectableJoinedRooms;
+        private BindableCollection<PublicProfile> _modifiedProfiles;
+        private BindableCollection<Avatar> _avatars = new BindableCollection<Avatar>();
         private Room _currentGameRoom;
         private string _matchId;
         private int _nbRounds;
         private IEventAggregator _events;
         private MatchMode _matchMode;
+
+        public string getAvatarSource(string avatarName)
+        {
+            try { return _avatars.Single(i => i.name == avatarName).source; }
+            catch { return "/Resources/apple.png"; }
+        }
+
+        public void fillAvatars()
+        {
+            _avatars.Add(new Avatar("/Resources/apple.png", "APPLE"));
+            _avatars.Add(new Avatar("/Resources/avocado.png", "AVOCADO"));
+            _avatars.Add(new Avatar("/Resources/banana.png", "BANANA"));
+            _avatars.Add(new Avatar("/Resources/cherry.png", "CHERRY"));
+            _avatars.Add(new Avatar("/Resources/grape.png", "GRAPE"));
+            _avatars.Add(new Avatar("/Resources/kiwi.png", "KIWI"));
+            _avatars.Add(new Avatar("/Resources/lemon.png", "LEMON"));
+            _avatars.Add(new Avatar("/Resources/orange.png", "ORANGE"));
+            _avatars.Add(new Avatar("/Resources/pear.png", "PEAR"));
+            _avatars.Add(new Avatar("/Resources/pineapple.png", "PINEAPPLE"));
+            _avatars.Add(new Avatar("/Resources/strawberry.png", "STRAWBERRY"));
+            _avatars.Add(new Avatar("/Resources/watermelon.png", "WATERMELON"));
+            _avatars.Add(new Avatar("/Resources/chatBox/robot.png", "ADMIN"));
+        }
 
         public BindableCollection<Invitation> invites
         {
@@ -112,18 +138,79 @@ namespace WPFUI.Models
         {
             _events = events;
             _events.Subscribe(this);
+            fillAvatars();
             _messages = new BindableCollection<Message>();
             _selectableJoinedRooms = new BindableCollection<SelectableRoom>();
             _selectablePublicRooms = new BindableCollection<SelectableRoom>();
+            _modifiedProfiles = new BindableCollection<PublicProfile>();
             _currentRoomId = null;
             _currentGameRoom = null;
             _avatarName = null;
             _invites = new BindableCollection<Invitation>();
         }
 
+        public void addModifiedProfile(PublicProfile profile)
+        {
+            if (profile.username == _userName)
+            {
+                _avatarName = profile.avatar;
+            }
+
+            PublicProfile alreadyExistingMPP = null;
+            foreach (PublicProfile pp in _modifiedProfiles)
+            {
+                if (pp.username == profile.username)
+                {
+                    alreadyExistingMPP = pp;
+                }
+            }
+
+            if (alreadyExistingMPP != null)
+            {
+                _modifiedProfiles.Remove(alreadyExistingMPP);
+                _modifiedProfiles.Add(profile);
+                fixAllRooms(profile);
+            }
+            else
+            {
+                _modifiedProfiles.Add(profile);
+                fixAllRooms(profile);
+            }
+        }
+
+        public void fixAllRooms(PublicProfile profile)
+        {
+            Boolean modifiedCurrentRoom = false;
+            foreach (SelectableRoom sR in _selectableJoinedRooms)
+            {
+                sR.room.avatars[profile.username] = profile.avatar;
+            }
+
+            foreach (SelectableRoom sR in _selectableJoinedRooms)
+            {
+                foreach (Message m in sR.room.messages)
+                {
+                    if (m.senderName == profile.username)
+                    {
+                        m.avatarSource = getAvatarSource(profile.avatar);
+                        if (m.roomId == _currentRoomId)
+                        {
+                            modifiedCurrentRoom = true;
+                        }
+                    }
+
+                }
+            }
+
+            if (modifiedCurrentRoom)
+            {
+                changeChannel(_currentRoomId);
+            }
+        }
+
+
         public void changeChannel(string roomID)
         {
-            this.currentRoomId = roomID;
             try
             {
                 this.messages = new BindableCollection<Message>((this.selectableJoinedRooms.Single(i => i.id == roomID)).room.messages);
@@ -132,7 +219,7 @@ namespace WPFUI.Models
             {
                 this.messages = new BindableCollection<Message>(this.selectableJoinedRooms.Where(x => x.id == roomID).ToList()[0].room.messages);
             }
-            _currentRoomId = roomID;
+            this.currentRoomId = roomID;
             _events.PublishOnUIThread(new refreshMessagesEvent(this.messages, roomID));
         }
 
@@ -155,7 +242,19 @@ namespace WPFUI.Models
             {
                 if (r.id != null)
                 {
-                    this.selectableJoinedRooms.Add(new SelectableRoom(r));
+                    SelectableRoom sR = new SelectableRoom(r);
+                    foreach (Message m in sR.room.messages)
+                    {
+                        string MessageAvatarName = "";
+                        try { MessageAvatarName = sR.room.avatars[m.senderName]; }
+                        catch { }
+                        if (m.senderName == "Admin")
+                        {
+                            MessageAvatarName = "ADMIN";
+                        }
+                        m.avatarSource = getAvatarSource(MessageAvatarName);
+                    }
+                    this.selectableJoinedRooms.Add(sR);
                 }
             }
 
@@ -169,6 +268,17 @@ namespace WPFUI.Models
             if (roomAlreadyExists.Count() == 0)
             {
                 SelectableRoom sR = new SelectableRoom(room);
+                foreach (Message m in sR.room.messages)
+                {
+                    string MessageAvatarName = "";
+                    try { MessageAvatarName = sR.room.avatars[m.senderName]; }
+                    catch { }
+                    if (m.senderName == "Admin")
+                    {
+                        MessageAvatarName = "ADMIN";
+                    }
+                    m.avatarSource = getAvatarSource(MessageAvatarName);
+                }
                 sR.isPrivate = isPrivate;
                 selectableJoinedRooms.Add(sR);
             }
@@ -192,6 +302,29 @@ namespace WPFUI.Models
         {
             Message[] messagesToUpdate;
             SelectableRoom roomToBeUpdated;
+            Dictionary<string, string> avatars = findTheMap(message.roomId);
+
+            if (avatars != null)
+            {
+                string MessageAvatarName = "";
+                try { MessageAvatarName = avatars[message.senderName]; }
+                catch { }
+                if (message.senderName == "Admin")
+                {
+                    MessageAvatarName = "ADMIN";
+                }
+                if (message.senderName == _userName)
+                {
+                    MessageAvatarName = this._avatarName;
+                }
+                try // Aide si l'avatar vient juste d'etre change et toutes les rooms ont pas pu update
+                {
+                    PublicProfile modifiedProfile = _modifiedProfiles.Single(i => i.username == message.senderName);
+                    MessageAvatarName = modifiedProfile.avatar;
+                }
+                catch { }
+                message.avatarSource = getAvatarSource(MessageAvatarName);
+            }
 
             if (message.roomId == currentRoomId)
             {
@@ -239,6 +372,32 @@ namespace WPFUI.Models
 
             }
 
+        }
+
+        public Dictionary<string, string> findTheMap(string roomID)
+        {
+            try
+            {
+                IEnumerable<SelectableRoom> enumSR = _selectableJoinedRooms.Where(x => x.id == roomID);
+                BindableCollection<SelectableRoom> sRs = new BindableCollection<SelectableRoom>(enumSR);
+                if (sRs.Count() != 1)
+                {
+                    Console.WriteLine("il exite un doublon dans les rooms jointes");
+                }
+                return sRs[0].room.avatars;
+            }
+            catch
+            {
+                if (_currentGameRoom.id == roomID)
+                {
+                    return _currentGameRoom.avatars;
+                }
+                else
+                {
+                    return null;
+                }
+
+            }
         }
     }
 }

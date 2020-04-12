@@ -528,6 +528,7 @@
     <Resource Include="Resources\chatBox\plus.png" />
     <Resource Include="Resources\chatBox\invite.png" />
     <Resource Include="Resources\chatBox\badge.png" />
+    <Resource Include="Resources\chatBox\robot.png" />
     <Content Include="Resources\cherry.svg" />
     <Resource Include="Resources\grape.png" />
     <Resource Include="Resources\duck.gif" />

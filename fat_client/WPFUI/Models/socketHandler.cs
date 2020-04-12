@@ -96,12 +96,6 @@ namespace WPFUI.Models
                  _userdata.addMessage(newMessage);
              });
 
-            /*_socket.On("new_client", (socketId) =>
-            {
-                MessageModel newMessageModel = new MessageModel("Nouvelle connection de: " + socketId.ToString(), "Server");
-                _userdata.messages.Add(newMessageModel);
-                ///Console.WriteLine(socketId + " is connected");
-            });*/
 
             _socket.On("user_signed_out", (feedback) =>
             {
@@ -115,6 +109,7 @@ namespace WPFUI.Models
 
             _socket.On("user_joined_room", (feedback) =>
             {
+                Console.WriteLine("qqn a join une room");
                 dynamic magic = JsonConvert.DeserializeObject(feedback.ToString());
                 if (magic.room_joined != null & magic.isPrivate != null)
                 {
@@ -163,6 +158,7 @@ namespace WPFUI.Models
 
             _socket.On("room_created", (feedback) =>
             {
+                Console.WriteLine("qqn a create une room");
                 Console.WriteLine(feedback);
                 Feedback json = JsonConvert.DeserializeObject<Feedback>(feedback.ToString());
                 if (json.status & _roomToBeCreated != null)
@@ -211,6 +207,16 @@ namespace WPFUI.Models
                 {
                     _userdata.invites.Add((Invitation)json);
                 }
+
+            });
+
+            _socket.On("avatar_updated", (feedback) =>
+            {
+                Console.WriteLine(feedback);
+                dynamic json = JsonConvert.DeserializeObject(feedback.ToString());
+                Console.WriteLine("avatar update dans la room :" + (string)json.roomId);
+                PublicProfile pp = new PublicProfile((string)json.updatedProfile.username, (string)json.updatedProfile.avatar);
+                _userdata.addModifiedProfile(pp);
 
             });
 

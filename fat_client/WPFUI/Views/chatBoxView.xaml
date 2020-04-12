@@ -53,7 +53,7 @@
 					<DataTemplate>
 						<StackPanel Orientation="Vertical" Margin="5,0,0,0">
 							<StackPanel Orientation="Horizontal">
-								<Image Source="account_circle_grey_72x72.png" MaxHeight="25" VerticalAlignment="Center"></Image>
+								<Image Source="{Binding avatarSource}" MaxHeight="25" VerticalAlignment="Center"></Image>
 								<TextBlock Text="{Binding senderName}" Foreground="DarkSlateGray" VerticalAlignment="Center"/>
 							</StackPanel>
 							<TextBlock Text="{Binding content}" Foreground="Black" TextWrapping="Wrap" Margin="0,0,0,0"/>
