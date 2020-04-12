@@ -50,8 +50,10 @@ class RankingCollabMode : Fragment() {
                text_view_collab_current_username.text = ranking.username
                collab_current_user_position.text = ranking.pos.toString()
                text_view_collab_ranking_score.text = ranking.score.toString()
+           } else {
+               adapter.add(LeaderboardItem(ranking))
            }
-           adapter.add(LeaderboardItem(ranking))
+
         }
     }
 

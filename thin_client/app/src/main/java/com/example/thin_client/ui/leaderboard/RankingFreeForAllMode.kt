@@ -47,8 +47,9 @@ class RankingFreeForAllMode : Fragment() {
                 text_view_freeforall_current_username.text = ranking.username
                 freeforall_current_user_position.text = ranking.pos.toString()
                 text_view_freeforall_ranking_score.text = ranking.score.toString()
+            } else {
+                adapter.add(LeaderboardItem(ranking))
             }
-            adapter.add(LeaderboardItem(ranking))
         }
     }
 

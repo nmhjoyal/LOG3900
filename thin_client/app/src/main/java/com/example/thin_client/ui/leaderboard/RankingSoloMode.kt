@@ -50,8 +50,9 @@ class RankingSoloMode : Fragment() {
                 text_view_solo_current_username.text = ranking.username
                 solo_current_user_position.text = ranking.pos.toString()
                 text_view_solo_ranking_score.text = ranking.score.toString()
+            } else {
+                adapter.add(LeaderboardItem(ranking))
             }
-            adapter.add(LeaderboardItem(ranking))
         }
     }
 

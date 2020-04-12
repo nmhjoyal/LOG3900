@@ -47,8 +47,9 @@ class RankingOneVsOneMode : Fragment() {
                 text_view_onevsone_current_username.text = ranking.username
                 onevsone_current_user_position.text = ranking.pos.toString()
                 text_view_onevsone_ranking_score.text = ranking.score.toString()
+            } else {
+                adapter.add(LeaderboardItem(ranking))
             }
-            adapter.add(LeaderboardItem(ranking))
         }
     }
 
