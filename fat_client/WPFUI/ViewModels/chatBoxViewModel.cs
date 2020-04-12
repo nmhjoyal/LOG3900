@@ -310,7 +310,7 @@ namespace WPFUI.ViewModels
             dynamic invitation = new System.Dynamic.ExpandoObject();
             invitation.id = roomID;
             invitation.username = player;
-
+            Console.WriteLine(JsonConvert.SerializeObject(invitation));
             _socketHandler.socket.Emit("send_invite", JsonConvert.SerializeObject(invitation));
 
         }

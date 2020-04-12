@@ -5,26 +5,45 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using WPFUI.Commands;
 using WPFUI.EventModels;
 using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-	class profileViewModel : Screen
+	class profileViewModel : Screen, IHandle<avatarUpdated>
 	{
-		private string _changedUsername;
-		private string _changedFirstName;
-		private string _changedLastName;
-		private string _newchangedPassword;
 		private BindableCollection<Avatar> _avatars;
-		private string _newConfirmedPassword;
 		private IUserData _userData;
 		private IEventAggregator _events;
 		private ISocketHandler _socketHandler;
 		private StatsClient statsClient;
-		private string _selectedAvatar;
-		public IselectAvatarCommand _selectAvatarCommand { get; set; }
+		private int _selectedAvatarIndex;
+		private int nbAvatars;
+
+		public string userName
+		{
+			get { return _userData.userName; }
+		}
+
+		public string userAvatarSource
+		{
+			get { return avatars.Single(x => x._name == _userData.avatarName)._source; }
+		}
+		public string selectedAvatarSource
+		{
+			get { return _avatars[_selectedAvatarIndex].source; }
+		}
+
+		public int selectedAvatarIndex
+		{
+			get { return _selectedAvatarIndex; }
+			set { _selectedAvatarIndex = value;
+				  NotifyOfPropertyChange(() => selectedAvatarIndex);
+				  NotifyOfPropertyChange(() => selectedAvatarSource);
+			}
+		}
 
 		private Rank _rank;
 
@@ -60,13 +79,61 @@ namespace WPFUI.ViewModels
 		{
 			_userData = userdata;
 			_events = events;
+			_events.Subscribe(this);
 			_socketHandler = socketHandler;
 			this.statsClient = JsonConvert.DeserializeObject<StatsClient>(this._socketHandler.TestGETWebRequest("/profile/stats/" + this._userData.userName).ToString());
 			_avatars = new BindableCollection<Avatar>();
 			fillAvatars();
-			_selectAvatarCommand = new selectAvatarCommand(events);
-			_selectedAvatar = null;
+			nbAvatars = _avatars.Count();
+			_selectedAvatarIndex = 0;
 		}
+
+		public void saveChanges(string passwordTB, string password2TB)
+		{
+			_socketHandler.avatarChangePending = _avatars[_selectedAvatarIndex].name;
+			if ((passwordTB != password2TB))
+			{
+				_events.PublishOnUIThread(new appWarningEvent("The new passwords don't match"));
+			}
+			else if( passwordTB == "" | passwordTB == null)
+			{
+				Console.WriteLine("no new pass");
+				PrivateProfile newPP = new PrivateProfile(_userData.userName, null, null, null, _avatars[_selectedAvatarIndex].name);
+				_socketHandler.socket.Emit("update_profile", JsonConvert.SerializeObject(newPP));
+				selectedAvatarIndex = 0;
+			} else
+			{
+				Console.WriteLine("new pass");
+				PrivateProfile newPP = new PrivateProfile(_userData.userName, null, null, passwordTB, _avatars[_selectedAvatarIndex].name);
+				_socketHandler.socket.Emit("update_profile", JsonConvert.SerializeObject(newPP));
+				selectedAvatarIndex = 0;
+			}
+		}
+
+		public void leftArrowAvatarChange()
+		{
+			if (selectedAvatarIndex >= 0 & selectedAvatarIndex < nbAvatars - 1)
+			{
+				selectedAvatarIndex++;
+			} else if (selectedAvatarIndex == nbAvatars - 1)
+			{
+				selectedAvatarIndex = 0;
+			}
+		}
+
+		public void rightArrowAvatarChange()
+		{
+			if (selectedAvatarIndex > 0 & selectedAvatarIndex <= nbAvatars - 1)
+			{
+				selectedAvatarIndex--;
+			}
+			else if (selectedAvatarIndex == 0)
+			{
+				selectedAvatarIndex = nbAvatars - 1;
+			}
+
+		}
+
 
 		public void fillAvatars()
 		{
@@ -84,6 +151,11 @@ namespace WPFUI.ViewModels
 			_avatars.Add(new Avatar("/Resources/watermelon.png", "WATERMELON"));
 		}
 
+		public void Handle(avatarUpdated message)
+		{
+			NotifyOfPropertyChange(() => userAvatarSource);
+		}
+
 		public BindableCollection<Avatar> avatars
 		{
 			get { return _avatars; }
@@ -97,49 +169,6 @@ namespace WPFUI.ViewModels
 		{
 			get { return this.statsClient; }
 		}
-		public string newConfirmedPassword
-		{
-			get { return _newConfirmedPassword; }
-			set { _newConfirmedPassword = value; }
-		}
-		public string newchangedPassword
-		{
-			get { return _newchangedPassword; }
-			set { _newchangedPassword = value; }
-		}
-		public string changedLastName
-		{
-			get { return _changedLastName; }
-			set { _changedLastName = value; }
-		}
-		public string changedUsername
-		{
-			get { return _changedUsername; }
-			set { _changedUsername = value; }
-		}
-		public string changedFirstName
-		{
-			get { return _changedFirstName; }
-			set { _changedFirstName = value; }
-		}
-
-		public void goBack()
-		{
-			_events.PublishOnUIThread(new goBackMainEvent());
-		}
-
-		public void Handle(refreshUIEvent message)
-		{
-			foreach (Avatar a in avatars)
-			{
-				a.resetColor();
-			}
-
-			int avatarIndex = avatars.IndexOf(avatars.Single(i => i._name == message.fruitSelected));
-			_selectedAvatar = message.fruitSelected;
-			avatars[avatarIndex].changeColor("Black");
-			avatars.Refresh();
-			NotifyOfPropertyChange(null);
-		}
+		
 	}
 }

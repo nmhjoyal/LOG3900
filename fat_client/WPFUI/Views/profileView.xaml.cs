@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WPFUI.ViewModels;
 
 namespace WPFUI.Views
 {
@@ -20,14 +21,10 @@ namespace WPFUI.Views
     /// </summary>
     public partial class profileView : UserControl
     {
+        profileViewModel vm;
         public profileView()
         {
             InitializeComponent();
-        }
-
-        private void saveProfileChanges_Click(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void matchHistory(object sender, RoutedEventArgs e)
@@ -40,6 +37,40 @@ namespace WPFUI.Views
         {
             this.border.Visibility = Visibility.Hidden;
             this.selectNextDrawingBox.Visibility = Visibility.Hidden;
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            vm = (DataContext as profileViewModel);
+        }
+
+        private void saveChangesButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            vm.saveChanges(passwordTB.Password, password2TB.Password);
+            passwordTB.Password = "";
+            password2TB.Password = "";
+            editProfileButton_PreviewMouseDown(sender, e);
+        }
+
+        private void rightArrow_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            vm.rightArrowAvatarChange();
+        }
+
+        private void leftArrow_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            vm.leftArrowAvatarChange();
+        }
+
+        private void editProfileButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if(editProfileGrid.Visibility == Visibility.Visible)
+            {
+                editProfileGrid.Visibility = Visibility.Hidden;
+            } else
+            {
+                editProfileGrid.Visibility = Visibility.Visible;
+            }
         }
     }
 }

@@ -11,12 +11,12 @@ namespace WPFUI.Models
 
         string _username;
         string _content;
-        double _date;
+        long _date;
         string _roomId;
         string _avatarSource;
         public Message(string username,
         string content,
-        double date,
+        long date,
         string roomId)
         {
             this._username = username;
@@ -52,25 +52,9 @@ namespace WPFUI.Models
 
         public string formattedTimeStamp
         {
-            /*
             get
             {
-                System.DateTime dtDateTime;
-                if (_date != 0)
-                {
-                    dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
-                    dtDateTime = dtDateTime.AddSeconds(_date).ToLocalTime();
-                }
-                else
-                {
-                    dtDateTime = DateTime.Now;
-                }
-                return "[" + dtDateTime.ToString("HH:mm:ss") + "]";
-            }
-            */
-            get
-            {
-                return "";
+                return "[" + UnixTimeToDateTime(_date).ToString("HH:mm:ss") + "]";
             }
         }
 
@@ -78,6 +62,15 @@ namespace WPFUI.Models
         {
             get { return _avatarSource; }
             set { _avatarSource = value; }
+        }
+
+
+        //methode prise de: https://ourcodeworld.com/articles/read/865/how-to-convert-an-unixtime-to-datetime-class-and-viceversa-in-c-sharp
+        public DateTime UnixTimeToDateTime(long unixtime)
+        {
+            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            dtDateTime = dtDateTime.AddMilliseconds(unixtime).ToLocalTime();
+            return dtDateTime;
         }
 
     }

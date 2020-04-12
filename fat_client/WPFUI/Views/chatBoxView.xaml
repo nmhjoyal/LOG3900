@@ -54,7 +54,7 @@
 						<StackPanel Orientation="Vertical" Margin="5,0,0,0">
 							<StackPanel Orientation="Horizontal">
 								<Image Source="{Binding avatarSource}" MaxHeight="25" VerticalAlignment="Center"></Image>
-								<TextBlock Text="{Binding senderName}" Foreground="DarkSlateGray" VerticalAlignment="Center"/>
+								<TextBlock Text="{Binding senderName}" Foreground="DarkSlateGray" VerticalAlignment="Center" Margin="3,0,0,0"/>
 							</StackPanel>
 							<TextBlock Text="{Binding content}" Foreground="Black" TextWrapping="Wrap" Margin="0,0,0,0"/>
 							<TextBlock Text="{Binding formattedTimeStamp}" Foreground="DarkSlateGray" HorizontalAlignment="Left" FontSize="12" Margin="0,0,0,10"/>

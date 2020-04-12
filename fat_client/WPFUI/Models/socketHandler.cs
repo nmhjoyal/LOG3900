@@ -32,6 +32,13 @@ namespace WPFUI.Models
         private Boolean _isRoomToBeCreatedPrivate;
         private string baseURL;
         private string roomToBeLeft;
+        private string _avatarChangePending;
+
+        public string avatarChangePending
+        {
+            get { return _avatarChangePending; }
+            set { _avatarChangePending = value; }
+        }
 
 
         public bool canConnect
@@ -203,9 +210,10 @@ namespace WPFUI.Models
             _socket.On("receive_invite", (feedback) =>
             {
                 dynamic json = JsonConvert.DeserializeObject(feedback.ToString());
-                if (_userdata.invites.Where(x => x.uid == ((Invitation)json).uid).Count() == 0)
+                Invitation invite = new Invitation((string)json.id, (string)json.username);
+                if (_userdata.invites.Where(x => x.id == invite.id).Count() == 0)
                 {
-                    _userdata.invites.Add((Invitation)json);
+                    _userdata.invites.Add(invite);
                 }
 
             });
@@ -284,6 +292,20 @@ namespace WPFUI.Models
                 }
 
 
+            });
+
+            _socket.On("profile_updated", (feedback) =>
+            {
+                Console.WriteLine(feedback);
+                dynamic json = JsonConvert.DeserializeObject(feedback.ToString());
+                if ((Boolean)json.status)
+                {
+                    _userdata.avatarName = avatarChangePending;
+                    _events.PublishOnUIThread(new avatarUpdated());
+                } else
+                {
+                    _events.PublishOnUIThread(new appWarningEvent((string)json.log_message));
+                }
             });
         }
 
