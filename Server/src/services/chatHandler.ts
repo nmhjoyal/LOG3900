@@ -34,6 +34,7 @@ export default class ChatHandler {
                     try {
                         const message: Message = this.connectSocketToRoom(socket, user.username, roomId);
                         const newRoom: Room = this.createRoomObject(roomId, user.username, user.avatar, message);
+                        user.rooms_joined.push(room.id);
                         await roomDB.createRoom(newRoom);
                         await profileDB.joinRoom(user.username, roomId);
                         status = true;

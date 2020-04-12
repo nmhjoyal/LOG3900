@@ -278,9 +278,9 @@ namespace WPFUI.Models
         {
             get { return "You have " + this.guess + " more guess(es)"; }
         }
-        public string Visibilty
+        public bool Visibility
         {
-            get { return this.isVisible ? "Visible" : "Hidden"; }
+            get { return this.isVisible; }
         }
         public GuessesLeft(int guess, bool isVisible)
         {

@@ -30,6 +30,7 @@ namespace WPFUI.Views
         chatBoxViewModel _viewModel;
         IEventAggregator _events;
         IUserData _userdata;
+        string _roomSelectedToInvite;
 
         public chatBoxView()
         {
@@ -48,6 +49,7 @@ namespace WPFUI.Views
             _events.Subscribe(this);
             _userdata = (DataContext as chatBoxViewModel).userdata;
             messagesUI.ScrollToBottom();
+            _roomSelectedToInvite = null;
         }
 
 
@@ -110,6 +112,7 @@ namespace WPFUI.Views
                 this.invitesGrid.Visibility = Visibility.Hidden;
             } else
             {
+                this.addPlayersGrid.Visibility = Visibility.Hidden;
                 this.newChannelGrid.Visibility = Visibility.Hidden;
                 this.invitesGrid.Visibility = Visibility.Visible;
             }
@@ -117,11 +120,15 @@ namespace WPFUI.Views
 
         private void newChannelButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
+            newRoomTB.Text = "";
+            privateCheckBox.IsChecked = false;
+
             if (this.newChannelGrid.Visibility == Visibility.Visible)
             {
                 this.newChannelGrid.Visibility = Visibility.Hidden;
             } else
             {
+                this.addPlayersGrid.Visibility = Visibility.Hidden;
                 this.invitesGrid.Visibility = Visibility.Hidden;
                 this.newChannelGrid.Visibility = Visibility.Visible;
             }
@@ -137,14 +144,42 @@ namespace WPFUI.Views
                 {
                     // create private room
                     _viewModel.createRoom(newRoomTB.Text, true);
+                    newRoomTB.Text = "";
+                    privateCheckBox.IsChecked = false;
                 } else
                 {
                     // create public room
                     _viewModel.createRoom(newRoomTB.Text, false);
+                    newRoomTB.Text = "";
+                    privateCheckBox.IsChecked = false;
                 }
 
             }
 
+        }
+
+        private void addPlayerButton_Click(object sender, RoutedEventArgs e)
+        {
+            string _roomSelectedToInvite = (string)(sender as Button).Tag;
+            this.newChannelGrid.Visibility = Visibility.Hidden;
+            this.invitesGrid.Visibility = Visibility.Hidden;
+            this.addPlayersGrid.Visibility = Visibility.Visible;
+        }
+
+        private void invitePlayerButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (invitedPlayerName.Text != null & invitedPlayerName.Text != "")
+            {
+                Console.WriteLine("invite sent in view");
+                _viewModel.sendInvite(_roomSelectedToInvite, invitedPlayerName.Text);
+            }
+
+        }
+
+        private void invitePlayerButtonQuit_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            _roomSelectedToInvite = null;
+            this.addPlayersGrid.Visibility = Visibility.Hidden;
         }
     }
 }

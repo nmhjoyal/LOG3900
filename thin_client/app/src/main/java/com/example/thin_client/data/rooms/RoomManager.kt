@@ -28,8 +28,10 @@ object RoomManager {
     }
 
     fun leaveRoom() {
-        roomsJoined.remove(roomToRemove)
-        roomAvatars.remove(roomToRemove)
+        if (roomToRemove != "General") {
+            roomsJoined.remove(roomToRemove)
+            roomAvatars.remove(roomToRemove)
+        }
         roomToRemove = ""
     }
 }
