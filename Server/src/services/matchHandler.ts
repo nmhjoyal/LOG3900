@@ -16,18 +16,13 @@ export default class MatchHandler {
     private currentMatches: Map<string, Match>;
     private chatHandler: ChatHandler;
 
-    // Used for free draw testing.
-    private drawer: string;         // Socket id
-    private observers: string[];    // Socket ids
+    // Used for preview of the game on fat client.
     private previews: Map<string, VirtualDrawing>; // Key : socket.id or roomId, Value : virtual drawing
-    private top: number;
 
     public constructor() {
         this.currentMatches = new Map<string, Match>();
-        this.observers = [];
         this.chatHandler = new ChatHandler();
         this.previews = new Map<string, VirtualDrawing>();
-        this.top = 0;
     }
     
     public async createMatch(io: SocketIO.Server, socket: SocketIO.Socket, 
@@ -226,9 +221,6 @@ export default class MatchHandler {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
                 match.stroke(socket, stroke);
-            } else {
-                stroke.DrawingAttributes.Top = this.top++;
-                socket.to("freeDrawRoomTest").emit("new_stroke", JSON.stringify(stroke));
             }
         }
     }
@@ -238,8 +230,6 @@ export default class MatchHandler {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
                 match.point(socket, point);
-            } else {
-                socket.to("freeDrawRoomTest").emit("new_point", JSON.stringify(point));
             }
         }
     }
@@ -249,8 +239,6 @@ export default class MatchHandler {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
                 match.eraseStroke(socket);
-            } else {
-                socket.to("freeDrawRoomTest").emit("new_erase_stroke");
             }
         }
     }
@@ -260,8 +248,6 @@ export default class MatchHandler {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
                 match.erasePoint(socket);
-            } else {
-                socket.to("freeDrawRoomTest").emit("new_erase_point");
             }
         }
     }
@@ -271,11 +257,6 @@ export default class MatchHandler {
             const match: Match | undefined = this.getMatchFromPlayer(user.username);
             if (match) {
                 match.clear(socket);
-            } else {
-                let virtualDrawing: VirtualDrawing | undefined = this.previews.get(socket.id);
-                if(virtualDrawing) {
-                    virtualDrawing.clear(socket);
-                };
             }
         }
     }
@@ -312,43 +293,6 @@ export default class MatchHandler {
         return availableMatches;
     }
 
-    /**
-     * 
-     * From here this code is used for free draw testing.
-     *  
-     */ 
-    public enterFreeDrawTestRoom(socket: SocketIO.Socket): void {
-        this.observers.push(socket.id);
-        socket.emit("observer");
-        socket.join("freeDrawRoomTest");
-    }
-
-    public leaveFreeDrawTestRoom(io: SocketIO.Server, socket: SocketIO.Socket): void {
-        if (socket.id == this.drawer) {
-            const newDrawer: string | undefined = this.observers.pop();
-            if (newDrawer) {
-                this.drawer = newDrawer;
-                io.to(this.drawer).emit("drawer");
-            }
-        } else {
-            this.observers.splice(this.observers.indexOf(socket.id), 1);
-        }
-        socket.leave("freeDrawRoomTest");
-    }
-
-    public async getDrawing(io: SocketIO.Server): Promise<void> {
-        /*
-        const game: Game = await gameDB.getRandomGame();
-        let virtualDrawing: VirtualDrawing | undefined = this.previews.find(drawing => "freeDrawRoomTest" == drawing.getId());
-        if(!virtualDrawing) {
-            virtualDrawing = new VirtualDrawing("froomDrawRoomTest", io, 20);
-            this.previews.push(virtualDrawing);
-        }
-        virtualDrawing.draw(game.drawing, game.level);
-        */
-    }
-
-    // previewHandler.ts
     public async preview(socket: SocketIO.Socket, gamePreview: GamePreview): Promise<void> {
         let virtualDrawing: VirtualDrawing | undefined = this.previews.get(socket.id);
         if(!virtualDrawing) {

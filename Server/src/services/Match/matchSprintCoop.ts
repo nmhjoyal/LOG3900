@@ -23,7 +23,7 @@ export default class SprintCoop extends Match {
         this.currentWord = word;
         if (this.timer && this.gameLevel)
             // Calculate new timeLimit with bonus depending on last round difficulty and if all guesses were used
-            this.timeLimit = this.timeLeft() + ((this.noMoreGuess()) ?  0 : SPRINT.getBonusTime(this.gameLevel));
+            this.timeLimit = this.timeLeft() + ((this.noMoreGuess()) ? 0 : SPRINT.getBonusTime(this.gameLevel));
         
         // Set up new game.
         const game: Game = await gameDB.getGame(word);
