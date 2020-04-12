@@ -34,7 +34,7 @@ namespace WPFUI.Models
                     return "Visible";
                  } else
                 {
-                    return "Hidden";
+                    return "Collapsed";
                 }
                  }
         }

@@ -117,6 +117,9 @@ namespace WPFUI.Views
 
         private void newChannelButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
+            newRoomTB.Text = "";
+            privateCheckBox.IsChecked = false;
+
             if (this.newChannelGrid.Visibility == Visibility.Visible)
             {
                 this.newChannelGrid.Visibility = Visibility.Hidden;
@@ -137,10 +140,14 @@ namespace WPFUI.Views
                 {
                     // create private room
                     _viewModel.createRoom(newRoomTB.Text, true);
+                    newRoomTB.Text = "";
+                    privateCheckBox.IsChecked = false;
                 } else
                 {
                     // create public room
                     _viewModel.createRoom(newRoomTB.Text, false);
+                    newRoomTB.Text = "";
+                    privateCheckBox.IsChecked = false;
                 }
 
             }

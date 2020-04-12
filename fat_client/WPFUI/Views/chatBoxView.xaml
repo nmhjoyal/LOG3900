@@ -170,10 +170,11 @@
 										AncestorType={x:Type ItemsControl}}, Path=DataContext._selectJoinedRoomCommand}" CommandParameter="{Binding id}">
 												</MouseBinding>
 											</StackPanel.InputBindings>
+											<TextBlock Text="[Private] " Foreground="{Binding backgroundColor}" FontSize="16" Visibility="{Binding privateVisibility}"/>
 											<TextBlock Text="{Binding id}" Foreground="{Binding backgroundColor}" FontSize="16"/>
 										</StackPanel>
 										<StackPanel Orientation="Horizontal" Visibility="{Binding menuVisibility}" HorizontalAlignment="Left" Margin="5,0,0,0">
-											<Button Content="+" Margin="0,0,0,0" BorderBrush="{x:Null}" Background="#FF31AF91" FontSize="10">
+											<Button Content="+" Margin="0,0,0,0" BorderBrush="{x:Null}" Background="#FF31AF91" FontSize="10" Visibility="{Binding privateVisibility}" >
 											</Button>
 											<Button Content="view" Margin="5,0,0,0" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext._changeChannelCommand}"
 													CommandParameter="{Binding id}" BorderBrush="{x:Null}" Background="#FF31AF91" FontSize="10">
@@ -190,7 +191,7 @@
 			</ScrollViewer>
 		</Grid>
 
-		<Grid Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="6" Name="newChannelGrid" Visibility="Visible">
+		<Grid Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="6" Name="newChannelGrid" Visibility="Hidden">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="auto"/>
