@@ -49,9 +49,8 @@
         <Border Background="#018677" BorderThickness="5" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="3" CornerRadius="10">
 			<TextBlock FontSize="14" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Choose the mode" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="3"/>
 		</Border>
-		<ComboBox Grid.ColumnSpan="4" Grid.Column="5" Grid.Row="3"  Name="comboBox"  Width="200">
+		<ComboBox Grid.ColumnSpan="4" Grid.Column="5" Grid.Row="3"  Name="comboBox" SelectedIndex="{Binding Index}" SelectionChanged="updateMatches"  Width="200">
             <ComboBoxItem Content="Free For All"/>
-            <ComboBoxItem Content="Sprint solo"/>
             <ComboBoxItem Content="Sprint coop"/>
             <ComboBoxItem Content="1 vs 1"/>
         </ComboBox>

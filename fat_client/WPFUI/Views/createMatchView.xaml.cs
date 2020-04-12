@@ -54,5 +54,17 @@ namespace WPFUI.Views
             }
 
         }
+
+        private void SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(this.modecomboBox.SelectedIndex == 1 || this.modecomboBox.SelectedIndex == 2)
+            {
+                this.roundcomboBox.SelectedIndex = 0;
+                this.roundcomboBox.IsEnabled = false;
+            } else
+            {
+                this.roundcomboBox.IsEnabled = true;
+            }
+        }
     }
 }
