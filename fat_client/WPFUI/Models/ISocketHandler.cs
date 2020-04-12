@@ -13,7 +13,7 @@ namespace WPFUI.Models
         User user { get; set; }
 
         void connectionAttempt();
-        void createRoom(string roomID);
+        void createRoom(string roomID, bool isPrivate);
         void createUser(PrivateProfile privateProfile);
         void disconnect();
         void getPublicChannels();

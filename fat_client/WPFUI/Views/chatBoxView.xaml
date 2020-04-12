@@ -190,7 +190,7 @@
 			</ScrollViewer>
 		</Grid>
 
-		<Grid Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="6" Name="newChannelGrid" Visibility="Hidden">
+		<Grid Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="6" Name="newChannelGrid" Visibility="Visible">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="auto"/>
@@ -207,16 +207,16 @@
 			<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
 				<Border Background="White" CornerRadius="15" Margin="20,30,20,15">
 					<StackPanel Orientation="Horizontal" Margin="0,2,0,2">
-						<TextBlock Width="160" Margin="5,0,0,0"></TextBlock>
-						<CheckBox Margin="0,0,2,0" VerticalContentAlignment="Center">
+						<TextBox Width="160" Margin="12,0,0,0" CaretBrush="#FF00584C" x:Name="newRoomTB"></TextBox>
+						<CheckBox Margin="0,0,2,0" VerticalContentAlignment="Center" x:Name="privateCheckBox">
 						</CheckBox>
-						<TextBlock FontSize="8" VerticalAlignment="Center" Margin="0,0,8,0">Private Room</TextBlock>
+						<TextBlock FontSize="8" VerticalAlignment="Center" Margin="0,0,8,0">Private</TextBlock>
 					</StackPanel>
 
 				</Border>
 
 
-				<Button Background="#FF1A695E" BorderBrush="{x:Null}" Height="30" Width="150" Margin="0,0,0,15">
+				<Button Background="#FF1A695E" BorderBrush="{x:Null}" Height="30" Width="150" Margin="0,0,0,15" PreviewMouseDown="createRoom_PreviewMouseDown">
 					<StackPanel Orientation="Horizontal">
 						<TextBlock Foreground="White" VerticalAlignment="Center" FontSize="14"> Create Room</TextBlock>
 						<!--<Image Source="/Resources/chat.png" Height="20" Margin="10,0,0,0"></Image> -->

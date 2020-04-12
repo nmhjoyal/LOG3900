@@ -28,6 +28,7 @@ namespace WPFUI.Models
         public bool _canConnect;
         private string _traitJSON;
         private string _roomToBeCreated;
+        private Boolean _isRoomToBeCreatedPrivate;
         private string baseURL;
 
 
@@ -120,11 +121,11 @@ namespace WPFUI.Models
                     {
                         if (fb.isPrivate)
                         {
-                            _userdata.addJoinedRoom(fb.room_joined);
+                            _userdata.addJoinedRoom(fb.room_joined, true);
                         }
                         else
                         {
-                            _userdata.addJoinedRoom(fb.room_joined);
+                            _userdata.addJoinedRoom(fb.room_joined, false);
                         }
                     }
                     else
@@ -150,21 +151,43 @@ namespace WPFUI.Models
 
             _socket.On("room_created", (feedback) =>
             {
+                Console.WriteLine(feedback);
                 Feedback json = JsonConvert.DeserializeObject<Feedback>(feedback.ToString());
                 if (json.status & _roomToBeCreated != null)
                 {
-                    getPublicChannels();
-                    _userdata.addJoinedRoom(new Room(_roomToBeCreated, new Message[0], new Dictionary<string, string>()));
+                    if (_isRoomToBeCreatedPrivate)
+                    {
+                        getPublicChannels();
+                        Message[] messages = new Message[1];
+                        // TODO: Mettre le bon timestamp
+                        messages[0] = new Message("Admin", _userdata.userName + " joigned the room.", 0, _roomToBeCreated);
+                        /* TODO: Ajouter l'avatar du user dans le dictionnaire */
+                        _userdata.addJoinedRoom(new Room(_roomToBeCreated, messages, new Dictionary<string, string>()), true);
+                    } else
+                    {
+                        getPublicChannels();
+                        // TODO: Trouver pourquoi ca join pas automatiquement
+                        //socket.Emit("join_chat_room", _roomToBeCreated);
+                        Message[] messages = new Message[1];
+                        // TODO: Mettre le bon timestamp
+                        messages[0] = new Message("Admin", _userdata.userName + " joigned the room.", 0, _roomToBeCreated);
+                        /* TODO: Ajouter l'avatar du user dans le dictionnaire */
+                        _userdata.addJoinedRoom(new Room(_roomToBeCreated, messages, new Dictionary<string, string>()), false);
+                    }
                     _roomToBeCreated = null;
-                    /* TODO: Ajouter l'avatar du user dans le dictionnaire */
-                }
+                    _isRoomToBeCreatedPrivate = false;
+                } else
+                {
+                    _events.PublishOnUIThread(new appWarningEvent(json.log_message));
+                } 
             });
         }
 
-        public void createRoom(string roomID)
+        public void createRoom(string roomID, Boolean isPrivate)
         {
             _roomToBeCreated = roomID;
-            CreateRoom cR = new CreateRoom(roomID, false);
+            _isRoomToBeCreatedPrivate = isPrivate;
+            CreateRoom cR = new CreateRoom(roomID, isPrivate);
             _socket.Emit("create_chat_room", JsonConvert.SerializeObject(cR));
         }
 
@@ -315,7 +338,8 @@ namespace WPFUI.Models
                         this.Dispatcher.Invoke(() =>
                         Traits[currentStrokeIndex].StylusPoints.Add(stylusPoint)
                     );
-                    } catch(Exception e) { _events.PublishOnUIThread(new appWarningEvent("New_point error")); }
+                    }
+                    catch (Exception e) { _events.PublishOnUIThread(new appWarningEvent("New_point error")); }
                 }
                 else if (drawersTool == "efface_trait" || drawersTool == "efface_segment")
                 {
