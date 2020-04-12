@@ -629,13 +629,6 @@ namespace WPFUI.Models
                     _events.PublishOnUIThread(new appWarningEvent((string)json.feedback.log_message));
                 }
             });
-
-            this.socket.On("unexpected_leave", () =>
-            {
-                this.offWaitingRoom();
-                this._events.PublishOnUIThread(new joinGameEvent());
-                _events.PublishOnUIThread(new appWarningEvent("Unexpected match leave"));
-            });
         }
 
         public void offWaitingRoom()
@@ -645,7 +638,6 @@ namespace WPFUI.Models
             this.socket.Off("vp_added");
             this.socket.Off("vp_removed");
             this.socket.Off("match_started");
-            this.socket.Off("unexpected_leave");
         }
 
         public void onMatch(StartTurn startTurn, EndTurn endTurn, GuessesLeft guessesLeft)
@@ -690,8 +682,6 @@ namespace WPFUI.Models
             this.socket.On("unexpected_leave", () =>
             {
                 this.offMatch();
-                socket.Emit("leave_chat_room", _userdata.matchId);
-                socket.Emit("leave_match");
                 this._events.PublishOnUIThread(new joinGameEvent());
                 _events.PublishOnUIThread(new appWarningEvent("Unexpected match leave"));
             });
