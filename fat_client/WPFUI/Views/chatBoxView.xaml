@@ -82,7 +82,7 @@
 
 		</StackPanel>
 
-		<Grid Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="6" Name="channelsGrid" Visibility="Hidden">
+		<Grid Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="6" Name="channelsGrid" Visibility="Visible">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="20" />
@@ -116,9 +116,9 @@
 					   VerticalAlignment="Center" HorizontalAlignment="Center"></Image>
 
 					<Image Source="/Resources/chatBox/badge.png" Height="20" 
-					   x:Name="badge" PreviewMouseDown="inviteButton_PreviewMouseDown" Visibility="{Binding nbInvitesVisibility}"
+					   x:Name="badge" PreviewMouseDown="inviteButton_PreviewMouseDown" Visibility="{Binding nbInvitesVisibility, Mode=OneWay}"
 					   VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,-5,-5,0"></Image>
-					<Grid x:Name="nbInvitesGrid" Height="20" Width="20" Visibility="{Binding nbInvitesVisibility}"
+					<Grid x:Name="nbInvitesGrid" Height="20" Width="20" Visibility="{Binding nbInvitesVisibility, Mode=OneWay}"
 							   VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,-5,-5,0">
 						<TextBlock FontSize="10" VerticalAlignment="Center" 
 								   HorizontalAlignment="Center" x:Name="nbInvites"></TextBlock>

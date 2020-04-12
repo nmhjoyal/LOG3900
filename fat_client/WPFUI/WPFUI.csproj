@@ -157,6 +157,7 @@
     <Compile Include="EventModels\ManuelIEvent.cs" />
     <Compile Include="EventModels\ManuelleIIEvent.cs" />
     <Compile Include="EventModels\passwordMismatchEvent.cs" />
+    <Compile Include="EventModels\refreshInvitesEvent.cs" />
     <Compile Include="EventModels\refreshRoomsEvent.cs" />
     <Compile Include="EventModels\refreshMessagesEvent.cs" />
     <Compile Include="EventModels\refreshUIEvent.cs" />
