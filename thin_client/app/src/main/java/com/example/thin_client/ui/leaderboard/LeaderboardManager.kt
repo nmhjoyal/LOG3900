@@ -11,7 +11,10 @@ object LeaderboardManager {
     var collabRankingList =  ArrayList<RankClient>()
     var oneVsOneRankingList = ArrayList<RankClient>()
     var freeForAllRankingList = ArrayList<RankClient>()
-
+    var collabCurrentPlayer: RankClient = RankClient("",0,0)
+    var soloCurrentPlayer: RankClient = RankClient("",0,0)
+    var onevsoneCurrentPlayer: RankClient = RankClient("",0,0)
+    var freeforallCurrentPlayer: RankClient = RankClient("",0,0)
 
     fun resetRankingLists() {
         soloRankingList.clear()

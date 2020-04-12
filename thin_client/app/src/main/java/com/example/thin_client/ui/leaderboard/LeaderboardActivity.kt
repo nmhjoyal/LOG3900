@@ -56,7 +56,9 @@ class LeaderboardActivity : AppCompatActivity() {
                     val soloRankingInfo = Gson().fromJson(responseData, Array<RankClient>::class.java)
                     LeaderboardManager.soloRankingList.clear()
                     LeaderboardManager.soloRankingList.addAll(soloRankingInfo)
+                    LeaderboardManager.soloCurrentPlayer = soloRankingInfo.last()
                     LeaderboardManager.soloRankingList.sortBy(({ it.pos.toInt() }))
+                    LeaderboardManager.soloRankingList.remove(LeaderboardManager.soloCurrentPlayer)
                     Handler(Looper.getMainLooper()).post(({
                         if (ranking_viewpager.adapter != null) {
                             ranking_viewpager.adapter?.notifyDataSetChanged()
@@ -76,7 +78,9 @@ class LeaderboardActivity : AppCompatActivity() {
                     val collabRankingInfo = Gson().fromJson(responseData, Array<RankClient>::class.java)
                     LeaderboardManager.collabRankingList.clear()
                     LeaderboardManager.collabRankingList.addAll(collabRankingInfo)
+                    LeaderboardManager.collabCurrentPlayer = collabRankingInfo.last()
                     LeaderboardManager.collabRankingList.sortBy(({ it.pos.toInt() }))
+                    LeaderboardManager.collabRankingList.remove(LeaderboardManager.collabCurrentPlayer)
                     Handler(Looper.getMainLooper()).post(({
                         if (ranking_viewpager.adapter != null) {
                             ranking_viewpager.adapter?.notifyDataSetChanged()
@@ -96,10 +100,13 @@ class LeaderboardActivity : AppCompatActivity() {
                     val oneVsOneRankingInfo = Gson().fromJson(responseData, Array<RankClient>::class.java)
                     LeaderboardManager.oneVsOneRankingList.clear()
                     LeaderboardManager.oneVsOneRankingList.addAll(oneVsOneRankingInfo)
+                    LeaderboardManager.onevsoneCurrentPlayer= oneVsOneRankingInfo.last()
                     LeaderboardManager.oneVsOneRankingList.sortBy(({ it.pos.toInt() }))
+                    LeaderboardManager.oneVsOneRankingList.remove(LeaderboardManager.onevsoneCurrentPlayer)
                     Handler(Looper.getMainLooper()).post(({
                         if (ranking_viewpager.adapter != null) {
                             ranking_viewpager.adapter?.notifyDataSetChanged()
+
                         }
                     }))
                 }
@@ -116,7 +123,9 @@ class LeaderboardActivity : AppCompatActivity() {
                     val freeForAllrankingInfo = Gson().fromJson(responseData, Array<RankClient>::class.java)
                     LeaderboardManager.freeForAllRankingList.clear()
                     LeaderboardManager.freeForAllRankingList.addAll(freeForAllrankingInfo)
+                    LeaderboardManager.freeforallCurrentPlayer = freeForAllrankingInfo.last()
                     LeaderboardManager.freeForAllRankingList.sortBy(({ it.pos.toInt() }))
+                    LeaderboardManager.freeForAllRankingList.remove(LeaderboardManager.freeforallCurrentPlayer )
                     Handler(Looper.getMainLooper()).post(({
                         if (ranking_viewpager.adapter != null) {
                             ranking_viewpager.adapter?.notifyDataSetChanged()
