@@ -59,6 +59,7 @@ namespace WPFUI.Views
                 RenderVisualService.RenderToPNGFile(PART_Canvas, saveFileDialog.FileName);
             }
 
+
         }
 
         private void Get_Drawing(object sender, RoutedEventArgs e)
