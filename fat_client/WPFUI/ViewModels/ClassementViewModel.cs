@@ -55,10 +55,7 @@ namespace WPFUI.ViewModels
             this.rankings.AddRange(new_rankings.Take(new_rankings.Count - 1));
             NotifyOfPropertyChange(null);
         }
-        public void goBack()
-        {
-            _events.PublishOnUIThread(new goBackMainEvent());
-        }
+       
     }
 
 }

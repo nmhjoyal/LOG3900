@@ -17,6 +17,11 @@ namespace WPFUI.ViewModels
         private ISocketHandler _socketHandler;
         private IUserData userdata;
 
+        public IEventAggregator events
+        {
+            get { return _events; }
+        }
+
         public createMatchViewModel(IEventAggregator events, ISocketHandler socketHandler, IUserData userdata)
         {
             _events = events;
@@ -30,9 +35,16 @@ namespace WPFUI.ViewModels
         }
         public void createMatch(MatchMode matchMode, int nbRounds, int timeLimit)
         {
-            CreateMatch createMatch = new CreateMatch(nbRounds, timeLimit, matchMode);
-            this._socketHandler.socket.Emit("create_match", JsonConvert.SerializeObject(createMatch));
-            this.userdata.matchMode = matchMode;
+            try
+            {
+                CreateMatch createMatch = new CreateMatch(nbRounds, timeLimit, matchMode);
+                this._socketHandler.socket.Emit("create_match", JsonConvert.SerializeObject(createMatch));
+                this.userdata.matchMode = matchMode;
+            }
+            catch(Exception)
+            {
+                _events.PublishOnUIThread(new appWarningEvent("Select an option from ALL the fields to create a match."));
+            }
         }
     }
 }
