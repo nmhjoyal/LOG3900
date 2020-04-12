@@ -567,8 +567,11 @@ namespace WPFUI.Models
         {
             this.socket.On("update_matches", (new_matches) =>
             {
+                this._events.PublishOnUIThread(new updateMatchesEvent(JsonConvert.DeserializeObject<BindableCollection<Match>>(new_matches.ToString())));
+                /*
                 matches.Clear();
                 matches.AddRange(JsonConvert.DeserializeObject<BindableCollection<Match>>(new_matches.ToString()));
+                */
             });
 
             this.socket.On("match_joined", (joinRoomFeedback) =>

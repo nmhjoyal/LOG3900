@@ -41,6 +41,12 @@ namespace WPFUI.Views
             {
                 (this.DataContext as ChoseGameViewModel).events.PublishOnUIThread(new resetToGeneralEvent());
             }
+            (this.DataContext as ChoseGameViewModel).events.Subscribe(this);
+        }
+
+        private void updateMatches(object sender, SelectionChangedEventArgs e)
+        {
+            (this.DataContext as ChoseGameViewModel).updateMatches();
         }
     }
 

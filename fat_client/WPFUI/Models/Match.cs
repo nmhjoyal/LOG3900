@@ -13,15 +13,15 @@ namespace WPFUI.Models
         public string host;
         public int nbRounds;
         public MatchMode matchMode;
-        public List<PublicProfile> players;
+        public BindableCollection<PublicProfile> players;
 
-        public Match(string matchId, string host, int nbRounds, MatchMode matchMode, List<PublicProfile> players)
+        public Match(string matchId, string host, int nbRounds, MatchMode matchMode, BindableCollection<PublicProfile> players)
         {
             this.matchId = matchId;
             this.host = host;
             this.nbRounds = nbRounds;
             this.matchMode = matchMode;
-            this.players = new List<PublicProfile>(players);
+            this.players = new BindableCollection<PublicProfile>(players);
         }
 
         public string MatchId
@@ -66,19 +66,23 @@ namespace WPFUI.Models
             }
         }
 
-        public string Players
-        {
-            get
-            {
-                string players = "";
+       
+
+        public BindableCollection<string> Players
+{
+            get { 
+                BindableCollection<string> playerNames= new BindableCollection<string>();
                 foreach(PublicProfile player in this.players)
                 {
-                    players += player.username + " ";
+                    playerNames.Add(player.username);
                 }
-                return players;
+                return playerNames;
             }
+
         }
     }
+
+
 
     public enum MatchMode
     {
