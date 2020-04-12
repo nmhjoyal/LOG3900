@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
@@ -12,9 +13,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/matches_background"
-        app:layout_constrainedWidth="true"
-        app:layout_constrainedHeight="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constrainedHeight="true"
+        app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toTopOf="@+id/ranking_bottom_view_pager"
         app:layout_constraintEnd_toStartOf="@+id/ranking_end_view_pager"
         app:layout_constraintStart_toStartOf="@+id/ranking_start_view_pager"
@@ -24,13 +25,93 @@
             android:id="@+id/ranking_tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabBackground="@drawable/tab_background_selector"
             android:layout_margin="0dp"
-            app:tabIndicatorHeight="0dp"
+            app:tabBackground="@drawable/tab_background_selector"
             app:tabGravity="fill"
+            app:tabIndicatorHeight="0dp"
             app:tabMaxWidth="0dp"
-            app:tabMode="fixed" />
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="@color/color_white"
+            app:tabTextColor="@color/colorPrimaryDark" />
     </androidx.viewpager.widget.ViewPager>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintEnd_toStartOf="@+id/ranking_end_view_pager"
+        app:layout_constraintStart_toStartOf="@+id/ranking_start_view_pager"
+        app:layout_constraintTop_toBottomOf="@+id/ranking_viewpager">
+
+        <TextView
+            android:id="@+id/position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:textColor="@color/color_white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/ranking_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:text="@string/prompt_username"
+            android:textColor="@color/color_white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/position"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_view_ranking_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:text="@string/stat_placeholder"
+            android:textColor="@color/color_white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ranking_username"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/ranking_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="@string/score"
+            android:textColor="@color/color_white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/text_view_ranking_username"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_view_ranking_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="@string/time_placeholder"
+            android:textColor="@color/color_white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ranking_score"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/ranking_top_view_pager"
@@ -59,15 +140,15 @@
 
     <ImageButton
         android:id="@+id/refresh_ranking"
-        android:layout_width="47dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="51dp"
+        android:layout_height="52dp"
+        android:layout_marginBottom="72dp"
         android:background="@drawable/button_primary_selector"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/ranking_end_view_pager"
         app:layout_constraintStart_toStartOf="@+id/ranking_start_view_pager"
         app:layout_constraintTop_toBottomOf="@+id/ranking_viewpager"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_bias="0.631"
         app:srcCompat="@drawable/ic_refresh_24px" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

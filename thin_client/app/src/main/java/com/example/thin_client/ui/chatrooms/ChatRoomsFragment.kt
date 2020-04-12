@@ -201,6 +201,7 @@ class ChatRoomsFragment : Fragment() {
                     roomList = arrayListOf()
                     val list = Gson().fromJson(data.first().toString(), ArrayList::class.java)
                     for (room in list) {
+
                         if (room != null) {
                             roomList.add(room.toString())
                         }
