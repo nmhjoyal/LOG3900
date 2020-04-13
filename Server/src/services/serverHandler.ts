@@ -193,14 +193,17 @@ class ServerHandler {
         });
         // Private rooms
         for (let roomId in socket.rooms) {
-            let socketIds: string[] = this.chatHandler.getSocketIds(io, roomId);
-            if (socketIds.length == 1 && socketIds[0] == socket.id) {
-                this.chatHandler.deleteChatRoom(io, socket, roomId, this.getUser(socket.id));
-            } else {
-                const message: Message = Admin.createAdminMessage(user.username + " is disconnected.", roomId);
-                this.chatHandler.privateRooms.find(room => room.id == roomId)?.messages.push(message);
-                socket.to(roomId).emit("new_message", JSON.stringify(message));
-                socket.leave(roomId);
+            const privateRoom: Room | undefined = this.chatHandler.privateRooms.find(room => room.id == roomId);
+            if(privateRoom) {
+                let socketIds: string[] = this.chatHandler.getSocketIds(io, roomId);
+                if (socketIds.length == 1 && socketIds[0] == socket.id) {
+                    this.chatHandler.deleteChatRoom(io, socket, roomId, this.getUser(socket.id));
+                } else {
+                    const message: Message = Admin.createAdminMessage(user.username + " is disconnected.", roomId);
+                    privateRoom.messages.push(message);
+                    socket.to(roomId).emit("new_message", JSON.stringify(message));
+                    socket.leave(roomId);
+                }
             }
         }
     }
