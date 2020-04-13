@@ -15,6 +15,7 @@ class StatsDB {
         mongoClient.connect((err, db) => {
             if (err) throw err;
             this.mongoDB = db;
+            // this.mongoDB.db("Stats").collection("stats").createIndex({ username: 1 }, { unique: true });
         });
     }
 

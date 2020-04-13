@@ -15,6 +15,10 @@ class RankingDB {
         mongoClient.connect((err, db) => {
             if (err) throw err;
             this.mongoDB = db;
+            // this.mongoDB.db("Ranks").collection("FreeForAll").createIndex({ username: 1 }, { unique: true });
+            // this.mongoDB.db("Ranks").collection("SprintSolo").createIndex({ username: 1 }, { unique: true });
+            // this.mongoDB.db("Ranks").collection("SprintCoop").createIndex({ username: 1 }, { unique: true });
+            // this.mongoDB.db("Ranks").collection("OneVsOne").createIndex({ username: 1 }, { unique: true });
         });
     }
 
