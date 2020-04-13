@@ -173,7 +173,7 @@ namespace WPFUI.Models
                     {
                         getPublicChannels();
                         Message[] messages = new Message[1];
-                        messages[0] = new Message("Admin", _userdata.userName + " joigned the room.", getUnixTimeStamp(), _roomToBeCreated);
+                        messages[0] = new Message("Admin", _userdata.userName + " joined the room.", getUnixTimeStamp(), _roomToBeCreated);
                         /* TODO: Ajouter l'avatar du user dans le dictionnaire */
                         _userdata.addJoinedRoom(new Room(_roomToBeCreated, messages, new Dictionary<string, string>()), true);
                     }
@@ -181,7 +181,7 @@ namespace WPFUI.Models
                     {
                         getPublicChannels();
                         Message[] messages = new Message[1];
-                        messages[0] = new Message("Admin", _userdata.userName + " joigned the room.", getUnixTimeStamp(), _roomToBeCreated);
+                        messages[0] = new Message("Admin", _userdata.userName + " joined the room.", getUnixTimeStamp(), _roomToBeCreated);
                         /* TODO: Ajouter l'avatar du user dans le dictionnaire */
                         _userdata.addJoinedRoom(new Room(_roomToBeCreated, messages, new Dictionary<string, string>()), false);
                     }

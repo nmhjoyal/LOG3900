@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -23,7 +25,7 @@ namespace WPFUI.Views
     /// <summary>
     /// Logique d'interaction pour CreationJeuAssiste1View.xaml
     /// </summary>
-    public partial class CreationJeuAssiste1View : UserControl, IHandle<previewDoneEvent>
+    public partial class CreationJeuAssiste1View : System.Windows.Controls.UserControl, IHandle<previewDoneEvent>
     {
         public CreationJeuAssiste1View()
         {
@@ -39,7 +41,7 @@ namespace WPFUI.Views
         private void addClue(object sender, RoutedEventArgs e)
         {
 
-            TextBox dynamicTextBox = new TextBox();
+            System.Windows.Controls.TextBox dynamicTextBox = new System.Windows.Controls.TextBox();
 
             // Grid.SetRow(dynamicTextBox, 3);
             // Grid.SetColumn(dynamicTextBox, 7);
@@ -55,13 +57,13 @@ namespace WPFUI.Views
             List<string> clues = new List<string>();
             for (int i = 0; i < this.canContainer.Children.Count; i++)
             {
-                clues.Add((this.canContainer.Children[i] as TextBox).Text);
+                clues.Add((this.canContainer.Children[i] as System.Windows.Controls.TextBox).Text);
 
             }
             int option = -1;
             if (this.Options.Children.Count > 0)
             {
-                option = (this.Options.Children[0] as ComboBox).SelectedIndex;
+                option = (this.Options.Children[0] as System.Windows.Controls.ComboBox).SelectedIndex;
             }
             (this.DataContext as CreationJeuAssiste1ViewModel).createGame(this.Word.Text, clues, this.Level.SelectedIndex, this.Mode.SelectedIndex, option, this.fileName.Text, (int)this.imageTransformee.ActualWidth, (int)this.imageTransformee.ActualHeight, (int)this.Thickness.Value, this.ColorPicker.SelectedColor);
         }
@@ -71,7 +73,7 @@ namespace WPFUI.Views
             int option = -1;
             if (this.Options.Children.Count > 0)
             {
-                option = (this.Options.Children[0] as ComboBox).SelectedIndex;
+                option = (this.Options.Children[0] as System.Windows.Controls.ComboBox).SelectedIndex;
             }
             this.PreviewButton.IsEnabled = false;
             (this.DataContext as CreationJeuAssiste1ViewModel).preview(this.fileName.Text, this.Mode.SelectedIndex, option, (int)this.imageTransformee.ActualWidth, (int)this.imageTransformee.ActualHeight, (int)this.Thickness.Value, this.ColorPicker.SelectedColor);
@@ -79,7 +81,7 @@ namespace WPFUI.Views
 
         private void elementSelectionne(object sender, RoutedEventArgs e)
         {
-            ComboBox comboBox = new ComboBox();
+            System.Windows.Controls.ComboBox comboBox = new System.Windows.Controls.ComboBox();
             TextBlock text = new TextBlock();
             text.Text = "Options:";
             text.TextAlignment = TextAlignment.Center;
@@ -131,5 +133,34 @@ namespace WPFUI.Views
         {
             (this.DataContext as CreationJeuAssiste1ViewModel).events.Subscribe(this);
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            //Code source: https://www.c-sharpcorner.com/UploadFile/mahesh/openfiledialog-in-C-Sharp/
+
+            OpenFileDialog openFileDialog1 = new OpenFileDialog
+            {
+                
+                InitialDirectory = (Directory.GetCurrentDirectory() + "/../../Potrace"),
+                Title = "Browse Image Files",
+
+                CheckFileExists = true,
+                CheckPathExists = true,
+
+                DefaultExt = "PNG",
+                Filter = "Png Image (.png)|*.png|JPG Image (.jpg)|*.jpg|Bitmap Image (.bmp)|*.bmp",
+                FilterIndex = 2,
+                RestoreDirectory = true,
+
+                ReadOnlyChecked = true,
+                ShowReadOnly = true
+            };
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                fileName.Text = openFileDialog1.FileName;
+            }
+        }
+
     }
 }

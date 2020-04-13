@@ -80,6 +80,7 @@ namespace WPFUI.ViewModels
         public void goBack()
         {
             this._socketHandler.socket.Emit("leave_match");
+            _events.PublishOnUIThread(new joinGameEvent());
         }
 
         public string username
