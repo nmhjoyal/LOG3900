@@ -8,7 +8,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="1300"
 			 FontSize="22"
-			 Foreground="White">
+			 Foreground="White"
+			 Loaded="UserControl_Loaded">
 	<Grid Background="#FF018577">
 
 		<Image Source="/Resources/topMenu/logo_still_white.png" Height="40" HorizontalAlignment="Center"  VerticalAlignment="Center"/>

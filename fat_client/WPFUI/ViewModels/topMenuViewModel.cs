@@ -23,6 +23,11 @@ namespace WPFUI.ViewModels
             _events.Subscribe(this);
         }
 
+        public IEventAggregator events()
+        {
+            return _events;
+        }
+
         public void goToScores()
         {
             offSocket();

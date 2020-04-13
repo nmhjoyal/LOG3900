@@ -129,7 +129,6 @@ export class Utils {
         const step: number = totalPoints / uniformedPoints;
         const uniformedDrawing: Stroke[] = [];
         if(drawing.length == totalPoints) {
-            console.log("dotted");
             for(let i: number = 0; i < drawing.length / step; i++) {
                 uniformedDrawing.push(drawing[Math.min(drawing.length - 1, Math.round(i * step))]);
             }
@@ -145,8 +144,6 @@ export class Utils {
                 }
             }
         }
-        console.log(step);
-        console.log(uniformedDrawing.length);
         return uniformedDrawing;
     }
 
