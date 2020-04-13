@@ -1,21 +1,16 @@
 package com.example.thin_client.ui.leaderboard
 
 import OkHttpRequest
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.View
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import com.example.thin_client.R
 import com.example.thin_client.data.app_preferences.PreferenceHandler
 import com.example.thin_client.data.game.MatchMode
 import com.example.thin_client.data.model.RankClient
 import com.example.thin_client.data.server.HTTPRequest
-import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
@@ -40,7 +35,9 @@ class LeaderboardActivity : AppCompatActivity() {
 
     }
 
-
+    override fun onBackPressed() {
+        // override back
+    }
 
     private fun getRankings() {
         val httpClient = OkHttpRequest(okhttp3.OkHttpClient())

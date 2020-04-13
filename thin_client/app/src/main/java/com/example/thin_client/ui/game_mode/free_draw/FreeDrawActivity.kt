@@ -6,7 +6,6 @@ import android.graphics.Bitmap
 import android.graphics.Paint
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.MenuItem
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.SeekBar

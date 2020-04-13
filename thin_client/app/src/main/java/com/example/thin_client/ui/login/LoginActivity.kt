@@ -51,6 +51,7 @@ class LoginActivity : AppCompatActivity() {
         login.setOnClickListener {
             loading.visibility = ProgressBar.VISIBLE
             login.isEnabled = false
+            signup.isEnabled = false
             val socket = SocketHandler.connect()
             val user = User(username.text.toString(), password.text.toString())
             socket
@@ -62,6 +63,7 @@ class LoginActivity : AppCompatActivity() {
                         showConnectionFailed(resources.getString(R.string.login_failed))
                         loading.visibility = ProgressBar.GONE
                         login.isEnabled = true
+                        signup.isEnabled = true
                     })
                     SocketHandler.disconnect()
                 }))
@@ -70,6 +72,7 @@ class LoginActivity : AppCompatActivity() {
                         showConnectionFailed(resources.getString(R.string.server_timeout))
                         loading.visibility = ProgressBar.GONE
                         login.isEnabled = true
+                        signup.isEnabled = true
                     })
                     SocketHandler.disconnect()
                 }))
@@ -107,6 +110,7 @@ class LoginActivity : AppCompatActivity() {
                             ).show()
                             loading.visibility = ProgressBar.GONE
                             login.isEnabled = true
+                            signup.isEnabled = true
                             SocketHandler.disconnect()
                         })
                     }

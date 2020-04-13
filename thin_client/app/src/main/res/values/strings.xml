@@ -113,7 +113,7 @@
     <string name="eraser_touch_erase">Touch erase</string>
     <string name="round_cap">Round cap</string>
     <string name="square_cap">Square cap</string>
-    <string name="image_saved">Image successfully saved.</string>
+    <string name="image_saved">Image saved to Gallery.</string>
     <string name="error_image_saved">Unable to save image.</string>
 
     <!-- Save drawing -->

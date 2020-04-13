@@ -218,8 +218,9 @@ class MatchList : Fragment() {
                         }
                     }
                     Handler(Looper.getMainLooper()).post(({
-                        viewpager.adapter?.notifyDataSetChanged()
-                        //setupTabs()
+                        if (viewpager != null && viewpager.adapter != null) {
+                            viewpager.adapter?.notifyDataSetChanged()
+                        }
                     }))
                 }))
         }
