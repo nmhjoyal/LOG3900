@@ -21,7 +21,7 @@ namespace WPFUI.Potrace
         private const string BMP = ".bmp";
         private const string SVG = ".svg";
         private static Boolean isPotraceDirectory = false;
-        public static StrokeCollection exec(string absolutePath, int width, int height, int thickness, System.Windows.Media.Color? color)
+        public static StrokeCollection exec(string absolutePath, int width, int height, int thickness, System.Windows.Media.Color color, bool dotted)
         {
             string filename = Path.GetFileName(absolutePath);
             if(!isPotraceDirectory)
@@ -72,27 +72,35 @@ namespace WPFUI.Potrace
             }
 
             StrokeCollection strokes = new StrokeCollection();
-            for(int i = 0; i < pathSegments.Count; i++)
+            if(dotted)
             {
-                /*
-                if(pathSegments[i].GetType() == typeof(SvgMoveToSegment)){
+                for(int i = 0; i < pathSegments.Count; i++)
+                {
                     StylusPointCollection stylusPoints = new StylusPointCollection();
                     stylusPoints.Add(new StylusPoint(scale.X * pathSegments[i].Start.X + translate.X, scale.Y * pathSegments[i].Start.Y + translate.Y));
                     Stroke stroke = new Stroke(stylusPoints);
                     stroke.DrawingAttributes.Width = stroke.DrawingAttributes.Height = thickness;
-                    stroke.DrawingAttributes.Color = color.GetValueOrDefault();
+                    stroke.DrawingAttributes.Color = color;
                     strokes.Add(stroke);
-                } else if(pathSegments[i].GetType() == typeof(SvgLineSegment))
-                {
-                    strokes[strokes.Count - 1].StylusPoints.Add(new StylusPoint(scale.X * pathSegments[i].End.X + translate.X, scale.Y * pathSegments[i].End.Y + translate.Y));
                 }
-                */
-                StylusPointCollection stylusPoints = new StylusPointCollection();
-                stylusPoints.Add(new StylusPoint(scale.X * pathSegments[i].Start.X + translate.X, scale.Y * pathSegments[i].Start.Y + translate.Y));
-                Stroke stroke = new Stroke(stylusPoints);
-                stroke.DrawingAttributes.Width = stroke.DrawingAttributes.Height = thickness;
-                stroke.DrawingAttributes.Color = color.GetValueOrDefault();
-                strokes.Add(stroke);
+            } else
+            {
+                for (int i = 0; i < pathSegments.Count; i++)
+                {
+                    if (pathSegments[i].GetType() == typeof(SvgMoveToSegment))
+                    {
+                        StylusPointCollection stylusPoints = new StylusPointCollection();
+                        stylusPoints.Add(new StylusPoint(scale.X * pathSegments[i].Start.X + translate.X, scale.Y * pathSegments[i].Start.Y + translate.Y));
+                        Stroke stroke = new Stroke(stylusPoints);
+                        stroke.DrawingAttributes.Width = stroke.DrawingAttributes.Height = thickness;
+                        stroke.DrawingAttributes.Color = color;
+                        strokes.Add(stroke);
+                    }
+                    else if (pathSegments[i].GetType() == typeof(SvgLineSegment))
+                    {
+                        strokes[strokes.Count - 1].StylusPoints.Add(new StylusPoint(scale.X * pathSegments[i].End.X + translate.X, scale.Y * pathSegments[i].End.Y + translate.Y));
+                    }
+                }
             }
             if (extension.ToLower() == PNG || extension.ToLower() == JPG)
             {

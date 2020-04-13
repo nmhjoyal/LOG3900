@@ -66,7 +66,7 @@ namespace WPFUI.Views
             {
                 option = (this.Options.Children[0] as System.Windows.Controls.ComboBox).SelectedIndex;
             }
-            (this.DataContext as CreationJeuAssiste1ViewModel).createGame(this.Word.Text, clues, this.Level.SelectedIndex, this.Mode.SelectedIndex, option, this.absolutePath.Text, (int)this.imageTransformee.ActualWidth, (int)this.imageTransformee.ActualHeight, (int)this.Thickness.Value, this.ColorPicker.SelectedColor);
+            (this.DataContext as CreationJeuAssiste1ViewModel).createGame(this.Word.Text, clues, this.Level.SelectedIndex, this.Mode.SelectedIndex, option, this.absolutePath.Text, (int)this.imageTransformee.ActualWidth, (int)this.imageTransformee.ActualHeight, (int)this.Thickness.Value, this.ColorPicker.SelectedColor.GetValueOrDefault(), this.Dotted.IsChecked.GetValueOrDefault());
         }
 
         private void preview(object sender, RoutedEventArgs e)
@@ -77,7 +77,7 @@ namespace WPFUI.Views
                 option = (this.Options.Children[0] as System.Windows.Controls.ComboBox).SelectedIndex;
             }
             this.PreviewButton.IsEnabled = false;
-            (this.DataContext as CreationJeuAssiste1ViewModel).preview(this.absolutePath.Text, this.Mode.SelectedIndex, option, (int)this.imageTransformee.ActualWidth, (int)this.imageTransformee.ActualHeight, (int)this.Thickness.Value, this.ColorPicker.SelectedColor);
+            (this.DataContext as CreationJeuAssiste1ViewModel).preview(this.absolutePath.Text, this.Mode.SelectedIndex, option, (int)this.imageTransformee.ActualWidth, (int)this.imageTransformee.ActualHeight, (int)this.Thickness.Value, this.ColorPicker.SelectedColor.GetValueOrDefault(), this.Dotted.IsChecked.GetValueOrDefault());
         }
 
         private void elementSelectionne(object sender, RoutedEventArgs e)
@@ -92,10 +92,10 @@ namespace WPFUI.Views
             if (this.Mode.SelectedIndex == 2)
             {
                 this.optionBlock.Children.Add(text);
-                comboBox.Items.Add("left to right");
-                comboBox.Items.Add("right to left");
-                comboBox.Items.Add("top to bottom");
-                comboBox.Items.Add("bottom to top");
+                comboBox.Items.Add("Left to right");
+                comboBox.Items.Add("Right to left");
+                comboBox.Items.Add("Top to bottom");
+                comboBox.Items.Add("Bottom to top");
                 comboBox.SelectedIndex = 0;
                 this.Options.Children.Add(comboBox);
             }

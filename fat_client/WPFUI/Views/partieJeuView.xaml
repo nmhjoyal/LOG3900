@@ -47,11 +47,11 @@
 		</Grid.Triggers>
 
 		<Grid.Background>
-			<ImageBrush ImageSource="/Resources/Stripes.png" TileMode="Tile" >
-				<ImageBrush.RelativeTransform>
+            <SolidColorBrush Color="#FF018577">
+				<SolidColorBrush.RelativeTransform>
 					<RotateTransform CenterX="0.5" CenterY="0.5" Angle="0" x:Name="imgRot"/>
-				</ImageBrush.RelativeTransform>
-			</ImageBrush>
+				</SolidColorBrush.RelativeTransform>
+			</SolidColorBrush>
 		</Grid.Background>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="10"/>

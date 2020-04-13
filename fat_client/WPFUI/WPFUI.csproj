@@ -151,7 +151,8 @@
     <Compile Include="EventModels\joinChatEvent.cs" />
     <Compile Include="EventModels\joinChatroomEvent.cs" />
     <Compile Include="EventModels\joinedRoomReceived.cs" />
-    <Compile Include="EventModels\joinGameEvent.cs" />
+    <Compile Include="EventModels\choseGameViewEvent.cs" />
+    <Compile Include="EventModels\joinMatchEvent.cs" />
     <Compile Include="EventModels\LeaderboardEvent.cs" />
     <Compile Include="EventModels\LogInEvent.cs" />
     <Compile Include="EventModels\logOutEvent.cs" />

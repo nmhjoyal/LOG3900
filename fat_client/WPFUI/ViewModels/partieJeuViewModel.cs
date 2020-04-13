@@ -352,7 +352,7 @@ namespace WPFUI.ViewModels
         public void goToGameView()
         {
             leaveMatchRoutine();
-            _events.PublishOnUIThread(new joinGameEvent());
+            _events.PublishOnUIThread(new choseGameViewEvent());
         }
 
         public void leaveMatchRoutine()

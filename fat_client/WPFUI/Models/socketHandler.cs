@@ -82,7 +82,7 @@ namespace WPFUI.Models
 
         public SocketHandler(IUserData userdata, IEventAggregator events)
         {
-            this.baseURL = "http://localhost:5000";
+            this.baseURL = "http://71b07964.ngrok.io";
             _userdata = userdata;
             _events = events;
             _roomToBeCreated = null;
@@ -586,6 +586,7 @@ namespace WPFUI.Models
                 }
                 else
                 {
+                    _events.PublishOnUIThread(new joinMatchEvent());
                     _events.PublishOnUIThread(new appWarningEvent(jRF.feedback.log_message));
                 }
             });
@@ -635,7 +636,7 @@ namespace WPFUI.Models
                 dynamic json = JsonConvert.DeserializeObject(feedback.ToString());
                 if ((Boolean)json.status)
                 {
-                    this._events.PublishOnUIThread(new joinGameEvent());
+                    this._events.PublishOnUIThread(new choseGameViewEvent());
                     this.offWaitingRoom();
                 }
             });
@@ -724,7 +725,7 @@ namespace WPFUI.Models
             this.socket.On("unexpected_leave", () =>
             {
                 this.offMatch();
-                this._events.PublishOnUIThread(new joinGameEvent());
+                this._events.PublishOnUIThread(new choseGameViewEvent());
                 _events.PublishOnUIThread(new appWarningEvent("Unexpected match leave"));
             });
 
