@@ -52,7 +52,9 @@ class StatsDB {
             startTime: startTime,
             endTime: Date.now(),
             matchMode: matchMode,
-            winner: { username: winner.user.username, score: winner.score.scoreTotal },
+            winner: (matchMode == MatchMode.sprintCoop) ? 
+                        { username: "", score: 0 } :
+                        { username: winner.user.username, score: winner.score.scoreTotal },
             myScore: 0,
             playerNames: players.filter(player => !player.isVirtual).map(player => player.user.username)
         }
@@ -88,7 +90,7 @@ class StatsDB {
         const statsDB: any = await this.mongoDB.db("Stats").collection("stats").findOne({ username: username });
         const matchCount: number = statsDB.matchesHistory.length;
         const victoryCount: number = statsDB.matchesHistory.map((matchHistory: MatchHistory) => 
-            matchHistory.winner.username).filter((winner: string) => winner == username ).length;
+            matchHistory.winner.username).filter((winner: string) => winner == username || winner == "").length;
 
         const totalTime: number = statsDB.matchesHistory.reduce((totalTime: number, matchHistory: MatchHistory) => 
             totalTime + matchHistory.endTime - matchHistory.startTime, 0);
