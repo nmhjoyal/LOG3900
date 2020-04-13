@@ -2,6 +2,7 @@ package com.example.thin_client.ui.chatrooms
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -26,6 +27,7 @@ import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
 import com.example.thin_client.ui.helpers.DEFAULT_INTERVAL
 import com.example.thin_client.ui.helpers.setOnClickListener
+import com.example.thin_client.ui.login.afterTextChanged
 import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -189,7 +191,7 @@ class ChatRoomsFragment : Fragment() {
                             inviteList = arrayListOf()
                         }
                     } else {
-                        if (activity !== null) {
+                        if (context != null) {
                             Toast.makeText(
                                 context,
                                 roomCreateFeedback.log_message,
@@ -362,16 +364,21 @@ class ChatRoomsFragment : Fragment() {
         alertBuilder
             .setPositiveButton(R.string.ok) { _, _ ->
                 newRoomName = dialogView.findViewById<EditText>(R.id.room_name).text.toString()
-                if (newRoomName.isNotBlank()) {
-                    SocketHandler.createChatRoom(newRoomName, isPrivate)
-                } else {
-                    Toast.makeText(context, R.string.error_roomname, Toast.LENGTH_SHORT)
-                        .show()                    }
+                SocketHandler.createChatRoom(newRoomName, isPrivate)
             }
             .setNegativeButton(R.string.cancel) { _, _ -> }
             .setCancelable(false)
         val dialog = alertBuilder.create()
         dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
         dialog.show()
+        val editRoomName = dialog.findViewById<EditText>(R.id.room_name)
+        editRoomName.afterTextChanged {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled =
+                editRoomName.text.isNotBlank() && editRoomName.text.length > 3 && editRoomName.text.length < 11
+            if (!dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled) {
+                editRoomName.error = resources.getText(R.string.room_name_error)
+            }
+        }
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
     }
 }
