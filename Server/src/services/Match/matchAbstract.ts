@@ -327,7 +327,6 @@ export default abstract class Match {
         this.isStarted = true;
         this.drawing = new Drawing(this.matchId);
         this.virtualDrawing = new VirtualDrawing(this.matchId, this.timeLimit);
-        io.in(this.matchId).emit("new_message", JSON.stringify(this.virtualPlayer.getStartMatchMessage(this.vp, this.matchId)));
 
         // In the other modes the drawer is set to the virtual player in the constructor.
         if (this.mode == MatchMode.freeForAll) {
@@ -337,6 +336,7 @@ export default abstract class Match {
             const username: string | undefined = this.getVPUsername(); 
             this.vp = (username) ? username : this.virtualPlayer.create().user.username;
         }
+        io.in(this.matchId).emit("new_message", JSON.stringify(this.virtualPlayer.getStartMatchMessage(this.vp, this.matchId)));
         this.round = 0;
         
         this.initScores();

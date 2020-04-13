@@ -57,7 +57,15 @@ namespace WPFUI.Views
             {
                 option = (this.Options.Children[0] as ComboBox).SelectedIndex;
             }
-            (this.DataContext as CreationJeuManuelleViewModel).createGame(this.Word.Text, clues, this.Level.SelectedIndex, this.Mode.SelectedIndex, option);
+            bool isCreated = (this.DataContext as CreationJeuManuelleViewModel).createGame(this.Word.Text, clues, this.Level.SelectedIndex, this.Mode.SelectedIndex, option);
+            if(isCreated)
+            {
+                this.canContainer.Children.Clear();
+                this.canContainer.Children.Add(new TextBox());
+                this.Word.Text = "";
+                this.Level.SelectedIndex = -1;
+                this.Mode.SelectedIndex = -1;
+            }
 
         }
 

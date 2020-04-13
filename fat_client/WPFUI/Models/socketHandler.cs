@@ -89,6 +89,18 @@ namespace WPFUI.Models
             // TestPOSTWebRequest(user);
             // TestGETWebRequest("Testing get...");
             this._socket = IO.Socket(this.baseURL);
+            _socket.On(Socket.EVENT_DISCONNECT, () =>
+            {
+                _events.PublishOnUIThread(new logOutEvent());
+                _events.PublishOnUIThread(new appWarningEvent("You have been disconnected"));
+            });
+
+            _socket.On(Socket.EVENT_ERROR, () =>
+            {
+                _events.PublishOnUIThread(new logOutEvent());
+                _events.PublishOnUIThread(new appWarningEvent("Event error"));
+            });
+
             _socket.On("user_signed_in", (signInFeedback) =>
             {
                 SignInFeedback feedback = JsonConvert.DeserializeObject<SignInFeedback>(signInFeedback.ToString());
@@ -450,7 +462,7 @@ namespace WPFUI.Models
                 {
                     for (int i = Traits.Count - 1; i >= 0; i--)
                     {
-                        if (strokes[Traits[i]] <= top)
+                        if(strokes.ContainsKey(Traits[i]))
                         {
                             this.Dispatcher.Invoke(() =>
                                 Traits.Insert(i + 1, stroke)
@@ -726,7 +738,7 @@ namespace WPFUI.Models
             {
                 this.offMatch();
                 this._events.PublishOnUIThread(new choseGameViewEvent());
-                _events.PublishOnUIThread(new appWarningEvent("Unexpected match leave"));
+                _events.PublishOnUIThread(new appWarningEvent("Match no longer meets requirments"));
             });
 
             this.socket.On("update_players", (new_players) =>
