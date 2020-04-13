@@ -169,17 +169,19 @@ namespace WPFUI.ViewModels
             this._socketHandler.offPreview();
             _events.PublishOnUIThread(new goBackCreationMenuEvent());
         }
-        public void createGame(string word, List<string> clues, int level, int mode, int option)
+        public bool createGame(string word, List<string> clues, int level, int mode, int option)
         {
             CreateGame game = new CreateGame(word, this.Traits, clues, (Level)level, (Mode)mode, option);
             Feedback feedback = JsonConvert.DeserializeObject<Feedback>(this._socketHandler.TestPOSTWebRequest(game, "/game/create").ToString());
             if (feedback.status)
             {
                 _events.PublishOnUIThread(new appSuccessEvent(feedback.log_message));
+                return true;
             }
             else
             {
                 _events.PublishOnUIThread(new appWarningEvent(feedback.log_message));
+                return false;
             }
         }
 

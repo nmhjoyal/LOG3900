@@ -77,7 +77,16 @@ namespace WPFUI.Views
                 option = (this.Options.Children[0] as System.Windows.Controls.ComboBox).SelectedIndex;
             }
             this.PreviewButton.IsEnabled = false;
-            (this.DataContext as CreationJeuAssiste1ViewModel).preview(this.absolutePath.Text, this.Mode.SelectedIndex, option, (int)this.imageTransformee.ActualWidth, (int)this.imageTransformee.ActualHeight, (int)this.Thickness.Value, this.ColorPicker.SelectedColor.GetValueOrDefault(), this.Dotted.IsChecked.GetValueOrDefault());
+            bool isCreated = (this.DataContext as CreationJeuAssiste1ViewModel).preview(this.absolutePath.Text, this.Mode.SelectedIndex, option, (int)this.imageTransformee.ActualWidth, (int)this.imageTransformee.ActualHeight, (int)this.Thickness.Value, this.ColorPicker.SelectedColor.GetValueOrDefault(), this.Dotted.IsChecked.GetValueOrDefault());
+            if(isCreated)
+            {
+                this.absolutePath.Text = "";
+                this.canContainer.Children.Clear();
+                this.canContainer.Children.Add(new System.Windows.Controls.TextBox());
+                this.Word.Text = "";
+                this.Level.SelectedIndex = -1;
+                this.Mode.SelectedIndex = -1;
+            }
         }
 
         private void elementSelectionne(object sender, RoutedEventArgs e)

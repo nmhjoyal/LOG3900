@@ -186,17 +186,19 @@ namespace WPFUI.ViewModels
             }
         }
 
-        public void preview(string fileName, int mode, int option, int width, int height, int thickness, System.Windows.Media.Color color, bool dotted)
+        public bool preview(string fileName, int mode, int option, int width, int height, int thickness, System.Windows.Media.Color color, bool dotted)
         {
             try
             {
                 GamePreview gamePreview = new GamePreview(Potrace.Converter.exec(fileName, width, height, thickness, color, dotted), (Mode)mode, option);
                 this._socketHandler.socket.Emit("preview", JsonConvert.SerializeObject(gamePreview));
+                return true;
             }
             catch (Exception)
             {
                 this._events.PublishOnUIThread(new previewDoneEvent());
                 _events.PublishOnUIThread(new appWarningEvent("This file provided is invalid (bmp, jpg, png)"));
+                return false;
             }
         }
         public void preventDrawing(Stroke stroke)
