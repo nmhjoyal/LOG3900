@@ -46,12 +46,12 @@ object SocketHandler {
     }
 
     fun disconnect() {
+        isLoggedIn = false
         if (socket != null) {
             socket!!.off()
             socket!!.disconnect()
             socket = null
         }
-        isLoggedIn = false
     }
 
     fun login(user: User) {

@@ -113,8 +113,14 @@ class WaitingRoom : Fragment() {
 
     private fun refreshPlayersAdapter() {
         adapter.clear()
+        var hostAllocated = false
         for (player in GameManager.playersList) {
-            adapter.add(WaitingRoomItem(player.user.username, player.user.avatar))
+            if (!player.isVirtual && !hostAllocated) {
+                adapter.add(WaitingRoomItem(player.user.username, player.user.avatar, true))
+                hostAllocated = true
+            } else {
+                adapter.add(WaitingRoomItem(player.user.username, player.user.avatar, false))
+            }
         }
     }
 

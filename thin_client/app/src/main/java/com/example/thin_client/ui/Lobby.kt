@@ -257,8 +257,20 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
                 }
             }))
             .on(Socket.EVENT_DISCONNECT, ({
-                SocketHandler.socket = null
-                SocketHandler.isLoggedIn = false
+                if (SocketHandler.isLoggedIn) {
+                    SocketHandler.socket = null
+                    SocketHandler.isLoggedIn = false
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        finishAffinity()
+                        val intent = Intent(applicationContext, Lobby::class.java)
+                        startActivity(intent)
+                        Toast.makeText(
+                            applicationContext,
+                            R.string.error_disconnected,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    })
+                }
             }))
         }
     }
