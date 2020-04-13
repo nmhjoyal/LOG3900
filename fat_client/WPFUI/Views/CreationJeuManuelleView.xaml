@@ -72,7 +72,7 @@
             <Button MaxWidth="140" Click="addClue" Background="#FF018577" 
 					Grid.Column="1" Grid.Row="9" BorderBrush="{x:Null}" VerticalAlignment="Top">
                 <StackPanel  Orientation="Horizontal">
-                    <TextBlock FontSize="12" Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Clue(s):</TextBlock>
+                    <TextBlock FontSize="12" Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Hint(s):</TextBlock>
                     <Image Source="/Resources/add.png" Height="20"></Image>
                 </StackPanel>
             </Button>
@@ -85,8 +85,8 @@
                 <Button BorderBrush="{x:Null}" Background="#00584C" FontSize="12" Foreground="#D6EFE9" Click="createGame" Content="Create Game"   HorizontalAlignment="Center" Width="110"/>
             </StackPanel>
 
-            <Border  Visibility="Visible" Name="border" Background="#00584C" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderBrush="Black"  Grid.ColumnSpan="6" Grid.RowSpan="9" Margin="0,0,0,20">
-                <Grid Visibility="Visible" Name="selectNextDrawingBox" >
+            <Border  Visibility="Hidden" Name="border" Background="#00584C" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderBrush="Black"  Grid.ColumnSpan="6" Grid.RowSpan="9" Margin="0,0,0,20">
+                <Grid Visibility="Hidden" Name="selectNextDrawingBox" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="20"/>
                         <ColumnDefinition Width="600"/>
