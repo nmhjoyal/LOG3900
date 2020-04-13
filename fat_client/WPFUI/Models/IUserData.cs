@@ -29,11 +29,9 @@ namespace WPFUI.Models
         void addPublicRoom(Room room);
         void changeChannel(string roomID);
         void fillAvatars();
-        Dictionary<string, string> findTheMap(string roomID);
-        void fixAllRooms(PublicProfile profile);
         string getAvatarSource(string avatarName);
         void Handle(joinedRoomReceived message);
-        void Handle(refreshInvitesEvent message);
         void Handle(roomsRetrievedEvent message);
+        Dictionary<string, string> theMap();
     }
 }

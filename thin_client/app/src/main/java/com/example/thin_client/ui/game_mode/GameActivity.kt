@@ -121,6 +121,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
 
     private fun cleanupAndFinish() {
         GameManager.isGameStarted = false
+        GameManager.hasJoinedMatch = false
         RoomManager.roomsJoined.remove(RoomManager.currentRoom)
         RoomManager.roomAvatars.remove(RoomManager.currentRoom)
         RoomManager.currentRoom = ""
@@ -234,14 +235,18 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         }
 
         adapter.setOnItemClickListener(({ item, v ->
-            val selectedWord = (item as WordHolder).text
-            wordBeingDrawn = selectedWord
-            SocketHandler.startTurn(selectedWord)
-            showDrawerFragment()
+            if (isGameStarted) {
+                val selectedWord = (item as WordHolder).text
+                wordBeingDrawn = selectedWord
+                SocketHandler.startTurn(selectedWord)
+                showDrawerFragment()
+            }
             dialog.dismiss()
         }))
         wordRecycler.adapter = adapter
-        dialog.show()
+        if (isGameStarted) {
+            dialog.show()
+        }
     }
 
     private fun resetTurn(drawer: String) {
@@ -259,10 +264,12 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
     }
 
     private fun delegateViews(choices: Array<String>) {
-        if (isHost) {
-            showWordsSelection(choices)
-        } else {
-            showObserverFragment()
+        if (isGameStarted) {
+            if (isHost) {
+                showWordsSelection(choices)
+            } else {
+                showObserverFragment()
+            }
         }
     }
 
@@ -410,6 +417,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                         getNonVirtualPlayers(playersRefresh)
                         refreshPlayerPointsToolbar()
                         turnOffSocketEvents()
+                        isGameStarted = false
                         user_block.bringToFront()
                         get_hint_button.visibility = View.GONE
                         user_points.visibility = View.GONE
@@ -430,6 +438,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                 .on(SocketEvent.UNEXPECTED_LEAVE, ({
                     Handler(Looper.getMainLooper()).post(Runnable {
                         turnOffSocketEvents()
+                        isGameStarted = false
                         user_block.bringToFront()
                         user_points.visibility = View.GONE
                         message.text = resources.getText(R.string.unexpected_leave)

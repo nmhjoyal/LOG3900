@@ -25,7 +25,10 @@ class OneVsOneMatchMode : Fragment() {
         adapter.setOnItemClickListener{ item, _ ->
             val matchId = (item as MatchItem).match.matchId
             GameManager.currentGameMode = MatchMode.ONE_ON_ONE
-            SocketHandler.joinMatch(matchId)
+            if (!GameManager.hasJoinedMatch) {
+                SocketHandler.joinMatch(matchId)
+                GameManager.hasJoinedMatch = true
+            }
         }
         refreshMatchesAdapter()
         available_onevsone.adapter = adapter

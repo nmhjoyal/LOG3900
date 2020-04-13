@@ -10,13 +10,10 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.thin_client.R
-import com.example.thin_client.data.AvatarID
-import com.example.thin_client.data.Feedback
-import com.example.thin_client.data.Message
+import com.example.thin_client.data.*
 import com.example.thin_client.data.app_preferences.PreferenceHandler
 import com.example.thin_client.data.game.GameArgs
 import com.example.thin_client.data.game.GameManager
-import com.example.thin_client.data.getAvatar
 import com.example.thin_client.data.rooms.Invitation
 import com.example.thin_client.data.rooms.RoomArgs
 import com.example.thin_client.data.rooms.RoomManager
@@ -61,9 +58,7 @@ class ChatFragment : Fragment() {
         room_id.text = roomID
 
         if (arguments!!.getBoolean(GameArgs.IS_GAME_CHAT)) {
-            back_button.visibility = View.GONE
-            leave_button.visibility = View.GONE
-            invite_user_button.visibility = View.GONE
+            chat_menu.visibility = View.GONE
         } else {
             send_guess.visibility = View.GONE
         }
@@ -149,11 +144,7 @@ class ChatFragment : Fragment() {
                     admin -> showAdminMessage(messages[i].content)
                     SocketHandler.user!!.username -> showToMessage(messages[i].content, messages[i].date)
                     else -> {
-                        var userAvatar: AvatarID = AvatarID.AVOCADO
-                        val avatarList = RoomManager.roomAvatars["General"]
-                        if (avatarList !== null) {
-                            userAvatar = getAvatar(avatarList[messages[i].username])
-                        }
+                        val userAvatar = getPlayerAvatar(messages[i].username)
                         showFromMessage(
                             messages[i].content,
                             userAvatar,
@@ -182,11 +173,7 @@ class ChatFragment : Fragment() {
                                     timestamp
                                 )
                                 else -> {
-                                    var userAvatar: AvatarID = AvatarID.AVOCADO
-                                    val avatarList = RoomManager.roomAvatars["General"]
-                                    if (avatarList !== null) {
-                                        userAvatar = getAvatar(avatarList[username])
-                                    }
+                                    val userAvatar = getPlayerAvatar(jsonData.username)
                                     showFromMessage(
                                         jsonData.content,
                                         userAvatar,

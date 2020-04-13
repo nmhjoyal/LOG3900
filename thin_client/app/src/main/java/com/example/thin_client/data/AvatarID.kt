@@ -1,6 +1,7 @@
 package com.example.thin_client.data
 import android.widget.ImageView
 import com.example.thin_client.R
+import com.example.thin_client.data.rooms.RoomManager
 import java.lang.IllegalArgumentException
 
 enum class AvatarID {
@@ -17,6 +18,19 @@ enum class AvatarID {
     CHERRY,
     PEAR
 }
+
+const val MR_AVOCADO = "Mr Avocado"
+const val LORD_BANANA = "Lord Banana"
+const val SGT_STRAWBERRY = "Sgt Strawberry"
+const val LADY_WATERMELON = "Lady Watermelon"
+const val MASTER_GRAPE = "Master Grape"
+const val GENTLEMAN_KIWI = "Gentleman Kiwi"
+const val MADAM_ORANGE = "Madam Orange"
+const val SIR_PINEAPPLE = "Sir Pineapple"
+const val LITTLE_APPLE = "Little Apple"
+const val MISS_LEMON = "Miss Lemon"
+const val DRE_CHERRY = "Dre Cherry"
+const val PIRATE_PEAR = "Pirate Pear"
 
 fun setAvatar(imgResource: ImageView, avatarID: AvatarID) {
     when (avatarID) {
@@ -44,4 +58,28 @@ fun getAvatar(avatar: String?): AvatarID {
         }
     }
     return AvatarID.AVOCADO
+}
+
+fun getPlayerAvatar(username: String): AvatarID {
+    return when(username) {
+        MR_AVOCADO -> AvatarID.AVOCADO
+        LORD_BANANA -> AvatarID.BANANA
+        SGT_STRAWBERRY -> AvatarID.STRAWBERRY
+        LADY_WATERMELON -> AvatarID.WATERMELON
+        MASTER_GRAPE -> AvatarID.GRAPE
+        GENTLEMAN_KIWI -> AvatarID.KIWI
+        MADAM_ORANGE -> AvatarID.ORANGE
+        SIR_PINEAPPLE -> AvatarID.PINEAPPLE
+        LITTLE_APPLE -> AvatarID.APPLE
+        MISS_LEMON -> AvatarID.LEMON
+        DRE_CHERRY -> AvatarID.CHERRY
+        PIRATE_PEAR -> AvatarID.PEAR
+        else -> {
+            val avatarList = RoomManager.roomAvatars["General"]
+            if (avatarList !== null) {
+                return getAvatar(avatarList[username])
+            }
+            return AvatarID.AVOCADO
+        }
+    }
 }
