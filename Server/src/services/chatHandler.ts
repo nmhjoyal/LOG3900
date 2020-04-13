@@ -8,6 +8,7 @@ import { profileDB } from "./Database/profileDB";
 import ChatFilter from "./Filter/chatFilter";
 import PublicProfile from "../models/publicProfile";
 import AvatarUpdate from "../models/avatarUpdate";
+import RandomMatchIdGenerator from "./IdGenerator/idGenerator";
 
 
 export default class ChatHandler {
@@ -23,30 +24,34 @@ export default class ChatHandler {
         let log_message: CreateRoomStatus;
         const roomId: string = room.id;
         if (user) {
-            if (!(this.findPrivateRoom(roomId) || (await roomDB.getRooms()).includes(roomId))) { // verifiy unicity 
-                if (room.isPrivate) { // private 
-                    const message: Message = this.connectSocketToRoom(socket, user.username, roomId);
-                    const newRoom: Room = this.createRoomObject(roomId, user.username, user.avatar, message);
-                    this.privateRooms.push(newRoom);
-                    status = true;
-                    log_message = CreateRoomStatus.Create;
-                } else { // public room
-                    try {
+            if((room.id.length < 4 || room.id.length > 10) && !room.id.startsWith(RandomMatchIdGenerator.prefix)) {
+                log_message = CreateRoomStatus.InvalidId;
+            } else {
+                if (!(this.findPrivateRoom(roomId) || (await roomDB.getRooms()).includes(roomId))) { // verifiy unicity 
+                    if (room.isPrivate) { // private 
                         const message: Message = this.connectSocketToRoom(socket, user.username, roomId);
                         const newRoom: Room = this.createRoomObject(roomId, user.username, user.avatar, message);
-                        user.rooms_joined.push(room.id);
-                        await roomDB.createRoom(newRoom);
-                        await profileDB.joinRoom(user.username, roomId);
+                        this.privateRooms.push(newRoom);
                         status = true;
                         log_message = CreateRoomStatus.Create;
-                    } catch {
-                        // Room already exists
-                        log_message = CreateRoomStatus.Error;
+                    } else { // public room
+                        try {
+                            const message: Message = this.connectSocketToRoom(socket, user.username, roomId);
+                            const newRoom: Room = this.createRoomObject(roomId, user.username, user.avatar, message);
+                            user.rooms_joined.push(room.id);
+                            await roomDB.createRoom(newRoom);
+                            await profileDB.joinRoom(user.username, roomId);
+                            status = true;
+                            log_message = CreateRoomStatus.Create;
+                        } catch {
+                            // Room already exists
+                            log_message = CreateRoomStatus.Error;
+                        }
                     }
+                } else {
+                    // Room id already taken
+                    log_message = CreateRoomStatus.AlreadyCreated
                 }
-            } else {
-                // Room id already taken
-                log_message = CreateRoomStatus.AlreadyCreated
             }
         } else {
             log_message = CreateRoomStatus.InvalidUser;

@@ -17,10 +17,11 @@ export class VirtualDrawing {
 
     public async draw(socketIO: SocketIO.Server | SocketIO.Socket, drawing: Stroke[], level: Level): Promise<void> {
         this.clear(socketIO);
+        const levelFactor: number = Math.pow(2, 2 - level);
         const speed: number = 250; // points per second
-        drawing = Utils.uniform(drawing, speed * this.time);
+        drawing = Utils.uniform(drawing, speed * this.time / levelFactor);
         let timeStamp: number = 0;
-        let deltaT: number = (this.time * 1000) / (Utils.totalPoints(drawing) * Math.pow(2, 2 - level));
+        let deltaT: number = (this.time * 1000) / (Utils.totalPoints(drawing) * levelFactor);
         for(let i: number = 0; i < drawing.length; i++) {
             this.timeouts.push(setTimeout(() => {
                 if(this.roomId) {
