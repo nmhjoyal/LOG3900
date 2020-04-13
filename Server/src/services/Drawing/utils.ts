@@ -68,7 +68,7 @@ export class Utils {
         // Point central : (300, 300)
         const center: StylusPoint = {
             X: 300,
-            Y: 300
+            Y: 250
         }
         switch(option) {
             case 0 :
@@ -115,27 +115,33 @@ export class Utils {
     public static totalPoints(drawing: Stroke[]): number {
         let totalPoints: number = 0;
         drawing.forEach((line: Stroke) => {
-            totalPoints += line.StylusPoints.length + 1;
+            totalPoints += line.StylusPoints.length;
         });
         return totalPoints;
     }
 
     public static uniform(drawing: Stroke[], uniformedPoints: number): Stroke[] {
         const totalPoints: number = this.totalPoints(drawing);
-        if(uniformedPoints >= totalPoints || uniformedPoints < drawing.length) {
+        if(uniformedPoints >= totalPoints /*|| uniformedPoints < drawing.length*/) {
             console.log("Not uniformed");
             return drawing;
         }
         const step: number = this.totalPoints(drawing) / uniformedPoints;
         const uniformedDrawing: Stroke[] = [];
-        for(let i: number = 0; i < drawing.length; i++) {
-            const stroke: Stroke = {
-                DrawingAttributes: drawing[i].DrawingAttributes,
-                StylusPoints: []
+        if(drawing.every(stroke => stroke.StylusPoints.length == 0)) {
+            for(let i: number = 0; i < step; i++) {
+                uniformedDrawing.push(drawing[Math.min(drawing.length - 1, Math.round(i * step))]);
             }
-            uniformedDrawing.push(stroke);
-            for(let j: number = 0; j < (drawing[i].StylusPoints.length) / step; j++) {
-                uniformedDrawing[i].StylusPoints.push(drawing[i].StylusPoints[Math.min(drawing[i].StylusPoints.length - 1, Math.round(j * step))]);
+        } else {
+            for(let i: number = 0; i < drawing.length; i++) {
+                const stroke: Stroke = {
+                    DrawingAttributes: drawing[i].DrawingAttributes,
+                    StylusPoints: []
+                }
+                uniformedDrawing.push(stroke);
+                for(let j: number = 0; j < (drawing[i].StylusPoints.length) / step; j++) {
+                    uniformedDrawing[i].StylusPoints.push(drawing[i].StylusPoints[Math.min(drawing[i].StylusPoints.length - 1, Math.round(j * step))]);
+                }
             }
         }
         return uniformedDrawing;
