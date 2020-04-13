@@ -65,7 +65,7 @@ namespace WPFUI.ViewModels
 
         public void joinGame()
         {
-            _events.PublishOnUIThread(new joinGameEvent());
+            _events.PublishOnUIThread(new choseGameViewEvent());
         }
         public void fillAvatars()
         {

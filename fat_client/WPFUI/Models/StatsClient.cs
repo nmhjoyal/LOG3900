@@ -44,24 +44,24 @@ namespace WPFUI.Models
             get { return this.matchCount; }
         }
 
-        public int VictoryPerc
+        public string VictoryPerc
         {
-            get { return this.victoryPerc; }
+            get { return this.victoryPerc + "%"; }
         }
 
-        public int AverageTime
+        public string AverageTime
         {
-            get { return this.averageTime; }
+            get { return this.averageTime + " seconds"; }
         }
 
-        public int TotalTime
+        public string TotalTime
         {
-            get { return this.totalTime; }
+            get { return this.totalTime + " seconds"; }
         }
 
-        public int BestSSS
+        public string BestSSS
         {
-            get { return this.bestSSS; }
+            get { return this.bestSSS + " points"; }
         }
         public BindableCollection<DateTime> Connections
         {
