@@ -60,8 +60,7 @@
             <ComboBoxItem Content="60 seconds"/>
             <ComboBoxItem Content="90 seconds"/>
             <ComboBoxItem Content="120 seconds"/>
-            <ComboBoxItem Content="150 seconds"/>
-           
+
         </ComboBox>
 
 		<Button HorizontalAlignment="Right" BorderBrush="{x:Null}" Background="#D6EFE9" Grid.Column="2" Grid.Row="9" Content="Lets go! " Foreground="#00584C" PreviewMouseDown="createMatch"/>

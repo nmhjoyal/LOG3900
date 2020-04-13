@@ -171,7 +171,14 @@ namespace WPFUI.ViewModels
             try
             {
                 CreateGame game = new CreateGame(word, Potrace.Converter.exec(fileName, width, height, thickness, color), clues, (Level)level, (Mode)mode, option);
-                this._socketHandler.TestPOSTWebRequest(game, "/game/create");
+                Feedback feedback = JsonConvert.DeserializeObject<Feedback>(this._socketHandler.TestPOSTWebRequest(game, "/game/create").ToString());
+                if(feedback.status)
+                {
+                    _events.PublishOnUIThread(new appSuccessEvent(feedback.log_message));
+                } else
+                {
+                    _events.PublishOnUIThread(new appWarningEvent(feedback.log_message));
+                }
             }
             catch (Exception)
             {

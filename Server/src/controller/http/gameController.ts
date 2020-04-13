@@ -24,7 +24,7 @@ export class GameController {
         if(createGame.drawing.length == 0) {
             feedback.status = false;
             feedback.log_message =  "You must provide a drawing";
-        } else if(createGame.word == "") {
+        } else if(createGame.word == "" || !createGame.word.match(/^[A-Za-z\s]+$/)) {
             feedback.status = false;
             feedback.log_message = "You must provide a word to guess";
         } else if(createGame.clues.length == 0) {
