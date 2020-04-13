@@ -65,7 +65,10 @@ namespace WPFUI.Models
         public Room currentGameRoom
         {
             get { return _currentGameRoom; }
-            set { _currentGameRoom = value; }
+            set {
+                _currentGameRoom = value;
+                formatGameRoom(_currentGameRoom); 
+            }
         }
 
         public string avatarName
@@ -152,6 +155,15 @@ namespace WPFUI.Models
             _currentGameRoom = null;
             _avatarName = null;
             _invites = new BindableCollection<Invitation>();
+        }
+
+        public void formatGameRoom(Room unformatedRoom)
+        {
+            foreach (Message m in unformatedRoom.messages)
+            {
+                try { m.avatarSource = theMap()[m.senderName]; }
+                catch { m.avatarSource = "/Resources/chatBox/robot.png"; }
+            }
         }
 
         public void addModifiedProfile(PublicProfile profile)
