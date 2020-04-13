@@ -362,8 +362,8 @@ namespace WPFUI.Models
                         roomToBeUpdated = null;
                         messagesToUpdate = null;
                         // TODO: faire un popup approprie
-                        Console.WriteLine("message sent to unjoigned room");
-                        _events.PublishOnUIThread(new appWarningEvent("a message was sent to an unjoigned room"));
+                        Console.WriteLine("message sent to unjoined room");
+                        _events.PublishOnUIThread(new appWarningEvent("a message was sent to an unjoined room"));
                     }
 
                 }

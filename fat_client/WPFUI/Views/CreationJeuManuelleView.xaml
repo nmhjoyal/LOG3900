@@ -159,7 +159,7 @@
                 </Grid>
             </Border>
 
-
+            <Button Grid.Column="6" Grid.Row="0" Content="Back" Background="#de0d56" BorderBrush="#de0d56"  Width="100" HorizontalAlignment="Right" x:Name="goBack"></Button>
 
         </Grid>
     </Viewbox>
