@@ -185,6 +185,7 @@ class MatchList : Fragment() {
                         gameStartedListener?.startGame()
                     } else {
                         Handler(Looper.getMainLooper()).post(({
+                            GameManager.hasJoinedMatch = false
                             if (context != null) {
                                 Toast.makeText(
                                     context,

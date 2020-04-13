@@ -49,13 +49,7 @@ class RankingFreeForAllMode : Fragment() {
     private fun refreshRankingAdapter() {
         adapter.clear()
         for (ranking in LeaderboardManager.freeForAllRankingList) {
-                adapter.add(LeaderboardItem(ranking))
+            adapter.add(LeaderboardItem(ranking))
         }
     }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-    }
-
 }

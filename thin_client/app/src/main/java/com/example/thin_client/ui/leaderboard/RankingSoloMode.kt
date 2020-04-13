@@ -55,10 +55,4 @@ class RankingSoloMode : Fragment() {
                 adapter.add(LeaderboardItem(ranking))
         }
     }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-    }
-
 }
