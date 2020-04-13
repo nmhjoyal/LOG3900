@@ -89,7 +89,6 @@ class ChatFragment : Fragment() {
                 send_button_chat.isEnabled = true
                 send_guess.isEnabled = true
                 SocketHandler.sendGuess(editText_chat.text.toString())
-                guessWordListener?.guessSent()
                 editText_chat.setText("")
             }
         }
@@ -205,6 +204,7 @@ class ChatFragment : Fragment() {
                 ?.on(SocketEvent.GUESS_RESULT, ({ data ->
                     val response = Gson().fromJson(data.first().toString(), Feedback::class.java)
                     Handler(Looper.getMainLooper()).post(Runnable {
+                        guessWordListener?.guessSent()
                         if (response.status) {
                             if (send_guess != null) {
                                 send_guess.isEnabled = false
