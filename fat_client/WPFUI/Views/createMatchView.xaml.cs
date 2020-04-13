@@ -46,7 +46,6 @@ namespace WPFUI.Views
                     int nbRounds = int.Parse(this.roundcomboBox.Text);
                     int timeLimit = int.Parse(this.timecomboBox.Text.Substring(0, this.timecomboBox.Text.Length - 8));
                     (this.DataContext as createMatchViewModel).createMatch(matchMode, nbRounds, timeLimit);
-                    this._events.PublishOnUIThread(new appSuccessEvent("Your match has been created!"));
                 }
             }
             catch (Exception)

@@ -31,7 +31,7 @@ namespace WPFUI.ViewModels
         }
         public void goBack()
         {
-            _events.PublishOnUIThread(new goBackMainEvent());
+            _events.PublishOnUIThread(new joinGameEvent());
         }
         public void createMatch(MatchMode matchMode, int nbRounds, int timeLimit)
         {

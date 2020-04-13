@@ -635,7 +635,7 @@ namespace WPFUI.Models
                 dynamic json = JsonConvert.DeserializeObject(feedback.ToString());
                 if ((Boolean)json.status)
                 {
-                    this._events.PublishOnUIThread(new goBackMainEvent());
+                    this._events.PublishOnUIThread(new joinGameEvent());
                     this.offWaitingRoom();
                 }
             });
