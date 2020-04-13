@@ -172,7 +172,15 @@ namespace WPFUI.ViewModels
         public void createGame(string word, List<string> clues, int level, int mode, int option)
         {
             CreateGame game = new CreateGame(word, this.Traits, clues, (Level)level, (Mode)mode, option);
-            this._socketHandler.TestPOSTWebRequest(game, "/game/create");
+            Feedback feedback = JsonConvert.DeserializeObject<Feedback>(this._socketHandler.TestPOSTWebRequest(game, "/game/create").ToString());
+            if (feedback.status)
+            {
+                _events.PublishOnUIThread(new appSuccessEvent(feedback.log_message));
+            }
+            else
+            {
+                _events.PublishOnUIThread(new appWarningEvent(feedback.log_message));
+            }
         }
 
         public void preview(int mode, int option)

@@ -11,11 +11,11 @@
             d:DesignHeight="900" d:DesignWidth="1100"
             Loaded="onLoad"
 			FontFamily="Microsoft JhengHei UI Light" Background="White">
-    <UserControl.Resources>
-        <convertisseurs:ConvertisseurBordure x:Key="convertisseurBordure" />
-        <convertisseurs:ConvertisseurCouleurFond x:Key="convertisseurCouleurFond" />
-        <convertisseurs:ConvertisseurModeEdition x:Key="convertisseurModeEdition" />
-    </UserControl.Resources>
+	<UserControl.Resources>
+		<convertisseurs:ConvertisseurBordure x:Key="convertisseurBordure" />
+		<convertisseurs:ConvertisseurCouleurFond x:Key="convertisseurCouleurFond" />
+		<convertisseurs:ConvertisseurModeEdition x:Key="convertisseurModeEdition" />
+	</UserControl.Resources>
 
 	<Viewbox Grid.Column="1" Grid.Row="0" >
 		<Grid Background="White" >
@@ -40,15 +40,15 @@
 				<RowDefinition Height="40"/>
 				<RowDefinition Height="10"/>
 				<RowDefinition Height="40"/>
-                <RowDefinition Height="10"/>
-                <RowDefinition Height="150"/>
-                <RowDefinition Height="*"/>
+				<RowDefinition Height="10"/>
+				<RowDefinition Height="150"/>
+				<RowDefinition Height="*"/>
 
 
 			</Grid.RowDefinitions>
 			<TextBlock  FontSize="40"  Foreground="#00584C" Text="Assisted Game Creation" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" TextAlignment="Center"/>
 			<Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="3" CornerRadius="10">
-				<TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="File Name:" Grid.Column="1" Grid.Row="3"/>
+				<Button  Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Right" Content="File Name:" Grid.Column="1" Grid.Row="3" Click="Button_Click" Margin="0,4.2,21.6,4.6"/>
 			</Border>
 			<TextBox x:Name="fileName" Grid.Column="3" Grid.Row="3" MinWidth="200" Grid.ColumnSpan="2"/>
 			<Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="5" CornerRadius="10">
@@ -59,27 +59,27 @@
 			<Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="7" CornerRadius="10">
 				<TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center"  Text="Difficulty:" Grid.Column="1" Grid.Row="14"/>
 			</Border>
-            <ComboBox Name="Level"  Grid.Column="3" Grid.Row="7" >
-                <ComboBoxItem Foreground="Green" Content="Easy"/>
-                <ComboBoxItem Foreground="Orange" Content="Normal"/>
-                <ComboBoxItem Foreground="Red" Content="Hard"/>
-            </ComboBox>
-            <Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="9" CornerRadius="10">
+			<ComboBox Name="Level"  Grid.Column="3" Grid.Row="7" >
+				<ComboBoxItem Foreground="Green" Content="Easy"/>
+				<ComboBoxItem Foreground="Orange" Content="Normal"/>
+				<ComboBoxItem Foreground="Red" Content="Hard"/>
+			</ComboBox>
+			<Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="9" CornerRadius="10">
 				<TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center"  Text="Mode:" Grid.Column="1" Grid.Row="9"/>
 			</Border>
 			<StackPanel Name="optionBlock" Grid.Column="4" Grid.Row="9"></StackPanel>
 			<StackPanel  Name="Options" Grid.Column="5" Grid.Row="9"></StackPanel>
-            <ComboBox SelectionChanged="elementSelectionne" Name="Mode" Grid.Column="3" Grid.Row="9">
-                <ComboBoxItem Content="Classic"/>
-                <ComboBoxItem Content="Random"/>
-                <ComboBoxItem Content="Panoramic"/>
-                <ComboBoxItem Content="Centered"/>
-            </ComboBox>
+			<ComboBox SelectionChanged="elementSelectionne" Name="Mode" Grid.Column="3" Grid.Row="9">
+				<ComboBoxItem Content="Classic"/>
+				<ComboBoxItem Content="Random"/>
+				<ComboBoxItem Content="Panoramic"/>
+				<ComboBoxItem Content="Centered"/>
+			</ComboBox>
 
-            <Button MaxWidth="140" Click="addClue" Background="#FF018577" Grid.Column="1" Grid.Row="11" BorderBrush="{x:Null}" Margin="0,10,0,0" VerticalAlignment="Top">
+			<Button MaxWidth="140" Click="addClue" Background="#FF018577" Grid.Column="1" Grid.Row="11" BorderBrush="{x:Null}" Margin="0,10,0,0" VerticalAlignment="Top">
 
 				<StackPanel  Orientation="Horizontal">
-					<TextBlock FontSize="12" Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Indice(s):</TextBlock>
+					<TextBlock FontSize="12" Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Hint(s):</TextBlock>
 					<Image Source="/Resources/add.png" Height="20"></Image>
 				</StackPanel>
 			</Button>
@@ -104,41 +104,42 @@
 					<RowDefinition Height="auto"></RowDefinition>
 					<RowDefinition Height="*"></RowDefinition>
 				</Grid.RowDefinitions>
-			<Border  Visibility="Hidden" Name="border" Background="#00584C" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderBrush="Black" >
-                <Grid Visibility="Hidden" Name="selectNextDrawingBox" >
-                    <Grid.ColumnDefinitions>
-						<ColumnDefinition Width="20"/>
-						<ColumnDefinition Width="600"/>
-						<ColumnDefinition Width="120"/>
-						<ColumnDefinition Width="20" />
-					</Grid.ColumnDefinitions>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="60"/>
-						<RowDefinition Height="60"/>
-						<RowDefinition Height="7*"/>
-						<RowDefinition Height="20"/>
-					</Grid.RowDefinitions>
-					<TextBlock Grid.Column="1" Grid.Row="0" Text="Preview Your Drawing Here !" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="22"
+				<Border  Visibility="Hidden" Name="border" Background="#00584C" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderBrush="Black" >
+					<Grid Visibility="Hidden" Name="selectNextDrawingBox" >
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="20"/>
+							<ColumnDefinition Width="600"/>
+							<ColumnDefinition Width="120"/>
+							<ColumnDefinition Width="20" />
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="60"/>
+							<RowDefinition Height="60"/>
+							<RowDefinition Height="7*"/>
+							<RowDefinition Height="20"/>
+						</Grid.RowDefinitions>
+						<TextBlock Grid.Column="1" Grid.Row="0" Text="Preview Your Drawing Here !" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="22"
 							   Name="roundFinishedMessage" Margin="0,10,0,20" Foreground="White"/>
-					<InkCanvas  StrokeCollected="imageTransformee_StrokeCollected" Strokes="{Binding Path=Traits, Mode=OneTime}" Name="imageTransformee" Grid.Row="1" Grid.Column="1"  Grid.RowSpan="2" Width="600" Height="500">
-					</InkCanvas>
-					<Button VerticalAlignment="Top" Grid.Column="2" Grid.Row="1" FontSize="12" 
+						<InkCanvas  StrokeCollected="imageTransformee_StrokeCollected" Strokes="{Binding Path=Traits, Mode=OneTime}" Name="imageTransformee" Grid.Row="1" Grid.Column="1"  Grid.RowSpan="2" Width="600" Height="500">
+						</InkCanvas>
+						<Button VerticalAlignment="Top" Grid.Column="2" Grid.Row="1" FontSize="12" 
 							Foreground="#00584C" Background="#D6EFE9" BorderBrush="#D6EFE9" 
 							x:Name="PreviewButton" Click="preview" Content="Preview" MaxWidth="100"
 							Margin="0,55,0,0"/>
-                    <Button Grid.Column="2" Grid.Row="1" FontSize="12" Foreground="White" Background="#D81A60" BorderBrush="#D81A60" Click="close" Content="Close" MaxWidth="100" VerticalAlignment="Top"/>
-					<StackPanel Orientation="Vertical" VerticalAlignment="Top" 
+						<Button Grid.Column="2" Grid.Row="1" FontSize="12" Foreground="White" Background="#D81A60" BorderBrush="#D81A60" Click="close" Content="Close" MaxWidth="100" VerticalAlignment="Top"/>
+						<StackPanel Orientation="Vertical" VerticalAlignment="Top" 
 								Margin="10,90,0,0" Grid.Row="1" Grid.Column="2">
-						<Slider Maximum="10" Minimum="1" TickPlacement="BottomRight" Margin="0,15,0,0"
+							<Slider Maximum="10" Minimum="1" TickPlacement="BottomRight" Margin="0,15,0,0"
 								TickFrequency="1" IsSnapToTickEnabled="True" VerticalAlignment="Stretch" x:Name="Thickness" Foreground="White" />
-						<toolkit:ColorPicker Name="ColorPicker" Height="30"  DisplayColorAndName="True" Margin="0,20,0,0" 
+							<toolkit:ColorPicker Name="ColorPicker" Height="30"  DisplayColorAndName="True" Margin="0,20,0,0" 
 											 AvailableColorsSortingMode="HueSaturationBrightness" SelectedColor="Black" Background="White" ></toolkit:ColorPicker>
-						
-					</StackPanel>
-					
-				</Grid>
-			</Border>
+
+						</StackPanel>
+
+					</Grid>
+				</Border>
 			</Grid>
+			<Button Grid.Column="6" Grid.Row="0" Content="Back" Background="#de0d56" BorderBrush="#de0d56"  Width="100" HorizontalAlignment="Right" x:Name="goBack"></Button>
 		</Grid>
 	</Viewbox>
 </UserControl>

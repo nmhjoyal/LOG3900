@@ -421,11 +421,17 @@ export default abstract class Match {
 
     protected assignHost(): void {
         // Place the new host at the beginning of the array.
-        this.players.splice(0, 0, this.players.splice(this.findNewHostIndex(), 1)[0]);
+        const newHost: Player = this.players.splice(this.findNewHostIndex(), 1)[0];
+        this.players.unshift(newHost);
     }
 
     protected findNewHostIndex(): number {
-        return this.players.findIndex(player => !player.isVirtual);
+        for(let i: number = 1; i < this.players.length; i++) {
+            if(!this.players[i].isVirtual) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     protected addVP(io: SocketIO.Server): Player {

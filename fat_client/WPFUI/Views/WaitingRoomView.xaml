@@ -98,5 +98,6 @@
             <Button Background="#D6EFE9" BorderBrush="#D6EFE9" x:Name="addVirtualPlayer" Content="+" Height="auto" Width="auto" />
             <Button Background="#D6EFE9" BorderBrush="#D6EFE9" x:Name="removeVirtualPlayer" Content="-" Margin="5,0,0,0" Height="auto" />
         </StackPanel>
+        <Button Grid.Column="13" Grid.Row="0" Content="Back" Background="#de0d56" BorderBrush="#de0d56"  Width="100" HorizontalAlignment="Left" x:Name="goBack"></Button>
     </Grid>
 </UserControl>

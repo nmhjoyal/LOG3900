@@ -270,6 +270,7 @@ namespace WPFUI.Models
         public void addJoinedRoom(Room room, Boolean isPrivate)
         {
             BindableCollection<SelectableRoom> roomAlreadyExists = new BindableCollection<SelectableRoom>(this.selectableJoinedRooms.Where(x => x.id == room.id));
+            Console.WriteLine(JsonConvert.SerializeObject(room.avatars));
             if (roomAlreadyExists.Count() == 0)
             {
                 SelectableRoom sR = new SelectableRoom(room);
@@ -342,6 +343,7 @@ namespace WPFUI.Models
                 List<Message> list = new List<Message>(currentGameRoom.messages);
                 list.Add(message);
                 currentGameRoom.messages = list.ToArray();
+                _events.PublishOnUIThread(new scrollDownEvent());
             }
             else
             {
@@ -362,8 +364,8 @@ namespace WPFUI.Models
                         roomToBeUpdated = null;
                         messagesToUpdate = null;
                         // TODO: faire un popup approprie
-                        Console.WriteLine("message sent to unjoigned room");
-                        _events.PublishOnUIThread(new appWarningEvent("a message was sent to an unjoigned room"));
+                        Console.WriteLine("message sent to unjoined room");
+                        _events.PublishOnUIThread(new appWarningEvent("a message was sent to an unjoined room"));
                     }
 
                 }
@@ -393,14 +395,23 @@ namespace WPFUI.Models
             }
             catch
             {
-                if (_currentGameRoom.id == roomID)
+                if(_currentGameRoom != null)
                 {
-                    return _currentGameRoom.avatars;
-                }
-                else
+                    if (_currentGameRoom.id == roomID)
+                    {
+                        return _currentGameRoom.avatars;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+
+                } else
                 {
                     return null;
                 }
+
+
 
             }
         }
