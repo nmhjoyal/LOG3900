@@ -17,6 +17,9 @@
     <string name="reversedGameMode">Reversed Game</string>
     <string name="freeForAllGameMode">Free For All Game</string>
     <string name="score">Score</string>
+    <string name="current_player_score">Your Score</string>
+    <string name="current_player_position">Your Position</string>
+
 
 
     <!-- Profile -->

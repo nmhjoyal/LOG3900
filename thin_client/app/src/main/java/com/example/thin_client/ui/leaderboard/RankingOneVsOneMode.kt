@@ -25,7 +25,7 @@ class RankingOneVsOneMode : Fragment() {
             if(ranking.username == PreferenceHandler(context!!).getUser().username){
                 linearLayout.visibility= View.VISIBLE
                 text_view_onevsone_current_username.text = LeaderboardManager.onevsoneCurrentPlayer.username
-                onevsone_current_user_position.text = LeaderboardManager.onevsoneCurrentPlayer.pos.toString()
+                text_view_onevsone_current_user_position.text = LeaderboardManager.onevsoneCurrentPlayer.pos.toString()
                 text_view_onevsone_ranking_score.text = LeaderboardManager.onevsoneCurrentPlayer.score.toString()
             }
         }

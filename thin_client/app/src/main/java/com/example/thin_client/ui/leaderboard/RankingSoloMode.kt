@@ -25,7 +25,7 @@ class RankingSoloMode : Fragment() {
             if(ranking.username == PreferenceHandler(context!!).getUser().username){
                 linearLayout.visibility= View.VISIBLE
                 text_view_solo_current_username.text = LeaderboardManager.soloCurrentPlayer.username
-                solo_current_user_position.text = LeaderboardManager.soloCurrentPlayer.pos.toString()
+                text_view_solo_current_user_position.text = LeaderboardManager.soloCurrentPlayer.pos.toString()
                 text_view_solo_ranking_score.text = LeaderboardManager.soloCurrentPlayer.score.toString()
             }
         }
