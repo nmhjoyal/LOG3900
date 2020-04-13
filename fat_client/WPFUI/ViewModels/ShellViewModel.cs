@@ -101,77 +101,90 @@ namespace WPFUI.ViewModels
 
 		public void Handle(LogInEvent message)
 		{
+			_events.PublishOnUIThread(new buttonsTopMenuEvent(true));
 			FirstSubViewModel = _container.GetInstance<MainMenuViewModel>();
 			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 
 		public void Handle(viewProfileEvent message)
 		{
+			_events.PublishOnUIThread(new buttonsTopMenuEvent(true));
 			FirstSubViewModel = _container.GetInstance<profileViewModel>();
 			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 
 		public void Handle(ManuelIEvent message)
 		{
+			_events.PublishOnUIThread(new buttonsTopMenuEvent(true));
 			FirstSubViewModel = _container.GetInstance<CreationJeuManuelle1ViewModel>();
 			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 
 		public void Handle(AssisteIEvent message)
 		{
+			_events.PublishOnUIThread(new buttonsTopMenuEvent(true));
 			FirstSubViewModel = _container.GetInstance<CreationJeuAssiste1ViewModel>();
 			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 		public void Handle(ManuelleIIEvent message)
 		{
+			_events.PublishOnUIThread(new buttonsTopMenuEvent(true));
 			FirstSubViewModel = _container.GetInstance<CreationJeuManuelleViewModel>();
 			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 
 		public void Handle(LeaderboardEvent message)
 		{
+			_events.PublishOnUIThread(new buttonsTopMenuEvent(true));
 			FirstSubViewModel = _container.GetInstance<ClassementViewModel>();
 			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 
 		public void Handle(goBackCreationMenuEvent message)
 		{
+			_events.PublishOnUIThread(new buttonsTopMenuEvent(true));
 			FirstSubViewModel = _container.GetInstance<MenuSelectionModeCreationViewModel>();
 			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 
 		public void Handle(goBackEvent message)
 		{
+			_events.PublishOnUIThread(new buttonsTopMenuEvent(true));
 			FirstSubViewModel = _container.GetInstance<LoginViewModel>();
 			SecondSubViewModel = _container.GetInstance<EmptyViewModel>();
 		}
 
 		public void Handle(goBackMainEvent message)
 		{
+			_events.PublishOnUIThread(new buttonsTopMenuEvent(true));
 			FirstSubViewModel = _container.GetInstance<MainMenuViewModel>();
 			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 
 		public void Handle(signUpEvent message)
 		{
+			_events.PublishOnUIThread(new buttonsTopMenuEvent(true));
 			FirstSubViewModel = _container.GetInstance<NewUserViewModel>();
 			SecondSubViewModel = _container.GetInstance<EmptyViewModel>();
 		}
 
 		public void Handle(createGameEvent message)
 		{
+			_events.PublishOnUIThread(new buttonsTopMenuEvent(true));
 			FirstSubViewModel = _container.GetInstance<MenuSelectionModeCreationViewModel>();
 			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 
 		public void Handle(logOutEvent message)
 		{
+			_events.PublishOnUIThread(new buttonsTopMenuEvent(true));
 			FirstSubViewModel = _container.GetInstance<LoginViewModel>();
 			SecondSubViewModel = _container.GetInstance<EmptyViewModel>();
 		}
 
 		public void Handle(joinChatroomEvent message)
 		{
+			_events.PublishOnUIThread(new buttonsTopMenuEvent(true));
 			FirstSubViewModel = _container.GetInstance<chatBoxViewModel>();
 			SecondSubViewModel = _container.GetInstance<EmptyViewModel>();
 		}
@@ -202,27 +215,32 @@ namespace WPFUI.ViewModels
 
 		public void Handle(choseGameViewEvent message)
 		{
+			_events.PublishOnUIThread(new buttonsTopMenuEvent(true));
 			FirstSubViewModel = _container.GetInstance<ChoseGameViewModel>();
 			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 		public void Handle(gameEvent message)
 		{
 			_countHelper++;
+			_events.PublishOnUIThread(new buttonsTopMenuEvent(false));
 			FirstSubViewModel = _container.GetInstance<partieJeuViewModel>();
 			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 		public void Handle(waitingRoomEvent message)
 		{
+			_events.PublishOnUIThread(new buttonsTopMenuEvent(true));
 			FirstSubViewModel = _container.GetInstance<WaitingRoomViewModel>();
 			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 		public void Handle(createMatchEvent message)
 		{
+			_events.PublishOnUIThread(new buttonsTopMenuEvent(true));
 			FirstSubViewModel = _container.GetInstance<createMatchViewModel>();
 			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}
 		public void Handle(freeDrawEvent message)
 		{
+			_events.PublishOnUIThread(new buttonsTopMenuEvent(true));
 			FirstSubViewModel = _container.GetInstance<FenetreDessinViewModel>();
 			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();
 		}

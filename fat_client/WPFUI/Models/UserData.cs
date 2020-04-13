@@ -67,7 +67,10 @@ namespace WPFUI.Models
             get { return _currentGameRoom; }
             set {
                 _currentGameRoom = value;
-                formatGameRoom(_currentGameRoom); 
+                if(_currentGameRoom != null)
+                {
+                   formatGameRoom(_currentGameRoom);
+                }
             }
         }
 
