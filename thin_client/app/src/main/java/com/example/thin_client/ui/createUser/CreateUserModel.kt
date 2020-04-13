@@ -35,7 +35,7 @@ class CreateUserModel : ViewModel() {
     }
 
     private fun isUsernameValid(username: String): Boolean {
-        if (username.length < 4 || username.length > 20) {
+        if (username.length < 4 || username.length > 10) {
             _createUserForm.value = CreateUserForm(usernameError = R.string.invalid_username)
             return false
         }
@@ -43,7 +43,7 @@ class CreateUserModel : ViewModel() {
     }
 
     private fun isPasswordValid(password: String): Boolean {
-        if (password.length < 8 || password.length > 20) {
+        if (password.length < 4 || password.length > 10) {
             _createUserForm.value = CreateUserForm(passwordError = R.string.invalid_password)
             return false
         }
