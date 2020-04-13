@@ -75,38 +75,49 @@ class ObserverFragment : Fragment() {
                     Handler(Looper.getMainLooper()).post(Runnable {
                         val drawPoint =
                             Gson().fromJson(data.first().toString(), StylusPoint::class.java)
-                        observer_draw_view.addPath(drawPoint)
+                        if (observer_draw_view != null) {
+                            observer_draw_view.addPath(drawPoint)
+                        }
                     })
                 }))
                 .on(SocketEvent.NEW_STROKE, ({ data ->
                     Handler(Looper.getMainLooper()).post(Runnable {
-                        observer_draw_view.toggleEraser(false)
-                        observer_draw_view.stopTrace()
-                        val drawPoint = Gson().fromJson(data.first().toString(), Stroke::class.java)
-                        observer_draw_view.startTrace(drawPoint)
+                        if (observer_draw_view != null) {
+                            observer_draw_view.toggleEraser(false)
+                            observer_draw_view.stopTrace()
+                            val drawPoint =
+                                Gson().fromJson(data.first().toString(), Stroke::class.java)
+                            observer_draw_view.startTrace(drawPoint)
+                        }
                     })
                 }))
                 .on(SocketEvent.NEW_ERASE_STROKE, ({
                     Handler(Looper.getMainLooper()).post(Runnable {
-                        observer_draw_view.toggleEraser(true)
-                        observer_draw_view.stopTrace()
+                        if (observer_draw_view != null) {
+                            observer_draw_view.toggleEraser(true)
+                            observer_draw_view.stopTrace()
+                        }
                     })
                 }))
                 .on(SocketEvent.NEW_ERASE_POINT, ({
                     Handler(Looper.getMainLooper()).post(Runnable {
-                        observer_draw_view.toggleEraser(false)
-                        observer_draw_view.stopTrace()
-                        observer_draw_view.setColor(
-                            ContextCompat.getColor(
-                                context!!,
-                                R.color.default_background
+                        if (observer_draw_view != null) {
+                            observer_draw_view.toggleEraser(false)
+                            observer_draw_view.stopTrace()
+                            observer_draw_view.setColor(
+                                ContextCompat.getColor(
+                                    context!!,
+                                    R.color.default_background
+                                )
                             )
-                        )
+                        }
                     })
                 }))
                 .on(SocketEvent.NEW_CLEAR, ({
                     Handler(Looper.getMainLooper()).post(Runnable {
-                        observer_draw_view.clearCanvas()
+                        if (observer_draw_view != null) {
+                            observer_draw_view.clearCanvas()
+                        }
                     })
                 }))
         }
