@@ -74,6 +74,7 @@ namespace WPFUI.Potrace
             StrokeCollection strokes = new StrokeCollection();
             for(int i = 0; i < pathSegments.Count; i++)
             {
+                /*
                 if(pathSegments[i].GetType() == typeof(SvgMoveToSegment)){
                     StylusPointCollection stylusPoints = new StylusPointCollection();
                     stylusPoints.Add(new StylusPoint(scale.X * pathSegments[i].Start.X + translate.X, scale.Y * pathSegments[i].Start.Y + translate.Y));
@@ -85,6 +86,13 @@ namespace WPFUI.Potrace
                 {
                     strokes[strokes.Count - 1].StylusPoints.Add(new StylusPoint(scale.X * pathSegments[i].End.X + translate.X, scale.Y * pathSegments[i].End.Y + translate.Y));
                 }
+                */
+                StylusPointCollection stylusPoints = new StylusPointCollection();
+                stylusPoints.Add(new StylusPoint(scale.X * pathSegments[i].Start.X + translate.X, scale.Y * pathSegments[i].Start.Y + translate.Y));
+                Stroke stroke = new Stroke(stylusPoints);
+                stroke.DrawingAttributes.Width = stroke.DrawingAttributes.Height = thickness;
+                stroke.DrawingAttributes.Color = color.GetValueOrDefault();
+                strokes.Add(stroke);
             }
             if (extension.ToLower() == PNG || extension.ToLower() == JPG)
             {

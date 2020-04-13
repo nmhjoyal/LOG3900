@@ -30,19 +30,21 @@ export class VirtualDrawing {
                 }
             }, timeStamp));
             timeStamp += deltaT;
-            for(let j: number = 0; j < drawing[i].StylusPoints.length; j++) {
+            for(let j: number = 1; j < drawing[i].StylusPoints.length; j++) {
                 this.timeouts.push(setTimeout(() => {
                     if(this.roomId) {
                         socketIO.in(this.roomId).emit("new_point", JSON.stringify(drawing[i].StylusPoints[j]));
                     } else  {
                         socketIO.emit("new_point", JSON.stringify(drawing[i].StylusPoints[j]));
                     }
-                    if(i == drawing.length - 1 && j == drawing[i].StylusPoints.length - 1 && !this.roomId) {
-                        socketIO.emit("preview_done");
-                    }
                 }, timeStamp));
                 timeStamp += deltaT;
             }
+            this.timeouts.push(setTimeout(() => {
+                if(!this.roomId) {
+                    socketIO.emit("preview_done");
+                }
+            }, this.time * 1000));
         }
     }
 
