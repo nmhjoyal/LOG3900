@@ -60,12 +60,9 @@
             <ComboBoxItem Content="60 seconds"/>
             <ComboBoxItem Content="90 seconds"/>
             <ComboBoxItem Content="120 seconds"/>
-           
-           
         </ComboBox>
 
 		<Button HorizontalAlignment="Right" BorderBrush="{x:Null}" Background="#D6EFE9" Grid.Column="2" Grid.Row="9" Content="Lets go! " Foreground="#00584C" PreviewMouseDown="createMatch"/>
 		<TextBlock FontSize="40"  Foreground="#00584C" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">Create your match!</TextBlock>
-        <Button Grid.Column="6" Grid.Row="0" Content="Back" Background="#de0d56" BorderBrush="#de0d56"  Width="100" HorizontalAlignment="Center" x:Name="goBack"></Button>
     </Grid>
 </UserControl>

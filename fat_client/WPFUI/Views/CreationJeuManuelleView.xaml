@@ -86,7 +86,7 @@
             </StackPanel>
 
             <Border  Visibility="Hidden" Name="border" Background="#00584C" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderBrush="Black"  Grid.ColumnSpan="6" Grid.RowSpan="9" Margin="0,0,0,20">
-                <Grid Visibility="Hidden" Name="selectNextDrawingBox" >
+                <Grid Visibility="Visible" Name="selectNextDrawingBox" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="20"/>
                         <ColumnDefinition Width="600"/>

@@ -27,9 +27,10 @@ class RankingCollabMode : Fragment() {
             if(ranking.username == PreferenceHandler(context!!).getUser().username){
                 linearLayout.visibility= View.VISIBLE
                 text_view_collab_current_username.text = LeaderboardManager.collabCurrentPlayer.username
-                collab_current_user_position.text = LeaderboardManager.collabCurrentPlayer.pos.toString()
+                text_view_collab_current_user_position.text = LeaderboardManager.collabCurrentPlayer.pos.toString()
                 text_view_collab_ranking_score.text = LeaderboardManager.collabCurrentPlayer.score.toString()
             }
+            adapter.add(LeaderboardItem(LeaderboardManager.collabCurrentPlayer))
         }
         refreshRankingAdapter()
         collab_rankinglist.adapter = adapter

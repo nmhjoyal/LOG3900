@@ -644,12 +644,20 @@ namespace WPFUI.Models
 
             this.socket.On("vp_added", (feedback) =>
             {
-                //Console.WriteLine(JsonConvert.DeserializeObject(feedback.ToString()));
+                Feedback fb = JsonConvert.DeserializeObject<Feedback>(feedback.ToString());
+                if(!fb.status)
+                {
+                    _events.PublishOnUIThread(new appWarningEvent(fb.log_message));
+                }
             });
 
             this.socket.On("vp_removed", (feedback) =>
             {
-                //Console.WriteLine(JsonConvert.DeserializeObject(feedback.ToString()));
+                Feedback fb = JsonConvert.DeserializeObject<Feedback>(feedback.ToString());
+                if (!fb.status)
+                {
+                    _events.PublishOnUIThread(new appWarningEvent(fb.log_message));
+                }
             });
 
             this.socket.On("match_started", (startMatchFeedback) =>
