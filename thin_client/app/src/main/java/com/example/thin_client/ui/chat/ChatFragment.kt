@@ -109,6 +109,7 @@ class ChatFragment : Fragment() {
 
         leave_button.setOnClickListener(DEFAULT_INTERVAL) {
             RoomManager.roomToRemove = roomID!!
+            RoomManager.leaveRoom()
             SocketHandler.leaveChatRoom(roomID!!)
             goBackToRooms()
         }
@@ -149,8 +150,9 @@ class ChatFragment : Fragment() {
                     SocketHandler.user!!.username -> showToMessage(messages[i].content, messages[i].date)
                     else -> {
                         var userAvatar: AvatarID = AvatarID.AVOCADO
-                        if (RoomManager.roomAvatars[roomID] !== null) {
-                            userAvatar = getAvatar(RoomManager.roomAvatars[roomID]!![messages[i].username])
+                        val avatarList = RoomManager.roomAvatars["General"]
+                        if (avatarList !== null) {
+                            userAvatar = getAvatar(avatarList[messages[i].username])
                         }
                         showFromMessage(
                             messages[i].content,
@@ -181,7 +183,7 @@ class ChatFragment : Fragment() {
                                 )
                                 else -> {
                                     var userAvatar: AvatarID = AvatarID.AVOCADO
-                                    val avatarList = RoomManager.roomAvatars[jsonData.roomId]
+                                    val avatarList = RoomManager.roomAvatars["General"]
                                     if (avatarList !== null) {
                                         userAvatar = getAvatar(avatarList[username])
                                     }
@@ -194,9 +196,9 @@ class ChatFragment : Fragment() {
                                 }
                             }
                         }
-                        if (RoomManager.roomsJoined.containsKey(roomID)) {
-                            if (!RoomManager.roomsJoined.get(roomID)!!.contains(jsonData)) {
-                                RoomManager.roomsJoined.get(roomID)!!.add(jsonData)
+                        if (RoomManager.roomsJoined.containsKey(jsonData.roomId)) {
+                            if (!RoomManager.roomsJoined.get(jsonData.roomId)!!.contains(jsonData)) {
+                                RoomManager.roomsJoined.get(jsonData.roomId)!!.add(jsonData)
                             }
                         }
                     })

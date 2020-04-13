@@ -44,11 +44,8 @@ import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.activity_profile.*
-import kotlinx.android.synthetic.main.match_history_layout.*
 import okhttp3.Call
 import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.collections.ArrayList
 
 class ProfileActivity : AppCompatActivity() {
@@ -394,12 +391,10 @@ class ProfileActivity : AppCompatActivity() {
                             connections.adapter = connectionsAdapter
 
                             // game stats
-                            val stringDate = "HH:mm:ss"
-                            val simpleDateFormat = SimpleDateFormat(stringDate, Locale.US)
                             matches_played.text = stats.matchCount.toString()
                             victory_perc.text = String.format(resources.getString(R.string.percentage_placeholder), stats.victoryPerc.toString())
-                            avg_time_played.text = simpleDateFormat.format(Date(stats.averageTime.toLong()))
-                            total_time_played.text = simpleDateFormat.format(Date(stats.totalTime.toLong()))
+                            avg_time_played.text = String.format(resources.getString(R.string.avg_time_played_holder), (stats.averageTime.toLong().div(60)).toString())
+                            total_time_played.text = String.format(resources.getString(R.string.total_time_played_holder), (stats.totalTime.toLong().div(60).div(60)).toString())
                             best_solo_score.text = stats.bestSSS.toString()
 
                             // match history
