@@ -25,7 +25,7 @@ class RankingSoloMode : Fragment() {
             if(ranking.username == PreferenceHandler(context!!).getUser().username){
                 linearLayout.visibility= View.VISIBLE
                 text_view_solo_current_username.text = LeaderboardManager.soloCurrentPlayer.username
-                solo_current_user_position.text = LeaderboardManager.soloCurrentPlayer.pos.toString()
+                text_view_solo_current_user_position.text = LeaderboardManager.soloCurrentPlayer.pos.toString()
                 text_view_solo_ranking_score.text = LeaderboardManager.soloCurrentPlayer.score.toString()
             }
         }
@@ -52,12 +52,6 @@ class RankingSoloMode : Fragment() {
         adapter.clear()
 
         for (ranking in LeaderboardManager.soloRankingList) {
-            if(ranking.username == PreferenceHandler(context!!).getUser().username){
-                linearLayout.visibility= View.VISIBLE
-                text_view_solo_current_username.text = ranking.username
-                solo_current_user_position.text = ranking.pos.toString()
-                text_view_solo_ranking_score.text = ranking.score.toString()
-            }
                 adapter.add(LeaderboardItem(ranking))
         }
     }

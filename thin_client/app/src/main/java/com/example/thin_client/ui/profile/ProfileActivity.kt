@@ -78,7 +78,7 @@ class ProfileActivity : AppCompatActivity() {
             val createUserState = it ?: return@Observer
 
             // disable login button unless all fields are correctly filled
-            save_button.isEnabled = createUserState.isDataValid
+            save_button.isEnabled = createUserState.isDataValid || selectedAvatar != AvatarID.valueOf(privateProfile.avatar.capitalize())
 
             if (createUserState.firstNameError != null) {
                 firstName.error = getString(createUserState.firstNameError)
@@ -169,6 +169,7 @@ class ProfileActivity : AppCompatActivity() {
                 password.text.toString(), selectedAvatar.name,
                 ArrayList(RoomManager.roomsJoined.keys))
             SocketHandler.updateProfile(updatedProfile)
+            save_button.isEnabled = false
         }
 
         undo_button.setOnClickListener(({
@@ -181,7 +182,10 @@ class ProfileActivity : AppCompatActivity() {
             alertDialog.setView(dialogView)
             initView(dialogView)
             alertDialog.setTitle(R.string.change_avatar)
-                .setPositiveButton(R.string.ok) { _, _ -> setAvatar(avocado_avatar, selectedAvatar)}
+                .setPositiveButton(R.string.ok) { _, _ ->
+                    save_button.isEnabled = selectedAvatar != AvatarID.valueOf(privateProfile.avatar.capitalize())
+                    setAvatar(avocado_avatar, selectedAvatar)
+                }
                 .setNegativeButton(R.string.cancel) { _, _ -> }
 
             val dialog = alertDialog.create()

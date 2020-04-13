@@ -72,7 +72,7 @@
             <Button MaxWidth="140" Click="addClue" Background="#FF018577" 
 					Grid.Column="1" Grid.Row="9" BorderBrush="{x:Null}" VerticalAlignment="Top">
                 <StackPanel  Orientation="Horizontal">
-                    <TextBlock FontSize="12" Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Clue(s):</TextBlock>
+                    <TextBlock FontSize="12" Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Hint(s):</TextBlock>
                     <Image Source="/Resources/add.png" Height="20"></Image>
                 </StackPanel>
             </Button>

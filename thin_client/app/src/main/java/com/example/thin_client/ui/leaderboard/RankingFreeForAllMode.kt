@@ -23,7 +23,7 @@ class RankingFreeForAllMode : Fragment() {
             if(ranking.username == PreferenceHandler(context!!).getUser().username){
                 linearLayout.visibility= View.VISIBLE
                 text_view_freeforall_current_username.text = LeaderboardManager.freeforallCurrentPlayer.username
-                freeforall_current_user_position.text = LeaderboardManager.freeforallCurrentPlayer.pos.toString()
+                text_view_freeforall_current_user_position.text = LeaderboardManager.freeforallCurrentPlayer.pos.toString()
                 text_view_freeforall_ranking_score.text = LeaderboardManager.freeforallCurrentPlayer.score.toString()
             }
         }
