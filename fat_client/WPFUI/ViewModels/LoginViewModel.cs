@@ -14,19 +14,8 @@ namespace WPFUI.ViewModels
         private IEventAggregator _events;
         private IUserData _userdata;
         private string _userName;
-        private string _ipAdress;
         private ISocketHandler _socketHandler;
-        private string _password;
-
-        public string password
-        {
-            get { return _password; }
-            set { _password = value;
-                  NotifyOfPropertyChange(() => password);
-            }
-        }
-
-
+       
         public LoginViewModel(IUserData userdata, IEventAggregator events, ISocketHandler socketHandler)
         {
             _userdata = userdata;
@@ -42,17 +31,13 @@ namespace WPFUI.ViewModels
                 NotifyOfPropertyChange(() => userName);}
         }
 
-        public void setUserName()
+        public void logIn(string password)
         {
-            _userdata.userName = userName;
-            _userdata.password = password;
-        }
-
-        public void logIn()
-        {   
-          if (userName != null & userName != "" & password != null & password != "")
+            
+            if (userName != null & userName != "" & password != null & password != "")
             {
-                setUserName();
+                _userdata.userName = userName;
+                _userdata.password = password;
                 _socketHandler.connectionAttempt();
 
             }

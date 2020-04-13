@@ -25,11 +25,13 @@ namespace WPFUI.ViewModels
 
         public void goToScores()
         {
+            offSocket();
             _events.PublishOnUIThread(new LeaderboardEvent());
         }
 
         public void goToProfileEdit()
         {
+            offSocket();
             _events.PublishOnUIThread(new viewProfileEvent());
         }
 

@@ -119,9 +119,24 @@ namespace WPFUI.Models
             get { return UnixTimeToDateTime(this.endTime); }
 
         }
-        public MatchMode MatchMode
+        public string MatchMode
         {
-            get { return this.matchMode; }
+            get 
+            { 
+                switch(this.matchMode)
+                {
+                    case Models.MatchMode.freeForAll:
+                        return "Free for all";
+                    case Models.MatchMode.sprintSolo:
+                        return "Sprint solo";
+                    case Models.MatchMode.sprintCoop:
+                        return "Sprint coop";
+                    case Models.MatchMode.oneVsOne:
+                        return "1 vs 1";
+                    default:
+                        return "";
+                }
+            }
 
         }
 
