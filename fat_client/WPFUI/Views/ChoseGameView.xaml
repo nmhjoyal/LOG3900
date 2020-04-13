@@ -94,13 +94,25 @@
 				</DataTemplate>
 			</ItemsControl.ItemTemplate>
 		</ItemsControl>
-		<ItemsControl ItemsSource="{Binding Matches.Players}" Grid.Column="11" Grid.Row="8">
+		<ItemsControl ItemsSource="{Binding Matches}" Grid.Column="11" Grid.Row="8">
 			<ItemsControl.ItemTemplate>
 				<DataTemplate>
                     
 					<StackPanel Orientation="Vertical">
-						<TextBlock Text="{Binding}" Height="40" TextAlignment="Center"></TextBlock>
-					</StackPanel>
+                        <ScrollViewer MaxHeight="40" VerticalScrollBarVisibility="Visible">
+                            <ItemsControl ItemsSource="{Binding Players}" Grid.Column="11" Grid.Row="8">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="{Binding }" Height="40" TextAlignment="Center"></TextBlock>
+                                    </StackPanel>
+
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        </ScrollViewer>
+                    </StackPanel>
                     
                 </DataTemplate>
 			</ItemsControl.ItemTemplate>

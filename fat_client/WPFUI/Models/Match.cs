@@ -53,13 +53,13 @@ namespace WPFUI.Models
                 switch (this.matchMode)
                 {
                     case Models.MatchMode.freeForAll:
-                        return "Mêlée génétale";
+                        return "Free for All";
                     case Models.MatchMode.oneVsOne:
                         return "1 vs 1";
                     case Models.MatchMode.sprintSolo:
-                        return "Sprint solo";
+                        return "Solo Sprint";
                     case Models.MatchMode.sprintCoop:
-                        return "Sprint coopératif";
+                        return "Cooperative Sprint";
                     default:
                         return "";
                 }
@@ -75,6 +75,7 @@ namespace WPFUI.Models
                 foreach(PublicProfile player in this.players)
                 {
                     playerNames.Add(player.username);
+                    Console.WriteLine(player.username);
                 }
                 return playerNames;
             }

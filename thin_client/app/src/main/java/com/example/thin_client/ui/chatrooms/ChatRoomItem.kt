@@ -15,6 +15,7 @@ class ChatRoomItem(val roomname: String): Item<GroupieViewHolder>(){
 
         viewHolder.itemView.leave_button.setOnClickListener(DEFAULT_INTERVAL) {
             RoomManager.roomToRemove = roomname
+            SocketHandler.leaveChatRoom(roomname)
             SocketHandler.deleteChatRoom(roomname)
         }
     }
