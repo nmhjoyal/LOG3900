@@ -207,22 +207,23 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
         },
     ],
     [
+        //quelques expressions ont été tirées et adaptées du film Full Metal Jacket
         SGT_STRAWBERRY,
         {
-            startMatch: "TODO",
+            startMatch: "I am Sgt. Strawberry, your senior drill instructor, but you will call me Sir. LETS BEGIN THIS EXERCISE!! ",
             endTurn: [
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO"
+                "Are you quitting on me? Well, ARE YOU? Then quit. I don't care. You don't deserve to play.",
+                "These are great days we're living, comrades.",
+                "THIS IS NOT A DRILL. I REPEAT, THIS IS NOT A DRILL. IT'S A GAME. Hehe.",
+                "If you don't believe in yourself, neither do I. Pick yourself up, NOW!!!",
+                "Not everybody is going to make it, but it's all part of the game.",
+                "YOU LOSE. AND YOU LOSE. AND YOU LOSE TO. And you, well... YOU LOSE TOO!",
+                "My grandma knows how to play better than you. And she's 120 years old.",
+                "A kindergarderner could do better. Get yourself together.",
+                "WHAT DO YOU MEAN YOU'VE NEVER TRAINED FOR THIS",
+                "Pff. Let's get this over with."
             ],
-            hint: "TODO" + INSERT_HINT
+            hint: "You can't do anything by yourself, can you? Pff. That's what i thought. Here:" + INSERT_HINT
         },
     ],
     [
@@ -266,58 +267,60 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
     [
         GENTLEMAN_KIWI,
         {
-            startMatch: "TODO",
+            startMatch: "Hello ladies. Gentlemen. Let's start, shall we?",
             endTurn: [
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO"
+                "I am delighted to be in your company this evening.",
+                "You all look rather ravishing.",
+                "I'm not sure my incompetence can compete with great minds like yours.",
+                "Your beauty blinded me. Now I can't see the drawing.",
+                "I'd lose to you every single day, my dears.",
+                "My mom thought me my manners. She was such a lovely lady.",
+                "The way you always guess correctly is divine!",
+                "I can't wait to play with all of you again.",
+                "What a lovely game. We should do this everyday.",
+                "I have never been surrounded by this much grace. Thank you."
             ],
-            hint: "TODO" + INSERT_HINT
+            hint: "It will be my pleasure to help :" + INSERT_HINT
         },
     ],
     [
+        
         MADAM_ORANGE,
         {
-            startMatch: "TODO",
+            startMatch: "Looks like this game will be delightfull.",
             endTurn: [
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO"
+                "What do you do when life throws you lemon? Lemonade hihi.",
+                "You could say i put the fruit on this table.",
+                "The sun made me peel. Get it? PEEL! Haha.",
+                "Orange you glad to have me play with you?",
+                "This game is deliciously sweet.",
+                "I can't believe you drink orange juice for breakfast. Murderers.",
+                "Believe it or not i'm in shape. Round is a shape.",
+                "Once, il laughted so hard at my own joke that i fell from the tree. I'm so glad that farmer didn't pick me up.",
+                "Yes, I am rich. In vitamin C ;). ",
+                "What's your favorite citrus?"
             ],
-            hint: "TODO" + INSERT_HINT
+            hint: "If i can remember the hint i'll help you : " + INSERT_HINT
         },
     ],
     [
+        //lui
         SIR_PINEAPPLE,
         {
-            startMatch: "TODO",
+            startMatch: "I don't have much time left. Let's get this over with!",
             endTurn: [
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO"
+                "When I was you age I couldn't play. I was fighting for my country.",
+                "What kind of abstract art is this? Even Picasso's work is clearer.",
+                "I forgot my glasses. Let me get them real quick.",
+                "I wish my grandchildren could see me use this Tablet.",
+                "It will soon be past my expiration date. But i'm still tough as ever.",
+                "Look at the time! I have to go to sleep.",
+                "When you will loose your teeth, you will understand.",
+                "I wish I was on a tropical island right now.",
+                "Respect your elders!!",
+                "I'm done playing with you. I don't even understand this game."
             ],
-            hint: "TODO" + INSERT_HINT
+            hint: "Oh millennials, They can't do anything by themselves : " + INSERT_HINT
         },
     ],
     [
