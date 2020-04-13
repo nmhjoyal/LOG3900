@@ -342,6 +342,7 @@ namespace WPFUI.Models
                 List<Message> list = new List<Message>(currentGameRoom.messages);
                 list.Add(message);
                 currentGameRoom.messages = list.ToArray();
+                _events.PublishOnUIThread(new scrollDownEvent());
             }
             else
             {
@@ -393,14 +394,23 @@ namespace WPFUI.Models
             }
             catch
             {
-                if (_currentGameRoom.id == roomID)
+                if(_currentGameRoom != null)
                 {
-                    return _currentGameRoom.avatars;
-                }
-                else
+                    if (_currentGameRoom.id == roomID)
+                    {
+                        return _currentGameRoom.avatars;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+
+                } else
                 {
                     return null;
                 }
+
+
 
             }
         }
