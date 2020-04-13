@@ -99,7 +99,7 @@
 				<DataTemplate>
                     
 					<StackPanel Orientation="Vertical">
-                        <ScrollViewer>
+                        <ScrollViewer MaxHeight="40" VerticalScrollBarVisibility="Visible">
                             <ItemsControl ItemsSource="{Binding Players}" Grid.Column="11" Grid.Row="8">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>

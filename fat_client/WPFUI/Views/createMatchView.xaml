@@ -60,7 +60,7 @@
             <ComboBoxItem Content="60 seconds"/>
             <ComboBoxItem Content="90 seconds"/>
             <ComboBoxItem Content="120 seconds"/>
-            <ComboBoxItem Content="150 seconds"/>
+           
            
         </ComboBox>
 
