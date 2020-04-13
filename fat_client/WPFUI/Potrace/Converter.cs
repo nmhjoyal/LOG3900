@@ -21,17 +21,18 @@ namespace WPFUI.Potrace
         private const string BMP = ".bmp";
         private const string SVG = ".svg";
         private static Boolean isPotraceDirectory = false;
-        public static StrokeCollection exec(string filename, int width, int height, int thickness, System.Windows.Media.Color? color)
+        public static StrokeCollection exec(string absolutePath, int width, int height, int thickness, System.Windows.Media.Color? color)
         {
+            string filename = Path.GetFileName(absolutePath);
             if(!isPotraceDirectory)
             {
                 Directory.SetCurrentDirectory(Directory.GetCurrentDirectory() + "/../../Potrace");
                 isPotraceDirectory = true;
             }
-            string extension = filename.Substring(filename.Length - 4, 4);
+            string extension = absolutePath.Substring(absolutePath.Length - 4, 4);
             if (extension.ToLower() == PNG || extension.ToLower() == JPG)
             {
-                Image img = Image.FromFile("Images/" + filename);
+                Image img = Image.FromFile(absolutePath);
                 filename = filename.Substring(0, filename.Length - 4) + BMP;
                 img.Save("Images/" + filename, ImageFormat.Bmp);
             }

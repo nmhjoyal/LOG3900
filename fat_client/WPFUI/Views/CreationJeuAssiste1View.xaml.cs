@@ -66,7 +66,7 @@ namespace WPFUI.Views
             {
                 option = (this.Options.Children[0] as System.Windows.Controls.ComboBox).SelectedIndex;
             }
-            (this.DataContext as CreationJeuAssiste1ViewModel).createGame(this.Word.Text, clues, this.Level.SelectedIndex, this.Mode.SelectedIndex, option, this.fileName.Text, (int)this.imageTransformee.ActualWidth, (int)this.imageTransformee.ActualHeight, (int)this.Thickness.Value, this.ColorPicker.SelectedColor);
+            (this.DataContext as CreationJeuAssiste1ViewModel).createGame(this.Word.Text, clues, this.Level.SelectedIndex, this.Mode.SelectedIndex, option, this.absolutePath.Text, (int)this.imageTransformee.ActualWidth, (int)this.imageTransformee.ActualHeight, (int)this.Thickness.Value, this.ColorPicker.SelectedColor);
         }
 
         private void preview(object sender, RoutedEventArgs e)
@@ -77,7 +77,7 @@ namespace WPFUI.Views
                 option = (this.Options.Children[0] as System.Windows.Controls.ComboBox).SelectedIndex;
             }
             this.PreviewButton.IsEnabled = false;
-            (this.DataContext as CreationJeuAssiste1ViewModel).preview(this.fileName.Text, this.Mode.SelectedIndex, option, (int)this.imageTransformee.ActualWidth, (int)this.imageTransformee.ActualHeight, (int)this.Thickness.Value, this.ColorPicker.SelectedColor);
+            (this.DataContext as CreationJeuAssiste1ViewModel).preview(this.absolutePath.Text, this.Mode.SelectedIndex, option, (int)this.imageTransformee.ActualWidth, (int)this.imageTransformee.ActualHeight, (int)this.Thickness.Value, this.ColorPicker.SelectedColor);
         }
 
         private void elementSelectionne(object sender, RoutedEventArgs e)
@@ -137,32 +137,25 @@ namespace WPFUI.Views
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Directory.SetCurrentDirectory(Directory.GetCurrentDirectory() + "/../../Potrace");
-            //Code source: https://stackoverflow.com/questions/10315188/open-file-dialog-and-select-a-file-using-wpf-controls-and-c-sharp
+            //Code source: https://www.c-sharpcorner.com/UploadFile/mahesh/openfiledialog-in-C-Sharp/
 
-            // Create OpenFileDialog 
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-
-
-
-            // Set filter for file extension and default file extension 
-            dlg.DefaultExt = ".png";
-            dlg.Filter = "JPEG Files (*.jpeg)|*.jpeg|PNG Files (*.png)|*.png|JPG Files (*.jpg)|*.jpg|GIF Files (*.gif)|*.gif";
-
-
-            // Display OpenFileDialog by calling ShowDialog method 
-            Nullable<bool> result = dlg.ShowDialog();
-
-
-            // Get the selected file name and display in a TextBox 
-            if (result == true)
+            OpenFileDialog openFileDialog1 = new OpenFileDialog
             {
-                // Open document 
-                string filename = dlg.FileName;
-                System.Drawing.Image img = System.Drawing.Image.FromFile(dlg.FileName);
-                img.Save("Images/" + System.IO.Path.GetFileName(filename), ImageFormat.Bmp);
-            }
 
+                Title = "Browse your image to create your game!",
+
+                CheckFileExists = true,
+                CheckPathExists = true,
+
+                Filter = "Png Image (.png)|*.png|JPG Image (.jpg)|*.jpg|Bitmap Image (.bmp)|*.bmp",
+                FilterIndex = 1,
+                RestoreDirectory = true,
+            };
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                absolutePath.Text = openFileDialog1.FileName;
+            }
         }
 
     }
