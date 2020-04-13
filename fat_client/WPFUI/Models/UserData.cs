@@ -270,6 +270,7 @@ namespace WPFUI.Models
         public void addJoinedRoom(Room room, Boolean isPrivate)
         {
             BindableCollection<SelectableRoom> roomAlreadyExists = new BindableCollection<SelectableRoom>(this.selectableJoinedRooms.Where(x => x.id == room.id));
+            Console.WriteLine(JsonConvert.SerializeObject(room.avatars));
             if (roomAlreadyExists.Count() == 0)
             {
                 SelectableRoom sR = new SelectableRoom(room);

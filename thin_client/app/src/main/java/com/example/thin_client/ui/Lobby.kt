@@ -44,7 +44,7 @@ import com.github.nkzawa.socketio.client.Socket
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_lobby.*
 
-class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.IStartNewFragment {
+class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.IStartNewFragment, ChatRoomsFragment.IOpenChat {
     private lateinit var manager: FragmentManager
     private lateinit var prefs: SharedPreferences
 
@@ -135,7 +135,17 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
         transaction.commitAllowingStateLoss()
     }
 
-
+    override fun openChat(roomId: String) {
+        val bundle = Bundle()
+        bundle.putString(RoomArgs.ROOM_ID, roomId)
+        bundle.putBoolean(GameArgs.IS_GAME_CHAT, false)
+        val transaction = manager.beginTransaction()
+        val chatFragment = ChatFragment()
+        chatFragment.arguments = bundle
+        transaction.replace(R.id.chatrooms_container, chatFragment)
+        transaction.addToBackStack(null)
+        transaction.commitAllowingStateLoss()
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
@@ -235,26 +245,6 @@ class Lobby : AppCompatActivity(), MatchList.IGameStarter, LobbyMenuFragment.ISt
                         feedback.log_message,
                         Toast.LENGTH_SHORT
                     ).show()
-                })
-            }))
-            .on(SocketEvent.USER_JOINED_ROOM, ({ data ->
-                val feedback =
-                    Gson().fromJson(data.first().toString(), JoinRoomFeedback::class.java)
-                if (feedback.feedback.status) {
-                    RoomManager.addRoom(feedback.room_joined!!)
-                }
-                val roomID =
-                    if (RoomManager.currentRoom == "") "General" else RoomManager.currentRoom
-                Handler(Looper.getMainLooper()).post(Runnable {
-                    val bundle = Bundle()
-                    bundle.putString(RoomArgs.ROOM_ID, roomID)
-                    bundle.putBoolean(GameArgs.IS_GAME_CHAT, false)
-                    val transaction = manager.beginTransaction()
-                    val chatFragment = ChatFragment()
-                    chatFragment.arguments = bundle
-                    transaction.replace(R.id.chatrooms_container, chatFragment)
-                    transaction.addToBackStack(null)
-                    transaction.commitAllowingStateLoss()
                 })
             }))
             .on(SocketEvent.AVATAR_UPDATED, ({ data ->

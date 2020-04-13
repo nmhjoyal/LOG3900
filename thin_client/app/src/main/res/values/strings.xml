@@ -43,7 +43,9 @@
     <string name="victory_perc">Percentage of victories</string>
     <string name="percentage_placeholder">%1$s %%</string>
     <string name="avg_time_played">Average time played</string>
+    <string name="avg_time_played_holder">%1$s min.</string>
     <string name="total_time_played">Total time played</string>
+    <string name="total_time_played_holder">%1$s hrs.</string>
     <string name="best_solo">Best Solo score</string>
     <string name="start_time">Start time:</string>
     <string name="end_time">End time:</string>

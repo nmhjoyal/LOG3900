@@ -1,6 +1,7 @@
 package com.example.thin_client.ui.chatrooms
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -19,6 +20,7 @@ import com.example.thin_client.R
 import com.example.thin_client.data.Feedback
 import com.example.thin_client.data.model.Room
 import com.example.thin_client.data.rooms.Invitation
+import com.example.thin_client.data.rooms.JoinRoomFeedback
 import com.example.thin_client.data.rooms.RoomManager
 import com.example.thin_client.data.server.SocketEvent
 import com.example.thin_client.server.SocketHandler
@@ -36,12 +38,18 @@ class ChatRoomsFragment : Fragment() {
     private var newRoomName : String = ""
     private var inviteList: ArrayList<String> = ArrayList()
 
+    private var openChatListener: IOpenChat? = null
+
+    interface IOpenChat {
+        fun openChat(roomId: String)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         adapter.setOnItemClickListener { item, _ ->
             RoomManager.currentRoom = (item as ChatRoomItem).roomname
-            SocketHandler.joinChatRoom(RoomManager.currentRoom)
+            openChatListener?.openChat(RoomManager.currentRoom)
         }
 
         setupSocketEvents()
@@ -148,6 +156,11 @@ class ChatRoomsFragment : Fragment() {
         }
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        openChatListener = context as? IOpenChat
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         turnOffSocketEvents()
@@ -186,6 +199,26 @@ class ChatRoomsFragment : Fragment() {
                     }
                 })
             }))
+            .on(SocketEvent.USER_JOINED_ROOM, ({ data ->
+                val feedback =
+                    Gson().fromJson(data.first().toString(), JoinRoomFeedback::class.java)
+                if (feedback.feedback.status) {
+                    RoomManager.addRoom(feedback.room_joined!!)
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        refreshRoomAdapter()
+                    })
+                } else {
+                    Handler(Looper.getMainLooper()).post(Runnable {
+                        if (context != null) {
+                            Toast.makeText(
+                                context,
+                                feedback.feedback.log_message,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    })
+                }
+            }))
             .on(SocketEvent.ROOM_DELETED, ({ data ->
                 Handler(Looper.getMainLooper()).post(Runnable {
                     removeRoom(Gson().fromJson(data.first().toString(), Feedback::class.java))
@@ -223,7 +256,6 @@ class ChatRoomsFragment : Fragment() {
                 val room = Gson().fromJson(data.first().toString(), Room::class.java)
                 if (RoomManager.roomsJoined.containsKey(room.id)) {
                     RoomManager.roomsJoined.put(room.id, room.messages)
-                    RoomManager.roomAvatars.put(room.id, room.avatars)
                 }
             }))
             .on(SocketEvent.USER_SENT_INVITE, ({ data ->
