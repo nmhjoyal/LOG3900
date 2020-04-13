@@ -486,14 +486,12 @@ namespace WPFUI.Models
                 if (drawersTool == "crayon")
                 {
                     StylusPoint stylusPoint = new StylusPoint((int)json.X, (int)json.Y);
-                    // Console.WriteLine(stylusPoint.X + " & " + stylusPoint.Y);
-                    try
+                    if (Traits.Count > currentStrokeIndex)
                     {
                         this.Dispatcher.Invoke(() =>
-                        Traits[currentStrokeIndex].StylusPoints.Add(stylusPoint)
-                    );
+                            Traits[currentStrokeIndex].StylusPoints.Add(stylusPoint)
+                        );
                     }
-                    catch (Exception e) { _events.PublishOnUIThread(new appWarningEvent("New_point error")); }
                 }
                 else if (drawersTool == "efface_trait" || drawersTool == "efface_segment")
                 {

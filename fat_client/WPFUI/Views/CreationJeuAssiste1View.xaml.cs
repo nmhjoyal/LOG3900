@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -136,30 +137,32 @@ namespace WPFUI.Views
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //Code source: https://www.c-sharpcorner.com/UploadFile/mahesh/openfiledialog-in-C-Sharp/
+            Directory.SetCurrentDirectory(Directory.GetCurrentDirectory() + "/../../Potrace");
+            //Code source: https://stackoverflow.com/questions/10315188/open-file-dialog-and-select-a-file-using-wpf-controls-and-c-sharp
 
-            OpenFileDialog openFileDialog1 = new OpenFileDialog
+            // Create OpenFileDialog 
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+
+
+
+            // Set filter for file extension and default file extension 
+            dlg.DefaultExt = ".png";
+            dlg.Filter = "JPEG Files (*.jpeg)|*.jpeg|PNG Files (*.png)|*.png|JPG Files (*.jpg)|*.jpg|GIF Files (*.gif)|*.gif";
+
+
+            // Display OpenFileDialog by calling ShowDialog method 
+            Nullable<bool> result = dlg.ShowDialog();
+
+
+            // Get the selected file name and display in a TextBox 
+            if (result == true)
             {
-                
-                InitialDirectory = (Directory.GetCurrentDirectory() + "/../../Potrace"),
-                Title = "Browse Image Files",
-
-                CheckFileExists = true,
-                CheckPathExists = true,
-
-                DefaultExt = "PNG",
-                Filter = "Png Image (.png)|*.png|JPG Image (.jpg)|*.jpg|Bitmap Image (.bmp)|*.bmp",
-                FilterIndex = 2,
-                RestoreDirectory = true,
-
-                ReadOnlyChecked = true,
-                ShowReadOnly = true
-            };
-
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                fileName.Text = openFileDialog1.FileName;
+                // Open document 
+                string filename = dlg.FileName;
+                System.Drawing.Image img = System.Drawing.Image.FromFile(dlg.FileName);
+                img.Save("Images/" + System.IO.Path.GetFileName(filename), ImageFormat.Bmp);
             }
+
         }
 
     }

@@ -24,7 +24,7 @@ namespace WPFUI.Views
     /// Logique d'interaction pour partieJeuView.xaml
     /// </summary>
     public partial class partieJeuView : UserControl, IHandle<endTurnRoutineEvent>, IHandle<startTurnRoutineEvent>,
-                                         IHandle<guessResponseEvent>, IHandle<endMatchEvent>
+                                         IHandle<guessResponseEvent>, IHandle<endMatchEvent>, IHandle<scrollDownEvent>
     {
         private partieJeuViewModel _viewModel;
         private Boolean isMouseDown = false;
@@ -150,6 +150,11 @@ namespace WPFUI.Views
         public void Handle(endMatchEvent message)
         {
             endMatchBox.Visibility = Visibility.Visible;
+        }
+
+        public void Handle(scrollDownEvent message)
+        {
+            messagesUI.ScrollToEnd();
         }
     }
 
