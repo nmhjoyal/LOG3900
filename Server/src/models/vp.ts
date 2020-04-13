@@ -248,20 +248,21 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
     [
         MASTER_GRAPE,
         {
-            startMatch: "TODO",
+            startMatch: "Listen to me! We start this game NOW.",
             endTurn: [
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO",
-                "TODO"
+                "What are you waiting for? Think!!!!",
+                "Can someone guess correctly this time?",
+                "You have to do as I say. I make the rules. And you must follow them.",
+                "I am not controlling you, I am guiding you!!!",
+                "I always know better. This is why I'm the master.",
+                "How can you question me? Leave if you're not happy.",
+                "Nothing is fair in life. Some people win, others lose.",
+                "See, the one who guessed correctly listed to me. As all of you should.",
+                "Nobody surpassed the master yet.",
+                "Maybe this time you will listen to me."
             ],
-            hint: "TODO" + INSERT_HINT
+            hint: "Good things happen when you listen: " + INSERT_HINT
+            
         },
     ],
     [
@@ -304,7 +305,7 @@ export const messages: Map<string /*username*/, CustomMessage> = new Map<string,
         },
     ],
     [
-        //lui
+  
         SIR_PINEAPPLE,
         {
             startMatch: "I don't have much time left. Let's get this over with!",
