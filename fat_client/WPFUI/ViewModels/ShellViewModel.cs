@@ -16,7 +16,7 @@ namespace WPFUI.ViewModels
     class ShellViewModel: Conductor<Screen>.Collection.AllActive, IHandle<LogInEvent>, IHandle<logOutEvent>,
 						  IHandle<DisconnectEvent>, IHandle<userNameTakenEvent>,IHandle<signUpEvent>, IHandle<goBackEvent>,
 						  IHandle<passwordMismatchEvent>, IHandle<viewProfileEvent>, IHandle<goBackMainEvent>,
-						  IHandle<joinGameEvent>, IHandle<ManuelIEvent>, IHandle<ManuelleIIEvent>, IHandle<createGameEvent>,IHandle<freeDrawEvent>, 
+						  IHandle<choseGameViewEvent>, IHandle<ManuelIEvent>, IHandle<ManuelleIIEvent>, IHandle<createGameEvent>,IHandle<freeDrawEvent>, 
 						  IHandle<joinChatroomEvent>, IHandle<goBackCreationMenuEvent>, IHandle<AssisteIEvent>, IHandle<LeaderboardEvent>, IHandle<gameEvent>, 
 						  IHandle<waitingRoomEvent>, IHandle<createMatchEvent>
 						  
@@ -200,7 +200,7 @@ namespace WPFUI.ViewModels
 			MessageBox.Show(messageBoxText, caption, button, icon);
 		}
 
-		public void Handle(joinGameEvent message)
+		public void Handle(choseGameViewEvent message)
 		{
 			FirstSubViewModel = _container.GetInstance<ChoseGameViewModel>();
 			SecondSubViewModel = _container.GetInstance<chatBoxViewModel>();

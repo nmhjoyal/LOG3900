@@ -365,7 +365,7 @@ namespace WPFUI.Models
                         messagesToUpdate = null;
                         // TODO: faire un popup approprie
                         Console.WriteLine("message sent to unjoined room");
-                        _events.PublishOnUIThread(new appWarningEvent("a message was sent to an unjoined room"));
+                        // _events.PublishOnUIThread(new appWarningEvent("a message was sent to an unjoined room"));
                     }
 
                 }
@@ -383,6 +383,12 @@ namespace WPFUI.Models
 
         public Dictionary<string, string> findTheMap(string roomID)
         {
+            Console.WriteLine("//");
+            for(int i = 0; i < _selectableJoinedRooms.Count; i++)
+            {
+                Console.WriteLine(_selectableJoinedRooms[i].id);
+            }
+            Console.WriteLine("//");
             try
             {
                 IEnumerable<SelectableRoom> enumSR = _selectableJoinedRooms.Where(x => x.id == roomID);

@@ -80,6 +80,8 @@
                 <TextBox  x:Name="clue" Grid.Column="3" Grid.Row="16"  />
             </StackPanel>
 
+            <Button Grid.Column="6" Grid.Row="0" Content="Back" Background="#de0d56" BorderBrush="#de0d56"  Width="100" HorizontalAlignment="Right" x:Name="goBack"></Button>
+
             <StackPanel Orientation="Vertical" Grid.Column="6" Grid.Row="9">
                 <Button BorderBrush="{x:Null}" Background="#D6EFE9" FontSize="12" Foreground="#00584C" Click="draw" Content="Draw" HorizontalAlignment="Center" Width="110"/>
                 <Button BorderBrush="{x:Null}" Background="#00584C" FontSize="12" Foreground="#D6EFE9" Click="createGame" Content="Create Game"   HorizontalAlignment="Center" Width="110"/>
@@ -93,13 +95,13 @@
                         <ColumnDefinition Width="120"/>
                         <ColumnDefinition Width="20" />
                     </Grid.ColumnDefinitions>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="60"/>
-						<RowDefinition Height="60"/>
-						<RowDefinition Height="7*"/>
-						<RowDefinition Height="20"/>
-					</Grid.RowDefinitions>
-					<Canvas x:Name="PART_Canvas" Grid.Row="1" Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="7*"/>
+                        <RowDefinition Height="20"/>
+                    </Grid.RowDefinitions>
+                    <Canvas x:Name="PART_Canvas" Grid.Row="1" Grid.Column="1">
                         <InkCanvas ClipToBounds="True" Grid.Column="2" Grid.Row="1" Name="surfaceDessin" 
                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"                                                                      
                            Strokes="{Binding Path=Traits, Mode=OneTime}" EditingMode="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurModeEdition}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
@@ -158,8 +160,6 @@
 
                 </Grid>
             </Border>
-
-            <Button Grid.Column="6" Grid.Row="0" Content="Back" Background="#de0d56" BorderBrush="#de0d56"  Width="100" HorizontalAlignment="Right" x:Name="goBack"></Button>
 
         </Grid>
     </Viewbox>
