@@ -112,8 +112,9 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     }
 
     fun startTrace(drawPoint: Stroke) {
-        mStartX = drawPoint.StylusPoints[0].X.toFloat()
-        mStartY = drawPoint.StylusPoints[0].Y.toFloat()
+        val scaledPoint = getScaledPoint(drawPoint.StylusPoints[0])
+        mStartX = scaledPoint.X.toFloat()
+        mStartY = scaledPoint.Y.toFloat()
         mCurX = mStartX
         mCurY = mStartY
         setColor(Color.parseColor(drawPoint.DrawingAttributes.Color))
@@ -124,10 +125,11 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     }
 
     fun stopTrace() {
-        if (mStartX == mCurX && mStartY == mCurY && mCurX != 0f && mCurY != 0f) {
-            mPath.lineTo(mCurX, mCurY + 2)
-            mPath.lineTo(mCurX + 1, mCurY + 2)
-            mPath.lineTo(mCurX + 1, mCurY)
+        val scaledPoint = getScaledPoint(StylusPoint(mCurX, mCurY))
+        if (mStartX == scaledPoint.X && mStartY == scaledPoint.Y && scaledPoint.X != 0f && scaledPoint.Y != 0f) {
+            mPath.lineTo(scaledPoint.X, scaledPoint.Y + 2)
+            mPath.lineTo(scaledPoint.X + 1, scaledPoint.Y + 2)
+            mPath.lineTo(scaledPoint.X + 1, scaledPoint.Y)
         }
         mPaths.put(mPath, mPaintOptions)
         mPath = MyPath()
@@ -142,9 +144,10 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     }
 
     fun addPath(drawPoint: StylusPoint) {
+        val scaledPoint = getScaledPoint(drawPoint)
         if (!mIsErasing) {
-            val x = drawPoint.X.toFloat()
-            val y = drawPoint.Y.toFloat()
+            val x = scaledPoint.X.toFloat()
+            val y = scaledPoint.Y.toFloat()
             if (mIsFirstMove) {
                 startTrace(
                     Stroke(
@@ -154,7 +157,7 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
                         getStrokeCapShape(),
                         0
                     ),
-                        arrayOf(StylusPoint(x, y))
+                        arrayOf(drawPoint)
                     )
                 )
             } else {
@@ -163,7 +166,7 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
                 mCurY = y
             }
         } else {
-            eraseStrokes(drawPoint.X.toFloat(), drawPoint.Y.toFloat())
+            eraseStrokes(scaledPoint.X.toFloat(), scaledPoint.Y.toFloat())
         }
         postInvalidate()
     }
@@ -193,6 +196,7 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
             if (mPaintOptions.color.equals(ContextCompat.getColor(context!!, R.color.default_background))) {
                 SocketHandler.startErasePoint()
             } else {
+                val scaledPoint = returnScaledPoint(StylusPoint(mCurX.toInt(), mCurY.toInt()))
                 SocketHandler.startStroke(
                     Stroke(
                         DrawingAttributes(
@@ -201,7 +205,7 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
                             getStrokeCapShape(),
                             0
                         ),
-                        arrayOf(StylusPoint(mCurX.toInt(), mCurY.toInt()))
+                        arrayOf(scaledPoint)
                     )
                 )
             }
@@ -218,7 +222,8 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
             mCurX = x
             mCurY = y
         }
-        SocketHandler.point(StylusPoint(x, y))
+        val scaledPoint = returnScaledPoint(StylusPoint(x, y))
+        SocketHandler.point(scaledPoint)
     }
 
     private fun eraseStrokes(x: Float, y: Float) {
@@ -237,6 +242,14 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         for (path in toDelete.iterator()) {
             mPaths.remove(path)
         }
+    }
+
+    private fun getScaledPoint(point: StylusPoint): StylusPoint {
+        return StylusPoint((point.X.toFloat().div(600)) * this.width, (point.Y.toFloat().div(500)) * this.height)
+    }
+
+    private fun returnScaledPoint(point: StylusPoint): StylusPoint {
+        return StylusPoint((point.X.toFloat().div(this.width)) * 600, (point.Y.toFloat().div(this.height)) * 500)
     }
 
     private fun actionUp() {
@@ -261,6 +274,8 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
             mPaintOptions.cap
         )
     }
+
+
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (!isDrawer) {

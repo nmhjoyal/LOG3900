@@ -25,10 +25,13 @@ export class ProfileController {
             status: true,
             log_message: "Profile " + profile.username + " created!"
         };
-
+        console.log(profile.username);
         if ((profile.username).toUpperCase() === (Admin.admin).toUpperCase()) {
             feedback.status = false;
             feedback.log_message = "Username Admin is reserved.";
+        } else if(profile.username.length == 0 || profile.username.length > 15) {
+            feedback.status = false;
+            feedback.log_message = "Username has to be between 1 and 15 characters";
         } else {
             try {
                 const generalRoomId: string = "General";

@@ -121,6 +121,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
 
     private fun cleanupAndFinish() {
         GameManager.isGameStarted = false
+        GameManager.hasJoinedMatch = false
         RoomManager.roomsJoined.remove(RoomManager.currentRoom)
         RoomManager.roomAvatars.remove(RoomManager.currentRoom)
         RoomManager.currentRoom = ""
@@ -217,9 +218,29 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
     private fun refreshPlayerPointsToolbar() {
         playerPointsAdapter.clear()
         for (player in nonVirtualPlayers) {
-            playerPointsAdapter.add(PlayerPointToolbarHolder(player.user, player.score.scoreTotal.toInt()))
+            playerPointsAdapter.add(PlayerPointToolbarHolder(player.user, player.score.scoreTotal.toInt(), false))
         }
         user_points_total.adapter = playerPointsAdapter
+    }
+
+    private fun refreshPlayerPointsToolbarEndGame(winner: String) {
+        playerPointsAdapter.clear()
+        for (player in nonVirtualPlayers) {
+            if (player.user.username == winner) {
+                playerPointsAdapter.add(PlayerPointToolbarHolder(player.user, player.score.scoreTotal.toInt(), true))
+            } else {
+                playerPointsAdapter.add(
+                    PlayerPointToolbarHolder(
+                        player.user,
+                        player.score.scoreTotal.toInt(),
+                        false
+                    )
+                )
+            }
+        }
+        user_points_total.adapter = playerPointsAdapter
+        user_points_toolbar.visibility = View.VISIBLE
+        show_points_button.setImageResource(R.drawable.ic_open)
     }
 
 
@@ -234,14 +255,18 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         }
 
         adapter.setOnItemClickListener(({ item, v ->
-            val selectedWord = (item as WordHolder).text
-            wordBeingDrawn = selectedWord
-            SocketHandler.startTurn(selectedWord)
-            showDrawerFragment()
+            if (isGameStarted) {
+                val selectedWord = (item as WordHolder).text
+                wordBeingDrawn = selectedWord
+                SocketHandler.startTurn(selectedWord)
+                showDrawerFragment()
+            }
             dialog.dismiss()
         }))
         wordRecycler.adapter = adapter
-        dialog.show()
+        if (isGameStarted) {
+            dialog.show()
+        }
     }
 
     private fun resetTurn(drawer: String) {
@@ -252,6 +277,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
         lettersAdapter.clear()
         wordBeingDrawn = ""
         message.text = ""
+        get_hint_button.isEnabled = false
         nbTries = 3
         GameManager.canGuess = true
         isHost = drawer.equals(currentUser)
@@ -259,10 +285,12 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
     }
 
     private fun delegateViews(choices: Array<String>) {
-        if (isHost) {
-            showWordsSelection(choices)
-        } else {
-            showObserverFragment()
+        if (isGameStarted) {
+            if (isHost) {
+                showWordsSelection(choices)
+            } else {
+                showObserverFragment()
+            }
         }
     }
 
@@ -303,6 +331,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                     val sprintParams = Gson().fromJson(data.first().toString(), UpdateSprint::class.java)
                     getNonVirtualPlayers(sprintParams.players)
                     Handler(Looper.getMainLooper()).post(({
+                        get_hint_button.isEnabled = false
                         draw_view_container.bringToFront()
                         refreshPlayerPointsToolbar()
                         if (timer != null) {
@@ -314,10 +343,11 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                             GameManager.canGuess = false
                             nb_guesses.text = ""
                         }
+                        wordBeingDrawn = sprintParams.word
+                        setupWordHolder()
                         GameManager.canGuess = true
                         nbTries = sprintParams.guess.toInt()
                         nb_guesses.text = sprintParams.guess.toString()
-                        message.text = sprintParams.word
                     }))
                 }))
                 .on(SocketEvent.TURN_ENDED, ({ data ->
@@ -408,8 +438,10 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                     val playersRefresh = Gson().fromJson(data.first().toString(), Array<Player>::class.java)
                     Handler(Looper.getMainLooper()).post(Runnable {
                         getNonVirtualPlayers(playersRefresh)
-                        refreshPlayerPointsToolbar()
+                        nonVirtualPlayers.sortByDescending(({ it.score.scoreTotal.toInt() }))
+                        refreshPlayerPointsToolbarEndGame(nonVirtualPlayers[0].user.username)
                         turnOffSocketEvents()
+                        isGameStarted = false
                         user_block.bringToFront()
                         get_hint_button.visibility = View.GONE
                         user_points.visibility = View.GONE
@@ -430,6 +462,7 @@ class GameActivity : AppCompatActivity(), ChatFragment.IGuessWord {
                 .on(SocketEvent.UNEXPECTED_LEAVE, ({
                     Handler(Looper.getMainLooper()).post(Runnable {
                         turnOffSocketEvents()
+                        isGameStarted = false
                         user_block.bringToFront()
                         user_points.visibility = View.GONE
                         message.text = resources.getText(R.string.unexpected_leave)

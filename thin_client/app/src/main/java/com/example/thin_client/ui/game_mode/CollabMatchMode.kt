@@ -28,7 +28,10 @@ class CollabMatchMode : Fragment() {
         adapter.setOnItemClickListener{ item, _ ->
             val matchId = (item as MatchItem).match.matchId
             GameManager.currentGameMode = MatchMode.COLLABORATIVE
-            SocketHandler.joinMatch(matchId)
+            if (!GameManager.hasJoinedMatch) {
+                SocketHandler.joinMatch(matchId)
+                GameManager.hasJoinedMatch = true
+            }
         }
         refreshMatchesAdapter()
         available_collab.adapter = adapter

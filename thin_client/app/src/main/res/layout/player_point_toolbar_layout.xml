@@ -42,8 +42,19 @@
             app:layout_constraintStart_toEndOf="@id/user_avatar"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/username"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/winner_icon"
             app:layout_constraintHorizontal_bias="0"
             android:text="@string/time_placeholder"/>
+        <ImageView
+            android:id="@+id/winner_icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="4dp"
+            android:scaleType="fitXY"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/username"
+            app:srcCompat="@drawable/ic_star_24px" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

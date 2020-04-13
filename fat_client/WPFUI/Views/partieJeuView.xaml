@@ -47,11 +47,11 @@
 		</Grid.Triggers>
 
 		<Grid.Background>
-			<ImageBrush ImageSource="/Resources/Stripes.png" TileMode="Tile" >
-				<ImageBrush.RelativeTransform>
+            <SolidColorBrush Color="#FF018577">
+				<SolidColorBrush.RelativeTransform>
 					<RotateTransform CenterX="0.5" CenterY="0.5" Angle="0" x:Name="imgRot"/>
-				</ImageBrush.RelativeTransform>
-			</ImageBrush>
+				</SolidColorBrush.RelativeTransform>
+			</SolidColorBrush>
 		</Grid.Background>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="10"/>
@@ -130,7 +130,7 @@
 					<RowDefinition Height="61"/>
 					<RowDefinition Height="6*"/>
 				</Grid.RowDefinitions>
-				<StackPanel Orientation="Horizontal" Grid.Row="0" Name="drawingEditingPanel" HorizontalAlignment="Right" Margin="0,0,10,0">
+				<StackPanel Orientation="Horizontal" Grid.Row="0" Name="drawingEditingPanel" HorizontalAlignment="Right" Margin="0,0,10,0" Visibility="Collapsed">
 
 					<Button Name="crayon" Width="40" Height="40" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="10,0,0,0"
                         BorderBrush="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurBordure}, ConverterParameter=crayon, UpdateSourceTrigger=PropertyChanged}" 

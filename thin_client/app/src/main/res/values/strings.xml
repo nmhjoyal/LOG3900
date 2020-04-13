@@ -65,6 +65,7 @@
     <string name="error_logging_in">Error logging in, please sign in again.</string>
     <string name="error_connect_title">Server error</string>
     <string name="error_connect">Error connecting to server. Please try again later.</string>
+    <string name="error_disconnected">You have been disconnected.</string>
 
     <!-- Strings related to chat -->
     <string name="default_message">Type message here</string>
@@ -144,8 +145,8 @@
     <!-- Game strings -->
     <string name="play">Play</string>
     <string name="title_game_mode">Game mode</string>
-    <string name="join_game">Join existing game</string>
-    <string name="create_match">Start new game</string>
+    <string name="join_game">Join existing match</string>
+    <string name="create_match">Start new match</string>
     <string name="start_match">Start</string>
     <string name="players_in_game">Players in game </string>
     <string name="virtual_players">Add virtual players </string>

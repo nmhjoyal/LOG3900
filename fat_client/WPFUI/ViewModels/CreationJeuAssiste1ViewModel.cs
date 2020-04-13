@@ -166,31 +166,34 @@ namespace WPFUI.ViewModels
             _events.PublishOnUIThread(new goBackCreationMenuEvent());
         }
 
-        public void createGame(string word, List<string> clues, int level, int mode, int option, string fileName, int width, int height, int thickness, System.Windows.Media.Color? color)
+        public bool createGame(string word, List<string> clues, int level, int mode, int option, string fileName, int width, int height, int thickness, System.Windows.Media.Color color, bool dotted)
         {
             try
             {
-                CreateGame game = new CreateGame(word, Potrace.Converter.exec(fileName, width, height, thickness, color), clues, (Level)level, (Mode)mode, option);
+                CreateGame game = new CreateGame(word, Potrace.Converter.exec(fileName, width, height, thickness, color, dotted), clues, (Level)level, (Mode)mode, option);
                 Feedback feedback = JsonConvert.DeserializeObject<Feedback>(this._socketHandler.TestPOSTWebRequest(game, "/game/create").ToString());
                 if(feedback.status)
                 {
                     _events.PublishOnUIThread(new appSuccessEvent(feedback.log_message));
+                    return true;
                 } else
                 {
                     _events.PublishOnUIThread(new appWarningEvent(feedback.log_message));
+                    return false;
                 }
             }
             catch (Exception)
             {
                 _events.PublishOnUIThread(new appWarningEvent("This file provided is invalid (bmp, jpg, png)"));
+                return false;
             }
         }
 
-        public void preview(string fileName, int mode, int option, int width, int height, int thickness, System.Windows.Media.Color? color)
+        public void preview(string fileName, int mode, int option, int width, int height, int thickness, System.Windows.Media.Color color, bool dotted)
         {
             try
             {
-                GamePreview gamePreview = new GamePreview(Potrace.Converter.exec(fileName, width, height, thickness, color), (Mode)mode, option);
+                GamePreview gamePreview = new GamePreview(Potrace.Converter.exec(fileName, width, height, thickness, color, dotted), (Mode)mode, option);
                 this._socketHandler.socket.Emit("preview", JsonConvert.SerializeObject(gamePreview));
             }
             catch (Exception)

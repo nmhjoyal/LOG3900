@@ -130,6 +130,7 @@ class MatchList : Fragment() {
 
         alertBuilder
             .setPositiveButton(R.string.start) { _, _ ->
+                GameManager.hasJoinedMatch = true
                 val stringMatchMode = gameSelectionSpinner.selectedItem.toString().replace("-", "_").toUpperCase(Locale.CANADA)
                 GameManager.currentGameMode = MatchMode.valueOf(stringMatchMode)
                 GameManager.nbRounds = nbRoundsSpinner.selectedItem.toString().toInt()
@@ -165,6 +166,7 @@ class MatchList : Fragment() {
                         gameStartedListener?.startGame()
                     } else {
                         Handler(Looper.getMainLooper()).post(({
+                            GameManager.hasJoinedMatch = false
                             if (context != null) {
                                 Toast.makeText(
                                     context,
@@ -185,6 +187,7 @@ class MatchList : Fragment() {
                         gameStartedListener?.startGame()
                     } else {
                         Handler(Looper.getMainLooper()).post(({
+                            GameManager.hasJoinedMatch = false
                             if (context != null) {
                                 Toast.makeText(
                                     context,

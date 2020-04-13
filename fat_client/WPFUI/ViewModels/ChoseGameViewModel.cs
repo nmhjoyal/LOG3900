@@ -10,7 +10,7 @@ using WPFUI.Models;
 
 namespace WPFUI.ViewModels
 {
-    class ChoseGameViewModel : Screen, IHandle<updateMatchesEvent>
+    class ChoseGameViewModel : Screen, IHandle<updateMatchesEvent>, IHandle<joinMatchEvent>
     {
         private IEventAggregator _events;
         private ISocketHandler _socketHandler;
@@ -19,6 +19,7 @@ namespace WPFUI.ViewModels
         public BindableCollection<Match> filteredMatches;
         public Boolean _addClicked;
         private int index;
+        private bool clicked;
         public BindableCollection<Match> Matches
         {
             get { return this.filteredMatches; }
@@ -47,6 +48,7 @@ namespace WPFUI.ViewModels
             _events.Subscribe(this);
             this.userdata = userdata;
             _socketHandler = socketHandler;
+            this.clicked = false;
             this.index = 0;
             this.filteredMatches = new BindableCollection<Match>();
             this.matches = new BindableCollection<Match>();
@@ -66,8 +68,12 @@ namespace WPFUI.ViewModels
         }
         public void joinGame(string matchId)
         {
-            this._socketHandler.socket.Emit("join_match", matchId);
-            this.userdata.matchMode = this.matches.Single(match => match.matchId == matchId).matchMode;
+            if(!this.clicked)
+            {
+                this.clicked = true;
+                this._socketHandler.socket.Emit("join_match", matchId);
+                this.userdata.matchMode = this.matches.Single(match => match.matchId == matchId).matchMode;
+            }
             // _events.PublishOnUIThread(new gameEvent());
         }
         public void createGame()
@@ -108,6 +114,11 @@ namespace WPFUI.ViewModels
         {
             this.filteredMatches.Clear();
             this.filteredMatches.AddRange(this.matches.Where(match => match.matchMode == this.getMatchMode(this.Index)));
+        }
+
+        public void Handle(joinMatchEvent message)
+        {
+            this.clicked = false;
         }
     }
 }

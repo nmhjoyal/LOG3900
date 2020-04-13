@@ -51,6 +51,8 @@
             <ComboBoxItem Content="6"/>
             <ComboBoxItem Content="7"/>
             <ComboBoxItem Content="8"/>
+            <ComboBoxItem Content="9"/>
+            <ComboBoxItem Content="10"/>
         </ComboBox>
         <Border Background="#018577" BorderThickness="5" Grid.ColumnSpan="1" Grid.Column="1" Grid.Row="7" CornerRadius="10" Height="40">
             <TextBlock FontSize="14" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Round time limit:" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="5"/>

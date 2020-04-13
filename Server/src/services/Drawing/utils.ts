@@ -126,10 +126,10 @@ export class Utils {
             console.log("Not uniformed");
             return drawing;
         }
-        const step: number = this.totalPoints(drawing) / uniformedPoints;
+        const step: number = totalPoints / uniformedPoints;
         const uniformedDrawing: Stroke[] = [];
-        if(drawing.every(stroke => stroke.StylusPoints.length == 0)) {
-            for(let i: number = 0; i < step; i++) {
+        if(drawing.length == totalPoints) {
+            for(let i: number = 0; i < drawing.length / step; i++) {
                 uniformedDrawing.push(drawing[Math.min(drawing.length - 1, Math.round(i * step))]);
             }
         } else {
