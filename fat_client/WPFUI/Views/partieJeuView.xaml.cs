@@ -156,6 +156,23 @@ namespace WPFUI.Views
         {
             messagesUI.ScrollToEnd();
         }
+
+        private void sendMessage_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter & sendMessage.IsEnabled)
+            {   
+                (this.DataContext as partieJeuViewModel).sendMessage();
+            }
+        }
+
+        private void guessBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter & sendGuess.IsEnabled)
+            {
+                (this.DataContext as partieJeuViewModel).sendGuess();
+            }
+
+        }
     }
 
 }
