@@ -144,13 +144,13 @@
 							x:Name="PreviewButton" Click="preview" Content="Preview" MaxWidth="100"
 							Margin="0,0,0,0"/>
 					<Button Grid.Column="3" Grid.Row="2" FontSize="12" Foreground="White" Background="#D81A60" BorderBrush="#D81A60" Click="close" Content="Close" MaxWidth="100" VerticalAlignment="Top"/>
-					<StackPanel Orientation="Vertical" VerticalAlignment="Top" 
-								Margin="10,90,0,0" Grid.Row="2" Grid.Column="3">
-						<Slider Maximum="10" Minimum="5" TickPlacement="BottomRight" Margin="0,15,0,0"
+					<StackPanel Orientation="Vertical" VerticalAlignment="Top" Margin="10,0,10,0"
+								 Grid.Row="3" Grid.Column="3">
+						<Slider Maximum="10" Minimum="5" TickPlacement="BottomRight" Margin="0,60,0,0"
 								TickFrequency="1" IsSnapToTickEnabled="True" VerticalAlignment="Stretch" x:Name="Thickness" Foreground="White" />
-						<toolkit:ColorPicker Name="ColorPicker" Height="30"  DisplayColorAndName="True" Margin="0,20,0,0" 
+						<toolkit:ColorPicker Name="ColorPicker" Height="30"  DisplayColorAndName="True" Margin="0,30,0,0" 
 											 AvailableColorsSortingMode="HueSaturationBrightness" SelectedColor="Black" Background="White" ></toolkit:ColorPicker>
-						<CheckBox x:Name="Dotted" Content="Dotted" Margin="0,20,0,0"></CheckBox>
+						<CheckBox x:Name="Dotted" Content="Dotted" Margin="0,30,0,0" Foreground="White"></CheckBox>
 
 					</StackPanel>
 
