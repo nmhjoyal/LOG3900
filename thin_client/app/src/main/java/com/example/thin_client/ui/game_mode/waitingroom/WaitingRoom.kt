@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.thin_client.R
 import com.example.thin_client.data.Feedback
+import com.example.thin_client.data.app_preferences.PreferenceHandler
 import com.example.thin_client.data.game.GameManager
 import com.example.thin_client.data.game.Player
 import com.example.thin_client.data.rooms.RoomManager
@@ -31,6 +32,10 @@ class WaitingRoom : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         super.onViewCreated(view, savedInstanceState)
+
+        add_vp.isEnabled = false
+        remove_vp.isEnabled = false
+        start_match.isEnabled = false
 
         recyclerview_available_players.adapter = adapter
         setUpSocketEvents()
@@ -118,6 +123,11 @@ class WaitingRoom : Fragment() {
             if (!player.isVirtual && !hostAllocated) {
                 adapter.add(WaitingRoomItem(player.user.username, player.user.avatar, true))
                 hostAllocated = true
+                if (context != null && player.user.username == PreferenceHandler(context!!).getUser().username) {
+                    add_vp.isEnabled = true
+                    remove_vp.isEnabled = true
+                    start_match.isEnabled = true
+                }
             } else {
                 adapter.add(WaitingRoomItem(player.user.username, player.user.avatar, false))
             }

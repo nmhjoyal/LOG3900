@@ -426,7 +426,7 @@ namespace WPFUI.ViewModels
                 dynamic dynamicScore = new System.Dynamic.ExpandoObject();
                 dynamicScore.position = 0;
                 dynamicScore.name = player.Username;
-                dynamicScore.score = player.ScoreTurn;
+                dynamicScore.score = player.score.scoreTurn;
                 _turnScores.Add(dynamicScore);
             }
 
@@ -440,7 +440,7 @@ namespace WPFUI.ViewModels
                 rank++;
             }
 
-            _turnScores = new BindableCollection<dynamic>(_turnScores.OrderBy(i => i.position));
+            // _turnScores = new BindableCollection<dynamic>(_turnScores.OrderBy(i => i.position));
 
             turnScores.Refresh();
             NotifyOfPropertyChange(() => turnScores);
@@ -579,7 +579,7 @@ namespace WPFUI.ViewModels
                 dynamic dynamicScore = new System.Dynamic.ExpandoObject();
                 dynamicScore.position = 0;
                 dynamicScore.name = player.Username;
-                dynamicScore.score = player.ScoreTotal;
+                dynamicScore.score = player.score.scoreTotal;
                 _matchScores.Add(dynamicScore);
             }
 
@@ -607,6 +607,8 @@ namespace WPFUI.ViewModels
 
             endTurn.players = new BindableCollection<Player>();
             NotifyOfPropertyChange(() => joueurs);
+
+
             _winnerMessage = "The winner is " + _matchScores[0].name;
             if (this._userData.matchMode == Models.MatchMode.sprintSolo || this._userData.matchMode == Models.MatchMode.sprintCoop)
             {
