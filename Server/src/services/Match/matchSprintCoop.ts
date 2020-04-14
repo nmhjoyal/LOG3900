@@ -15,7 +15,6 @@ export default class SprintCoop extends Match {
         super(matchId, user, createMatch, chatHandler, sprintCoopSettings);
         // Add the only virtual player in the mode 1vs1, sprint coop and solo
         const vp: Player = this.addVP(io);
-        this.vp = vp.user.username;
         this.drawer = vp;
     }
 
