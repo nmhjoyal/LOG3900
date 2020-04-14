@@ -72,12 +72,12 @@
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="0.2*"/>
 				<ColumnDefinition Width="10"/>
-				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width=".3*" />
 				<ColumnDefinition Width="10"/>
 				<ColumnDefinition Width="30" />
 				<ColumnDefinition Width="10" />
 				<ColumnDefinition Width="10"/>
-				<ColumnDefinition Width="60" />
+				<ColumnDefinition Width=".5*" />
 				<ColumnDefinition Width="10" />
 				<ColumnDefinition Width="600" />
 				<ColumnDefinition Width="10" />
@@ -111,14 +111,15 @@
 
 
 
-		<TextBlock FontSize="12" Grid.Row="2" TextAlignment="Center" Grid.Column="2" 
-				   Text="Remaining Time" Grid.ColumnSpan="5" Grid.RowSpan="3" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,5.6,8.8,4.2"/>
-            <TextBlock FontSize="14" Grid.Row="5" TextAlignment="Center" Grid.Column="2" Text="{Binding timerContent}" Grid.ColumnSpan="5" VerticalAlignment="Center" Margin="0,0.8,8.8,1.2"/>
+		<TextBlock FontSize="14" Grid.Row="2" TextAlignment="Center" Grid.Column="2" 
+				   Text="Remaining Time" Grid.ColumnSpan="5" Grid.RowSpan="3" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,10,0,0"/>
+            <TextBlock FontSize="14" Grid.Row="5" TextAlignment="Center" Grid.Column="2" Text="{Binding timerContent}" 
+					   Grid.ColumnSpan="5" VerticalAlignment="Center" Margin="0,0.8,8.8,1.2" HorizontalAlignment="Center"/>
             <TextBlock FontSize="14" Grid.Column="7" Grid.Row="3" Grid.RowSpan="3" Height="50"  TextAlignment="Center" Text="{Binding roundText}" VerticalAlignment="Center"/>
-		<TextBlock FontSize="14" Grid.Row="3" TextAlignment="Center" Grid.Column="9" 
-				   Text="{Binding MatchMode}" Grid.ColumnSpan="1"  Grid.RowSpan="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+		<TextBlock FontSize="20" Grid.Row="3" TextAlignment="Center" Grid.Column="9" 
+				   Text="{Binding MatchMode}" Grid.ColumnSpan="1"  Grid.RowSpan="3" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
 
-		<TextBlock FontSize="14" Grid.ColumnSpan="3" Grid.Row="3" TextAlignment="Center" Grid.Column="11" Text="Word To Guess" Grid.RowSpan="2"/>
+		<TextBlock FontSize="16" Grid.ColumnSpan="3" Grid.Row="3" TextAlignment="Center" Grid.Column="11" Text="Word To Guess" Grid.RowSpan="2"/>
 		<TextBlock FontSize="14" Grid.Row="4" TextAlignment="Center" Grid.Column="11" Text="{Binding currentWord}" 
 				   HorizontalAlignment="Center" Grid.RowSpan="2" VerticalAlignment="Center" Grid.ColumnSpan="3"/>
 
@@ -223,16 +224,16 @@
 
 			<TextBox x:Name ="currentMessage" Grid.Column="11" Grid.Row="9" Foreground="DarkSlateGray" BorderBrush="Black"  Background="White" Grid.ColumnSpan="2" Grid.RowSpan="1" PreviewKeyDown="sendMessage_PreviewKeyDown"/>
             <Button x:Name ="sendMessage" BorderBrush="{x:Null}" Grid.Column="13" Grid.Row="9" Background="#018677" Foreground="White" Click="refocus" 
-				HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="auto">
+				HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="auto" FontSize="20">
 			Send
 		</Button>
 		<TextBox x:Name ="guessBox" Grid.Column="11" Grid.Row="11" Foreground="DarkSlateGray" BorderBrush="Black" Background="White" Grid.ColumnSpan="2" PreviewKeyDown="guessBox_PreviewKeyDown"/>
-            <Button x:Name ="sendGuess"  Grid.Column="13" Grid.Row="11" BorderBrush="{x:Null}" Background="#D6EFE9" Foreground="#018677" Click="refocus" Height="auto" Width="auto" >
+			<Button x:Name ="sendGuess"  Grid.Column="13" Grid.Row="11" BorderBrush="{x:Null}" Background="#D6EFE9" Foreground="#FF00584C" Click="refocus2" Height="auto" Width="auto" FontSize="20">
 			Guess
 		</Button>
             <TextBlock x:Name="guessesLeft" FontSize="14" Grid.Row="10" TextAlignment="Right" VerticalAlignment="Center" Grid.Column="9" Text="{Binding GuessesLeft.Text}" Visibility="{Binding GuessesLeft.Visibility, Converter={StaticResource BooleanToVisibilityConverter}}"  Grid.ColumnSpan="2" Margin="0.2,0.2,9.4,10.2" Grid.RowSpan="2"/>
-            
-            <Button x:Name ="requestHint" IsEnabled="{Binding HintEnabled}" Background="#01C853" Grid.Column="13" Grid.Row="13" Content="Hint" Foreground="White" BorderBrush="{x:Null}" Height="auto" Grid.ColumnSpan="1"/>
+
+			<Button x:Name ="requestHint" IsEnabled="{Binding HintEnabled}" Background="#01C853" Grid.Column="13" Grid.Row="13" Content="Hint" Foreground="White" BorderBrush="{x:Null}" Height="auto" Grid.ColumnSpan="1" FontSize="20"/>
 	
 			<Canvas Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="13" Grid.RowSpan="13" Name="mainUIFilter" Margin="0.4,30,0.4,0"></Canvas>
 			<Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="13" Grid.RowSpan="13" Visibility="Hidden" Name="endTurnBox" Margin="0.4,30,0.4,0">

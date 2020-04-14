@@ -41,6 +41,10 @@ namespace WPFUI.Views
         {
             currentMessage.Focus();
         }
+        private void refocus2(object sender, RoutedEventArgs e)
+        {
+            guessBox.Focus();
+        }
 
         private void OnLoad(object sender, RoutedEventArgs e)
         {
