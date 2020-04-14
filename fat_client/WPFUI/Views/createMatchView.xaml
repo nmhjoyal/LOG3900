@@ -10,8 +10,8 @@
     <Grid Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="3*" />
-            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="250" />
+            <ColumnDefinition Width="250" />
             <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -64,7 +64,11 @@
             <ComboBoxItem Content="120 seconds"/>
         </ComboBox>
 
-        <Button Grid.Column="13" Grid.Row="0" Content="Back" Background="#de0d56" BorderBrush="#de0d56"  Width="100" HorizontalAlignment="Left" x:Name="goBack"></Button>
+        <Button Grid.Column="1" Grid.Row="0" Background="#de0d56" BorderBrush="#de0d56"  Width="65" HorizontalAlignment="Left" x:Name="goBack">
+			<TextBlock FontSize="22" VerticalAlignment="Center" Foreground="White">
+				←
+			</TextBlock>
+		</Button>
 
         <Button HorizontalAlignment="Right" BorderBrush="{x:Null}" Background="#D6EFE9" Grid.Column="2" Grid.Row="9" Content="Lets go! " Foreground="#00584C" PreviewMouseDown="createMatch"/>
 		<TextBlock FontSize="40"  Foreground="#00584C" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">Create your match!</TextBlock>
