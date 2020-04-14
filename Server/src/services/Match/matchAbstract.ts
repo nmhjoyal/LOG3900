@@ -60,7 +60,6 @@ export default abstract class Match {
         this.timeLimit = createMatch.timeLimit;
         this.chatHandler = chatHandler;
         this.ms = matchSettings;
-        this.vp = "";
         this.currentWord = "";
         this.virtualPlayer = new VirtualPlayer();
     }
@@ -245,7 +244,7 @@ export default abstract class Match {
 
             if (this.hints.length > 0) {
                 const hint: string = this.hints.splice(Math.floor(Math.random() * (Math.floor(this.hints.length))), 1)[0];
-                io.in(this.matchId).emit("new_message", this.virtualPlayer.getHintMessage(this.vp, hint, this.matchId));
+                this.sendVPHintMessages(io, hint);
 
                 if (this.hints.length > 0) {
                     this.timeouts.push(setTimeout(() => {
@@ -271,7 +270,7 @@ export default abstract class Match {
     protected notifyWord(io: SocketIO.Server): void {
         const message: Message = Admin.createAdminMessage("The word was " + this.currentWord, this.matchId);
         io.in(this.matchId).emit("new_message", JSON.stringify(message));
-        io.in(this.matchId).emit("new_message", JSON.stringify(this.virtualPlayer.getEndTurnMessage(this.vp, this.matchId)));
+        this.sendVPEndTurnMessages(io);
     }
 
     protected reset(io: SocketIO.Server): void {
@@ -332,14 +331,38 @@ export default abstract class Match {
         if (this.mode == MatchMode.freeForAll) {
             // Init to the last player on round 0 so it resets in endTurn for round 1 with first player.
             this.drawer = this.players[this.players.length - 1];
-
-            const username: string | undefined = this.getVPUsername(); 
-            this.vp = (username) ? username : this.virtualPlayer.create().user.username;
         }
-        io.in(this.matchId).emit("new_message", JSON.stringify(this.virtualPlayer.getStartMatchMessage(this.vp, this.matchId)));
+
+        this.sendVPStartMatchMessages(io);
         this.round = 0;
         
         this.initScores();
+    }
+
+    protected sendVPStartMatchMessages(io: SocketIO.Server): void {
+        // Pour tous les joueurs virtuels
+        for (let player of this.players) {
+            if (player.isVirtual) {
+                const message: Message = this.virtualPlayer.getStartMatchMessage(player.user.username, this.matchId);
+                io.in(this.matchId).emit("new_message", JSON.stringify(message));
+            }
+        }
+    }
+
+    protected sendVPEndTurnMessages(io: SocketIO.Server): void {
+        // Pour tous les joueurs virtuels
+        for (let player of this.players) {
+            if (player.isVirtual) {
+                const message: Message = this.virtualPlayer.getEndTurnMessage(player.user.username, this.matchId);
+                io.in(this.matchId).emit("new_message", JSON.stringify(message));
+            }
+        }
+    }
+
+    protected sendVPHintMessages(io: SocketIO.Server, hint: string): void {
+        // Le drawer envoit le hint
+        const message: Message = this.virtualPlayer.getHintMessage(this.drawer.user.username, hint, this.matchId);
+        io.in(this.matchId).emit("new_message", JSON.stringify(message));
     }
 
     protected resetScoresTurn(): void {
@@ -392,9 +415,10 @@ export default abstract class Match {
         for (let player of this.players) {
             if (player.user.username == username) {
                 const oldScore: number = player.score.scoreTotal;
+                const scoreTurn: number = player.score.scoreTurn;
                 const updatedScore: UpdateScore = {
                     scoreTotal: oldScore + score,
-                    scoreTurn: score
+                    scoreTurn: scoreTurn + score
                 };
                 player.score = updatedScore;
             }

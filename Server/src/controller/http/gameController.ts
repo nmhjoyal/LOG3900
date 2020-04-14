@@ -16,6 +16,7 @@ export class GameController {
             status: true,
             log_message: "Game created!"
         };
+        createGame.clues = createGame.clues.filter(clue => clue.length != 0);
         for(let i = 0; i < createGame.clues.length; i++) {
             if(createGame.clues[i] == "") {
                 createGame.clues.splice(i, 1);

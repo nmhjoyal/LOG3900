@@ -8,159 +8,170 @@
              xmlns:gif="http://wpfanimatedgif.codeplex.com"
             xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit" 
             mc:Ignorable="d"
-             d:DesignHeight="850" d:DesignWidth="1200"
+             d:DesignHeight="850" d:DesignWidth="1600"
              Loaded="onLoad"
              
 			 FontFamily="Microsoft JhengHei UI Light" Background="White">
-    <UserControl.Resources>
-        <convertisseurs:ConvertisseurBordure x:Key="convertisseurBordure" />
-        <convertisseurs:ConvertisseurCouleurFond x:Key="convertisseurCouleurFond" />
-        <convertisseurs:ConvertisseurModeEdition x:Key="convertisseurModeEdition" />
-    </UserControl.Resources>
-    <Viewbox>
-        <Grid Background="White" >
+	<UserControl.Resources>
+		<convertisseurs:ConvertisseurBordure x:Key="convertisseurBordure" />
+		<convertisseurs:ConvertisseurCouleurFond x:Key="convertisseurCouleurFond" />
+		<convertisseurs:ConvertisseurModeEdition x:Key="convertisseurModeEdition" />
+	</UserControl.Resources>
+	<Viewbox>
+		<Grid Background="White" >
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="20"/>
-                <ColumnDefinition Width="150" />
-                <ColumnDefinition Width="20"/>
-                <ColumnDefinition Width="150" />
-                <ColumnDefinition Width="150" />
-                <ColumnDefinition Width="150" />
-                <ColumnDefinition Width="150" />
-                <ColumnDefinition Width="20" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="100"/>
-                <RowDefinition Height="10"/>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="10"/>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="10"/>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="10"/>
-                <RowDefinition Height="350"/>
-                <RowDefinition Height="10"/>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="20"/>
+				<ColumnDefinition Width="150" />
+				<ColumnDefinition Width="20"/>
+				<ColumnDefinition Width="150" />
+				<ColumnDefinition Width="150" />
+				<ColumnDefinition Width="150" />
+				<ColumnDefinition Width="150" />
+				<ColumnDefinition Width="20" />
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="10"/>
+				<RowDefinition Height="200"/>
+				<RowDefinition Height="10"/>
+				<RowDefinition Height="60"/>
+				<RowDefinition Height="10"/>
+				<RowDefinition Height="60"/>
+				<RowDefinition Height="10"/>
+				<RowDefinition Height="60"/>
+				<RowDefinition Height="10"/>
+				<RowDefinition Height="200"/>
+				<RowDefinition Height="100"/>
+				<RowDefinition Height="10"/>
 
-            </Grid.RowDefinitions>
-            <TextBlock  FontSize="40"  Foreground="#00584C" Text="Manual Game Creation" 
+			</Grid.RowDefinitions>
+			<TextBlock  FontSize="40"  Foreground="#00584C" Text="Manual Game Creation" 
 						Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" TextAlignment="Center" VerticalAlignment="Center"/>
-            <Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="3" CornerRadius="10">
-                <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Word To Guess:" Grid.Column="1" Grid.Row="3"/>
-            </Border>
-            <TextBox x:Name="Word" Grid.Column="3" Grid.Row="3" MinWidth="200" Grid.ColumnSpan="3"/>
-            <Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="5" CornerRadius="10">
-                <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center"  Text="Game Difficulty:" />
-            </Border>
-            <ComboBox Name="Level"  Grid.Column="3" Grid.Row="5" >
-                <ComboBoxItem Foreground="Green" Content="Easy"/>
-                <ComboBoxItem Foreground="Orange" Content="Normal"/>
-                <ComboBoxItem Foreground="Red" Content="Hard"/>
-            </ComboBox>
-            <StackPanel Name="optionBlock" Grid.Column="4" Grid.Row="7"></StackPanel>
-            <StackPanel  Name="Options" Grid.Column="5" Grid.Row="7"></StackPanel>
-            <Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="7" CornerRadius="10">
-                <TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center"  Text="Mode:" />
-            </Border>
-            <ComboBox SelectionChanged="elementSelectionne" Name="Mode" Grid.Column="3" Grid.Row="7">
-                <ComboBoxItem Content="Classic"/>
-                <ComboBoxItem Content="Random"/>
-                <ComboBoxItem Content="Panoramic"/>
-                <ComboBoxItem Content="Centered"/>
-            </ComboBox>
-            <Button MaxWidth="140" Click="addClue" Background="#FF018577" 
-					Grid.Column="1" Grid.Row="9" BorderBrush="{x:Null}" VerticalAlignment="Top">
-                <StackPanel  Orientation="Horizontal">
-                    <TextBlock FontSize="12" Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Hint(s):</TextBlock>
-                    <Image Source="/Resources/add.png" Height="20"></Image>
-                </StackPanel>
-            </Button>
-            <StackPanel Name="canContainer"  Grid.Column="3" Grid.Row="9">
-                <TextBox  x:Name="clue" Grid.Column="3" Grid.Row="16"  />
-            </StackPanel>
+			<Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="3" CornerRadius="10">
+				<TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Word To Guess:" Grid.Column="1" Grid.Row="3"/>
+			</Border>
+			<TextBox x:Name="Word" Grid.Column="3" Grid.Row="3" MinWidth="200" Grid.ColumnSpan="3" VerticalAlignment="Center"/>
+			<Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="5" CornerRadius="10">
+				<TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center"  Text="Game Difficulty:" />
+			</Border>
+			<ComboBox Name="Level"  Grid.Column="3" Grid.Row="5" >
+				<ComboBoxItem Foreground="Green" Content="Easy"/>
+				<ComboBoxItem Foreground="Orange" Content="Normal"/>
+				<ComboBoxItem Foreground="Red" Content="Hard"/>
+			</ComboBox>
+			<StackPanel Name="optionBlock" Grid.Column="4" Grid.Row="7"></StackPanel>
+			<StackPanel  Name="Options" Grid.Column="5" Grid.Row="7"></StackPanel>
+			<Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="7" CornerRadius="10">
+				<TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center"  Text="Mode:" />
+			</Border>
+			<ComboBox SelectionChanged="elementSelectionne" Name="Mode" Grid.Column="3" Grid.Row="7">
+				<ComboBoxItem Content="Classic"/>
+				<ComboBoxItem Content="Random"/>
+				<ComboBoxItem Content="Panoramic"/>
+				<ComboBoxItem Content="Centered"/>
+			</ComboBox>
+			<Button MaxWidth="140" Click="addClue" Background="#FF018577" 
+					Grid.Column="1" Grid.Row="9" BorderBrush="{x:Null}" VerticalAlignment="Top" Height="45">
+				<StackPanel  Orientation="Horizontal">
+					<TextBlock FontSize="12" Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Hint(s):</TextBlock>
+					<Image Source="/Resources/add.png" Height="20"></Image>
+				</StackPanel>
+			</Button>
+			<StackPanel Name="canContainer"  Grid.Column="3" Grid.Row="9">
+				<TextBox  x:Name="clue" Grid.Column="3" Grid.Row="16"  />
+			</StackPanel>
 
-            <Button Grid.Column="6" Grid.Row="0" Content="Back" Background="#de0d56" BorderBrush="#de0d56"  Width="100" HorizontalAlignment="Right" x:Name="goBack"></Button>
+			<Button Grid.Column="1" Grid.Row="1" Background="#de0d56" 
+					BorderBrush="#de0d56"  Width="60" HorizontalAlignment="Left" 
+					x:Name="goBack" Height="35" Margin="20,0,0,0">
+				<TextBlock FontSize="30" VerticalAlignment="Center" Foreground="White">
+					←
+				</TextBlock>
 
-            <StackPanel Orientation="Vertical" Grid.Column="6" Grid.Row="9">
-                <Button BorderBrush="{x:Null}" Background="#D6EFE9" FontSize="12" Foreground="#00584C" Click="draw" Content="Draw" HorizontalAlignment="Center" Width="110"/>
-                <Button BorderBrush="{x:Null}" Background="#00584C" FontSize="12" Foreground="#D6EFE9" Click="createGame" Content="Create Game"   HorizontalAlignment="Center" Width="110"/>
-            </StackPanel>
+			</Button>
+			<StackPanel Orientation="Vertical" Grid.Column="6" Grid.Row="9">
+				<Button BorderBrush="{x:Null}" Background="#D6EFE9" FontSize="12" Foreground="#00584C" Click="draw" Content="Draw" HorizontalAlignment="Center" Width="110"/>
+				<Button BorderBrush="{x:Null}" Background="#00584C" FontSize="12" Foreground="#D6EFE9" Click="createGame" Content="Create Game"   HorizontalAlignment="Center" Width="110"/>
+			</StackPanel>
 
-            <Border  Visibility="Hidden" Name="border" Background="#00584C" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderBrush="Black"  Grid.ColumnSpan="6" Grid.RowSpan="9" Margin="0,0,0,20">
-                <Grid Visibility="Visible" Name="selectNextDrawingBox" >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="20"/>
-                        <ColumnDefinition Width="600"/>
-                        <ColumnDefinition Width="120"/>
-                        <ColumnDefinition Width="20" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="60"/>
-                        <RowDefinition Height="60"/>
-                        <RowDefinition Height="7*"/>
-                        <RowDefinition Height="20"/>
-                    </Grid.RowDefinitions>
-                    <Canvas x:Name="PART_Canvas" Grid.Row="1" Grid.Column="1">
-                        <InkCanvas ClipToBounds="True" Grid.Column="2" Grid.Row="1" Name="surfaceDessin" 
-                           HorizontalAlignment="Stretch" VerticalAlignment="Stretch"                                                                      
-                           Strokes="{Binding Path=Traits, Mode=OneTime}" EditingMode="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurModeEdition}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                           DefaultDrawingAttributes="{Binding Path=AttributsDessin, Mode=OneTime}"  Height="500" Width="600"/>
-                    </Canvas>
+			<Grid Visibility="Hidden" Name="selectNextDrawingBox" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="16" Grid.RowSpan="16">
 
 
-                    <StackPanel Orientation="Horizontal" Background="#D3D3D3" Grid.Column="1" Grid.Row="0" MaxWidth="600" Margin="0,13,0,0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="600"/>
+					<ColumnDefinition Width="120"/>
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="20"/>
+					<RowDefinition Height="60"/>
+					<RowDefinition Height="60"/>
+					<RowDefinition Height="7*"/>
+					<RowDefinition Height="20"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
 
-                        <Button Name="crayon" Width="40" Height="40" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="10,0,0,0"
-                        BorderBrush="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurBordure}, ConverterParameter=crayon, UpdateSourceTrigger=PropertyChanged}" 
-                        Background="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurCouleurFond}, ConverterParameter=crayon, UpdateSourceTrigger=PropertyChanged}" 
-                        Command="{Binding Path=ChoisirOutil}"
-                        CommandParameter="crayon">
-                            <Image Source="/Resources/crayon.png" Margin="-12,-7,-11,-8"/>
-                        </Button>
-                        <Button Name="efface_segment" Width="40" Height="40" Margin="10,0,0,0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"   
-                        BorderBrush="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurBordure}, ConverterParameter=efface_segment, UpdateSourceTrigger=PropertyChanged}" 
-                        Background="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurCouleurFond}, ConverterParameter=efface_segment, UpdateSourceTrigger=PropertyChanged}" 
-                        Command="{Binding Path=ChoisirOutil}"
-                        CommandParameter="efface_segment">
-                            <Image Source="/Resources/efface_crayon.png" Margin="-9,0,-7,-2" />
-                        </Button>
-                        <Button Name="efface_trait" Width="40" Height="40" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"  Margin="10,0,0,0"
-                        BorderBrush="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurBordure}, ConverterParameter=efface_trait, UpdateSourceTrigger=PropertyChanged}" 
-                        Background="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurCouleurFond}, ConverterParameter=efface_trait, UpdateSourceTrigger=PropertyChanged}" 
-                        Command="{Binding Path=ChoisirOutil}"
-                        CommandParameter="efface_trait">
-                            <Image Source="/Resources/efface.png" Margin="-10,-4,-12,-4"/>
-                        </Button>
+				<Border  Visibility="Visible" Name="border" Background="#00584C" Grid.Column="0" Grid.Row="1" CornerRadius="15" BorderBrush="Black"  Grid.ColumnSpan="16" Grid.RowSpan="5"/>
+
+				<Canvas x:Name="PART_Canvas" Grid.Row="3" Grid.Column="1">
+					<InkCanvas ClipToBounds="True" Grid.Column="2" Grid.Row="1" Name="surfaceDessin" 
+                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"                                                                      
+                                Strokes="{Binding Path=Traits, Mode=OneTime}" EditingMode="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurModeEdition}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                                DefaultDrawingAttributes="{Binding Path=AttributsDessin, Mode=OneTime}"  Height="500" Width="600"/>
+				</Canvas>
 
 
-                        <toolkit:ColorPicker x:Name="selecteurCouleur"                             
-                  VerticalContentAlignment="Stretch"
-                  Background="#00000000"
-                  ShowDropDownButton="False"
-                  ShowRecentColors="True"
-                  BorderBrush="#80000000"
-                  Margin="10,0,0,0" Width="39" Height="38"
-                  SelectedColor="{Binding Path=CouleurSelectionnee, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                  AvailableColorsHeader="Palette"
-                  StandardColorsHeader="Couleurs de base"
-                  StandardButtonHeader="Standard"
-                  RecentColorsHeader="Récemment utilisées"
-                  UsingAlphaChannel="True"
-                  AdvancedButtonHeader="Personnalisé" />
-                        <Slider Width="100" Height="26" Minimum="1" Maximum="50"
-                        Value="{Binding Path=TailleTrait, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                        Margin="10,0,0,0"
-                        Foreground="#FFCFD1D0"                        
-                        TickFrequency="10" TickPlacement="BottomRight" IsSnapToTickEnabled="False">
-                        </Slider>
-                    </StackPanel>
-                    <Button Grid.Column="2" Grid.Row="1" FontSize="12" Foreground="#00584C" Background="#D6EFE9" BorderBrush="#D6EFE9" x:Name="PreviewButton" Click="preview" Content="Preview" MaxWidth="100"/>
-                    <Button Grid.Column="2" Grid.Row="0" FontSize="12" Foreground="White" Background="#D81A60" BorderBrush="#D81A60" Click="close" Content="Close" MaxWidth="100"/>
+				<StackPanel Orientation="Horizontal" Background="#D3D3D3" Grid.Column="1" Grid.Row="2" MaxWidth="600" Margin="0,10,0,0">
 
-                </Grid>
-            </Border>
+					<Button Name="crayon" Width="40" Height="40" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="10,0,0,0"
+                            BorderBrush="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurBordure}, ConverterParameter=crayon, UpdateSourceTrigger=PropertyChanged}" 
+                            Background="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurCouleurFond}, ConverterParameter=crayon, UpdateSourceTrigger=PropertyChanged}" 
+                            Command="{Binding Path=ChoisirOutil}"
+                            CommandParameter="crayon">
+						<Image Source="/Resources/crayon.png" Margin="-12,-7,-11,-8"/>
+					</Button>
+					<Button Name="efface_segment" Width="40" Height="40" Margin="10,0,0,0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"   
+                            BorderBrush="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurBordure}, ConverterParameter=efface_segment, UpdateSourceTrigger=PropertyChanged}" 
+                            Background="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurCouleurFond}, ConverterParameter=efface_segment, UpdateSourceTrigger=PropertyChanged}" 
+                            Command="{Binding Path=ChoisirOutil}"
+                            CommandParameter="efface_segment">
+						<Image Source="/Resources/efface_crayon.png" Margin="-9,0,-7,-2" />
+					</Button>
+					<Button Name="efface_trait" Width="40" Height="40" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"  Margin="10,0,0,0"
+                            BorderBrush="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurBordure}, ConverterParameter=efface_trait, UpdateSourceTrigger=PropertyChanged}" 
+                            Background="{Binding Path=OutilSelectionne, Converter={StaticResource convertisseurCouleurFond}, ConverterParameter=efface_trait, UpdateSourceTrigger=PropertyChanged}" 
+                            Command="{Binding Path=ChoisirOutil}"
+                            CommandParameter="efface_trait">
+						<Image Source="/Resources/efface.png" Margin="-10,-4,-12,-4"/>
+					</Button>
 
-        </Grid>
-    </Viewbox>
+
+					<toolkit:ColorPicker x:Name="selecteurCouleur"                             
+                        VerticalContentAlignment="Stretch"
+                        Background="#00000000"
+                        ShowDropDownButton="False"
+                        ShowRecentColors="True"
+                        BorderBrush="#80000000"
+                        Margin="10,0,0,0" Width="39" Height="38"
+                        SelectedColor="{Binding Path=CouleurSelectionnee, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                        AvailableColorsHeader="Palette"
+                        StandardColorsHeader="Couleurs de base"
+                        StandardButtonHeader="Standard"
+                        RecentColorsHeader="Récemment utilisées"
+                        UsingAlphaChannel="True"
+                        AdvancedButtonHeader="Personnalisé" />
+					<Slider Width="100" Height="26" Minimum="1" Maximum="50"
+                            Value="{Binding Path=TailleTrait, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                            Margin="10,0,0,0"
+                            Foreground="#FFCFD1D0"                        
+                            TickFrequency="10" TickPlacement="BottomRight" IsSnapToTickEnabled="False">
+					</Slider>
+				</StackPanel>
+				<Button Grid.Column="2" Grid.Row="3" FontSize="12" Foreground="#00584C" Background="#D6EFE9" BorderBrush="#D6EFE9" x:Name="PreviewButton" Click="preview" Content="Preview" MaxWidth="100"/>
+				<Button Grid.Column="2" Grid.Row="2" FontSize="12" Foreground="White" Background="#D81A60" BorderBrush="#D81A60" Click="close" Content="Close" MaxWidth="100"/>
+			</Grid>
+		</Grid>
+	</Viewbox>
 </UserControl>

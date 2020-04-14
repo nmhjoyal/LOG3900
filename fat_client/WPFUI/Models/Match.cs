@@ -211,7 +211,7 @@ namespace WPFUI.Models
             this.currentRound = endTurn.currentRound;
             this.choices = endTurn.choices;
             this.drawer = endTurn.drawer;
-            this.players = new BindableCollection<Player>(endTurn.players.OrderByDescending(i => i.ScoreTotal));
+            this.players = new BindableCollection<Player>(endTurn.players.OrderByDescending(i => i.ScoreTurn));
         }
     }
     public class UpdateScore

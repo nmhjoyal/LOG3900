@@ -264,7 +264,7 @@ namespace WPFUI.ViewModels
         }
         public string roundText
         {
-            get { return this.endTurn.currentRound + " of " + _userData.nbRounds; }
+            get { return (this._userData.matchMode == Models.MatchMode.sprintSolo || this._userData.matchMode == Models.MatchMode.sprintCoop)? "" : "Round\n " + this.endTurn.currentRound + " of " + _userData.nbRounds; }
         }
 
         public string currentWord
@@ -426,7 +426,7 @@ namespace WPFUI.ViewModels
                 dynamic dynamicScore = new System.Dynamic.ExpandoObject();
                 dynamicScore.position = 0;
                 dynamicScore.name = player.Username;
-                dynamicScore.score = player.ScoreTurn;
+                dynamicScore.score = player.score.scoreTurn;
                 _turnScores.Add(dynamicScore);
             }
 
@@ -440,7 +440,7 @@ namespace WPFUI.ViewModels
                 rank++;
             }
 
-            _turnScores = new BindableCollection<dynamic>(_turnScores.OrderBy(i => i.position));
+            // _turnScores = new BindableCollection<dynamic>(_turnScores.OrderBy(i => i.position));
 
             turnScores.Refresh();
             NotifyOfPropertyChange(() => turnScores);
@@ -579,25 +579,41 @@ namespace WPFUI.ViewModels
                 dynamic dynamicScore = new System.Dynamic.ExpandoObject();
                 dynamicScore.position = 0;
                 dynamicScore.name = player.Username;
-                dynamicScore.score = player.ScoreTotal;
+                dynamicScore.score = player.score.scoreTotal;
                 _matchScores.Add(dynamicScore);
             }
 
             _matchScores = new BindableCollection<dynamic>(_matchScores.OrderByDescending(i => i.score));
 
-            int rank = 1;
-            foreach (dynamic score in _matchScores)
+            if(this._userData.matchMode == Models.MatchMode.sprintSolo || this._userData.matchMode == Models.MatchMode.sprintCoop)
             {
-                score.position = rank + ".";
-                score.score = ": " + score.score + " points";
-                rank++;
+                foreach (dynamic score in _matchScores)
+                {
+                    score.position = "";
+                    score.score = ": " + score.score + " points";
+                }
+            } else
+            {
+                int rank = 1;
+                foreach (dynamic score in _matchScores)
+                {
+                    score.position = rank + ".";
+                    score.score = ": " + score.score + " points";
+                    rank++;
+                }
             }
 
-            _matchScores = new BindableCollection<dynamic>(_matchScores.OrderBy(i => i.position));
+            // _matchScores = new BindableCollection<dynamic>(_matchScores.OrderBy(i => i.position));
 
             endTurn.players = new BindableCollection<Player>();
             NotifyOfPropertyChange(() => joueurs);
+
+
             _winnerMessage = "The winner is " + _matchScores[0].name;
+            if (this._userData.matchMode == Models.MatchMode.sprintSolo || this._userData.matchMode == Models.MatchMode.sprintCoop)
+            {
+                _winnerMessage = "";
+            }
             NotifyOfPropertyChange(() => winnerMessage);
             matchScores.Refresh();
             NotifyOfPropertyChange(() => matchScores);

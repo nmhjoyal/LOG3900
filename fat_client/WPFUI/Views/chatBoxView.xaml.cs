@@ -212,5 +212,13 @@ namespace WPFUI.Views
         {
             _viewModel.deleteRoom();
         }
+
+        private void currentMessage_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                _viewModel.sendMessage();
+            }
+        }
     }
 }

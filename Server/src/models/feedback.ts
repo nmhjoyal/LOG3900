@@ -41,6 +41,7 @@ export enum SignOutStatus {
 }
 
 export enum CreateRoomStatus {
+    InvalidId = "The room id has to be between 4 and 10 characters",
     Create = "You created and joined the room.",
     AlreadyCreated = "This room is already created.",
     InvalidUser = "You are not signed in.",
