@@ -1,25 +1,187 @@
 <resources>
+    <!-- Common -->
     <string name="app_name">Draw Something</string>
+    <string name="ok">OK</string>
+    <string name="done">Done</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
+    <string name="sign_out">Sign out</string>
+    <string name="profile">User profile</string>
+    <string name="server_stopped_error">Server stopped unexpectedly. Please try again later.</string>
+
+    <!--- Leaderboard -->
+    <string name="leaderboard">Leaderboard</string>
+    <string name="soloGameMode">Solo Game</string>
+    <string name="cooperativeGameMode">Cooperative Game</string>
+    <string name="oneVsOneGameMode">One vs One</string>
+    <string name="reversedGameMode">Reversed Game</string>
+    <string name="freeForAllGameMode">Free For All Game</string>
+    <string name="score">Score</string>
+    <string name="current_player_score">Your Score</string>
+    <string name="current_player_position">Your Position</string>
+
+
+
+    <!-- Profile -->
+    <style name="profile">Profile</style>
+    <string name="edit_profile">Edit profile</string>
+    <string name="change_avatar">Change your avatar</string>
+    <string name="undo_changes">Undo</string>
+    <string name="stats">Stats</string>
+    <string name="game_stats">Game stats</string>
+    <string name="user_stats">Connection stats</string>
+    <string name="match_history">Match history</string>
+    <string name="stat_placeholder">PLACEHOLDER</string>
+    <string name="delete_profile">Delete profile</string>
+    <string name="delete">DELETE</string>
+    <string name="delete_profile_warning">Are you sure you want to delete your profile? You will lose all your progress. This action is IRREVERSIBLE.</string>
+
+    <!-- stats strings -->
+    <string name="connections">Connection</string>
+    <string name="to">To</string>
+    <string name="matches_played">Number of games</string>
+    <string name="victory_perc">Percentage of victories</string>
+    <string name="percentage_placeholder">%1$s %%</string>
+    <string name="avg_time_played">Average time played</string>
+    <string name="avg_time_played_holder">%1$s min.</string>
+    <string name="total_time_played">Total time played</string>
+    <string name="total_time_played_holder">%1$s hrs.</string>
+    <string name="best_solo">Best Solo score</string>
+    <string name="start_time">Start time:</string>
+    <string name="end_time">End time:</string>
+    <string name="winner">Winner:</string>
+    <string name="my_score">My score</string>
+    <string name="get_hint">Need a hint?</string>
+
     <!-- Strings related to login -->
     <string name="prompt_password">Password</string>
-    <string name="action_register">Create an account</string>
-    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_register">Sign up</string>
+    <string name="action_sign_in_short">Login</string>
     <string name="welcome">"Welcome !"</string>
     <string name="invalid_username">Username cannot be blank and cannot exceed 10 characters.</string>
     <string name="invalid_password">Invalid Password</string>
-    <string name="login_failed">"Failed Connection"</string>
+    <string name="login_failed">Failed to connect to server</string>
+    <string name="server_timeout">Connection timed out. Please try again later.</string>
+    <string name="error_logging_in">Error logging in, please sign in again.</string>
+    <string name="error_connect_title">Server error</string>
+    <string name="error_connect">Error connecting to server. Please try again later.</string>
+    <string name="error_disconnected">You have been disconnected.</string>
+
     <!-- Strings related to chat -->
     <string name="default_message">Type message here</string>
-    <string name="prompt_ip">IP Address</string>
-    <string name="prompt_port">Port</string>
-    <string name="invalid_ip">IP address invalid. Must be in the form 127.0.0.1</string>
-    <string name="invalid_port">Port not a valid number.</string>
+    <string name="send_button">Send</string>
+    <string name="left_chat">Left chat successfully.</string>
+    <string name="user_joined">User %1$s has joined the chat.</string>
+    <string name="user_left">User %1$s has left the chat.</string>
+
+    <!-- Strings related to rooms -->
+    <string name="rooms_title">Rooms</string>
+    <string name="leave_room_cd">Leave room</string>
+    <string name="create_room">Create a room</string>
+    <string name="room_name">Enter room name</string>
+    <string name="room_name_error">Room name must be between 4 and 10 characters.</string>
+    <string name="show_rooms">Show rooms</string>
+    <string name="public_room">Public</string>
+    <string name="private_room">Private</string>
+    <string name="search_room">Search rooms</string>
+    <string name="invite_user">Invite users</string>
+    <string name="prompt_enter_username">Enter username</string>
+    <string name="invites">Invites</string>
 
     <!-- Strings for create user -->
     <string name="prompt_first_name">First Name</string>
     <string name="prompt_last_name">Last Name</string>
     <string name="prompt_username">Username</string>
     <string name="prompt_confirm_password">Confirm password</string>
+    <string name="prompt_avatar">Select an avatar</string>
     <string name="action_create">Create</string>
     <string name="invalid_password_confirm">Passwords do not match</string>
+    <string name="invalid_name">Name cannot be blank</string>
+
+    <!-- Strings for manifest page names -->
+    <string name="chat_rooms">Chat Rooms</string>
+    <string name="sign_up">Create a Profile</string>
+
+    <!-- Strings for free draw mode -->
+    <string name="title_activity_free_draw">Free Draw</string>
+    <string name="title_activity_free_draw_test">Free Draw online test</string>
+    <string name="palette_cd">Pick a colour</string>
+    <string name="crayon_cd">Crayon</string>
+    <string name="eraser_cd">Eraser</string>
+    <string name="trash_cd">Clear canvas</string>
+    <string name="trash_dialog">"Are you sure you want to clear the canvas? All changes with be lost."</string>
+    <string name="eraser_draw_erase">Draw erase</string>
+    <string name="eraser_touch_erase">Touch erase</string>
+    <string name="round_cap">Round cap</string>
+    <string name="square_cap">Square cap</string>
+    <string name="image_saved">Image saved to Gallery.</string>
+    <string name="error_image_saved">Unable to save image.</string>
+
+    <!-- Save drawing -->
+    <string name="save_drawing">Save Drawing</string>
+    <string name="save">Save</string>
+    <string name="filename">File name</string>
+    <string name="desc">Description</string>
+
+    <!-- Avatar content descriptions -->
+    <string name="fruit_icon_author">
+        Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+    </string>
+    <string name="avocado_cd">Avocado avatar</string>
+    <string name="banana_cd">Banana avatar</string>
+    <string name="strawberry_cd">Strawberry avatar</string>
+    <string name="watermelon_cd">Watermelon avatar</string>
+    <string name="grape_cd">Grape avatar</string>
+    <string name="kiwi_cd">Kiwi avatar</string>
+    <string name="orange_cd">Orange avatar</string>
+    <string name="pineapple_cd">Pineapple avatar</string>
+    <string name="apple_cd">Apple avatar</string>
+    <string name="lemon_cd">Lemon avatar</string>
+    <string name="cherry_cd">Cherry avatar</string>
+    <string name="pear_cd">Pear avatar</string>
+    <string name="title_activity_leaderboard">Leaderboard </string>
+    <string name="title_activity_games_list">Join An Existing Game</string>
+
+    <!-- Game strings -->
+    <string name="play">Play</string>
+    <string name="title_game_mode">Game mode</string>
+    <string name="join_game">Join existing match</string>
+    <string name="create_match">Start new match</string>
+    <string name="start_match">Start</string>
+    <string name="players_in_game">Players in game </string>
+    <string name="virtual_players">Add virtual players </string>
+    <string name="solo_mode">Solo</string>
+    <string name="collab_mode">Collaborative</string>
+    <string name="free_for_all_mode">Free-for-All</string>
+    <string name="one_v_one_mode">One-on-One</string>
+    <string name="reverse_mode">Reverse</string>
+    <string name="prompt_nb_rounds">Number of rounds</string>
+    <string name="prompt_time_limit_round">Time limit per round (seconds)</string>
+    <string name="prompt_time_limit">Time limit (seconds)</string>
+    <string name="start">Start!</string>
+    <string name="time_separator"> : </string>
+    <string name="timer_cd">Timer</string>
+    <string name="time_placeholder">00</string>
+    <string name="guess_placeholder">0</string>
+    <string name="virtual_player">VIRTUAL PLAYER</string>
+    <string name="leave_match">Leave game</string>
+    <string name="leave_match_ask">Are you sure you want to leave the game ?</string>
+    <string name="prompt_choose_word">Choose a word to draw</string>
+    <string name="send_guess">Guess</string>
+    <string name="user_choosing_word">%1$s is choosing a word.</string>
+    <string name="round">Round %1$d !</string>
+    <string name="word_was">The word was %1$s</string>
+    <string name="points">Points</string>
+    <string name="time_up">Times up!</string>
+    <string name="game_over">Game over</string>
+    <string name="unexpected_leave">Match no longer meets requirements.</string>
+    <string name="back_to_lobby">Exit</string>
+    <string name="one_vs_one_title">%1$s vs. %2$s</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hostname">Hostname:</string>
+    <string name="matchId">MatchId:</string>
+    <string name="rounds">Rounds:</string>
+    <string name="numberplayers">Number of players: </string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

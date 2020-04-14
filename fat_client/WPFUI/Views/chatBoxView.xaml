@@ -7,8 +7,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
-             MinHeight="200"
+             d:DesignHeight="600" d:DesignWidth="500"
              FontSize="20"
              Foreground="White"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -17,57 +16,359 @@
              TextElement.FontSize="20"
              TextOptions.TextFormattingMode="Ideal" 
              TextOptions.TextRenderingMode="Auto"
-             FontFamily="{DynamicResource MaterialDesignFont}" Background="#FFF1F2F1"
+             FontFamily="Microsoft JhengHei UI Light" Background="White"
              >
 
-    <Grid Loaded="OnLoad">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="20"/>
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="15" />
-            <ColumnDefinition Width="120" />
-            <ColumnDefinition Width="20" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="35"/>
-            <RowDefinition Height="20"/>
-        </Grid.RowDefinitions>
+	<Grid Loaded="OnLoad">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="20"/>
+			<ColumnDefinition Width="auto" />
+			<ColumnDefinition Width="auto" />
+			<ColumnDefinition Width="auto" />
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="15" />
+			<ColumnDefinition Width="130" />
+			<ColumnDefinition Width="20" />
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="20"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="35"/>
+			<RowDefinition Height="20"/>
+		</Grid.RowDefinitions>
+		<Image Source="chat logo png.png" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" Grid.RowSpan="5"
+			   HorizontalAlignment="Center" Opacity="0.15" MaxHeight="250"/>
 
-        <Image Source="chat logo png.png" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" HorizontalAlignment="Left" MaxHeight="60"/>
-        <TextBlock Text="{Binding Path = welcomeMessage, Mode = Oneway}" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment ="Center" Grid.ColumnSpan="3" Foreground="DarkSlateGray" FontSize="14"/>
-        <ScrollViewer Grid.Column="1" Grid.Row="3" Grid.RowSpan="3" Grid.ColumnSpan="6" VerticalScrollBarVisibility="Visible" Margin="0,10,0,0">
-            <ItemsControl x:Name="messages">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Vertical">
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="account_circle_grey_72x72.png" MaxHeight="25" VerticalAlignment="Center"></Image>
-                                <TextBlock Text="{Binding senderName}" Foreground="DarkSlateGray"/>
-                            </StackPanel>
-                            <TextBlock Text="{Binding content}" Foreground="Black" TextWrapping="Wrap" Margin="10,0,0,0"/>
-                            <TextBlock Text="{Binding formattedTimeStamp}" Foreground="DarkSlateGray" HorizontalAlignment="Left" FontSize="12" Margin="10,0,0,10"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
-        <TextBox x:Name ="currentMessage" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="4" Foreground="DarkSlateGray" Background="White" KeyDown="currentMessage_KeyDown">
+		<TextBlock Text="{Binding Path = currentRoomId, Mode = Oneway}" 
+				   Grid.Column="2" Grid.Row="1" HorizontalAlignment="Left" 
+				   VerticalAlignment ="Center" Grid.ColumnSpan="3" 
+				   Foreground="#FF00584C" FontSize="20" x:Name="ChannelText"/>
+		<ScrollViewer Grid.Column="1" Grid.Row="3" Grid.RowSpan="3" Grid.ColumnSpan="6" VerticalScrollBarVisibility="Visible" Margin="0,10,0,0" Name="messagesUI">
+			<ItemsControl x:Name="messages">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<StackPanel Orientation="Vertical" Margin="5,0,0,0">
+							<StackPanel Orientation="Horizontal">
+								<Image Source="{Binding avatarSource}" MaxHeight="25" VerticalAlignment="Center"></Image>
+								<TextBlock Text="{Binding senderName}" Foreground="DarkSlateGray" VerticalAlignment="Center" Margin="3,0,0,0"/>
+							</StackPanel>
+							<TextBlock Text="{Binding content}" Foreground="Black" TextWrapping="Wrap" Margin="0,0,0,0"/>
+							<TextBlock Text="{Binding formattedTimeStamp}" Foreground="DarkSlateGray" HorizontalAlignment="Left" FontSize="12" Margin="0,0,0,10"/>
+						</StackPanel>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+		</ScrollViewer>
+		<TextBox x:Name ="currentMessage" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="4" Foreground="DarkSlateGray" Background="White" PreviewKeyDown="currentMessage_PreviewKeyDown">
 
-        </TextBox>
-        <Button x:Name ="disconnect" Style="{DynamicResource MaterialDesignRaisedAccentButton}" Grid.Column="6" Grid.Row="1" Foreground="White" Background="#FF00867A">
-            Disconnect
-        </Button>
-        <Button x:Name ="sendMessage" Style="{DynamicResource MaterialDesignRaisedLightButton}" Grid.Column="6" Grid.Row="6" Background="#FF008679" Foreground="White" Click="refocus">
-            Send
-        </Button>
-    </Grid>
+		</TextBox>
+
+		<Button x:Name ="sendMessage" Style="{DynamicResource MaterialDesignRaisedLightButton}" Grid.Column="6" Grid.Row="6" Background="LightGray" Foreground="White" Click="refocus" BorderBrush="{x:Null}">
+			Send
+		</Button>
+		<StackPanel Grid.Row="1" Grid.Column="6" Orientation="Horizontal" HorizontalAlignment="Right">
+
+			<Button Background="#FF00584C" BorderBrush="#FF00584C" x:Name ="channelsMode" Margin="5,0,20,0" Click="channelsMode_Click">
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Foreground="White" VerticalAlignment="Center"> Options</TextBlock>
+					<!--<Image Source="/Resources/chat.png" Height="20" Margin="10,0,0,0"></Image> -->
+				</StackPanel>
+			</Button>
+
+
+		</StackPanel>
+
+		<Grid Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="6" Name="channelsGrid" Visibility="Hidden">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="20" />
+				<ColumnDefinition Width="15*" />
+				<ColumnDefinition Width="auto" />
+				<ColumnDefinition Width="auto" />
+				<ColumnDefinition Width="auto" />
+				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="20" />
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="0"/>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="30"/>
+				<RowDefinition Height="3*"/>
+				<RowDefinition Height="10"/>
+				<RowDefinition Height="10"/>
+			</Grid.RowDefinitions>
+			<Canvas Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="5" Grid.RowSpan="6" Background="#FF00584C" Opacity="0.9"></Canvas>
+
+			<Canvas Grid.Row="1" Grid.Column="2" Background="#FF00584C"></Canvas>
+			<TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center"
+					   Foreground="White" FontSize="18"> Rooms</TextBlock>
+			<StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,5,10,5">
+				<Grid Height="22" Width="22">
+
+					<Image Source="/Resources/chatBox/invite.png" Height="18"
+					   Name="inviteButton" PreviewMouseDown="inviteButton_PreviewMouseDown" 
+					   VerticalAlignment="Center" HorizontalAlignment="Center"></Image>
+
+					<Image Source="/Resources/chatBox/badge.png" Height="20" 
+					   x:Name="badge" PreviewMouseDown="inviteButton_PreviewMouseDown" Visibility="{Binding nbInvitesVisibility, Mode=OneWay}"
+					   VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,-5,-5,0"></Image>
+					<Grid x:Name="nbInvitesGrid" Height="20" Width="20" Visibility="{Binding nbInvitesVisibility, Mode=OneWay}"
+							   VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,-5,-5,0">
+						<TextBlock FontSize="10" VerticalAlignment="Center" 
+								   HorizontalAlignment="Center" x:Name="nbInvites"></TextBlock>
+					</Grid>
+
+				</Grid>
+
+				<Grid Height="22" Width="22" Margin="15,0,8,0">
+					<Image Source="/Resources/chatBox/plus.png" Height="16" 
+						   Name="newChannelButton" PreviewMouseDown="newChannelButton_PreviewMouseDown"
+						   VerticalAlignment="Center" HorizontalAlignment="Center"></Image>
+
+				</Grid>
+
+			</StackPanel>
+
+			<StackPanel Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="4" HorizontalAlignment="Center" Orientation="Vertical" Margin="0,10,0,0">
+				<TextBlock Foreground="White" FontSize="12" HorizontalAlignment="Center">Search Public Rooms</TextBlock>
+				<Border Background="White" CornerRadius="5" Margin="0,10,0,15" >
+					<StackPanel Orientation="Horizontal" Margin="0,2,0,2" Width="260" HorizontalAlignment="Center">
+						<TextBox Width="250" Margin="5,0,5,1" 
+								 HorizontalContentAlignment="Center"
+								 HorizontalAlignment="Center" CaretBrush="#FF1A695E" 
+								 Foreground="#FF8E8E8E" x:Name="searchBarText"></TextBox>
+					</StackPanel>
+
+				</Border>
+
+
+
+			</StackPanel>
+			<ScrollViewer Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="4"
+						  VerticalScrollBarVisibility="Visible" Margin="17,0,0,0" MaxHeight="140">
+				<ItemsControl ItemsSource="{Binding availableRooms}" Foreground="White">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+								<Border Background="White" CornerRadius="5" Margin="0,30,0,0" MinHeight="40">
+									<Border.InputBindings>
+										<MouseBinding Gesture="LeftClick" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor,
+									AncestorType={x:Type ItemsControl}}, Path=DataContext._selectAvailableRoomCommand}" CommandParameter="{Binding id}">
+										</MouseBinding>
+									</Border.InputBindings>
+									<StackPanel Orientation="Vertical" Margin="0,5,0,5" Width="260" HorizontalAlignment="Center" VerticalAlignment="Center">
+										<TextBlock Text="{Binding id}" Foreground="{Binding backgroundColor}" 
+										   FontSize="16" HorizontalAlignment="Center" MaxWidth="150" TextWrapping="Wrap" Margin="10,0,10,0"/>
+										<StackPanel Orientation="Horizontal" Margin="0,2,0,0" Visibility="{Binding menuVisibility}" HorizontalAlignment="Center">
+											<Button  Background="#FFD81A60" HorizontalAlignment="Center" 
+											Name="joinButton" Click="joinButton_click"  BorderBrush="{x:Null}" Foreground="White" FontSize="16">Join</Button>
+											<Button  Background="#FFD81A60" HorizontalAlignment="Center" Margin="10,0,0,0"
+											Name="deleteButton"  BorderBrush="{x:Null}" Foreground="White" FontSize="16" PreviewMouseDown="deleteButton_PreviewMouseDown">Delete</Button>
+										</StackPanel>
+									</StackPanel>
+								</Border>
+							</StackPanel>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</ScrollViewer>
+
+			<Border Grid.Row="4" Grid.Column="2" HorizontalAlignment="Stretch" Grid.ColumnSpan="4" Background="#FF00584C">
+				
+			</Border>
+			<TextBlock Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" Grid.ColumnSpan="4" 
+					   Foreground="White" FontSize="12" VerticalAlignment="Center"> Joined Rooms</TextBlock>
+			<ScrollViewer Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="5" Grid.RowSpan="2" Margin="17,0,0,0" VerticalScrollBarVisibility="Visible">
+				<ItemsControl ItemsSource="{Binding joinedRooms}" Foreground="White">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+								<Border Background="White" CornerRadius="5" Margin="0,30,0,0" MinHeight="40">
+									<Border.InputBindings>
+										<MouseBinding Gesture="LeftClick" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor,
+												AncestorType={x:Type ItemsControl}}, Path=DataContext._selectJoinedRoomCommand}" CommandParameter="{Binding id}">
+										</MouseBinding>
+									</Border.InputBindings>
+									<StackPanel Orientation="Vertical" Margin="0,5,0,5" Width="260" HorizontalAlignment="Center" VerticalAlignment="Center">
+										<TextBlock Text="{Binding id}" Foreground="{Binding backgroundColor}" FontSize="16" 
+												   TextWrapping="Wrap" HorizontalAlignment="Center" Margin="10,0,10,0"/>
+										<StackPanel Orientation="Horizontal" Visibility="{Binding menuVisibility}" HorizontalAlignment="Center" VerticalAlignment="Center">
+											<Button Content="+" Margin="0,0,0,0" BorderBrush="{x:Null}" Tag="{Binding id}"
+													Background="#FF31AF91" FontSize="16" Visibility="{Binding privateVisibility}" 
+													x:Name="addPlayerButton" Click="addPlayerButton_Click" Foreground="White">
+											</Button>
+											<Button Content="view" Margin="5,0,0,0" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext._changeChannelCommand}"
+													CommandParameter="{Binding id}" BorderBrush="{x:Null}" Background="#FF31AF91" FontSize="16" Foreground="White">
+											</Button>
+											<Button Content="leave" Margin="5,0,0,0" Background="#FFD81A60" BorderBrush="{x:Null}" 
+													FontSize="16" Foreground="White" Tag="{Binding id}" x:Name="leaveButton" PreviewMouseDown="leaveButton_PreviewMouseDown">
+											</Button>
+										</StackPanel>
+									</StackPanel>
+								</Border>
+							</StackPanel>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</ScrollViewer>
+		</Grid>
+
+		<Grid Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="6" Name="newChannelGrid" Visibility="Hidden">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="1.5*"/>
+			</Grid.RowDefinitions>
+
+			<Border Grid.Row="1" Grid.Column="1" Background="#FF00584C" CornerRadius="15" ></Border>
+			<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
+				<TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,10,0,0" FontSize="18"> Create Room</TextBlock>
+				<Border Background="White" CornerRadius="15" Margin="20,10,20,15">
+					<StackPanel Orientation="Horizontal" Margin="0,2,0,2">
+						<TextBox Width="160" Margin="12,0,0,0" CaretBrush="#FF00584C" x:Name="newRoomTB"></TextBox>
+						<CheckBox Margin="0,0,2,0" VerticalContentAlignment="Center" x:Name="privateCheckBox">
+						</CheckBox>
+						<TextBlock FontSize="8" VerticalAlignment="Center" Margin="0,0,8,0">Private</TextBlock>
+					</StackPanel>
+
+				</Border>
+
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+					<Button Background="#FF1A695E" BorderBrush="{x:Null}" Height="30" Width="120" Margin="0,0,0,15" PreviewMouseDown="createRoom_PreviewMouseDown">
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Foreground="White" VerticalAlignment="Center" FontSize="14"> Create Room</TextBlock>
+							<!--<Image Source="/Resources/chat.png" Height="20" Margin="10,0,0,0"></Image> -->
+						</StackPanel>
+					</Button>
+
+					<Button Background="#FF1A695E" BorderBrush="{x:Null}" Height="30" Width="80" Margin="20,0,0,15" 
+							PreviewMouseDown="newChannelButton_PreviewMouseDown">
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Foreground="White" VerticalAlignment="Center" FontSize="14"> Cancel</TextBlock>
+							<!--<Image Source="/Resources/chat.png" Height="20" Margin="10,0,0,0"></Image> -->
+						</StackPanel>
+					</Button>
+
+				</StackPanel>
+
+			</StackPanel>
+
+		</Grid>
+		<Grid Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="6" Name="addPlayersGrid" Visibility="Hidden">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="1.5*"/>
+			</Grid.RowDefinitions>
+
+			<Border Grid.Row="1" Grid.Column="1" Background="#FF00584C" CornerRadius="15" ></Border>
+			<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
+				<TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,10,0,0" FontSize="18"> Invite player </TextBlock>
+				<Border Background="White" CornerRadius="5" Margin="20,10,20,15" MaxHeight="300" MaxWidth="250" >
+					<StackPanel Orientation="Horizontal" Margin="10,2,10,2">
+						<TextBox Width="170" Margin="5,0,0,0" x:Name="invitedPlayerName" HorizontalContentAlignment="Center"></TextBox>
+					</StackPanel>
+
+				</Border>
+
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="15,0,15,0">
+
+					<Button Background="#FF1A695E" BorderBrush="{x:Null}" 
+						Height="30" Width="70" Margin="0,0,0,15" x:Name="invitePlayerButton" Click="invitePlayerButton_Click">
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Foreground="White" VerticalAlignment="Center" FontSize="14"> Invite</TextBlock>
+							<!--<Image Source="/Resources/chat.png" Height="20" Margin="10,0,0,0"></Image> -->
+						</StackPanel>
+					</Button>
+
+					<Button Background="#FF1A695E" BorderBrush="{x:Null}"
+						Height="30" Width="80" Margin="10,0,0,15" x:Name="invitePlayerButtonQuit" PreviewMouseDown="invitePlayerButtonQuit_PreviewMouseDown">
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Foreground="White" VerticalAlignment="Center" FontSize="14"> Cancel</TextBlock>
+							<!--<Image Source="/Resources/chat.png" Height="20" Margin="10,0,0,0"></Image> -->
+						</StackPanel>
+					</Button>
+
+				</StackPanel>
+			</StackPanel>
+
+		</Grid>
+		<Grid Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="6" Name="invitesGrid" Visibility="Hidden">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="1.5*"/>
+			</Grid.RowDefinitions>
+
+			<Border Grid.Row="1" Grid.Column="1" Background="#FF00584C" CornerRadius="15" ></Border>
+			<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
+				<TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,10,0,0" FontSize="18"> Invites </TextBlock>
+				<Border Background="White" CornerRadius="10" Margin="20,10,20,15" MaxHeight="300" MaxWidth="300">
+					<StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+						<ScrollViewer VerticalScrollBarVisibility="Visible" Margin="10,0,10,0" MaxHeight="200" Width="250">
+							<ItemsControl x:Name="invites">
+								<ItemsControl.ItemTemplate>
+									<DataTemplate>
+										<StackPanel Orientation="Horizontal">
+											<TextBlock Text="{Binding uid}" FontSize="10" VerticalAlignment="Center"></TextBlock>
+
+											<Button Background="#FF1A695E" BorderBrush="{x:Null}" x:Name="joinInvitedButton"
+													Tag="{Binding id}" PreviewMouseDown="joinInvitedButton_PreviewMouseDown" 
+													Margin="5,0,0,0" VerticalAlignment="Center">
+												<StackPanel Orientation="Horizontal">
+													<TextBlock Foreground="White" VerticalAlignment="Center" FontSize="12"> Join </TextBlock>
+												</StackPanel>
+											</Button>
+
+										</StackPanel>
+
+									</DataTemplate>
+								</ItemsControl.ItemTemplate>
+							</ItemsControl>
+							
+						</ScrollViewer>
+					</StackPanel>
+
+				</Border>
+
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="20,0,20,0">
+
+					<Button Background="#FF1A695E" BorderBrush="{x:Null}" PreviewMouseDown="inviteButton_PreviewMouseDown"
+							Height="30" Width="78" Margin="10,0,0,15">
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Foreground="White" VerticalAlignment="Center" FontSize="14"> Cancel</TextBlock>
+							<!--<Image Source="/Resources/chat.png" Height="20" Margin="10,0,0,0"></Image> -->
+						</StackPanel>
+					</Button>
+				</StackPanel>
+			</StackPanel>
+
+		</Grid>
+
+
+	</Grid>
 </UserControl>

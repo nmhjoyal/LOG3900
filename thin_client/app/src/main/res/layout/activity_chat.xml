@@ -3,33 +3,85 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:background="#ffffff"
-    android:paddingTop="@dimen/activity_vertical_margin">
+    android:background="@drawable/chat_border">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/chat_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/colorPrimaryDark">
+
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitXY"
+            android:background="@color/colorPrimaryDark"
+            app:srcCompat="@drawable/ic_arrow_back_24px"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/room_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_white"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif"
+            android:text=""
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageButton
+            android:id="@+id/leave_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitXY"
+            android:background="@color/colorPrimaryDark"
+            app:srcCompat="@drawable/ic_meeting_room_24px"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <ImageButton
+            android:id="@+id/invite_user_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="16dp"
+            android:background="@color/colorPrimaryDark"
+            app:srcCompat="@drawable/ic_add_24px"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/leave_button"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_chat"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@+id/send_button_chat"
+        app:layout_constraintBottom_toTopOf="@+id/send_guess"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@id/chat_menu" />
 
     <EditText
         android:id="@+id/editText_chat"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:layout_margin="16dp"
         android:layout_weight="1"
-        android:hint="@string/default_message"
         android:background="#ffffff"
+        android:hint="@string/default_message"
+        app:layout_constraintTop_toTopOf="@id/send_guess"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/send_button_chat"
         app:layout_constraintStart_toStartOf="parent" />
@@ -40,8 +92,23 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:enabled="false"
-        android:text="SEND"
+        android:layout_margin="8dp"
+        android:text="@string/send_button"
+        android:textColor="@color/color_white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/button_primary_selector"/>
+    <Button
+        android:id="@+id/send_guess"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:enabled="false"
+        android:layout_margin="8dp"
+        android:text="@string/send_guess"
+        android:textColor="@color/color_white"
+        app:layout_constraintBottom_toTopOf="@id/send_button_chat"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/button_guess_selector"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

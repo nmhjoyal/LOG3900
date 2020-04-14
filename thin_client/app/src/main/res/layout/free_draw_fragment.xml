@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.game_mode.free_draw.FreeDrawActivity"
+    android:background="@color/colorPrimaryDark">
+
+    <com.example.thin_client.ui.game_mode.free_draw.DrawView
+        android:id="@+id/draw_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constrainedWidth="true"
+        app:layout_constrainedHeight="true"
+        android:background="@color/default_background"
+        app:layout_constraintBottom_toTopOf="@+id/colour_options"
+        app:layout_constraintEnd_toStartOf="@+id/drawing_options"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/save_button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="8dp"
+        app:fabCustomSize="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/colour_options"
+        app:layout_constraintEnd_toStartOf="@+id/drawing_options"
+        app:srcCompat="@drawable/ic_save_alt_24px">
+    </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+    <LinearLayout
+        android:id="@+id/drawing_options"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageButton
+            android:id="@+id/crayon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/circle_primary_dark"
+            android:contentDescription="@string/crayon_cd"
+            android:padding="8dp"
+            app:srcCompat="@drawable/ic_crayon_24px" />
+
+        <ImageButton
+            android:id="@+id/eraser"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:background="@color/colorPrimary"
+            android:contentDescription="@string/eraser_cd"
+            android:padding="8dp"
+            android:tint="@color/color_white"
+            app:srcCompat="@drawable/ic_eraser" />
+
+        <ImageButton
+            android:id="@+id/pencil_eraser"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:background="@color/colorPrimary"
+            android:contentDescription="@string/eraser_cd"
+            android:padding="8dp"
+            android:tint="@color/color_white"
+            app:srcCompat="@drawable/ic_pencil_eraser" />
+
+        <ImageView
+            android:id="@+id/sizing"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center"
+            android:layout_margin="40dp"
+            android:background="@drawable/circle_black"
+            android:contentDescription="@string/crayon_cd" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="125dp"
+            android:layout_gravity="center"
+            android:background="@color/colorPrimary"
+            android:backgroundTint="@color/colorPrimary"
+            android:outlineAmbientShadowColor="@color/colorPrimaryDark"
+            android:outlineSpotShadowColor="@color/colorPrimaryDark">
+
+            <SeekBar
+                android:id="@+id/seekBar"
+                style="@style/Widget.AppCompat.SeekBar"
+                android:layout_width="125dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:progress="20"
+                android:rotation="270" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/paint_caps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <ImageButton
+                android:id="@+id/circle_cap"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:background="@color/colorPrimary"
+                android:contentDescription="@string/round_cap"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/circle_white" />
+
+            <ImageButton
+                android:id="@+id/square_cap"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignBottom="@id/circle_cap"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:background="@color/colorPrimary"
+                android:contentDescription="@string/square_cap"
+                app:layout_constraintStart_toEndOf="@id/circle_cap"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/square_tip" />
+
+            <ImageButton
+                android:id="@+id/horizontal_cap"
+                android:layout_width="5dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/colorPrimary"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/circle_cap"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/circle_cap"
+                app:srcCompat="@drawable/square_tip" />
+
+            <ImageButton
+                android:id="@+id/vertical_cap"
+                android:layout_width="20dp"
+                android:layout_height="5dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:background="@color/colorPrimary"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/square_cap"
+                app:layout_constraintTop_toBottomOf="@id/paint_caps"
+                app:srcCompat="@drawable/square_tip" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageButton
+            android:id="@+id/trash"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:background="@color/colorPrimary"
+            android:contentDescription="@string/trash_cd"
+            app:srcCompat="@drawable/ic_delete_24px" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/colour_options"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/drawing_options">
+
+        <ImageButton
+            android:id="@+id/red"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/colorPrimary"
+            android:contentDescription="@string/crayon_cd"
+            android:padding="8dp"
+            app:srcCompat="@drawable/circle_red"></ImageButton>
+
+        <ImageButton
+            android:id="@+id/orange"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/colorPrimary"
+            android:contentDescription="@string/crayon_cd"
+            android:padding="8dp"
+            app:srcCompat="@drawable/circle_orange"></ImageButton>
+
+        <ImageButton
+            android:id="@+id/yellow"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/colorPrimary"
+            android:contentDescription="@string/crayon_cd"
+            android:padding="8dp"
+            app:srcCompat="@drawable/circle_yellow"></ImageButton>
+
+        <ImageButton
+            android:id="@+id/green"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/colorPrimary"
+            android:contentDescription="@string/crayon_cd"
+            android:padding="8dp"
+            app:srcCompat="@drawable/circle_green"></ImageButton>
+
+        <ImageButton
+            android:id="@+id/blue"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/colorPrimary"
+            android:contentDescription="@string/crayon_cd"
+            android:padding="8dp"
+            app:srcCompat="@drawable/circle_blue"></ImageButton>
+
+        <ImageButton
+            android:id="@+id/purple"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/colorPrimary"
+            android:contentDescription="@string/crayon_cd"
+            android:padding="8dp"
+            app:srcCompat="@drawable/circle_purple"></ImageButton>
+
+        <ImageButton
+            android:id="@+id/pink"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/colorPrimary"
+            android:contentDescription="@string/crayon_cd"
+            android:padding="8dp"
+            app:srcCompat="@drawable/circle_pink"></ImageButton>
+
+        <ImageButton
+            android:id="@+id/white"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/colorPrimary"
+            android:contentDescription="@string/crayon_cd"
+            android:padding="8dp"
+            app:srcCompat="@drawable/circle_white"></ImageButton>
+
+        <ImageButton
+            android:id="@+id/grey"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/colorPrimary"
+            android:contentDescription="@string/crayon_cd"
+            android:padding="8dp"
+            app:srcCompat="@drawable/circle_grey"></ImageButton>
+
+        <ImageButton
+            android:id="@+id/brown"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/colorPrimary"
+            android:contentDescription="@string/crayon_cd"
+            android:padding="8dp"
+            app:srcCompat="@drawable/circle_brown"></ImageButton>
+
+        <ImageButton
+            android:id="@+id/black"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/colorPrimaryDark"
+            android:contentDescription="@string/crayon_cd"
+            android:padding="8dp"
+            app:srcCompat="@drawable/circle_black"></ImageButton>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

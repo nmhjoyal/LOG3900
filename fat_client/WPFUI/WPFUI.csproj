@@ -66,7 +66,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Caliburn.Micro.3.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -85,6 +87,24 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WpfAnimatedGif, Version=1.4.18.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WpfAnimatedGif.1.4.18\lib\net\WpfAnimatedGif.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -95,29 +115,252 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Commands\changeChannelCommand.cs" />
+    <Compile Include="Commands\IchangeChannelCommand.cs" />
+    <Compile Include="Commands\IselectAvailableRoomCommand.cs" />
+    <Compile Include="Commands\IselectAvatarCommand.cs" />
+    <Compile Include="Commands\IselectJoinedRoomCommand.cs" />
+    <Compile Include="Commands\IselectWordCommand.cs" />
+    <Compile Include="Commands\selectWordCommand.cs" />
+    <Compile Include="Commands\selectJoinedRoomCommand.cs" />
+    <Compile Include="Commands\selectAvailableRoomCommand.cs" />
+    <Compile Include="Commands\selectAvatarCommand.cs" />
+    <Compile Include="Converters\Converters.cs" />
+    <Compile Include="EventModels\addMessageEvent.cs" />
+    <Compile Include="EventModels\appSuccessEvent.cs" />
+    <Compile Include="EventModels\appWarningEvent.cs" />
+    <Compile Include="EventModels\AssisteIEvent.cs" />
+    <Compile Include="EventModels\avatarUpdated.cs" />
+    <Compile Include="EventModels\buttonsTopMenuEvent.cs" />
     <Compile Include="EventModels\connectionEvent.cs" />
+    <Compile Include="EventModels\createGameEvent.cs" />
+    <Compile Include="EventModels\createMatchEvent.cs" />
+    <Compile Include="EventModels\createTheRoomEvent.cs" />
+    <Compile Include="EventModels\changeChatOptionsEvent.cs" />
     <Compile Include="EventModels\DisconnectEvent.cs" />
+    <Compile Include="EventModels\endMatchEvent.cs" />
+    <Compile Include="EventModels\endTurnRoutineVMEvent.cs" />
+    <Compile Include="EventModels\endTurnRoutineEvent.cs" />
+    <Compile Include="EventModels\freeDrawEvent.cs" />
+    <Compile Include="EventModels\fullScreenChatEvent.cs" />
+    <Compile Include="EventModels\gameEvent.cs" />
+    <Compile Include="EventModels\goBackCreationMenuEvent.cs" />
+    <Compile Include="EventModels\goBackEvent.cs" />
+    <Compile Include="EventModels\goBackMainEvent.cs" />
+    <Compile Include="EventModels\guessResponseEvent.cs" />
+    <Compile Include="EventModels\hintEvent.cs" />
+    <Compile Include="EventModels\joinChatEvent.cs" />
+    <Compile Include="EventModels\joinChatroomEvent.cs" />
+    <Compile Include="EventModels\joinedRoomReceived.cs" />
+    <Compile Include="EventModels\choseGameViewEvent.cs" />
+    <Compile Include="EventModels\joinMatchEvent.cs" />
+    <Compile Include="EventModels\LeaderboardEvent.cs" />
     <Compile Include="EventModels\LogInEvent.cs" />
+    <Compile Include="EventModels\logOutEvent.cs" />
+    <Compile Include="EventModels\ManuelIEvent.cs" />
+    <Compile Include="EventModels\ManuelleIIEvent.cs" />
+    <Compile Include="EventModels\passwordMismatchEvent.cs" />
+    <Compile Include="EventModels\previewDoneEvent.cs" />
+    <Compile Include="EventModels\privateProfileConfirmedEvent.cs" />
+    <Compile Include="EventModels\refreshInvitesEvent.cs" />
+    <Compile Include="EventModels\refreshRoomsEvent.cs" />
+    <Compile Include="EventModels\refreshMessagesEvent.cs" />
+    <Compile Include="EventModels\refreshUIEvent.cs" />
+    <Compile Include="EventModels\resetToGeneralEvent.cs" />
+    <Compile Include="EventModels\roomsChangedEvent.cs" />
+    <Compile Include="EventModels\roomsRetrievedEvent.cs" />
+    <Compile Include="EventModels\scrollDownEvent.cs" />
     <Compile Include="EventModels\sendMessageEvent.cs" />
+    <Compile Include="EventModels\signUpEvent.cs" />
+    <Compile Include="EventModels\startTurnRoutineEvent.cs" />
+    <Compile Include="EventModels\testEvent.cs" />
+    <Compile Include="EventModels\updateMatchesEvent.cs" />
     <Compile Include="EventModels\userNameTakenEvent.cs" />
+    <Compile Include="EventModels\viewProfileEvent.cs" />
+    <Compile Include="EventModels\waitingRoomEvent.cs" />
+    <Compile Include="EventModels\wordSelectedEvent.cs" />
+    <Compile Include="Models\CreateGame.cs" />
+    <Compile Include="Models\Invitation.cs" />
     <Compile Include="Models\ISocketHandler.cs" />
     <Compile Include="Models\IUserData.cs" />
+    <Compile Include="Models\Match.cs" />
+    <Compile Include="Models\Ranking.cs" />
+    <Compile Include="Models\SelectableRoom.cs" />
+    <Compile Include="Models\StatsClient.cs" />
+    <Compile Include="Models\Trace.cs" />
+    <Compile Include="Models\Avatar.cs" />
+    <Compile Include="Models\ClientMessage.cs" />
+    <Compile Include="Models\CreateRoom.cs" />
+    <Compile Include="Models\Editeur.cs" />
+    <Compile Include="Models\Feedback.cs" />
+    <Compile Include="Models\JavaScriptSerializer.cs" />
+    <Compile Include="Models\JoinRoomFeedBack.cs" />
     <Compile Include="Models\MessageModel.cs" />
+    <Compile Include="Models\PrivateProfile.cs" />
+    <Compile Include="Models\RenderVisualService.cs" />
+    <Compile Include="Models\Room.cs" />
+    <Compile Include="Models\SignInFeedback.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\socketHandler.cs" />
     <Compile Include="Models\UserData.cs" />
+    <Compile Include="Potrace\Converter.cs" />
+    <Compile Include="Potrace\SvgLibrary\Basic Shapes\SvgCircle.cs" />
+    <Compile Include="Potrace\SvgLibrary\Basic Shapes\SvgEllipse.cs" />
+    <Compile Include="Potrace\SvgLibrary\Basic Shapes\SvgLine.cs" />
+    <Compile Include="Potrace\SvgLibrary\Basic Shapes\SvgPolygon.cs" />
+    <Compile Include="Potrace\SvgLibrary\Basic Shapes\SvgPolyline.cs" />
+    <Compile Include="Potrace\SvgLibrary\Basic Shapes\SvgRectangle.cs" />
+    <Compile Include="Potrace\SvgLibrary\Basic Shapes\SvgVisualElement.cs" />
+    <Compile Include="Potrace\SvgLibrary\Basic Shapes\SvgVisualElementStyle.cs" />
+    <Compile Include="Potrace\SvgLibrary\Clipping and Masking\ISvgClipable.cs" />
+    <Compile Include="Potrace\SvgLibrary\Clipping and Masking\SvgClipPath.cs" />
+    <Compile Include="Potrace\SvgLibrary\Clipping and Masking\SvgClipRule.cs" />
+    <Compile Include="Potrace\SvgLibrary\Clipping and Masking\SvgMask.cs" />
+    <Compile Include="Potrace\SvgLibrary\DataTypes\ISvgViewPort.cs" />
+    <Compile Include="Potrace\SvgLibrary\DataTypes\SvgCoordinateUnits.cs" />
+    <Compile Include="Potrace\SvgLibrary\DataTypes\SvgElementStyle.cs" />
+    <Compile Include="Potrace\SvgLibrary\DataTypes\SvgPoint.cs" />
+    <Compile Include="Potrace\SvgLibrary\DataTypes\SvgUnit.cs" />
+    <Compile Include="Potrace\SvgLibrary\DataTypes\SvgUnitCollection.cs" />
+    <Compile Include="Potrace\SvgLibrary\DataTypes\SvgUnitConverter.cs" />
+    <Compile Include="Potrace\SvgLibrary\DataTypes\SvgViewBox.cs" />
+    <Compile Include="Potrace\SvgLibrary\Document Structure\SvgDefinitionList.cs" />
+    <Compile Include="Potrace\SvgLibrary\Document Structure\SvgDescription.cs" />
+    <Compile Include="Potrace\SvgLibrary\Document Structure\SvgFragment.cs" />
+    <Compile Include="Potrace\SvgLibrary\Document Structure\SvgGroup.cs" />
+    <Compile Include="Potrace\SvgLibrary\Document Structure\SvgUse.cs" />
+    <Compile Include="Potrace\SvgLibrary\Exceptions\SvgException.cs" />
+    <Compile Include="Potrace\SvgLibrary\Filter Effects\feGaussianBlur\RawBitmap.cs" />
+    <Compile Include="Potrace\SvgLibrary\Filter Effects\feGaussianBlur\SvgGaussianBlur.cs" />
+    <Compile Include="Potrace\SvgLibrary\Filter Effects\feMerge\SvgMerge.cs" />
+    <Compile Include="Potrace\SvgLibrary\Filter Effects\ISvgFilterable.cs" />
+    <Compile Include="Potrace\SvgLibrary\Filter Effects\SvgFilter.cs" />
+    <Compile Include="Potrace\SvgLibrary\Filter Effects\SvgFilterPrimitive.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\ISvgStylable.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgColourConverter.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgColourServer.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgFillRule.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgGradientServer.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgGradientSpreadMethod.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgGradientStop.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgLinearGradientServer.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgPaintServer.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgPaintServerFactory.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgPatternServer.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgRadialGradientServer.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgStrokeLineCap.cs" />
+    <Compile Include="Potrace\SvgLibrary\Painting\SvgStrokeLineJoin.cs" />
+    <Compile Include="Potrace\SvgLibrary\Paths\SvgArcSegment.cs" />
+    <Compile Include="Potrace\SvgLibrary\Paths\SvgClosePathSegment.cs" />
+    <Compile Include="Potrace\SvgLibrary\Paths\SvgCubicCurveSegment.cs" />
+    <Compile Include="Potrace\SvgLibrary\Paths\SvgLineSegment.cs" />
+    <Compile Include="Potrace\SvgLibrary\Paths\SvgMoveToSegment.cs" />
+    <Compile Include="Potrace\SvgLibrary\Paths\SvgPath.cs" />
+    <Compile Include="Potrace\SvgLibrary\Paths\SvgPathBuilder.cs" />
+    <Compile Include="Potrace\SvgLibrary\Paths\SvgPathSegment.cs" />
+    <Compile Include="Potrace\SvgLibrary\Paths\SvgPathSegmentList.cs" />
+    <Compile Include="Potrace\SvgLibrary\Paths\SvgQuadraticCurveSegment.cs" />
+    <Compile Include="Potrace\SvgLibrary\SvgAttributeAttribute.cs" />
+    <Compile Include="Potrace\SvgLibrary\SvgAttributeCollection.cs" />
+    <Compile Include="Potrace\SvgLibrary\SvgDocument.cs" />
+    <Compile Include="Potrace\SvgLibrary\SvgDtdResolver.cs" />
+    <Compile Include="Potrace\SvgLibrary\SvgElement.cs" />
+    <Compile Include="Potrace\SvgLibrary\SvgElementAttribute.cs" />
+    <Compile Include="Potrace\SvgLibrary\SvgElementCollection.cs" />
+    <Compile Include="Potrace\SvgLibrary\SvgElementFactory.cs" />
+    <Compile Include="Potrace\SvgLibrary\SvgElementIdManager.cs" />
+    <Compile Include="Potrace\SvgLibrary\SvgRenderer.cs" />
+    <Compile Include="Potrace\SvgLibrary\SvgTextReader.cs" />
+    <Compile Include="Potrace\SvgLibrary\Text\SvgText.cs" />
+    <Compile Include="Potrace\SvgLibrary\Text\SvgTextAnchor.cs" />
+    <Compile Include="Potrace\SvgLibrary\Text\SvgTextSpan.cs" />
+    <Compile Include="Potrace\SvgLibrary\Transforms\ISvgTransformable.cs" />
+    <Compile Include="Potrace\SvgLibrary\Transforms\SvgMatrix.cs" />
+    <Compile Include="Potrace\SvgLibrary\Transforms\SvgRotate.cs" />
+    <Compile Include="Potrace\SvgLibrary\Transforms\SvgScale.cs" />
+    <Compile Include="Potrace\SvgLibrary\Transforms\SvgShear.cs" />
+    <Compile Include="Potrace\SvgLibrary\Transforms\SvgSkew.cs" />
+    <Compile Include="Potrace\SvgLibrary\Transforms\SvgTransform.cs" />
+    <Compile Include="Potrace\SvgLibrary\Transforms\SvgTransformCollection.cs" />
+    <Compile Include="Potrace\SvgLibrary\Transforms\SvgTransformConverter.cs" />
+    <Compile Include="Potrace\SvgLibrary\Transforms\SvgTranslate.cs" />
+    <Compile Include="Potrace\SvgLibrary\Web\SvgHandler.cs" />
+    <Compile Include="Utilitaires\RelayCommand.cs" />
     <Compile Include="ViewModels\chatBoxViewModel.cs" />
+    <Compile Include="ViewModels\ChoseGameViewModel.cs" />
+    <Compile Include="ViewModels\ClassementViewModel.cs" />
+    <Compile Include="ViewModels\createMatchViewModel.cs" />
+    <Compile Include="ViewModels\CreationJeuAssiste1ViewModel.cs" />
+    <Compile Include="ViewModels\CreationJeuManuelle1ViewModel.cs" />
+    <Compile Include="ViewModels\CreationJeuManuelle2ViewModel.cs" />
+    <Compile Include="ViewModels\CreationJeuManuelleViewModel.cs" />
+    <Compile Include="ViewModels\EmptyViewModel.cs" />
+    <Compile Include="ViewModels\FenetreDessinViewModel.cs" />
+    <Compile Include="ViewModels\gameViewModel.cs" />
+    <Compile Include="ViewModels\LeaderboardViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="Models\Message.cs" />
+    <Compile Include="ViewModels\MainMenuViewModel.cs" />
+    <Compile Include="ViewModels\MenuSelectionModeCreationViewModel.cs" />
+    <Compile Include="ViewModels\NewUserViewModel.cs" />
+    <Compile Include="ViewModels\partieJeuViewModel.cs" />
+    <Compile Include="ViewModels\profileViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
+    <Compile Include="ViewModels\topMenuViewModel.cs" />
+    <Compile Include="ViewModels\WaitingRoomViewModel.cs" />
     <Compile Include="Views\chatBoxView.xaml.cs">
       <DependentUpon>chatBoxView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ChoseGameView.xaml.cs">
+      <DependentUpon>ChoseGameView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ClassementView.xaml.cs">
+      <DependentUpon>ClassementView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\createMatchView.xaml.cs">
+      <DependentUpon>createMatchView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CreationJeuAssiste1View.xaml.cs">
+      <DependentUpon>CreationJeuAssiste1View.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CreationJeuManuelleView.xaml.cs">
+      <DependentUpon>CreationJeuManuelleView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FenetreDessinView.xaml.cs">
+      <DependentUpon>FenetreDessinView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EmptyView.xaml.cs">
+      <DependentUpon>EmptyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LeaderboardView.xaml.cs">
+      <DependentUpon>LeaderboardView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\MainMenuView.xaml.cs">
+      <DependentUpon>MainMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MenuSelectionModeCreationView.xaml.cs">
+      <DependentUpon>MenuSelectionModeCreationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\NewUserView.xaml.cs">
+      <DependentUpon>NewUserView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\partieJeuView.xaml.cs">
+      <DependentUpon>partieJeuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\profileView.xaml.cs">
+      <DependentUpon>profileView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\topMenuView.xaml.cs">
+      <DependentUpon>topMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WaitingRoomView.xaml.cs">
+      <DependentUpon>WaitingRoomView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -140,6 +383,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
+    <None Include="Potrace\SvgLibrary\Resources\svg11.dtd" />
+    <None Include="Potrace\SvgLibrary\Svg.csproj" />
+    <None Include="Potrace\SvgLibrary\Svg.csproj.vspscc" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -153,7 +399,59 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\ChoseGameView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ClassementView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\createMatchView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CreationJeuAssiste1View.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CreationJeuManuelleView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FenetreDessinView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EmptyView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LeaderboardView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\LoginView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainMenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MenuSelectionModeCreationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\NewUserView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\partieJeuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\profileView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -161,21 +459,131 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\topMenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WaitingRoomView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\mainMenu\arrowWhite.png" />
     <Resource Include="Views\chat-icon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Views\login image.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Views\chat logo png.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Views\login imagev2.png" />
+    <Resource Include="Views\account_circle_grey_72x72.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Views\account_circle_grey_72x72.png" />
+    <Resource Include="Resources\add.png" />
+    <Resource Include="Resources\lock.png" />
+    <Resource Include="Resources\login.png" />
+    <Resource Include="Resources\pencil.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\crayon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\efface.png" />
+    <Resource Include="Resources\efface_crayon.png" />
+    <Resource Include="Resources\position.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\logout.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\chat.png" />
+    <Resource Include="Resources\joystick.png" />
+    <Resource Include="Resources\pen.png" />
+    <Resource Include="Resources\ranking.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\apple.png" />
+    <Resource Include="Potrace\Images\yao.bmp" />
+    <Resource Include="Resources\alarmclock.png" />
+    <Content Include="Resources\apple.svg" />
+    <Resource Include="Resources\avocado.png" />
+    <Content Include="Resources\avocado.svg" />
+    <Resource Include="Resources\banana.png" />
+    <Resource Include="Resources\bad guess.png" />
+    <Content Include="Resources\banana.svg" />
+    <Resource Include="Resources\cherry.png" />
+    <Resource Include="Resources\chat.gif" />
+    <Resource Include="Resources\chatBox\plus.png" />
+    <Resource Include="Resources\chatBox\invite.png" />
+    <Resource Include="Resources\chatBox\badge.png" />
+    <Resource Include="Resources\chatBox\robot.png" />
+    <Content Include="Resources\cherry.svg" />
+    <Resource Include="Resources\grape.png" />
+    <Resource Include="Resources\duck.gif" />
+    <Resource Include="Resources\duck_cropped.gif" />
+    <Resource Include="Resources\F.gif" />
+    <Resource Include="Resources\F_cropped.gif" />
+    <Resource Include="Resources\fireworks.gif" />
+    <Resource Include="Resources\expand.png" />
+    <Resource Include="Resources\clock.gif" />
+    <Resource Include="Resources\good guess.png" />
+    <Resource Include="Resources\gif\animatedLogo.gif" />
+    <Resource Include="Resources\gif\animatedLogoWhiteSmoke.gif" />
+    <Resource Include="Resources\gif\logo.gif" />
+    <Resource Include="Resources\gif\logo_big.gif" />
+    <Resource Include="Resources\gif\logo_metronome.gif" />
+    <Resource Include="Resources\gif\logo_sides.gif" />
+    <Resource Include="Resources\gameView\endGame logo.png" />
+    <Content Include="Resources\grape.svg" />
+    <Resource Include="Resources\kiwi.png" />
+    <Resource Include="Resources\HAND-DRAW.gif" />
+    <Resource Include="Resources\heart.gif" />
+    <Resource Include="Resources\heart_crooped.gif" />
+    <Resource Include="Resources\invite.png" />
+    <Content Include="Resources\kiwi.svg" />
+    <Resource Include="Resources\lemon.png" />
+    <Content Include="Resources\lemon.svg" />
+    <Resource Include="Resources\orange.png" />
+    <Resource Include="Resources\mail.png" />
+    <Resource Include="Resources\mad.gif" />
+    <Resource Include="Resources\login\Draw Something.png" />
+    <Resource Include="Resources\login\Logo_still.png" />
+    <Content Include="Resources\orange.svg" />
+    <Resource Include="Resources\pear.png" />
+    <Resource Include="Resources\party.gif" />
+    <Content Include="Resources\pear.svg" />
+    <Resource Include="Resources\pineapple.png" />
+    <Content Include="Resources\pineapple.svg" />
+    <Resource Include="Resources\strawberry.png" />
+    <Resource Include="Resources\questions.gif" />
+    <Resource Include="Resources\settings.png" />
+    <Resource Include="Resources\shellView\Nono.png" />
+    <Resource Include="Resources\shellView\stop.png" />
+    <Resource Include="Resources\profileView\arrow_left.png" />
+    <Resource Include="Resources\profileView\arrow_right.png" />
+    <Resource Include="Resources\signUp\create_account_banner.png" />
+    <Resource Include="Resources\shellView\sucess.png" />
+    <Content Include="Resources\strawberry.svg" />
+    <Resource Include="Resources\watermelon.png" />
+    <Resource Include="Resources\trophy.gif" />
+    <Resource Include="Resources\trophy_cropped.gif" />
+    <Resource Include="Resources\Stripes.png" />
+    <Resource Include="Resources\topMenu\exit.png" />
+    <Resource Include="Resources\topMenu\trophy.png" />
+    <Resource Include="Resources\topMenu\user.png" />
+    <Resource Include="Resources\topMenu\house.png" />
+    <Resource Include="Resources\topMenu\logo_still_white.png" />
+    <Content Include="Resources\watermelon.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Potrace\SvgLibrary\Properties\" />
+    <Folder Include="Potrace\SvgLibrary\Web\Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.3.0.1\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.0.1\build\MaterialDesignThemes.targets')" />

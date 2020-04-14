@@ -1,0 +1,139 @@
+﻿<UserControl x:Class="WPFUI.Views.LeaderboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+              xmlns:gif="http://wpfanimatedgif.codeplex.com"
+             xmlns:local="clr-namespace:WPFUI.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="810" d:DesignWidth="1000">
+    <Grid Background="#FFF5F5F6" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="150" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="100"/>
+        </Grid.RowDefinitions>
+
+        <Image gif:ImageBehavior.AnimatedSource="/Resources/fireworks.gif" Grid.Column="1" Grid.Row="1" Opacity="0.3" Grid.ColumnSpan="8" Grid.RowSpan="13" VerticalAlignment="Center" HorizontalAlignment="Center" Height="350"/>
+        <TextBlock  FontSize="50"  Foreground="#00584C" Text="Leaderboard" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="8" TextAlignment="Center"/>
+        <Border Background="#018577" BorderThickness="5" Grid.Column="1" Grid.Row="3" CornerRadius="10" Grid.ColumnSpan="2">
+            <TextBlock FontSize="16" Foreground="White" VerticalAlignment="Bottom" TextAlignment="Center" Text="SOLO GAME" Grid.Column="1" Grid.Row="3" Margin="-0.333,0,0.333,3.667"/>
+        </Border>
+        <TextBlock FontSize="16" VerticalAlignment="Center" TextAlignment="Right" Text="Your position: " Grid.Column="1" Grid.Row="5"/>
+        <Border  BorderBrush="#D3D3D3" BorderThickness="3" Grid.Column="2" Grid.Row="5" CornerRadius="10"  >
+            <TextBlock FontSize="16" Foreground="White"  VerticalAlignment="Center" TextAlignment="Center" Name="soloGameScore"  Grid.Column="1" Grid.Row="3"/>
+        </Border>
+        <Border  BorderBrush="#00584C" BorderThickness="3" Grid.Column="1" Grid.Row="7" CornerRadius="10" Grid.ColumnSpan="2">
+            <ItemsControl x:Name="soloPos" FontSize="16">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding position}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+                                <Image Source="account_circle_grey_72x72.png" MaxHeight="20" VerticalAlignment="Center" Margin="0,0,2,0"></Image>
+                                <TextBlock Text="{Binding username}" Foreground="#FF8AD63E" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Border>
+
+
+
+        <Border Background="#018577" BorderThickness="5" Grid.Column="7" Grid.Row="3" CornerRadius="10" Grid.ColumnSpan="2">
+            <TextBlock FontSize="16" Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="1 VS 1 GAME" Grid.Column="7" Grid.Row="3"/>
+        </Border>
+        <TextBlock FontSize="16" VerticalAlignment="Center" TextAlignment="Right" Text="Your position: " Grid.Column="7" Grid.Row="5"/>
+        <Border  BorderBrush="#D3D3D3" BorderThickness="3" Grid.Column="8" Grid.Row="5" CornerRadius="10" Height="40" Margin="0.333,0,0,0" VerticalAlignment="Top"  >
+            <TextBlock FontSize="16" Foreground="White"  VerticalAlignment="Center" TextAlignment="Center" Name="inversedGameScore"  Grid.Column="4" Grid.Row="3"/>
+        </Border>
+        <Border  BorderBrush="#00584C" BorderThickness="3" Grid.Column="7" Grid.Row="7" CornerRadius="10" Grid.ColumnSpan="2" >
+            <ItemsControl x:Name="invertedPos" FontSize="16">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding position}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+                                <Image Source="account_circle_grey_72x72.png" MaxHeight="20" VerticalAlignment="Center" Margin="0,0,2,0"></Image>
+                                <TextBlock Text="{Binding username}" Foreground="#FF8AD63E" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Border>
+
+        <Border Background="#D6EFE9" BorderThickness="5" Grid.Column="1" Grid.Row="9" CornerRadius="10" Grid.ColumnSpan="2">
+            <TextBlock FontSize="16" Foreground="#018577" VerticalAlignment="Center" TextAlignment="Center" Text="COOPERATIVE MODE" Grid.Column="1" Grid.Row="9"/>
+        </Border>
+        <TextBlock FontSize="16" VerticalAlignment="Center" TextAlignment="Right" Text="Your position: " Grid.Column="1" Grid.Row="11"/>
+        <Border  BorderBrush="#D3D3D3" BorderThickness="3" Grid.Column="1" Grid.Row="11" CornerRadius="10" Grid.ColumnSpan="3" Height="40" Margin="113,0,9.667,0" VerticalAlignment="Top"  >
+            <TextBlock FontSize="16" Foreground="White"  VerticalAlignment="Center" TextAlignment="Center" Name="coopGameScore"  Grid.Column="1" Grid.Row="11"/>
+        </Border>
+        <Border  BorderBrush="#00584C" BorderThickness="3" Grid.Column="1" Grid.Row="13" CornerRadius="10" Grid.ColumnSpan="2" >
+            <ItemsControl x:Name="coopPos" FontSize="16">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding position}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+                                <Image Source="account_circle_grey_72x72.png" MaxHeight="20" VerticalAlignment="Center" Margin="0,0,2,0"></Image>
+                                <TextBlock Text="{Binding username}" Foreground="#FF8AD63E" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+        </Border>
+
+        <Border Background="#D6EFE9" BorderThickness="5" Grid.Column="7" Grid.Row="9" CornerRadius="10" Grid.ColumnSpan="2">
+            <TextBlock FontSize="16" Foreground="#018577" VerticalAlignment="Bottom" TextAlignment="Center" Text="SOLO MODE" Grid.Column="1" Grid.Row="9" Margin="-0.333,0,0.333,3.667"/>
+        </Border>
+        <TextBlock FontSize="16" VerticalAlignment="Center" TextAlignment="Right" Text="Your position: " Grid.Column="7" Grid.Row="11"/>
+        <Border  BorderBrush="#D3D3D3" BorderThickness="3" Grid.Column="8" Grid.Row="11" CornerRadius="10"  >
+            <TextBlock FontSize="16" Foreground="White"  VerticalAlignment="Center" TextAlignment="Center" Name="solomodeGameScore"  Grid.Column="8" Grid.Row="11"/>
+        </Border>
+        <Border  BorderBrush="#00584C" BorderThickness="3" Grid.Column="7" Grid.Row="13" CornerRadius="10" Grid.ColumnSpan="2" >
+            <ItemsControl x:Name="solo2Pos" FontSize="16">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding position}" Foreground="#FF8AD63E" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Left"/>
+                                <Image Source="account_circle_grey_72x72.png" MaxHeight="20" VerticalAlignment="Center" Margin="0,0,2,0"></Image>
+                                <TextBlock Text="{Binding username}" Foreground="#FF8AD63E" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Border>
+
+    </Grid>
+</UserControl>

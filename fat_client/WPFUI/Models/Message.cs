@@ -9,35 +9,68 @@ namespace WPFUI.Models
     public class Message
     {
 
-        private User _author;
-
-        public User author
+        string _username;
+        string _content;
+        long _date;
+        string _roomId;
+        string _avatarSource;
+        public Message(string username,
+        string content,
+        long date,
+        string roomId)
         {
-            get { return _author; }
-            set { _author = value; }
+            this._username = username;
+            this._content = content;
+            this._roomId = roomId;
+            this._date = date;
+   
         }
 
-        private string _content;
+        public string senderName
+        {
+            get
+            {
+                return _username;
+            }
+        }
 
         public string content
         {
-            get { return _content; }
-            set { _content = value; }
+            get
+            {
+                return _content;
+            }
         }
 
-        private double _date;
-
-        public double date
+        public string roomId
         {
-            get { return _date; }
-            set { _date = value; }
+            get
+            {
+                return _roomId;
+            }
         }
 
-        public Message(User author, string content, double timestamp)
+        public string formattedTimeStamp
         {
-            _content = content;
-            _author = author;
-            _date = timestamp;
+            get
+            {
+                return "[" + UnixTimeToDateTime(_date).ToString("HH:mm") + "]";
+            }
+        }
+
+        public string avatarSource
+        {
+            get { return _avatarSource; }
+            set { _avatarSource = value; }
+        }
+
+
+        //methode prise de: https://ourcodeworld.com/articles/read/865/how-to-convert-an-unixtime-to-datetime-class-and-viceversa-in-c-sharp
+        public DateTime UnixTimeToDateTime(long unixtime)
+        {
+            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            dtDateTime = dtDateTime.AddMilliseconds(unixtime).ToLocalTime();
+            return dtDateTime;
         }
 
     }

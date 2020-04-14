@@ -1,7 +1,11 @@
-import User from "./user";
-
-export default interface Message {
-    author : User
+export interface Message {
+    username : string
     content : string
     date : number
+    roomId : string
+}
+
+export interface ClientMessage {
+    content : string
+    roomId : string
 }

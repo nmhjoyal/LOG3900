@@ -1,65 +1,307 @@
-import User from "../models/user";
-import ChatRoom from "./chatRoom";
+import SignIn from "../models/signIn";
+import PrivateProfile from "../models/privateProfile";
+import { Room, CreateRoom, Invitation } from "../models/room";
+import { Feedback, SignInFeedback, SignInStatus, SignOutStatus, UpdateProfileStatus, JoinRoomFeedback, StartMatchFeedback, CreateMatchFeedback } from "../models/feedback";
+import { profileDB } from "../services/Database/profileDB";
+import { roomDB } from "../services/Database/roomDB";
+import Admin from "../models/admin";
+import { Message, ClientMessage } from "../models/message";
+import PublicProfile from "../models/publicProfile";
+import ChatHandler from "./chatHandler";
+import MatchHandler from "./matchHandler";
+import RandomMatchIdGenerator from "./IdGenerator/idGenerator";
+import { CreateMatch } from "../models/match";
+import { StylusPoint, Stroke } from "../models/drawPoint";
+import { statsDB } from "./Database/statsDB";
 
-export default class ServerHandler {
-    public name: string;
-    private users: Map<string, User>;
-    // TEMPORARY : eventually array of rooms
-    private chatRoom: ChatRoom;
+class ServerHandler {
+    public users: Map<string, PrivateProfile>;
+    public chatHandler: ChatHandler;
+    public matchHandler: MatchHandler;
 
-    public constructor(name: string) {
-        this.name = name;
-        this.users = new Map();
-        // TEMPORARY
-        this.chatRoom = new ChatRoom("TEMPORARY_NAME");
+    public constructor () {
+        this.users = new Map<string, PrivateProfile>();
+        this.chatHandler = new ChatHandler();
+        this.matchHandler = new MatchHandler();
+    }
+
+    public async signIn(socket: SocketIO.Socket, signIn: SignIn): Promise<SignInFeedback> {
+        const user: PrivateProfile | null = await profileDB.getPrivateProfile(signIn.username);
+        let signed_in: boolean = false;
+        let log_message: SignInStatus;
+        let rooms_joined: Room[] = [];
+        if(user) {
+            if(signIn.password == user.password) {
+                if(this.isConnected(signIn.username)) {
+                    log_message = SignInStatus.AlreadyConnected
+                } else {
+                    statsDB.updateConnectionStats(user.username);
+                    this.users.set(socket.id, user);
+                    signed_in = true;
+                    log_message = SignInStatus.SignIn;
+                    rooms_joined = await this.connectToJoinedRooms(socket, user);
+                }
+            } else {
+                log_message = SignInStatus.InvalidPassword;
+            }
+        } else {
+            log_message = SignInStatus.InvalidUsername;
+        }
+        const feedback: Feedback = {
+            status: signed_in,
+            log_message: log_message
+        }
+        const signInFeedback: SignInFeedback = {
+            feedback: feedback,
+            rooms_joined: rooms_joined
+        }
+        return signInFeedback;
+    }
+
+    public signOut(io: SocketIO.Server, socket: SocketIO.Socket): Feedback {
+        const user: PrivateProfile | undefined = this.getUser(socket.id);
+        let status: boolean = false;
+        let log_message: SignOutStatus = SignOutStatus.Error;
+        if(user) {
+            statsDB.updateDisconnectionStats(user.username);
+            this.matchHandler.leaveMatch(io, socket, this.getUser(socket.id));
+            this.diconnectFromJoinedRooms(io, socket, user);
+            this.users.delete(socket.id);
+            status = true;
+            log_message = SignOutStatus.SignedOut;
+        }
+        const feedback: Feedback = {
+            status: status,
+            log_message: log_message
+        }
+
+        return feedback;
+    }
+
+    public async updateProfile(io: SocketIO.Server, socket: SocketIO.Socket, updatedProfile: PrivateProfile): Promise<Feedback> {
+        const user: PrivateProfile | undefined = this.users.get(socket.id);
+        let status: boolean = false;
+        let log_message: UpdateProfileStatus;
+
+        if (user) {
+            if (user.username == updatedProfile.username) {
+                try {
+                    if(updatedProfile.password == "" || !updatedProfile.password) {
+                        updatedProfile.password = user.password;
+                    }
+                    if(updatedProfile.firstname == "" || !updatedProfile.firstname) {
+                        updatedProfile.firstname = user.firstname;
+                    }
+                    if(updatedProfile.lastname == "" || !updatedProfile.lastname) {
+                        updatedProfile.lastname = user.lastname;
+                    }
+                    // Updating rooms_joined array
+                    updatedProfile.rooms_joined = (user as PrivateProfile).rooms_joined;
+                    await profileDB.updateProfile(updatedProfile);
+
+                    if (user.avatar != updatedProfile.avatar) {
+                        await this.updateAvatarInRooms(io, user.username, updatedProfile.avatar);
+                    }
+
+                    this.users.set(socket.id, updatedProfile);
+                    
+                    status = true;
+                    log_message = UpdateProfileStatus.Update;
+                } catch {
+                    log_message = UpdateProfileStatus.UnexpectedError;
+                }
+            } else {
+                log_message = UpdateProfileStatus.InvalidUsername;
+            }
+        } else {
+            log_message = UpdateProfileStatus.InvalidProfile;
+        }
+        const feedback: Feedback = {
+            status: status,
+            log_message: log_message
+        }
+        return feedback;
+    }
+
+    private async updateAvatarInRooms(io: SocketIO.Server, username: string, newAvatar: string): Promise<void> {
+        
+        const updatedPublicProfile: PublicProfile = {
+            username: username,
+            avatar: newAvatar
+        };
+    
+        // For each room retrieved from db (all the rooms that the user has been in or is currently in)
+        // Update and notify that his avatar has changed.
+        (await roomDB.getRoomsByUser(username)).forEach(async (roomId: string) => {
+            await roomDB.mapAvatar(updatedPublicProfile, roomId);
+            this.chatHandler.notifyAvatarUpdate(io, updatedPublicProfile, roomId);
+        });
+        
+        // Update avatar map in the private rooms and notify the rooms
+        for (let room of this.chatHandler.privateRooms) {
+            if (room.avatars.has(updatedPublicProfile.username)) {
+                room.avatars.set(username, newAvatar);
+                this.chatHandler.notifyAvatarUpdate(io, updatedPublicProfile, room.id);
+            }
+        }
     }
 
     /**
-     * Returns true if user is signed in
-     * @param user user we wish to add
-     */
-    public signIn(socketId: string, user: User): boolean {
-        let canSignIn: boolean = false;
-
-        if (!this.isConnected(user.username)) {
-            console.log("User " + user.username + " signed in")
-            this.users.set(socketId, user);
-            canSignIn = true;
-        }
-
-        return canSignIn;
-    }
-
-    public signOut(socketId: string): boolean {
-        let user: User | undefined = this.getUser(socketId);
-        if (user) {
-            console.log("User " + user.username + " signed out")
-        }
-
-        return this.users.delete(socketId);
-    }
-
-    public getUsers(): Map<string, User> {
-        return this.users;
-    }
-
-    public getUser(socketId: string): User | undefined {
+     * 
+     * Other functions.
+     * 
+     */   
+    
+    public getUser(socketId: string): PrivateProfile | undefined {
         return this.users.get(socketId);
     }
 
     private isConnected(username: string): boolean {
-        let userIsConnected: boolean = false;
+        let isConnected: boolean = false;
 
-        this.users.forEach((value: User) => {
-            if (value.username === username) {
-                userIsConnected = true;
+        this.users.forEach((user: PrivateProfile) => {
+            if (user.username === username) {
+                isConnected = true;
             }
         });
 
-        return userIsConnected;
+        return isConnected;
     }
 
-    public joinRoom(roomName: string): void {
-        // eventually
+    private async connectToJoinedRooms(socket: SocketIO.Socket, user: PrivateProfile): Promise<Room[]> {
+        const rooms: Room[] = [];
+        for(let room_joined of user.rooms_joined) {
+            socket.join(room_joined);
+            const message: Message = Admin.createAdminMessage(user.username + " is connected.", room_joined);
+            socket.to(room_joined).emit("new_message", JSON.stringify(message));
+            const room: Room | null = await roomDB.getRoom(room_joined);
+            if(room) {
+                rooms.push(room);
+            } else {
+                console.log("This room does not exist : " + room_joined);
+            }
+        }
+        return rooms;
+    }
+
+    private diconnectFromJoinedRooms(io: SocketIO.Server, socket: SocketIO.Socket, user: PrivateProfile): void {
+        // Public rooms
+        user.rooms_joined.forEach((room_joined: string) => {
+            const message: Message = Admin.createAdminMessage(user.username + " is disconnected.", room_joined);
+            socket.to(room_joined).emit("new_message", JSON.stringify(message));
+            socket.leave(room_joined);
+        });
+        // Private rooms
+        for (let roomId in socket.rooms) {
+            const privateRoom: Room | undefined = this.chatHandler.privateRooms.find(room => room.id == roomId);
+            if(privateRoom) {
+                let socketIds: string[] = this.chatHandler.getSocketIds(io, roomId);
+                if (socketIds.length == 1 && socketIds[0] == socket.id) {
+                    this.chatHandler.deleteChatRoom(io, socket, roomId, this.getUser(socket.id));
+                } else {
+                    const message: Message = Admin.createAdminMessage(user.username + " is disconnected.", roomId);
+                    privateRoom.messages.push(message);
+                    socket.to(roomId).emit("new_message", JSON.stringify(message));
+                    socket.leave(roomId);
+                }
+            }
+        }
+    }
+    
+    /**
+     * 
+     * ChatHandler and MatchHandler function calls while passing the private profile of the user.
+     * 
+     */
+    public async createChatRoom(io: SocketIO.Server, socket: SocketIO.Socket, room: CreateRoom): Promise<Feedback> {
+        return await this.chatHandler.createChatRoom(io, socket, room, this.getUser(socket.id));
+    }
+
+    public async deleteChatRoom(io: SocketIO.Server, socket: SocketIO.Socket, roomId: string): Promise<Feedback> {
+        return await this.chatHandler.deleteChatRoom(io, socket, roomId, this.getUser(socket.id));
+    }
+
+    public async invite(io: SocketIO.Server, socket: SocketIO.Socket, invitation: Invitation): Promise<Feedback> {
+        return await this.chatHandler.invite(io, socket, invitation, this.users);
+    }
+
+    public async joinChatRoom(io: SocketIO.Server, socket: SocketIO.Socket, roomId: string): Promise<JoinRoomFeedback> {
+        return await this.chatHandler.joinChatRoom(io, socket, roomId, this.getUser(socket.id));
+    }
+
+    public async leaveChatRoom(io: SocketIO.Server, socket: SocketIO.Socket, roomId: string): Promise<Feedback> {
+        return await this.chatHandler.leaveChatRoom(io, socket, roomId, this.getUser(socket.id));
+    }
+
+    public sendMessage(io: SocketIO.Server, socket: SocketIO.Socket, message: ClientMessage): void { 
+        const user: PrivateProfile | undefined = this.getUser(socket.id);
+        if (user) {
+            if (message.roomId.startsWith(RandomMatchIdGenerator.prefix)) {
+                this.matchHandler.sendMessage(io, message, user);
+            } else {
+                // Send the message
+                this.chatHandler.sendMessage(io, message, user);
+            }
+        } else {
+            console.log("User not signed in");
+        }
+    }
+
+    public async createMatch(io: SocketIO.Server, socket: SocketIO.Socket, createMatch: CreateMatch): Promise<CreateMatchFeedback> {
+        return await this.matchHandler.createMatch(io, socket, createMatch, this.getUser(socket.id));
+    }
+
+    public async joinMatch(io: SocketIO.Server, socket: SocketIO.Socket, matchId: string): Promise<JoinRoomFeedback> {
+        return await this.matchHandler.joinMatch(io, socket, matchId, this.getUser(socket.id));
+    }
+
+    public async leaveMatch(io: SocketIO.Server, socket: SocketIO.Socket): Promise<Feedback> {
+        return await this.matchHandler.leaveMatch(io, socket, this.getUser(socket.id));
+    }
+
+    public addVirtualPlayer(io: SocketIO.Server, socket: SocketIO.Socket): Feedback {
+        return this.matchHandler.addVirtualPlayer(io, socket, this.getUser(socket.id));
+    }
+
+    public removeVirtualPlayer(io: SocketIO.Server, socket: SocketIO.Socket): Feedback {
+        return this.matchHandler.removeVirtualPlayer(io, socket, this.getUser(socket.id));
+    }
+
+    public startMatch(io: SocketIO.Server, socket: SocketIO.Socket): StartMatchFeedback {
+        return this.matchHandler.startMatch(io, socket, this.getUser(socket.id));
+    }
+
+    public startTurn(io: SocketIO.Server, socket: SocketIO.Socket, word: string): void {
+        this.matchHandler.startTurn(io, socket, word, this.getUser(socket.id));
+    }
+    
+    public guess(io: SocketIO.Server, socket: SocketIO.Socket, guess: string): void {
+        this.matchHandler.guess(io, socket, guess, this.getUser(socket.id));
+    }
+
+    public hint(io: SocketIO.Server, socket: SocketIO.Socket): void {
+        this.matchHandler.hint(io, this.getUser(socket.id));
+    }
+
+    public stroke(socket: SocketIO.Socket, stroke: Stroke): void {
+        this.matchHandler.stroke(socket, stroke, this.getUser(socket.id));
+    }
+    
+    public point(socket: SocketIO.Socket, point: StylusPoint): void {
+        this.matchHandler.point(socket, point, this.getUser(socket.id));
+    }
+
+    public eraseStroke(socket: SocketIO.Socket): void {
+        this.matchHandler.eraseStroke(socket, this.getUser(socket.id));
+    }
+
+    public erasePoint(socket: SocketIO.Socket): void {
+        this.matchHandler.erasePoint(socket, this.getUser(socket.id));
+    }
+
+    public clear(socket: SocketIO.Socket): void {
+        this.matchHandler.clear(socket, this.getUser(socket.id));
     }
 }
+
+export var serverHandler: ServerHandler = new ServerHandler();
