@@ -32,7 +32,7 @@
 						  AutoReverse="True" RepeatBehavior="3x"/>
 			</Storyboard>
 		</Grid.Resources>
-		
+
 		<Grid.Triggers>
 			<EventTrigger RoutedEvent="Grid.Loaded">
 				<BeginStoryboard>
@@ -47,7 +47,7 @@
 		</Grid.Triggers>
 
 		<Grid.Background>
-            <SolidColorBrush Color="#FF00584C">
+			<SolidColorBrush Color="#FF00584C">
 				<SolidColorBrush.RelativeTransform>
 					<RotateTransform CenterX="0.5" CenterY="0.5" Angle="0" x:Name="imgRot"/>
 				</SolidColorBrush.RelativeTransform>
@@ -60,7 +60,7 @@
 			<ColumnDefinition Width="auto"/>
 			<ColumnDefinition Width="10"/>
 		</Grid.ColumnDefinitions>
-	
+
 		<Grid.RowDefinitions>
 			<RowDefinition Height="10"/>
 			<RowDefinition Height="*"/>
@@ -68,46 +68,7 @@
 		</Grid.RowDefinitions>
 
 		<Grid Grid.Row="1" Grid.Column="2" x:Name="ContentGrid">
-			
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="0.2*"/>
-				<ColumnDefinition Width="10"/>
-				<ColumnDefinition Width="*" />
-				<ColumnDefinition Width="10"/>
-				<ColumnDefinition Width="30" />
-				<ColumnDefinition Width="10" />
-				<ColumnDefinition Width="10"/>
-				<ColumnDefinition Width="60" />
-				<ColumnDefinition Width="10" />
-				<ColumnDefinition Width="600" />
-				<ColumnDefinition Width="10" />
-				<ColumnDefinition Width="*" />
-				<ColumnDefinition Width="*"/>
-				<ColumnDefinition Width="*" />
-				<ColumnDefinition Width="0.2*"/>
 
-
-			</Grid.ColumnDefinitions>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="0.1*"/>
-				<RowDefinition Height="0"/>
-				<RowDefinition Height="10"/>
-				<RowDefinition Height="20"/>
-				<RowDefinition Height="10"/>
-				<RowDefinition Height="20"/>
-				<RowDefinition Height="10"/>
-				<RowDefinition Height="10"/>
-				<RowDefinition Height="483"/>
-				<RowDefinition Height="40"/>
-				<RowDefinition Height="5"/>
-				<RowDefinition Height="40"/>
-				<RowDefinition Height="5"/>
-				<RowDefinition Height="40"/>
-				<RowDefinition Height="0.1*"/>
-
-			</Grid.RowDefinitions>
-		<Grid Grid.Row="1" Grid.Column="2" x:Name="ContentGrid">
-			
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="0.2*"/>
 				<ColumnDefinition Width="10"/>
@@ -150,16 +111,16 @@
 
 
 
-		<TextBlock FontSize="14" Grid.Row="2" TextAlignment="Center" Grid.Column="2" 
+			<TextBlock FontSize="14" Grid.Row="2" TextAlignment="Center" Grid.Column="2" 
 				   Text="Remaining Time" Grid.ColumnSpan="5" Grid.RowSpan="3" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,10,0,0"/>
-            <TextBlock FontSize="14" Grid.Row="5" TextAlignment="Center" Grid.Column="2" Text="{Binding timerContent}" 
+			<TextBlock FontSize="14" Grid.Row="5" TextAlignment="Center" Grid.Column="2" Text="{Binding timerContent}" 
 					   Grid.ColumnSpan="5" VerticalAlignment="Center" Margin="0,0.8,8.8,1.2" HorizontalAlignment="Center"/>
-            <TextBlock FontSize="14" Grid.Column="7" Grid.Row="3" Grid.RowSpan="3" Height="50"  TextAlignment="Center" Text="{Binding roundText}" VerticalAlignment="Center"/>
-		<TextBlock FontSize="20" Grid.Row="3" TextAlignment="Center" Grid.Column="9" 
+			<TextBlock FontSize="14" Grid.Column="7" Grid.Row="3" Grid.RowSpan="3" Height="50"  TextAlignment="Center" Text="{Binding roundText}" VerticalAlignment="Center"/>
+			<TextBlock FontSize="20" Grid.Row="3" TextAlignment="Center" Grid.Column="9" 
 				   Text="{Binding MatchMode}" Grid.ColumnSpan="1"  Grid.RowSpan="3" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
 
-		<TextBlock FontSize="16" Grid.ColumnSpan="3" Grid.Row="3" TextAlignment="Center" Grid.Column="11" Text="Word To Guess" Grid.RowSpan="2"/>
-		<TextBlock FontSize="14" Grid.Row="4" TextAlignment="Center" Grid.Column="11" Text="{Binding currentWord}" 
+			<TextBlock FontSize="16" Grid.ColumnSpan="3" Grid.Row="3" TextAlignment="Center" Grid.Column="11" Text="Word To Guess" Grid.RowSpan="2"/>
+			<TextBlock FontSize="14" Grid.Row="4" TextAlignment="Center" Grid.Column="11" Text="{Binding currentWord}" 
 				   HorizontalAlignment="Center" Grid.RowSpan="2" VerticalAlignment="Center" Grid.ColumnSpan="3"/>
 
 
@@ -226,11 +187,11 @@
 
 			<!-- End of the xaml of the drawing section -->
 
-		<ScrollViewer Grid.Column="1" Grid.Row="6" Grid.RowSpan="6" Grid.ColumnSpan="7" 
+			<ScrollViewer Grid.Column="1" Grid.Row="6" Grid.RowSpan="6" Grid.ColumnSpan="7" 
 					  VerticalScrollBarVisibility="Hidden" Background="White" FontSize="18" Height="500" VerticalAlignment="Top">
-			<ItemsControl x:Name="joueurs">
-				<ItemsControl.ItemTemplate>
-					<DataTemplate>
+				<ItemsControl x:Name="joueurs">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
 							<StackPanel Orientation="Vertical">
 								<TextBlock Text="{Binding Username}" Foreground="DarkSlateGray"  Margin="0,20,0,20" VerticalAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Center"/>
 								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -238,10 +199,10 @@
 									<TextBlock Text="{Binding ScoreTotal}" Foreground="#FF66CC37" Margin="10,0,0,0" VerticalAlignment="Center"/>
 								</StackPanel>
 							</StackPanel>
-					</DataTemplate>
-				</ItemsControl.ItemTemplate>
-			</ItemsControl>
-		</ScrollViewer>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</ScrollViewer>
 
 			<ScrollViewer Grid.Column="11" Grid.Row="6" Grid.ColumnSpan="3" VerticalScrollBarVisibility="Visible" 
 					  x:Name="messagesUI" Background="#FFEBF3F3" FontSize="18" Grid.RowSpan="4" Height="500" VerticalAlignment="Top">
@@ -262,18 +223,18 @@
 			</ScrollViewer>
 
 			<TextBox x:Name ="currentMessage" Grid.Column="11" Grid.Row="9" Foreground="DarkSlateGray" BorderBrush="Black"  Background="White" Grid.ColumnSpan="2" Grid.RowSpan="1" PreviewKeyDown="sendMessage_PreviewKeyDown"/>
-            <Button x:Name ="sendMessage" BorderBrush="{x:Null}" Grid.Column="13" Grid.Row="9" Background="#018677" Foreground="White" Click="refocus" 
+			<Button x:Name ="sendMessage" BorderBrush="{x:Null}" Grid.Column="13" Grid.Row="9" Background="#018677" Foreground="White" Click="refocus" 
 				HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="auto" FontSize="20">
-			Send
-		</Button>
-		<TextBox x:Name ="guessBox" Grid.Column="11" Grid.Row="11" Foreground="DarkSlateGray" BorderBrush="Black" Background="White" Grid.ColumnSpan="2" PreviewKeyDown="guessBox_PreviewKeyDown"/>
+				Send
+			</Button>
+			<TextBox x:Name ="guessBox" Grid.Column="11" Grid.Row="11" Foreground="DarkSlateGray" BorderBrush="Black" Background="White" Grid.ColumnSpan="2" PreviewKeyDown="guessBox_PreviewKeyDown"/>
 			<Button x:Name ="sendGuess"  Grid.Column="13" Grid.Row="11" BorderBrush="{x:Null}" Background="#D6EFE9" Foreground="#FF00584C" Click="refocus2" Height="auto" Width="auto" FontSize="20">
-			Guess
-		</Button>
-            <TextBlock x:Name="guessesLeft" FontSize="14" Grid.Row="10" TextAlignment="Right" VerticalAlignment="Center" Grid.Column="9" Text="{Binding GuessesLeft.Text}" Visibility="{Binding GuessesLeft.Visibility, Converter={StaticResource BooleanToVisibilityConverter}}"  Grid.ColumnSpan="2" Margin="0.2,0.2,9.4,10.2" Grid.RowSpan="2"/>
+				Guess
+			</Button>
+			<TextBlock x:Name="guessesLeft" FontSize="14" Grid.Row="10" TextAlignment="Right" VerticalAlignment="Center" Grid.Column="9" Text="{Binding GuessesLeft.Text}" Visibility="{Binding GuessesLeft.Visibility, Converter={StaticResource BooleanToVisibilityConverter}}"  Grid.ColumnSpan="2" Margin="0.2,0.2,9.4,10.2" Grid.RowSpan="2"/>
 
 			<Button x:Name ="requestHint" IsEnabled="{Binding HintEnabled}" Background="#01C853" Grid.Column="13" Grid.Row="13" Content="Hint" Foreground="White" BorderBrush="{x:Null}" Height="auto" Grid.ColumnSpan="1" FontSize="20"/>
-	
+
 			<Canvas Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="13" Grid.RowSpan="13" Name="mainUIFilter" Margin="0.4,30,0.4,0"></Canvas>
 			<Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="13" Grid.RowSpan="13" Visibility="Hidden" Name="endTurnBox" Margin="0.4,30,0.4,0">
 				<Grid.ColumnDefinitions>
@@ -287,7 +248,7 @@
 					<RowDefinition Height="*"/>
 				</Grid.RowDefinitions>
 
-                <Border Background="#018677" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderBrush="Black" Opacity="0.9">
+				<Border Background="#018677" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderBrush="Black" Opacity="0.9">
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="*"/>
