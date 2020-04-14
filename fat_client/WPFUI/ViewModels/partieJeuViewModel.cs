@@ -264,7 +264,7 @@ namespace WPFUI.ViewModels
         }
         public string roundText
         {
-            get { return (this._userData.matchMode == Models.MatchMode.sprintSolo || this._userData.matchMode == Models.MatchMode.sprintCoop)? "" : "Round " + this.endTurn.currentRound + " of " + _userData.nbRounds; }
+            get { return (this._userData.matchMode == Models.MatchMode.sprintSolo || this._userData.matchMode == Models.MatchMode.sprintCoop)? "" : "Round\n " + this.endTurn.currentRound + " of " + _userData.nbRounds; }
         }
 
         public string currentWord

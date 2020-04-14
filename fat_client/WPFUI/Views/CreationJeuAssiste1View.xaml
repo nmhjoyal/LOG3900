@@ -8,7 +8,7 @@
              xmlns:gif="http://wpfanimatedgif.codeplex.com"
             xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit" 
             mc:Ignorable="d"
-            d:DesignHeight="900" d:DesignWidth="1100"
+            d:DesignHeight="900" d:DesignWidth="1500"
             Loaded="onLoad"
 			FontFamily="Microsoft JhengHei UI Light" Background="White">
 	<UserControl.Resources>
@@ -30,9 +30,10 @@
 				<ColumnDefinition Width="30" />
 			</Grid.ColumnDefinitions>
 			<Grid.RowDefinitions>
-				<RowDefinition Height="*"/>
-				<RowDefinition Height="50"/>
-				<RowDefinition Height="10"/>
+				<RowDefinition Height="80"/>
+				<RowDefinition Height="30"/>
+				<RowDefinition Height="0"/>
+				<RowDefinition Height="20"/>
 				<RowDefinition Height="40"/>
 				<RowDefinition Height="10"/>
 				<RowDefinition Height="40"/>
@@ -47,100 +48,114 @@
 
 			</Grid.RowDefinitions>
 			<TextBlock  FontSize="40"  Foreground="#00584C" Text="Assisted Game Creation" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" TextAlignment="Center"/>
-			<Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="3" CornerRadius="10">
-                <Button Background="#FF018577" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Right" Content="File Name:" Grid.Column="1" Grid.Row="3" Click="Button_Click" Margin="0,4.2,21.6,4.6"/>
+			<Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="4" CornerRadius="10">
+				<StackPanel Orientation="Vertical" PreviewMouseDown="Button_Click" VerticalAlignment="Center" Margin="10,0,10,0">
+					<TextBlock Text="Click here to select your image" VerticalAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Center" Foreground="White"/>
+				</StackPanel>
 			</Border>
-			<TextBlock x:Name="absolutePath" Grid.Column="3" Grid.Row="3" MinWidth="200" Grid.ColumnSpan="2"/>
-			<Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="5" CornerRadius="10">
+			<TextBlock x:Name="absolutePath" Grid.Column="3" Grid.Row="4" MinWidth="200" Grid.ColumnSpan="3" VerticalAlignment="Center"/>
+			<Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="6" CornerRadius="10">
 				<TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Word To Guess:" Grid.Column="1" Grid.Row="5"/>
 			</Border>
-			<TextBox x:Name="Word" Grid.Column="3" Grid.Row="5" MinWidth="200" Grid.ColumnSpan="2"/>
+			<TextBox x:Name="Word" Grid.Column="3" Grid.Row="6" MinWidth="200" Grid.ColumnSpan="2" VerticalAlignment="Center"/>
 
-			<Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="7" CornerRadius="10">
+			<Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="8" CornerRadius="10">
 				<TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center"  Text="Difficulty:" Grid.Column="1" Grid.Row="14"/>
 			</Border>
-			<ComboBox Name="Level"  Grid.Column="3" Grid.Row="7" >
+			<ComboBox Name="Level"  Grid.Column="3" Grid.Row="8" >
 				<ComboBoxItem Foreground="Green" Content="Easy"/>
 				<ComboBoxItem Foreground="Orange" Content="Normal"/>
 				<ComboBoxItem Foreground="Red" Content="Hard"/>
 			</ComboBox>
-			<Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="9" CornerRadius="10">
+			<Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="10" CornerRadius="10">
 				<TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center"  Text="Mode:" Grid.Column="1" Grid.Row="9"/>
 			</Border>
-			<StackPanel Name="optionBlock" Grid.Column="4" Grid.Row="9"></StackPanel>
-			<StackPanel  Name="Options" Grid.Column="5" Grid.Row="9"></StackPanel>
-			<ComboBox SelectionChanged="elementSelectionne" Name="Mode" Grid.Column="3" Grid.Row="9">
+			<StackPanel Name="optionBlock" Grid.Column="4" Grid.Row="10"></StackPanel>
+			<StackPanel  Name="Options" Grid.Column="5" Grid.Row="10"></StackPanel>
+			<ComboBox SelectionChanged="elementSelectionne" Name="Mode" Grid.Column="3" Grid.Row="10">
 				<ComboBoxItem Content="Classic"/>
 				<ComboBoxItem Content="Random"/>
 				<ComboBoxItem Content="Panoramic"/>
 				<ComboBoxItem Content="Centered"/>
 			</ComboBox>
 
-			<Button MaxWidth="140" Click="addClue" Background="#FF018577" Grid.Column="1" Grid.Row="11" BorderBrush="{x:Null}" Margin="0,10,0,0" VerticalAlignment="Top">
+			<Button MaxWidth="140" Click="addClue" Height="50"
+					Background="#FF018577" Grid.Column="1" Grid.Row="12" BorderBrush="{x:Null}" Margin="0,10,0,0" VerticalAlignment="Top">
 
 				<StackPanel  Orientation="Horizontal">
 					<TextBlock FontSize="12" Margin="0,0,10,0" Foreground="White" VerticalAlignment="Center">Hint(s):</TextBlock>
 					<Image Source="/Resources/add.png" Height="20"></Image>
 				</StackPanel>
 			</Button>
-			<StackPanel Name="canContainer"  Grid.Column="3" Grid.Row="11" VerticalAlignment="Top" Margin="0,10,0,0">
+			<StackPanel Name="canContainer"  Grid.Column="3" Grid.Row="12" VerticalAlignment="Top" Margin="0,10,0,0">
 
 				<TextBox  x:Name="clue" Grid.Column="3" Grid.Row="11"  />
 			</StackPanel>
 
-            <Button Grid.Column="6" Grid.Row="0" Content="Back" Background="#de0d56" BorderBrush="#de0d56"  Width="100" HorizontalAlignment="Right" x:Name="goBack"></Button>
+			<Button Grid.Column="1" Grid.Row="1" Background="#de0d56" 
+					BorderBrush="#de0d56"  Width="60" HorizontalAlignment="Left" 
+					x:Name="goBack" Height="35" Margin="20,0,0,0">
+				<TextBlock FontSize="30" VerticalAlignment="Center" Foreground="White">
+					←
+				</TextBlock>
 
-			<StackPanel Grid.Row="11" Grid.Column="6" Orientation="Vertical">
+			</Button>
+
+			<StackPanel Grid.Row="12" Grid.Column="6" Orientation="Vertical">
 				<Button  BorderBrush="{x:Null}" Background="#D6EFE9" FontSize="12" Foreground="#00584C" Click="draw" Content="Visualize Game" Grid.Column="6" Grid.Row="11" HorizontalAlignment="Right" Width="120" Margin="0,0,0,10"/>
 				<Button  BorderBrush="{x:Null}" Background="#00584C" FontSize="12" Foreground="#D6EFE9" Click="createGame" Content="Create Game" Grid.Column="6" Grid.Row="11" HorizontalAlignment="Right" Width="120"  Margin="0,0,0,10"/>
 			</StackPanel>
-            <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="16" Grid.ColumnSpan="16">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="auto"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"></RowDefinition>
-                    <RowDefinition Height="auto"></RowDefinition>
-                    <RowDefinition Height="*"></RowDefinition>
-                </Grid.RowDefinitions>
-                <Border  Visibility="Hidden" Name="border" Background="#00584C" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderBrush="Black" >
-                    <Grid Visibility="Hidden" Name="selectNextDrawingBox" >
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="20"/>
-                            <ColumnDefinition Width="600"/>
-                            <ColumnDefinition Width="120"/>
-                            <ColumnDefinition Width="20" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="7*"/>
-                            <RowDefinition Height="20"/>
-                        </Grid.RowDefinitions>
-                        <TextBlock Grid.Column="1" Grid.Row="0" Text="Preview Your Drawing Here !" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="22"
+			<Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="16" Grid.ColumnSpan="16">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"></ColumnDefinition>
+					<ColumnDefinition Width="auto"></ColumnDefinition>
+					<ColumnDefinition Width="*"></ColumnDefinition>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*"></RowDefinition>
+					<RowDefinition Height="auto"></RowDefinition>
+					<RowDefinition Height="*"></RowDefinition>
+					<RowDefinition Height="*"></RowDefinition>
+				</Grid.RowDefinitions>
+
+				<Grid Visibility="Hidden" Name="selectNextDrawingBox" Grid.Row="1" Grid.Column="1" Grid.RowSpan="1">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="20"/>
+						<ColumnDefinition Width="20"/>
+						<ColumnDefinition Width="600"/>
+						<ColumnDefinition Width="120"/>
+						<ColumnDefinition Width="20" />
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="80"/>
+						<RowDefinition Height="60"/>
+						<RowDefinition Height="60"/>
+						<RowDefinition Height="500"/>
+						<RowDefinition Height="80"/>
+					</Grid.RowDefinitions>
+					<Border  Visibility="Visible" Name="border" Background="#FF00584C" Grid.Column="1" Grid.Row="1" Grid.RowSpan="3" Grid.ColumnSpan="3"
+							 CornerRadius="15" BorderBrush="Black" />
+					<TextBlock Grid.Column="2" Grid.Row="1" Text="Preview Your Drawing Here !" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="22"
 							   Name="roundFinishedMessage" Margin="0,10,0,20" Foreground="White"/>
-                        <InkCanvas  StrokeCollected="imageTransformee_StrokeCollected" Strokes="{Binding Path=Traits, Mode=OneTime}" Name="imageTransformee" Grid.Row="1" Grid.Column="1"  Grid.RowSpan="2" Width="600" Height="500">
-                        </InkCanvas>
-                        <Button VerticalAlignment="Top" Grid.Column="2" Grid.Row="1" FontSize="12" 
+					<InkCanvas  StrokeCollected="imageTransformee_StrokeCollected" Strokes="{Binding Path=Traits, Mode=OneTime}" Name="imageTransformee" Grid.Row="2" Grid.Column="2"  Grid.RowSpan="2" Width="600" Height="500">
+					</InkCanvas>
+					<Button VerticalAlignment="Top" Grid.Column="3" Grid.Row="3" FontSize="12" 
 							Foreground="#00584C" Background="#D6EFE9" BorderBrush="#D6EFE9" 
 							x:Name="PreviewButton" Click="preview" Content="Preview" MaxWidth="100"
-							Margin="0,55,0,0"/>
-                        <Button Grid.Column="2" Grid.Row="1" FontSize="12" Foreground="White" Background="#D81A60" BorderBrush="#D81A60" Click="close" Content="Close" MaxWidth="100" VerticalAlignment="Top"/>
-                        <StackPanel Orientation="Vertical" VerticalAlignment="Top" 
-								Margin="10,90,0,0" Grid.Row="1" Grid.Column="2">
-                            <Slider Maximum="10" Minimum="5" TickPlacement="BottomRight" Margin="0,15,0,0"
+							Margin="0,0,0,0"/>
+					<Button Grid.Column="3" Grid.Row="2" FontSize="12" Foreground="White" Background="#D81A60" BorderBrush="#D81A60" Click="close" Content="Close" MaxWidth="100" VerticalAlignment="Top"/>
+					<StackPanel Orientation="Vertical" VerticalAlignment="Top" 
+								Margin="10,90,0,0" Grid.Row="2" Grid.Column="3">
+						<Slider Maximum="10" Minimum="5" TickPlacement="BottomRight" Margin="0,15,0,0"
 								TickFrequency="1" IsSnapToTickEnabled="True" VerticalAlignment="Stretch" x:Name="Thickness" Foreground="White" />
-                            <toolkit:ColorPicker Name="ColorPicker" Height="30"  DisplayColorAndName="True" Margin="0,20,0,0" 
+						<toolkit:ColorPicker Name="ColorPicker" Height="30"  DisplayColorAndName="True" Margin="0,20,0,0" 
 											 AvailableColorsSortingMode="HueSaturationBrightness" SelectedColor="Black" Background="White" ></toolkit:ColorPicker>
-                            <CheckBox x:Name="Dotted" Content="Dotted" Margin="0,20,0,0"></CheckBox>
+						<CheckBox x:Name="Dotted" Content="Dotted" Margin="0,20,0,0"></CheckBox>
 
-                        </StackPanel>
+					</StackPanel>
 
-                    </Grid>
-                </Border>
-            </Grid>
-        </Grid>
+				</Grid>
+			</Grid>
+		</Grid>
 	</Viewbox>
 </UserControl>

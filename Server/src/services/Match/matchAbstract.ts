@@ -60,7 +60,6 @@ export default abstract class Match {
         this.timeLimit = createMatch.timeLimit;
         this.chatHandler = chatHandler;
         this.ms = matchSettings;
-        this.vp = "";
         this.currentWord = "";
         this.virtualPlayer = new VirtualPlayer();
     }
