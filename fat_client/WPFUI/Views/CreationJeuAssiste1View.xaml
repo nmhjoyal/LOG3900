@@ -49,9 +49,11 @@
 			</Grid.RowDefinitions>
 			<TextBlock  FontSize="40"  Foreground="#00584C" Text="Assisted Game Creation" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" TextAlignment="Center"/>
 			<Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="4" CornerRadius="10">
-				<Button Background="#FF018577" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Right" Content="File Name:" Grid.Column="1" Grid.Row="3" Click="Button_Click" Margin="0,4.2,21.6,4.6"/>
+				<StackPanel Orientation="Vertical" PreviewMouseDown="Button_Click" VerticalAlignment="Center" Margin="10,0,10,0">
+					<TextBlock Text="Click here to select your image" VerticalAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Center" Foreground="White"/>
+				</StackPanel>
 			</Border>
-			<TextBlock x:Name="absolutePath" Grid.Column="3" Grid.Row="4" MinWidth="200" Grid.ColumnSpan="2" VerticalAlignment="Center"/>
+			<TextBlock x:Name="absolutePath" Grid.Column="3" Grid.Row="4" MinWidth="200" Grid.ColumnSpan="3" VerticalAlignment="Center"/>
 			<Border Background="#FF018577" BorderThickness="5" Grid.Column="1" Grid.Row="6" CornerRadius="10">
 				<TextBlock  Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Word To Guess:" Grid.Column="1" Grid.Row="5"/>
 			</Border>
