@@ -47,6 +47,8 @@ export default class FreeForAll extends Match {
                 this.notifyWord(io);
             }
 
+            console.log(this.players);
+
             io.in(this.matchId).emit("turn_ended", JSON.stringify(endTurn));
             
             this.resetScoresTurn();
