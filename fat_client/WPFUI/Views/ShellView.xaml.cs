@@ -156,5 +156,11 @@ namespace WPFUI.Views
             confirmationMessageBox.Visibility = Visibility.Hidden;
             confirmationMessageTB.Text = "";
         }
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+
+            Application.Current.Shutdown();
+        }
     }
 }
