@@ -191,8 +191,8 @@
 							<ItemsControl ItemsSource="{Binding StatsClient.MatchesHistory}" Width="120" Grid.Column="4" Grid.Row="2">
 								<ItemsControl.ItemTemplate>
 									<DataTemplate>
-										<StackPanel Orientation="Vertical">
-                                            <ScrollViewer Height="40" VerticalScrollBarVisibility="Hidden" Grid.Column="4" Grid.Row="2">
+										<StackPanel Height="40" Orientation="Vertical">
+                                            <ScrollViewer Height="20" VerticalScrollBarVisibility="Visible" Grid.Column="4" Grid.Row="2">
                                                 <ItemsControl ItemsSource="{Binding PlayerNames}" Grid.Column="4" Grid.Row="2" Width="120">
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
