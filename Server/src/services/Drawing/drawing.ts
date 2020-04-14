@@ -12,7 +12,6 @@ export class Drawing {
 
     public stroke(socket: SocketIO.Socket, stroke: Stroke): void {
         stroke.DrawingAttributes.Top = this.top++;
-        console.log("on stroke");
         socket.to(this.roomId).emit("new_stroke", JSON.stringify(stroke));
     }
 

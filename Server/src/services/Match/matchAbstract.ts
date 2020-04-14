@@ -416,9 +416,10 @@ export default abstract class Match {
         for (let player of this.players) {
             if (player.user.username == username) {
                 const oldScore: number = player.score.scoreTotal;
+                const scoreTurn: number = player.score.scoreTurn;
                 const updatedScore: UpdateScore = {
                     scoreTotal: oldScore + score,
-                    scoreTurn: score
+                    scoreTurn: scoreTurn + score
                 };
                 player.score = updatedScore;
             }
