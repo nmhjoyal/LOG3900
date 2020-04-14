@@ -63,7 +63,7 @@
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>
 		</ScrollViewer>
-		<TextBox x:Name ="currentMessage" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="4" Foreground="DarkSlateGray" Background="White">
+		<TextBox x:Name ="currentMessage" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="4" Foreground="DarkSlateGray" Background="White" PreviewKeyDown="currentMessage_PreviewKeyDown">
 
 		</TextBox>
 
